@@ -148,6 +148,13 @@ class ArticleDecorator < Draper::Base
 end
 ```
 
+## Issues / Pending
+
+* Test coverage for generators
+* Ability to decorate multiple objects at once
+* Revise readme to better explain interface pattern
+* Build sample application
+
 ## License
 
 (The MIT License)
