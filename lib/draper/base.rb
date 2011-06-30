@@ -8,7 +8,7 @@ module Draper
     class_attribute :denied, :allowed
     attr_accessor   :source
     
-    DEFAULT_DENIED = Object.new.methods << [:method_missing]
+    DEFAULT_DENIED = Object.new.methods << :method_missing
     self.denied = DEFAULT_DENIED
     
     def self.denies(*input_denied)
