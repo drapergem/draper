@@ -1,5 +1,10 @@
-Draper
-================
+## Heads Up!
+
+This gem is not yet production ready. The API is sure to change quickly and there could be side-effects I haven't discovered yet.
+
+Please only use it if you're playing around and helping me experiment! Thanks :)
+
+# Draper
 
 This gem makes it easy to apply the decorator pattern to the models in a Rails application.
 
