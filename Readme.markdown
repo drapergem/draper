@@ -53,6 +53,32 @@ ActionView::Helpers::TextHelper
 
 Use the new methods in your views like any other model method (ex: `@article.formatted_published_at`)
 
+## An Interface with Allows/Denies
+
+A proper interface defines a contract between two objects. One purpose of the decorator pattern is to define an interface between your data model and the view template.
+
+You are provided class methods `allows` and `denies` to control exactly which of the subject's methods are available. By default, *all* of the subject's methods can be accessed.
+
+For example, say you want to prevent access to the `:title` method. You'd use `denies` like this:
+
+```ruby
+  class ArticleDecorator < Draper::Base
+    denies :title
+  end
+```
+
+`denies` uses a blacklist approach. Note that, as of the current version, denying `:title` does not affect related methods like `:title=`, `:title?`, etc.
+
+A better idea is a whitelist approach using `allows`:
+
+```ruby
+  class ArticleDecorator < Draper::Base
+    allows :title, :body, :author
+  end
+```
+
+Now only those methods and any defined in the decorator class itself can be accessed directly.
+
 ## Possible Decoration Methods
 
 Here are some ideas of what you might do in decorator methods:
