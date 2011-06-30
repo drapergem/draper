@@ -1,4 +1,4 @@
-class <%= singular_name.camelize %>Decorator < RailsDecorators::Base
+class <%= singular_name.camelize %>Decorator < Draper::Base
   # Rails helpers like content_tag, link_to, and pluralize are already
   # available to you. If you need access to other helpers, include them
   # like this:
