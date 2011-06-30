@@ -151,9 +151,10 @@ end
 ## Issues / Pending
 
 * Test coverage for generators
-* Ability to decorate multiple objects at once
+* Ability to decorate multiple objects at once, ex: `ArticleDecorator.decorate(Article.all)`
 * Revise readme to better explain interface pattern
-* Build sample application
+* Build sample Rails application
+* Consider: `ArticleDecorator.new(1)` does the equivalent of `ArticleDecorator.new(Article.find(1))`
 
 ## License
 
