@@ -21,10 +21,10 @@ describe Draper::Base do
     source.to_s.should_not == subject.to_s
   end
   
-  describe "a sample usage with excludes" do
+  describe "a sample usage with denies" do
     before(:all) do
-      class DecoratorWithExcludes < Draper::Base  
-        excludes :upcase
+      class DecoratorWithDenies < Draper::Base  
+        denies :upcase
         
         def sample_content
           content_tag :span, "Hello, World!"
@@ -40,27 +40,31 @@ describe Draper::Base do
       end
     end
     
-    let(:subject_with_excludes){ DecoratorWithExcludes.new(source) }
+    let(:subject_with_denies){ DecoratorWithDenies.new(source) }
     
-    it "should not echo methods specified with excludes" do
-      subject_with_excludes.should_not respond_to(:upcase)
+    it "should not echo methods specified with denies" do
+      subject_with_denies.should_not respond_to(:upcase)
     end
 
-    it "should not clobber other decorators methods" do
+    it "should not clobber other decorators' methods" do
       subject.should respond_to(:upcase)
     end    
     
     it "should be able to use the content_tag helper" do
-      subject_with_excludes.sample_content.to_s.should == "<span>Hello, World!</span>"
+      subject_with_denies.sample_content.to_s.should == "<span>Hello, World!</span>"
     end
     
     it "should be able to use the link_to helper" do
-      subject_with_excludes.sample_link.should == "<a href=\"/World\">Hello</a>"
+      subject_with_denies.sample_link.should == "<a href=\"/World\">Hello</a>"
     end
     
     it "should be able to use the pluralize helper" do
       pending("Figure out odd interaction when the wrapped source object already has the text_helper methods (ie: a String)")
-      subject_with_excludes.sample_truncate.should == "Once..."
+      subject_with_denies.sample_truncate.should == "Once..."
+    end
+    
+    it "should nullify method_missing to prevent AR from being cute" do
+      pending("How to test this without AR? Ugh.")
     end
   end
   
@@ -82,29 +86,29 @@ describe Draper::Base do
     end
   end
   
-  describe "invalid usages of allows and excludes" do
+  describe "invalid usages of allows and denies" do
     let(:blank_allows){
       class DecoratorWithInvalidAllows < Draper::Base  
         allows
       end
     }
     
-    let(:blank_excludes){
-      class DecoratorWithInvalidExcludes < Draper::Base  
-        excludes
+    let(:blank_denies){
+      class DecoratorWithInvalidDenies < Draper::Base  
+        denies
       end
     }
     
-    let(:using_allows_then_excludes){
+    let(:using_allows_then_denies){
       class DecoratorWithInvalidMixing < Draper::Base  
         allows :upcase
-        excludes :downcase
+        denies :downcase
       end
     }    
     
-    let(:using_excludes_then_allows){
+    let(:using_denies_then_allows){
       class DecoratorWithInvalidMixing < Draper::Base  
-        excludes :downcase
+        denies :downcase
         allows :upcase        
       end
     }
@@ -113,16 +117,16 @@ describe Draper::Base do
       expect {blank_allows}.should raise_error(ArgumentError)
     end
     
-    it "should raise an exception for a blank excludes" do
-      expect {blank_excludes}.should raise_error(ArgumentError)
+    it "should raise an exception for a blank denies" do
+      expect {blank_denies}.should raise_error(ArgumentError)
     end
     
-    it "should raise an exception for mixing allows then excludes" do
-      expect {using_allows_then_excludes}.should raise_error(ArgumentError)
+    it "should raise an exception for calling allows then denies" do
+      expect {using_allows_then_denies}.should raise_error(ArgumentError)
     end
     
-    it "should raise an exception for calling excludes then allows" do
-      expect {using_excludes_then_allows}.should raise_error(ArgumentError)
+    it "should raise an exception for calling denies then allows" do
+      expect {using_denies_then_allows}.should raise_error(ArgumentError)
     end
   end
 end

@@ -5,21 +5,21 @@ module Draper
     include ActionView::Helpers::TextHelper
 
     require 'active_support/core_ext/class/attribute'
-    class_attribute :exclusions, :allowed
+    class_attribute :denied, :allowed
     attr_accessor   :source
     
-    DEFAULT_EXCLUSIONS = Object.new.methods
-    self.exclusions = DEFAULT_EXCLUSIONS
+    DEFAULT_DENIED = Object.new.methods << [:method_missing]
+    self.denied = DEFAULT_DENIED
     
-    def self.excludes(*input_exclusions)
-      raise ArgumentError, "Specify at least one method (as a symbol) to exclude when using excludes" if input_exclusions.empty?
-      raise ArgumentError, "Use either 'allows' or 'excludes', but not both." if self.allowed?
-      self.exclusions += input_exclusions
+    def self.denies(*input_denied)
+      raise ArgumentError, "Specify at least one method (as a symbol) to exclude when using denies" if input_denied.empty?
+      raise ArgumentError, "Use either 'allows' or 'denies', but not both." if self.allowed?
+      self.denied += input_denied
     end
     
     def self.allows(*input_allows)
       raise ArgumentError, "Specify at least one method (as a symbol) to allow when using allows" if input_allows.empty?
-      #raise ArgumentError, "Use either 'allows' or 'excludes', but not both." unless (self.exclusions == DEFAULT_EXCLUSIONS)
+      #raise ArgumentError, "Use either 'allows' or 'denies', but not both." unless (self.denies == DEFAULT_EXCLUSIONS)
       self.allowed = input_allows
     end
     
@@ -30,7 +30,7 @@ module Draper
     
   private
     def select_methods
-      self.allowed || (source.public_methods - exclusions)
+      self.allowed || (source.public_methods - denied)
     end
 
     def build_methods
