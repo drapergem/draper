@@ -37,8 +37,8 @@ module Draper
     def build_methods
       select_methods.each do |method|
         (class << self; self; end).class_eval do
-          define_method method do |*args|
-            source.send method, *args
+          define_method method do |*args, &block|
+            source.send method, *args, &block
           end
         end
       end  

@@ -3,10 +3,24 @@ require 'draper'
 
 describe Draper::Base do
   subject{ Draper::Base.new(source) }
-  let(:source){ "Sample String" }
+  let(:source){ "Sample String" }    
     
   it "should return the wrapped object when asked for source" do
     subject.source.should == source
+  end
+  
+  it "should wrap source methods so they still accept blocks" do
+    subject.gsub("Sample"){|match| "Super"}.should == "Super String"
+  end
+  
+  it "should return a collection of wrapped objects when given a collection of source objects" do
+    pending("need to fix the proxying of blocks")
+    sources = ["one", "two", "three"]
+    output = Draper::Base.new(sources)
+    output.should respond_to(:each)
+    output.size.should == sources.size
+    output.each{ |decorated| decorated.should be_instance_of(Draper::Base) }
+    debugger
   end
   
   it "echos the methods of the wrapped class" do
