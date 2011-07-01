@@ -6,15 +6,53 @@ Please only use it if you're playing around and helping me experiment! Thanks :)
 
 # Draper
 
-This gem makes it easy to apply the decorator pattern to the models in a Rails application.
+This gem makes it easy to apply the decorator pattern to the models in a Rails application. This gives you three wins:
 
-## Why use decorators?
+1. Replace most helpers with an object-oriented approach
+2. Filter data at the presentation level
+3. Enforce an interface between your controllers and view templates.
 
-Helpers, as they're commonly used, are a bit odd. In both Ruby and Rails we approach everything from an Object-Oriented perspective, then with helpers we get procedural.
+## 1. Object Oriented Helpers
 
-The job of a helper is to take in data or a data object and output presentation-ready results. We can do that job in an OO fashion with a decorator.
+Why hate helpers? In Ruby/Rails we approach everything from an Object-Oriented perspective, then with helpers we get procedural.The job of a helper is to take in data and output a presentation-ready string. We can do that job in an OO style with a decorator.
 
 In general, a decorator wraps an object with presentation-related accessor methods. For instance, if you had an `Article` object, then a decorator might add instance methods like `.formatted_published_at` or `.formatted_title` that output actual HTML.
+
+For example:
+
+```ruby
+class ArticleDecorator < Draper::Base
+  def formatted_published_at
+    date = content_tag(:span, published_at.strftime("%A, %B %e").squeeze(" "), :class => 'date')
+    time = content_tag(:span, published_at.strftime("%l:%M%p"), :class => 'time').delete(" ")
+    content_tag :span, date + time, :class => 'created_at'
+  end
+end
+```
+
+## 2. View-Layer Data Filtering
+
+Have you ever written a `to_xml` or `to_json` method in your model? Did it feel weird to put what is essentially view logic in your model?
+
+Or, in the course of formatting this data, did you wish you could access `current_user` down in the model? Maybe for guests your `to_json` is only going to show three attributes, but if the user is an admin they get to see them all.
+
+How would you handle this in the model layer? You'd probably pass the `current_user` or some role/flag down to `to_json`. That should still feel slimy.
+
+When you use a decorator you have the power of a Ruby object but it's a part of the view layer. This is where your `to_xml` belongs. It has access to the core data from the model, but it also knows about `current_user` because it can see the `ApplicationHelper` where that method is typically defined.
+
+For example:
+
+```ruby
+class ArticleDecorator < Draper::Base
+  ADMIN_VISIBLE_ATTRIBUTES = [:title, :body, :author, :status]
+  PUBLIC_VISIBLE_ATTRIBUTES = [:title, :body]
+
+  def to_xml
+    attr_set = current_user.admin? ? ADMIN_VISIBLE_ATTRIBUTES : PUBLIC_VISIBLE_ATTRIBUTES
+    self.subject.to_xml(:only => attr_set)
+  end
+end
+```
 
 ## How is it implemented?
 
