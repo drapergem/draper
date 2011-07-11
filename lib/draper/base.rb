@@ -3,7 +3,7 @@ module Draper
     include ActionView::Helpers::TagHelper
     include ActionView::Helpers::UrlHelper
     include ActionView::Helpers::TextHelper
-    include ApplicationHelper #if defined?(ApplicationHelper)      
+    #include ApplicationHelper #if defined?(ApplicationHelper)      
 
     require 'active_support/core_ext/class/attribute'
     class_attribute :denied, :allowed
