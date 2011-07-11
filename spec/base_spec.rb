@@ -13,14 +13,19 @@ describe Draper::Base do
     subject.gsub("Sample"){|match| "Super"}.should == "Super String"
   end
   
-  it "should return a collection of wrapped objects when given a collection of source objects" do
-    pending("need to fix the proxying of blocks")
-    sources = ["one", "two", "three"]
-    output = Draper::Base.new(sources)
-    output.should respond_to(:each)
-    output.size.should == sources.size
-    output.each{ |decorated| decorated.should be_instance_of(Draper::Base) }
-    debugger
+  context ".draper" do
+    it "should return a collection of wrapped objects when given a collection of source objects" do
+      sources = ["one", "two", "three"]
+      output = Draper::Base.decorate(sources)
+      output.should respond_to(:each)
+      output.size.should == sources.size
+      output.each{ |decorated| decorated.should be_instance_of(Draper::Base) }
+    end
+    
+    it "should return a single wrapped object when given a single source object" do
+      output = Draper::Base.decorate(source)
+      output.should be_instance_of(Draper::Base)
+    end
   end
   
   it "echos the methods of the wrapped class" do
@@ -37,21 +42,6 @@ describe Draper::Base do
   
   describe "a sample usage with denies" do
     before(:all) do
-      class DecoratorWithDenies < Draper::Base  
-        denies :upcase
-        
-        def sample_content
-          content_tag :span, "Hello, World!"
-        end
-        
-        def sample_link
-          link_to "Hello", "/World"
-        end
-        
-        def sample_truncate
-          ActionView::Helpers::TextHelper.truncate("Once upon a time", :length => 7)
-        end
-      end
     end
     
     let(:subject_with_denies){ DecoratorWithDenies.new(source) }
@@ -83,12 +73,6 @@ describe Draper::Base do
   end
   
   describe "a sample usage with allows" do
-    before(:all) do
-      class DecoratorWithAllows < Draper::Base  
-        allows :upcase
-      end
-    end
-    
     let(:subject_with_allows){ DecoratorWithAllows.new(source) }
     
     it "should echo the allowed method" do
@@ -114,14 +98,14 @@ describe Draper::Base do
     }
     
     let(:using_allows_then_denies){
-      class DecoratorWithInvalidMixing < Draper::Base  
+      class DecoratorWithAllowsAndDenies < Draper::Base  
         allows :upcase
         denies :downcase
       end
     }    
     
     let(:using_denies_then_allows){
-      class DecoratorWithInvalidMixing < Draper::Base  
+      class DecoratorWithDeniesAndAllows < Draper::Base  
         denies :downcase
         allows :upcase        
       end
@@ -141,6 +125,13 @@ describe Draper::Base do
     
     it "should raise an exception for calling denies then allows" do
       expect {using_denies_then_allows}.should raise_error(ArgumentError)
+    end
+  end
+  
+  context "in a Rails application" do
+    it "should include ApplicationHelper if one exists" do
+      decorator = DecoratorApplicationHelper.decorate(Object.new)
+      decorator.uses_hello == "Hello, World!"
     end
   end
 end
