@@ -13,7 +13,7 @@ module Draper
 
     def initialize(subject)
       subject.inspect
-      self.source_class = subject.class
+      self.class.source_class = subject.class
       self.source = subject      
       build_methods
     end
