@@ -5,7 +5,7 @@ module Draper
     include ActionView::Helpers::TextHelper
 
     require 'active_support/core_ext/class/attribute'
-    class_attribute :denied, :allowed
+    class_attribute :denied, :allowed, :source_class
     attr_accessor   :source
     
     DEFAULT_DENIED = Object.new.methods << :method_missing
@@ -13,6 +13,7 @@ module Draper
 
     def initialize(subject)
       subject.inspect
+      self.source_class = subject.class
       self.source = subject      
       build_methods
     end
@@ -35,6 +36,10 @@ module Draper
     
     def helpers
       ActionController::Base.helpers
+    end
+    
+    def self.model_name
+      ActiveModel::Name.new(source_class)
     end
         
   private
