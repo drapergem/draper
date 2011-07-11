@@ -3,7 +3,6 @@ module Draper
     include ActionView::Helpers::TagHelper
     include ActionView::Helpers::UrlHelper
     include ActionView::Helpers::TextHelper
-    #include ApplicationHelper #if defined?(ApplicationHelper)      
 
     require 'active_support/core_ext/class/attribute'
     class_attribute :denied, :allowed
@@ -31,6 +30,10 @@ module Draper
 
     def self.decorate(input)
       input.respond_to?(:each) ? input.map{|i| new(i)} : new(input)
+    end
+    
+    def helpers
+      ActionController::Base.helpers
     end
         
   private
