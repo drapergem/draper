@@ -12,6 +12,7 @@ module Draper
     self.denied = DEFAULT_DENIED
 
     def initialize(subject)
+      subject.inspect
       self.source = subject      
       build_methods
     end
