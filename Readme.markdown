@@ -12,7 +12,7 @@ This gem makes it easy to apply the decorator pattern to the models in a Rails a
 2. Filter data at the presentation level
 3. Enforce an interface between your controllers and view templates.
 
-## 1. Object Oriented Helpers
+### 1. Object Oriented Helpers
 
 Why hate helpers? In Ruby/Rails we approach everything from an Object-Oriented perspective, then with helpers we get procedural.The job of a helper is to take in data and output a presentation-ready string. We can do that job in an OO style with a decorator.
 
@@ -30,7 +30,7 @@ class ArticleDecorator < Draper::Base
 end
 ```
 
-## 2. View-Layer Data Filtering
+### 2. View-Layer Data Filtering
 
 Have you ever written a `to_xml` or `to_json` method in your model? Did it feel weird to put what is essentially view logic in your model?
 
@@ -53,6 +53,10 @@ class ArticleDecorator < Draper::Base
   end
 end
 ```
+
+### 3. Enforcing an Interface
+
+Notes about `denies` and `allows` go here!
 
 ## How is it implemented?
 
@@ -131,6 +135,8 @@ Here are some ideas of what you might do in decorator methods:
 * Implement a commonly used representation of the data object like a `.name` method that combines `first_name` and `last_name` attributes
 
 ## Example Using a Decorator
+
+For a brief tutorial with sample project, check this out: http://tutorials.jumpstartlab.com/rails/topics/decorators.html
 
 Say I have a publishing system with `Article` resources. My designer decides that whenever we print the `published_at` timestamp, it should be constructed like this:
 
