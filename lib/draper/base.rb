@@ -49,7 +49,7 @@ module Draper
 
     def build_methods
       select_methods.each do |method|
-        unless self.respond_to(method)
+        unless self.respond_to?(method)
           (class << self; self; end).class_eval do
             define_method method do |*args, &block|
               source.send method, *args, &block
