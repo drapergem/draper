@@ -1,14 +1,10 @@
 module Draper
-  class Base  
-    include ActionView::Helpers::TagHelper
-    include ActionView::Helpers::UrlHelper
-    include ActionView::Helpers::TextHelper
-
+  class Base      
     require 'active_support/core_ext/class/attribute'
     class_attribute :denied, :allowed, :source_class
     attr_accessor   :source
     
-    DEFAULT_DENIED = Object.new.methods << :method_missing
+    DEFAULT_DENIED = Object.new.methods
     self.denied = DEFAULT_DENIED
 
     def initialize(subject)
@@ -35,13 +31,14 @@ module Draper
     end
     
     def helpers
-      ActionController::Base.helpers
+      @helpers ||= ApplicationController::all_helpers
     end
+    alias :h :helpers
     
     def self.model_name
       ActiveModel::Name.new(source_class)
     end
-        
+            
   private
     def select_methods
       self.allowed || (source.public_methods - denied)
