@@ -1,4 +1,5 @@
 class <%= singular_name.camelize %>Decorator < Draper::Base
+  decorates :<%= singular_name.to_sym %>
 
   # Helpers from Rails an Your Application
   #   You can access any helper via a proxy to ApplicationController
