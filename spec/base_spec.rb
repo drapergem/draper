@@ -4,7 +4,13 @@ require 'draper'
 describe Draper::Base do
   subject{ Draper::Base.new(source) }
   let(:source){ "Sample String" }    
-    
+
+  context(".decorates") do
+    it "sets the model class for the decorator" do
+      ProductDecorator.new(source).model_class == Product
+    end
+  end
+  
   it "should return the wrapped object when converted to a model" do
     subject.to_model.should == source
   end
@@ -24,6 +30,14 @@ describe Draper::Base do
   it "should always proxy to_param" do
     source.send :class_eval, "def to_param; 1; end"
     Draper::Base.new(source).to_param.should == 1
+  end
+  
+  context ".new" do
+    it "should lookup the associated model when passed an integer" do
+      pd = ProductDecorator.new(1)
+      pd.should be_instance_of(ProductDecorator)
+      pd.model.should be_instance_of(Product)
+    end
   end
   
   context ".decorate" do

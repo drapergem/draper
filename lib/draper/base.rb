@@ -1,7 +1,7 @@
 module Draper
   class Base      
     require 'active_support/core_ext/class/attribute'
-    class_attribute :denied, :allowed, :source_class
+    class_attribute :denied, :allowed, :source_class, :model_class
     attr_accessor :model
     
     DEFAULT_DENIED = Object.new.methods
@@ -9,10 +9,17 @@ module Draper
     self.denied = DEFAULT_DENIED
 
     def initialize(input)
+      if input.instance_of?(Fixnum)
+        input = model_class.find(Fixnum)
+      end
       input.inspect
       self.class.source_class = input.class
       @model = input      
       build_methods
+    end
+    
+    def self.decorates(input)
+      self.model_class = input.to_s.classify.constantize
     end
     
     def self.denies(*input_denied)
