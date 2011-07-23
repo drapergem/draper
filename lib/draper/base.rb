@@ -1,7 +1,7 @@
 module Draper
   class Base      
     require 'active_support/core_ext/class/attribute'
-    class_attribute :denied, :allowed, :source_class, :model_class
+    class_attribute :denied, :allowed, :model_class
     attr_accessor :model
     
     DEFAULT_DENIED = Object.new.methods
@@ -10,7 +10,7 @@ module Draper
 
     def initialize(input)
       input.inspect
-      self.class.source_class = input.class
+      self.class.model_class = input.class if model_class.nil?
       @model = input      
       build_methods
     end
