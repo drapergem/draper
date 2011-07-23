@@ -19,9 +19,11 @@ describe Draper::Base do
   end
     
   context("selecting methods") do
-    it "echos the methods of the wrapped class" do
+    it "echos the methods of the wrapped class except default exclusions" do
       source.methods.each do |method|
-        subject.should respond_to(method)
+        unless Draper::Base::DEFAULT_DENIED.include?(method)
+          subject.should respond_to(method)
+        end
       end
     end
     
@@ -74,18 +76,23 @@ describe Draper::Base do
     end
   end
     
-  describe "a sample usage with denies" do
-    before(:all) do
-    end
-    
+  describe "a sample usage with denies" do    
     let(:subject_with_denies){ DecoratorWithDenies.new(source) }
     
+    it "should proxy methods not listed in denies" do
+      subject_with_denies.should respond_to(:hello_world)
+    end
+    
     it "should not echo methods specified with denies" do
-      subject_with_denies.should_not respond_to(:upcase)
+      subject_with_denies.should_not respond_to(:goodnight_moon)
     end
 
     it "should not clobber other decorators' methods" do
       subject.should respond_to(:hello_world)
+    end    
+    
+    it "should not allow method_missing to circumvent a deny" do
+      expect{subject_with_denies.title}.to raise_error(NoMethodError)
     end    
   end
   
@@ -116,15 +123,15 @@ describe Draper::Base do
     
     let(:using_allows_then_denies){
       class DecoratorWithAllowsAndDenies < Draper::Base  
-        allows :upcase
-        denies :downcase
+        allows :hello_world
+        denies :goodnight_moon
       end
     }    
     
     let(:using_denies_then_allows){
       class DecoratorWithDeniesAndAllows < Draper::Base  
-        denies :downcase
-        allows :upcase        
+        denies :goodnight_moon
+        allows :hello_world        
       end
     }
 
@@ -162,10 +169,6 @@ describe Draper::Base do
     
     it "should be able to use the pluralize helper" do
       decorator.sample_truncate.should == "Once..."
-    end
-    
-    it "should nullify method_missing to prevent AR from being cute" do
-      pending("How to test this without AR? Ugh.")
     end
   end
 end

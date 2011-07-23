@@ -4,7 +4,7 @@ module Draper
     class_attribute :denied, :allowed, :model_class
     attr_accessor :model
     
-    DEFAULT_DENIED = Object.new.methods
+    DEFAULT_DENIED = Object.new.methods << :method_missing
     FORCED_PROXY = [:to_param]
     self.denied = DEFAULT_DENIED
 
