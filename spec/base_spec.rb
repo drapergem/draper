@@ -5,8 +5,8 @@ describe Draper::Base do
   subject{ Draper::Base.new(source) }
   let(:source){ "Sample String" }    
     
-  it "should return the wrapped object when asked for source" do
-    subject.source.should == source
+  it "should return the wrapped object when converted to a model" do
+    subject.to_model.should == source
   end
   
   it "should wrap source methods so they still accept blocks" do
@@ -53,23 +53,6 @@ describe Draper::Base do
     it "should not clobber other decorators' methods" do
       subject.should respond_to(:upcase)
     end    
-    
-    it "should be able to use the content_tag helper" do
-      subject_with_denies.sample_content.to_s.should == "<span>Hello, World!</span>"
-    end
-    
-    it "should be able to use the link_to helper" do
-      subject_with_denies.sample_link.should == "<a href=\"/World\">Hello</a>"
-    end
-    
-    it "should be able to use the pluralize helper" do
-      pending("Figure out odd interaction when the wrapped source object already has the text_helper methods (ie: a String)")
-      subject_with_denies.sample_truncate.should == "Once..."
-    end
-    
-    it "should nullify method_missing to prevent AR from being cute" do
-      pending("How to test this without AR? Ugh.")
-    end
   end
   
   describe "a sample usage with allows" do
@@ -129,10 +112,26 @@ describe Draper::Base do
   end
   
   context "in a Rails application" do
-    it "should include ApplicationHelper if one exists" do
-      pending
-      decorator = DecoratorApplicationHelper.decorate(Object.new)
-      decorator.uses_hello == "Hello, World!"
+    let(:decorator){ DecoratorWithApplicationHelper.decorate(Object.new) }
+    
+    it "should have access to ApplicationHelper helpers" do
+      decorator.uses_hello_world == "Hello, World!"
+    end
+    
+    it "should be able to use the content_tag helper" do
+      decorator.sample_content.to_s.should == "<span>Hello, World!</span>"
+    end
+    
+    it "should be able to use the link_to helper" do
+      decorator.sample_link.should == "<a href=\"/World\">Hello</a>"
+    end
+    
+    it "should be able to use the pluralize helper" do
+      decorator.sample_truncate.should == "Once..."
+    end
+    
+    it "should nullify method_missing to prevent AR from being cute" do
+      pending("How to test this without AR? Ugh.")
     end
   end
 end

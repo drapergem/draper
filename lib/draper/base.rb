@@ -2,15 +2,14 @@ module Draper
   class Base      
     require 'active_support/core_ext/class/attribute'
     class_attribute :denied, :allowed, :source_class
-    attr_accessor   :source
     
     DEFAULT_DENIED = Object.new.methods
     self.denied = DEFAULT_DENIED
 
-    def initialize(subject)
-      subject.inspect
-      self.class.source_class = subject.class
-      self.source = subject      
+    def initialize(input)
+      input.inspect
+      self.class.source_class = input.class
+      @model = input      
       build_methods
     end
     
@@ -38,10 +37,14 @@ module Draper
     def self.model_name
       ActiveModel::Name.new(source_class)
     end
+    
+    def to_model
+      @model
+    end
             
   private
     def select_methods
-      self.allowed || (source.public_methods - denied)
+      self.allowed || (@model.public_methods - denied)
     end
 
     def build_methods
@@ -49,7 +52,7 @@ module Draper
         unless self.respond_to?(method)
           (class << self; self; end).class_eval do
             define_method method do |*args, &block|
-              source.send method, *args, &block
+              @model.send method, *args, &block
             end
           end
         end
