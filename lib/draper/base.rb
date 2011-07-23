@@ -43,8 +43,12 @@ module Draper
     end
             
   private
+    def model
+      @model
+    end
+  
     def select_methods
-      self.allowed || (@model.public_methods - denied)
+      self.allowed || (model.public_methods - denied)
     end
 
     def build_methods
@@ -52,7 +56,7 @@ module Draper
         unless self.respond_to?(method)
           (class << self; self; end).class_eval do
             define_method method do |*args, &block|
-              @model.send method, *args, &block
+              model.send method, *args, &block
             end
           end
         end
