@@ -11,25 +11,38 @@ describe Draper::Base do
     end
   end
   
-  it "should return the wrapped object when converted to a model" do
-    subject.to_model.should == source
+  context(".model / .to_model") do
+    it "should return the wrapped object" do
+      subject.to_model.should == source
+      subject.model.should == source
+    end
   end
-  
-  it "should return the wrapped object when asked for model" do
-    subject.model.should == source
-  end
-  
+    
+  context("selecting methods") do
+    it "echos the methods of the wrapped class" do
+      source.methods.each do |method|
+        subject.should respond_to(method)
+      end
+    end
+    
+    it "should not override a defined method with a source method" do
+      DecoratorWithApplicationHelper.new(source).length.should == "overridden"
+    end
+    
+    it "should always proxy to_param" do
+      source.send :class_eval, "def to_param; 1; end"
+      Draper::Base.new(source).to_param.should == 1
+    end
+    
+    it "should not copy the .class, .inspect, or other existing methods" do
+      source.class.should_not == subject.class
+      source.inspect.should_not == subject.inspect
+      source.to_s.should_not == subject.to_s
+    end
+  end  
+
   it "should wrap source methods so they still accept blocks" do
     subject.gsub("Sample"){|match| "Super"}.should == "Super String"
-  end
-  
-  it "should not override a defined method with a source method" do
-    DecoratorWithApplicationHelper.new(source).length.should == "overridden"
-  end
-  
-  it "should always proxy to_param" do
-    source.send :class_eval, "def to_param; 1; end"
-    Draper::Base.new(source).to_param.should == 1
   end
   
   context ".new" do
@@ -54,19 +67,7 @@ describe Draper::Base do
       output.should be_instance_of(Draper::Base)
     end
   end
-  
-  it "echos the methods of the wrapped class" do
-    source.methods.each do |method|
-      subject.should respond_to(method)
-    end
-  end
-  
-  it "should not copy the .class, .inspect, or other existing methods" do
-    source.class.should_not == subject.class
-    source.inspect.should_not == subject.inspect
-    source.to_s.should_not == subject.to_s
-  end
-  
+    
   describe "a sample usage with denies" do
     before(:all) do
     end
