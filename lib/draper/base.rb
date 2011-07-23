@@ -2,6 +2,7 @@ module Draper
   class Base      
     require 'active_support/core_ext/class/attribute'
     class_attribute :denied, :allowed, :source_class
+    attr_accessor :model
     
     DEFAULT_DENIED = Object.new.methods
     self.denied = DEFAULT_DENIED
@@ -42,11 +43,7 @@ module Draper
       @model
     end
             
-  private
-    def model
-      @model
-    end
-  
+  private  
     def select_methods
       self.allowed || (model.public_methods - denied)
     end

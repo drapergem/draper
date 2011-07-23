@@ -9,6 +9,10 @@ describe Draper::Base do
     subject.to_model.should == source
   end
   
+  it "should return the wrapped object when asked for model" do
+    subject.model.should == source
+  end
+  
   it "should wrap source methods so they still accept blocks" do
     subject.gsub("Sample"){|match| "Super"}.should == "Super String"
   end
