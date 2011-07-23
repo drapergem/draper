@@ -5,6 +5,7 @@ module Draper
     attr_accessor :model
     
     DEFAULT_DENIED = Object.new.methods
+    FORCED_PROXY = [:to_param]
     self.denied = DEFAULT_DENIED
 
     def initialize(input)
@@ -45,16 +46,15 @@ module Draper
             
   private  
     def select_methods
-      self.allowed || (model.public_methods - denied)
+      specified = self.allowed || (model.public_methods - denied)
+      (specified - self.public_methods) + FORCED_PROXY
     end
 
     def build_methods
       select_methods.each do |method|
-        unless self.respond_to?(method)
-          (class << self; self; end).class_eval do
-            define_method method do |*args, &block|
-              model.send method, *args, &block
-            end
+        (class << self; self; end).class_eval do
+          define_method method do |*args, &block|
+            model.send method, *args, &block
           end
         end
       end  

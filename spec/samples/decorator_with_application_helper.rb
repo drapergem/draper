@@ -14,4 +14,8 @@ class DecoratorWithApplicationHelper < Draper::Base
   def sample_truncate
     h.truncate("Once upon a time", :length => 7)
   end
+  
+  def length
+    "overridden"
+  end
 end

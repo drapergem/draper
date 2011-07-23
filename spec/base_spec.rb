@@ -17,7 +17,16 @@ describe Draper::Base do
     subject.gsub("Sample"){|match| "Super"}.should == "Super String"
   end
   
-  context ".draper" do
+  it "should not override a defined method with a source method" do
+    DecoratorWithApplicationHelper.new(source).length.should == "overridden"
+  end
+  
+  it "should always proxy to_param" do
+    source.send :class_eval, "def to_param; 1; end"
+    Draper::Base.new(source).to_param.should == 1
+  end
+  
+  context ".decorate" do
     it "should return a collection of wrapped objects when given a collection of source objects" do
       sources = ["one", "two", "three"]
       output = Draper::Base.decorate(sources)
