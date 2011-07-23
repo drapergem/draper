@@ -9,13 +9,14 @@ module Draper
     self.denied = DEFAULT_DENIED
 
     def initialize(input)
-      if input.instance_of?(Fixnum)
-        input = model_class.find(Fixnum)
-      end
       input.inspect
       self.class.source_class = input.class
       @model = input      
       build_methods
+    end
+    
+    def self.find(input)
+      self.new(model_class.find(input))
     end
     
     def self.decorates(input)

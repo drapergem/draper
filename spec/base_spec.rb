@@ -3,7 +3,7 @@ require 'draper'
 
 describe Draper::Base do
   subject{ Draper::Base.new(source) }
-  let(:source){ "Sample String" }    
+  let(:source){ Product.new }    
 
   context(".decorates") do
     it "sets the model class for the decorator" do
@@ -42,12 +42,18 @@ describe Draper::Base do
   end  
 
   it "should wrap source methods so they still accept blocks" do
-    subject.gsub("Sample"){|match| "Super"}.should == "Super String"
+    subject.block{"marker"}.should == "marker"
   end
   
-  context ".new" do
+  context ".find" do
     it "should lookup the associated model when passed an integer" do
-      pd = ProductDecorator.new(1)
+      pd = ProductDecorator.find(1)
+      pd.should be_instance_of(ProductDecorator)
+      pd.model.should be_instance_of(Product)
+    end
+  
+    it "should lookup the associated model when passed a string" do
+      pd = ProductDecorator.find("1")
       pd.should be_instance_of(ProductDecorator)
       pd.model.should be_instance_of(Product)
     end
@@ -55,7 +61,7 @@ describe Draper::Base do
   
   context ".decorate" do
     it "should return a collection of wrapped objects when given a collection of source objects" do
-      sources = ["one", "two", "three"]
+      sources = [Product.new, Product.new]
       output = Draper::Base.decorate(sources)
       output.should respond_to(:each)
       output.size.should == sources.size
@@ -79,7 +85,7 @@ describe Draper::Base do
     end
 
     it "should not clobber other decorators' methods" do
-      subject.should respond_to(:upcase)
+      subject.should respond_to(:hello_world)
     end    
   end
   
