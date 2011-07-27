@@ -6,11 +6,11 @@
 2. Run `rails g draper:model YourModel`
 3. Edit `app/decorators/your_model_decorator.rb` using:
   1. `h` to proxy to Rails/application helpers like `h.current_user`
-  2. `model` to access the wrapped object
+  2. `model` to access the wrapped object like `model.created_at`
 4. Wrap models in your controller with the decorator using:
-  1. `.find` lookup: `ArticleDecorator.find(1)`
-  2. `.decorate` method: `ArticleDecorator.decorate(Article.all)`
-  3. `.new` method: `ArticleDecorator.new(Article.first)`
+  1. `.find` automatic lookup & wrap: `ArticleDecorator.find(1)`
+  2. `.decorate` method with single object or collection: `ArticleDecorator.decorate(Article.all)`
+  3. `.new` method with single object: `ArticleDecorator.new(Article.first)`
 5. Call and output the methods in your view templates as normal
 
 ## Goals
