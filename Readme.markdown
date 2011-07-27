@@ -1,9 +1,3 @@
-## Heads Up!
-
-This gem is not yet production ready. The API is sure to change quickly and there could be side-effects I haven't discovered yet.
-
-Please only use it if you're playing around and helping me experiment! Thanks :)
-
 # Draper
 
 This gem makes it easy to apply the decorator pattern to the models in a Rails application. This gives you three wins:
@@ -12,20 +6,21 @@ This gem makes it easy to apply the decorator pattern to the models in a Rails a
 2. Filter data at the presentation level
 3. Enforce an interface between your controllers and view templates.
 
+## Goals
+
 ### 1. Object Oriented Helpers
 
 Why hate helpers? In Ruby/Rails we approach everything from an Object-Oriented perspective, then with helpers we get procedural.The job of a helper is to take in data and output a presentation-ready string. We can do that job in an OO style with a decorator.
 
-In general, a decorator wraps an object with presentation-related accessor methods. For instance, if you had an `Article` object, then a decorator might add instance methods like `.formatted_published_at` or `.formatted_title` that output actual HTML.
-
-For example:
+A decorator wraps an object with presentation-related accessor methods. For instance, if you had an `Article` object, then the decorator could override `.published_at` to use formatted output like this:
 
 ```ruby
 class ArticleDecorator < Draper::Base
-  def formatted_published_at
-    date = content_tag(:span, published_at.strftime("%A, %B %e").squeeze(" "), :class => 'date')
-    time = content_tag(:span, published_at.strftime("%l:%M%p"), :class => 'time').delete(" ")
-    content_tag :span, date + time, :class => 'created_at'
+  decorates :article
+  def published_at
+    date = h.content_tag(:span, published_at.strftime("%A, %B %e").squeeze(" "), :class => 'date')
+    time = h.content_tag(:span, published_at.strftime("%l:%M%p"), :class => 'time').delete(" ")
+    h.content_tag :span, date + time, :class => 'created_at'
   end
 end
 ```
@@ -38,9 +33,7 @@ Or, in the course of formatting this data, did you wish you could access `curren
 
 How would you handle this in the model layer? You'd probably pass the `current_user` or some role/flag down to `to_json`. That should still feel slimy.
 
-When you use a decorator you have the power of a Ruby object but it's a part of the view layer. This is where your `to_xml` belongs. It has access to the core data from the model, but it also knows about `current_user` because it can see the `ApplicationHelper` where that method is typically defined.
-
-For example:
+When you use a decorator you have the power of a Ruby object but it's a part of the view layer. This is where your `to_xml` belongs. You can access your `current_user` helper method using the `h` proxy available in the decorator:
 
 ```ruby
 class ArticleDecorator < Draper::Base
@@ -48,7 +41,7 @@ class ArticleDecorator < Draper::Base
   PUBLIC_VISIBLE_ATTRIBUTES = [:title, :body]
 
   def to_xml
-    attr_set = current_user.admin? ? ADMIN_VISIBLE_ATTRIBUTES : PUBLIC_VISIBLE_ATTRIBUTES
+    attr_set = h.current_user.admin? ? ADMIN_VISIBLE_ATTRIBUTES : PUBLIC_VISIBLE_ATTRIBUTES
     self.subject.to_xml(:only => attr_set)
   end
 end
@@ -56,19 +49,30 @@ end
 
 ### 3. Enforcing an Interface
 
-Notes about `denies` and `allows` go here!
+Want to strictly control what methods are proxied to the original object? Use `denies` or `allows`.
 
-## How is it implemented?
+#### Using `denies`
 
-To implement the pattern in Rails we can:
+The `denies` method takes a blacklist approach. For instance:
 
-1. Write a wrapper class with the decoration methods
-2. Wrap the data object
-3. Utilize those methods within our view layer
+```ruby
+class ArticleDecorator < Draper::Base
+  denies :title
+end
+```
 
-## How do you utilize this gem in your application?
+Then, to test it:
 
-Here are the steps to utilizing this gem:
+```irb
+ruby-1.9.2-p290 :001 > ad = ArticleDecorator.find(1)
+ => #<ArticleDecorator:0x000001020d7728 @model=#<Article id: 1, title: "Hello, World">> 
+ruby-1.9.2-p290 :002 > ad.title
+NoMethodError: undefined method `title' for #<ArticleDecorator:0x000001020d7728>
+``` 
+
+## Usage
+
+### Setup
 
 Add the dependency to your `Gemfile`:
 
@@ -82,23 +86,72 @@ Run bundle:
 bundle
 ```
 
-Create a decorator for your model (ex: `Article`)
+### Generate the Decorator
+
+To decorate a model named `Article`:
 
 ```
 rails generate draper:model Article
 ```
 
-Open the decorator model (ex: `app/decorators/article_decorator.rb`)
+### Writing Methods
 
-Add your new formatting methods as normal instance or class methods. You have access to the Rails helpers from the following classes:
+Open the decorator model (ex: `app/decorators/article_decorator.rb`) and add normal instance methods. To access the wrapped source object, use the `model` method:
 
+```ruby
+class Article < Draper::Base
+  decorates :article
+  
+  def author_name
+    model.author.first_name + " " + model.author.last_name
+  end
+end
 ```
-ActionView::Helpers::TagHelper
-ActionView::Helpers::UrlHelper
-ActionView::Helpers::TextHelper
+
+
+### Using Existing Helpers
+
+You probably want to make use of existing helpers from Rails and your application helpers. Use the `helpers` or `h` method proxy:
+
+```ruby
+class Article < Draper::Base
+  decorates :article
+  
+  def published_at
+    date = h.content_tag(:span, published_at.strftime("%A, %B %e").squeeze(" "), :class => 'date')
+    time = h.content_tag(:span, published_at.strftime("%l:%M%p"), :class => 'time').delete(" ")
+    h.content_tag :span, date + time, :class => 'created_at'
+  end
+end
 ```
 
-Use the new methods in your views like any other model method (ex: `@article.formatted_published_at`)
+### In the Controller
+
+When writing your controller actions, you have three options:
+
+* Call `.new` and pass in the object to be wrapped
+
+  ```ruby
+  ArticleDecorator.new(Article.find(params[:id]))`
+  ```
+
+* Call `.decorate` and pass in an object or collection of objects to be wrapped:
+  ```ruby
+  
+  ```
+  
+* Call `.find` to do automatically do a lookup on the `decorates` class:
+  ```ruby
+  
+  ```
+  
+### In Your Views
+
+Use the new methods in your views like any other model method (ex: `@article.published_at`):
+
+```erb
+<h1><%= @article.title %> <%= @article.published_at %></h1>
+```
 
 ## An Interface with Allows/Denies
 
@@ -149,7 +202,7 @@ Say I have a publishing system with `Article` resources. My designer decides tha
 
 Could we build that using a partial? Yes. A helper? Uh-huh. But the point of the decorator is to encapsulate logic just like we would a method in our models. Here's how to implement it.
 
-First, follow the steps above to add the dependency, update your bundle, then run the `rails generate decorator:setup` to prepare your app.
+First, follow the steps above to add the dependency and update your bundle.
 
 Since we're talking about the `Article` model we'll create an `ArticleDecorator` class. You could do it by hand, but use the provided generator:
 
@@ -161,20 +214,18 @@ Now open up the created `app/decorators/article_decorator.rb` and you'll find an
 
 ```ruby
 def formatted_published_at
-  date = content_tag(:span, published_at.strftime("%A, %B %e").squeeze(" "), :class => 'date')
-  time = content_tag(:span, published_at.strftime("%l:%M%p").delete(" "), :class => 'time')
-  content_tag :span, date + time, :class => 'published_at'
+  date = h.content_tag(:span, published_at.strftime("%A, %B %e").squeeze(" "), :class => 'date')
+  time = h.content_tag(:span, published_at.strftime("%l:%M%p").delete(" "), :class => 'time')
+  h.content_tag :span, date + time, :class => 'published_at'
 end
 ```
-
-*ASIDE*: Unfortunately, due to the current implementation of `content_tag`, you can't use the style of sending the content is as a block or you'll get an error about `undefined method 'output_buffer='`. Passing in the content as the second argument, as above, works fine.
 
 Then you need to perform the wrapping in your controller. Here's the simplest method:
 
 ```ruby
 class ArticlesController < ApplicationController
   def show
-    @article = ArticleDecorator.new( Article.find params[:id] )
+    @article = ArticleDecorator.find params[:id]
   end
 end
 ```
@@ -189,10 +240,12 @@ Ta-da! Object-oriented data formatting for your view layer. Below is the complet
 
 ```ruby
 class ArticleDecorator < Draper::Base
+  decorates :article
+  
   def formatted_published_at
-    date = content_tag(:span, published_at.strftime("%A, %B %e").squeeze(" "), :class => 'date')
-    time = content_tag(:span, published_at.strftime("%l:%M%p"), :class => 'time').delete(" ")
-    content_tag :span, date + time, :class => 'created_at'
+    date = h.content_tag(:span, published_at.strftime("%A, %B %e").squeeze(" "), :class => 'date')
+    time = h.content_tag(:span, published_at.strftime("%l:%M%p"), :class => 'time').delete(" ")
+    h.content_tag :span, date + time, :class => 'created_at'
   end
 end
 ```
@@ -200,10 +253,8 @@ end
 ## Issues / Pending
 
 * Test coverage for generators
-* Ability to decorate multiple objects at once, ex: `ArticleDecorator.decorate(Article.all)`
 * Revise readme to better explain interface pattern
 * Build sample Rails application
-* Consider: `ArticleDecorator.new(1)` does the equivalent of `ArticleDecorator.new(Article.find(1))`
 
 ## License
 
