@@ -1,6 +1,6 @@
-# Draper
+# Draper: View Models for Rails
 
-This gem makes it easy to apply the decorator pattern to the models in a Rails application. This gives you three wins:
+This gem makes it easy to apply the decorator pattern to the data models in a Rails application. This gives you three wins:
 
 1. Replace most helpers with an object-oriented approach
 2. Filter data at the presentation level
@@ -10,7 +10,7 @@ This gem makes it easy to apply the decorator pattern to the models in a Rails a
 
 ### 1. Object Oriented Helpers
 
-Why hate helpers? In Ruby/Rails we approach everything from an Object-Oriented perspective, then with helpers we get procedural.The job of a helper is to take in data and output a presentation-ready string. We can do that job in an OO style with a decorator.
+Why hate helpers? In Ruby/Rails we approach everything from an Object-Oriented perspective, then with helpers we get procedural.The job of a helper is to take in data and output a presentation-ready string. We can do that with a decorator.
 
 A decorator wraps an object with presentation-related accessor methods. For instance, if you had an `Article` object, then the decorator could override `.published_at` to use formatted output like this:
 
@@ -18,8 +18,8 @@ A decorator wraps an object with presentation-related accessor methods. For inst
 class ArticleDecorator < Draper::Base
   decorates :article
   def published_at
-    date = h.content_tag(:span, published_at.strftime("%A, %B %e").squeeze(" "), :class => 'date')
-    time = h.content_tag(:span, published_at.strftime("%l:%M%p"), :class => 'time').delete(" ")
+    date = h.content_tag(:span, model.published_at.strftime("%A, %B %e").squeeze(" "), :class => 'date')
+    time = h.content_tag(:span, model.published_at.strftime("%l:%M%p"), :class => 'time').delete(" ")
     h.content_tag :span, date + time, :class => 'created_at'
   end
 end
@@ -27,7 +27,7 @@ end
 
 ### 2. View-Layer Data Filtering
 
-Have you ever written a `to_xml` or `to_json` method in your model? Did it feel weird to put what is essentially view logic in your model?
+Have you ever written a `to_xml` or `to_json` method in your model? Did it feel weird to put presentation logic in your model?
 
 Or, in the course of formatting this data, did you wish you could access `current_user` down in the model? Maybe for guests your `to_json` is only going to show three attributes, but if the user is an admin they get to see them all.
 
@@ -37,12 +37,13 @@ When you use a decorator you have the power of a Ruby object but it's a part of 
 
 ```ruby
 class ArticleDecorator < Draper::Base
+  decorates :article
   ADMIN_VISIBLE_ATTRIBUTES = [:title, :body, :author, :status]
   PUBLIC_VISIBLE_ATTRIBUTES = [:title, :body]
 
   def to_xml
     attr_set = h.current_user.admin? ? ADMIN_VISIBLE_ATTRIBUTES : PUBLIC_VISIBLE_ATTRIBUTES
-    self.subject.to_xml(:only => attr_set)
+    self.model.to_xml(:only => attr_set)
   end
 end
 ```
@@ -57,6 +58,7 @@ The `denies` method takes a blacklist approach. For instance:
 
 ```ruby
 class ArticleDecorator < Draper::Base
+  decorates :article
   denies :title
 end
 ```
@@ -70,7 +72,27 @@ ruby-1.9.2-p290 :002 > ad.title
 NoMethodError: undefined method `title' for #<ArticleDecorator:0x000001020d7728>
 ``` 
 
-## Usage
+#### Using `allows`
+
+A better approach is to define a whitelist using `allows`:
+
+```ruby
+class ArticleDecorator < Draper::Base
+  decorates :article
+  allows :title, :description
+end
+```
+
+```irb
+ruby-1.9.2-p290 :001 > ad = ArticleDecorator.find(1)
+ => #<ArticleDecorator:0x000001020d7728 @model=#<Article id: 1, title: "Hello, World">> 
+ruby-1.9.2-p290 :002 > ad.title
+ => "Hello, World"
+ruby-1.9.2-p290 :003 > ad.created_at
+NoMethodError: undefined method `created_at' for #<ArticleDecorator:0x000001020d7728>
+```
+
+## Up an Running
 
 ### Setup
 
@@ -111,15 +133,15 @@ end
 
 ### Using Existing Helpers
 
-You probably want to make use of existing helpers from Rails and your application helpers. Use the `helpers` or `h` method proxy:
+You probably want to make use of Rails helpers and those defined in your application. Use the `helpers` or `h` method proxy:
 
 ```ruby
 class Article < Draper::Base
   decorates :article
   
   def published_at
-    date = h.content_tag(:span, published_at.strftime("%A, %B %e").squeeze(" "), :class => 'date')
-    time = h.content_tag(:span, published_at.strftime("%l:%M%p"), :class => 'time').delete(" ")
+    date = h.content_tag(:span, model.published_at.strftime("%A, %B %e").squeeze(" "), :class => 'date')
+    time = h.content_tag(:span, model.published_at.strftime("%l:%M%p"), :class => 'time').delete(" ")
     h.content_tag :span, date + time, :class => 'created_at'
   end
 end
@@ -137,12 +159,13 @@ When writing your controller actions, you have three options:
 
 * Call `.decorate` and pass in an object or collection of objects to be wrapped:
   ```ruby
-  
+  ArticleDecorator.decorate(Article.first) # Returns one instance of ArticleDecorator
+  ArticleDecorator.decorate(Article.all)   # Returns an array of ArticleDecorator instances
   ```
   
 * Call `.find` to do automatically do a lookup on the `decorates` class:
   ```ruby
-  
+  ArticleDecorator.find(1)
   ```
   
 ### In Your Views
@@ -152,32 +175,6 @@ Use the new methods in your views like any other model method (ex: `@article.pub
 ```erb
 <h1><%= @article.title %> <%= @article.published_at %></h1>
 ```
-
-## An Interface with Allows/Denies
-
-A proper interface defines a contract between two objects. One purpose of the decorator pattern is to define an interface between your data model and the view template.
-
-You are provided class methods `allows` and `denies` to control exactly which of the subject's methods are available. By default, *all* of the subject's methods can be accessed.
-
-For example, say you want to prevent access to the `:title` method. You'd use `denies` like this:
-
-```ruby
-  class ArticleDecorator < Draper::Base
-    denies :title
-  end
-```
-
-`denies` uses a blacklist approach. Note that, as of the current version, denying `:title` does not affect related methods like `:title=`, `:title?`, etc.
-
-A better idea is a whitelist approach using `allows`:
-
-```ruby
-  class ArticleDecorator < Draper::Base
-    allows :title, :body, :author
-  end
-```
-
-Now only those methods and any defined in the decorator class itself can be accessed directly.
 
 ## Possible Decoration Methods
 
@@ -213,9 +210,9 @@ rails generate draper:model Article
 Now open up the created `app/decorators/article_decorator.rb` and you'll find an `ArticleDecorator` class. Add this method:
 
 ```ruby
-def formatted_published_at
-  date = h.content_tag(:span, published_at.strftime("%A, %B %e").squeeze(" "), :class => 'date')
-  time = h.content_tag(:span, published_at.strftime("%l:%M%p").delete(" "), :class => 'time')
+def published_at
+  date = h.content_tag(:span, model.published_at.strftime("%A, %B %e").squeeze(" "), :class => 'date')
+  time = h.content_tag(:span, model.published_at.strftime("%l:%M%p").delete(" "), :class => 'time')
   h.content_tag :span, date + time, :class => 'published_at'
 end
 ```
@@ -233,7 +230,7 @@ end
 Then within your views you can utilize both the normal data methods and your new presentation methods:
 
 ```ruby
-<%= @article.formatted_published_at %>
+<%= @article.published_at %>
 ```
 
 Ta-da! Object-oriented data formatting for your view layer. Below is the complete decorator with extra comments removed:
@@ -242,7 +239,7 @@ Ta-da! Object-oriented data formatting for your view layer. Below is the complet
 class ArticleDecorator < Draper::Base
   decorates :article
   
-  def formatted_published_at
+  def published_at
     date = h.content_tag(:span, published_at.strftime("%A, %B %e").squeeze(" "), :class => 'date')
     time = h.content_tag(:span, published_at.strftime("%l:%M%p"), :class => 'time').delete(" ")
     h.content_tag :span, date + time, :class => 'created_at'
@@ -253,7 +250,7 @@ end
 ## Issues / Pending
 
 * Test coverage for generators
-* Revise readme to better explain interface pattern
+* Keep revising Readme for better organization/clarity
 * Build sample Rails application
 
 ## License
