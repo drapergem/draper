@@ -1,12 +1,26 @@
 # Draper: View Models for Rails
 
+## Quick Start
+
+1. Add `gem 'draper'` to your `Gemfile` and `bundle`
+2. Run `rails g draper:model YourModel`
+3. Edit `app/decorators/your_model_decorator.rb` using:
+  1. `h` to proxy to Rails/application helpers like `h.current_user`
+  2. `model` to access the wrapped object
+4. Wrap models in your controller with the decorator using:
+  1. `.find` lookup: `ArticleDecorator.find(1)`
+  2. `.decorate` method: `ArticleDecorator.decorate(Article.all)`
+  3. `.new` method: `ArticleDecorator.new(Article.first)`
+5. Call and output the methods in your view templates as normal
+
+## Goals
+
 This gem makes it easy to apply the decorator pattern to the data models in a Rails application. This gives you three wins:
 
 1. Replace most helpers with an object-oriented approach
 2. Filter data at the presentation level
 3. Enforce an interface between your controllers and view templates.
 
-## Goals
 
 ### 1. Object Oriented Helpers
 
@@ -43,7 +57,7 @@ class ArticleDecorator < Draper::Base
 
   def to_xml
     attr_set = h.current_user.admin? ? ADMIN_VISIBLE_ATTRIBUTES : PUBLIC_VISIBLE_ATTRIBUTES
-    self.model.to_xml(:only => attr_set)
+    model.to_xml(:only => attr_set)
   end
 end
 ```
