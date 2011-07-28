@@ -254,9 +254,9 @@ class ArticleDecorator < Draper::Base
   decorates :article
   
   def published_at
-    date = h.content_tag(:span, published_at.strftime("%A, %B %e").squeeze(" "), :class => 'date')
-    time = h.content_tag(:span, published_at.strftime("%l:%M%p"), :class => 'time').delete(" ")
-    h.content_tag :span, date + time, :class => 'created_at'
+    date = h.content_tag(:span, model.published_at.strftime("%A, %B %e").squeeze(" "), :class => 'date')
+    time = h.content_tag(:span, model.published_at.strftime("%l:%M%p"), :class => 'time').delete(" ")
+    h.content_tag :span, date + time, :class => 'published_at'
   end
 end
 ```
