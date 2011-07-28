@@ -106,7 +106,7 @@ ruby-1.9.2-p290 :003 > ad.created_at
 NoMethodError: undefined method `created_at' for #<ArticleDecorator:0x000001020d7728>
 ```
 
-## Up an Running
+## Up and Running
 
 ### Setup
 
@@ -135,7 +135,7 @@ rails generate draper:model Article
 Open the decorator model (ex: `app/decorators/article_decorator.rb`) and add normal instance methods. To access the wrapped source object, use the `model` method:
 
 ```ruby
-class Article < Draper::Base
+class ArticleDecorator < Draper::Base
   decorates :article
   
   def author_name
@@ -144,13 +144,12 @@ class Article < Draper::Base
 end
 ```
 
-
 ### Using Existing Helpers
 
 You probably want to make use of Rails helpers and those defined in your application. Use the `helpers` or `h` method proxy:
 
 ```ruby
-class Article < Draper::Base
+class ArticleDecorator < Draper::Base
   decorates :article
   
   def published_at
