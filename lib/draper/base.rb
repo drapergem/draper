@@ -43,9 +43,13 @@ module Draper
       @helpers ||= ApplicationController::all_helpers
     end
     alias :h :helpers
+
+    def self.lazy_helpers
+      self.send(:include, Draper::LazyHelpers)
+    end
     
     def self.model_name
-      ActiveModel::Name.new(source_class)
+      ActiveModel::Name.new(model_class)
     end
     
     def to_model

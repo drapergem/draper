@@ -1,5 +1,6 @@
 require 'rubygems'
 require 'bundler'
+require 'cover_me'
 require './spec/samples/application_helper.rb'
 Bundler.require
 Dir.glob('./spec/samples/*') {|file| require file}
