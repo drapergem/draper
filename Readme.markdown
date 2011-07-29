@@ -122,19 +122,17 @@ Run bundle:
 bundle
 ```
 
-#### Optional
+#### Disable Rails Helper Generation (Optional) 
 
-Turn off helper creation in your `config/application.rb`
+When you generate a scaffold, Rails will create a matching helper file. If you're using decorators, this is probably unnecessary. You can disable the helper file creation by adding this to your `config/application.rb`
 
-```
+```ruby
 config.generators do |g|
   g.helper false
 end
 ```
 
-This turns off the helper call backs in generators that normally
-crate helpers (e.g. scaffold and controller) You will still be able to
-call `rails generate helper` directly.
+If you want a helper, you can still call `rails generate helper` directly.
 
 ### Generate the Decorator
 
@@ -276,9 +274,18 @@ end
 
 ## Issues / Pending
 
-* Test coverage for generators
-* Keep revising Readme for better organization/clarity
-* Build sample Rails application
+* Documentation
+  * Keep revising Readme for better organization/clarity
+  * Make clear the pattern of overriding accessor methods of the wrapped model  
+  * Build sample Rails application
+  * Document the `lazy_helpers` feature
+* Generators
+  * Test coverage for generators (help!)
+  * Implement hook so generating a controller/scaffold generates a decorator  
+  * Change generator to create an `ApplicationDecorator`, then inherit from that
+* Other
+  * Implement a HATEOAS helper, maybe as a separate gem
+  * Build a fly website like http://fabricationgem.com
 
 ## License
 
