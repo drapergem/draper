@@ -122,6 +122,20 @@ Run bundle:
 bundle
 ```
 
+#### Optional
+
+Turn off helper creation in your `config/application.rb`
+
+```
+config.generators do |g|
+  g.helper false
+end
+```
+
+This turns off the helper call backs in generators that normally
+crate helpers (e.g. scaffold and controller) You will still be able to
+call `rails generate helper` directly.
+
 ### Generate the Decorator
 
 To decorate a model named `Article`:
