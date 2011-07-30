@@ -1,5 +1,6 @@
 module Draper
   module AllHelpers
+    # Most of the black magic here thanks to Xavier Shay (@xshay)
     # Provide access to helper methods from outside controllers and views,
     # such as in Presenter objects. Rails provides ActionController::Base.helpers,
     # but this does not include any of our application helpers.
