@@ -14,8 +14,8 @@ class ApplicationDecorator < Draper::Base
   #   Example: standardize the formatting of timestamps
   #
   #   def formatted_timestamp(time)
-  #     content_tag :span, time.strftime("%a %m/%d/%y"), 
-  #                 :class => 'timestamp' 
+  #     h.content_tag :span, time.strftime("%a %m/%d/%y"), 
+  #                   :class => 'timestamp' 
   #   end
   # 
   #   def created_at
