@@ -1,9 +1,9 @@
 module Draper
-  class Base      
+  class Base
     require 'active_support/core_ext/class/attribute'
     class_attribute :denied, :allowed, :model_class
     attr_accessor :model
-    
+
     DEFAULT_DENIED = Object.new.methods << :method_missing
     FORCED_PROXY = [:to_param]
     self.denied = DEFAULT_DENIED
@@ -11,24 +11,24 @@ module Draper
     def initialize(input)
       input.inspect
       self.class.model_class = input.class if model_class.nil?
-      @model = input      
+      @model = input
       build_methods
     end
-    
+
     def self.find(input)
       self.new(model_class.find(input))
     end
-    
+
     def self.decorates(input)
       self.model_class = input.to_s.classify.constantize
     end
-    
+
     def self.denies(*input_denied)
       raise ArgumentError, "Specify at least one method (as a symbol) to exclude when using denies" if input_denied.empty?
       raise ArgumentError, "Use either 'allows' or 'denies', but not both." if self.allowed?
       self.denied += input_denied
     end
-    
+
     def self.allows(*input_allows)
       raise ArgumentError, "Specify at least one method (as a symbol) to allow when using allows" if input_allows.empty?
       raise ArgumentError, "Use either 'allows' or 'denies', but not both." unless (self.denied == DEFAULT_DENIED)
@@ -38,7 +38,7 @@ module Draper
     def self.decorate(input)
       input.respond_to?(:each) ? input.map{|i| new(i)} : new(input)
     end
-    
+
     def helpers
       @helpers ||= ApplicationController::all_helpers
     end
@@ -47,16 +47,16 @@ module Draper
     def self.lazy_helpers
       self.send(:include, Draper::LazyHelpers)
     end
-    
+
     def self.model_name
       ActiveModel::Name.new(model_class)
     end
-    
+
     def to_model
       @model
     end
-            
-  private  
+
+  private
     def select_methods
       specified = self.allowed || (model.public_methods - denied)
       (specified - self.public_methods) + FORCED_PROXY
@@ -69,7 +69,7 @@ module Draper
             model.send method, *args, &block
           end
         end
-      end  
-    end    
+      end
+    end
   end
 end
