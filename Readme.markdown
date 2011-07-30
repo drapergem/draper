@@ -4,23 +4,27 @@
 
 1. Add `gem 'draper'` to your `Gemfile` and `bundle`
 2. Run `rails g draper:model YourModel`
-3. Edit `app/decorators/your_model_decorator.rb` using:
+3. Edit `app/decorators/[your_model]_decorator.rb` using:
   1. `h` to proxy to Rails/application helpers like `h.current_user`
   2. `model` to access the wrapped object like `model.created_at`
-4. Wrap models in your controller with the decorator using:
-  1. `.find` automatic lookup & wrap: `ArticleDecorator.find(1)`
-  2. `.decorate` method with single object or collection: `ArticleDecorator.decorate(Article.all)`
-  3. `.new` method with single object: `ArticleDecorator.new(Article.first)`
-5. Call and output the methods in your view templates as normal
+4. Put common decorations in `app/decorators/application.rb`  
+5. Wrap models in your controller with the decorator using:
+  1. `.find` automatic lookup & wrap
+    ex: `ArticleDecorator.find(1)`
+  2. `.decorate` method with single object or collection, 
+    ex: `ArticleDecorator.decorate(Article.all)`
+  3. `.new` method with single object
+    ex: `ArticleDecorator.new(Article.first)`
+6. Output the instance methods in your view templates
+  ex: `@article_decorator.created_at`
 
 ## Goals
 
-This gem makes it easy to apply the decorator pattern to the data models in a Rails application. This gives you three wins:
+This gem makes it easy to apply the decorator pattern to domain models in a Rails application. This pattern gives you three wins:
 
 1. Replace most helpers with an object-oriented approach
 2. Filter data at the presentation level
 3. Enforce an interface between your controllers and view templates.
-
 
 ### 1. Object Oriented Helpers
 
@@ -29,7 +33,7 @@ Why hate helpers? In Ruby/Rails we approach everything from an Object-Oriented p
 A decorator wraps an object with presentation-related accessor methods. For instance, if you had an `Article` object, then the decorator could override `.published_at` to use formatted output like this:
 
 ```ruby
-class ArticleDecorator < Draper::Base
+class ArticleDecorator < ApplicationDecorator
   decorates :article
   def published_at
     date = h.content_tag(:span, model.published_at.strftime("%A, %B %e").squeeze(" "), :class => 'date')
@@ -50,7 +54,7 @@ How would you handle this in the model layer? You'd probably pass the `current_u
 When you use a decorator you have the power of a Ruby object but it's a part of the view layer. This is where your `to_xml` belongs. You can access your `current_user` helper method using the `h` proxy available in the decorator:
 
 ```ruby
-class ArticleDecorator < Draper::Base
+class ArticleDecorator < ApplicationDecorator
   decorates :article
   ADMIN_VISIBLE_ATTRIBUTES = [:title, :body, :author, :status]
   PUBLIC_VISIBLE_ATTRIBUTES = [:title, :body]
@@ -71,7 +75,7 @@ Want to strictly control what methods are proxied to the original object? Use `d
 The `denies` method takes a blacklist approach. For instance:
 
 ```ruby
-class ArticleDecorator < Draper::Base
+class ArticleDecorator < ApplicationDecorator
   decorates :article
   denies :title
 end
@@ -91,7 +95,7 @@ NoMethodError: undefined method `title' for #<ArticleDecorator:0x000001020d7728>
 A better approach is to define a whitelist using `allows`:
 
 ```ruby
-class ArticleDecorator < Draper::Base
+class ArticleDecorator < ApplicationDecorator
   decorates :article
   allows :title, :description
 end
@@ -147,7 +151,7 @@ rails generate draper:model Article
 Open the decorator model (ex: `app/decorators/article_decorator.rb`) and add normal instance methods. To access the wrapped source object, use the `model` method:
 
 ```ruby
-class ArticleDecorator < Draper::Base
+class ArticleDecorator < ApplicationDecorator
   decorates :article
   
   def author_name
@@ -161,13 +165,30 @@ end
 You probably want to make use of Rails helpers and those defined in your application. Use the `helpers` or `h` method proxy:
 
 ```ruby
-class ArticleDecorator < Draper::Base
+class ArticleDecorator < ApplicationDecorator
   decorates :article
   
   def published_at
     date = h.content_tag(:span, model.published_at.strftime("%A, %B %e").squeeze(" "), :class => 'date')
     time = h.content_tag(:span, model.published_at.strftime("%l:%M%p"), :class => 'time').delete(" ")
     h.content_tag :span, date + time, :class => 'created_at'
+  end
+end
+```
+
+#### Lazy Helpers
+
+Hate seeing that `h.` proxy all over? Willing to mix a bazillion methods into your decorator? Then try lazy helpers:
+
+```ruby
+class ArticleDecorator < ApplicationDecorator
+  decorates :article
+  include Draper::LazyHelpers
+  
+  def published_at
+    date = content_tag(:span, model.published_at.strftime("%A, %B %e").squeeze(" "), :class => 'date')
+    time = content_tag(:span, model.published_at.strftime("%l:%M%p"), :class => 'time').delete(" ")
+    content_tag :span, date + time, :class => 'created_at'
   end
 end
 ```
@@ -261,7 +282,7 @@ Then within your views you can utilize both the normal data methods and your new
 Ta-da! Object-oriented data formatting for your view layer. Below is the complete decorator with extra comments removed:
 
 ```ruby
-class ArticleDecorator < Draper::Base
+class ArticleDecorator < ApplicationDecorator
   decorates :article
   
   def published_at
@@ -278,11 +299,9 @@ end
   * Keep revising Readme for better organization/clarity
   * Make clear the pattern of overriding accessor methods of the wrapped model  
   * Build sample Rails application
-  * Document the `lazy_helpers` feature
 * Generators
   * Test coverage for generators (help!)
   * Implement hook so generating a controller/scaffold generates a decorator  
-  * Change generator to create an `ApplicationDecorator`, then inherit from that
 * Other
   * Implement a HATEOAS helper, maybe as a separate gem
   * Build a fly website like http://fabricationgem.com
