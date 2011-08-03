@@ -298,10 +298,18 @@ end
 * Documentation
   * Keep revising Readme for better organization/clarity
   * Make clear the pattern of overriding accessor methods of the wrapped model  
-  * Build sample Rails application
+  * Build sample Rails application(s)
+  * Add a short screencast
+  * Add YARD documentation to source
+  * Add a section about contributing
 * Generators
   * Test coverage for generators (help!)
   * Implement hook so generating a controller/scaffold generates a decorator  
+  * Refactor the current generator from `draper:model` to `draper:decorator`
+  * Add generators for...
+    * `draper:model`: Model + Decorator
+    * `draper:controller`: Controller setup with decoration calls
+    * `draper:scaffold`: Controller, Model, Decorator, Views, Tests
 * Other
   * Implement a HATEOAS helper, maybe as a separate gem
   * Build a fly website like http://fabricationgem.com
