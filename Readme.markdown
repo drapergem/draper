@@ -293,6 +293,15 @@ class ArticleDecorator < ApplicationDecorator
 end
 ```
 
+## Development / Contributions
+
+_Pretty this up please; pretty please._
+
+Draper requires Ruby 1.9.2. A `.rvmrc` file exists for those that use RVM; it will also create a separate `draper` gemset to help
+isolate gems needed for Draper development.
+
+Fork, create a topic branch, add a test, fix a bug, add a feature, push to your fork, and submit a pull request.
+
 ## Issues / Pending
 
 * Documentation
