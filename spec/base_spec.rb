@@ -75,17 +75,22 @@ describe Draper::Base do
   end
 
   context ".decorate" do
-    it "should return a collection of wrapped objects when given a collection of source objects" do
-      sources = [Product.new, Product.new]
-      output = Draper::Base.decorate(sources)
-      output.should respond_to(:each)
-      output.size.should == sources.size
-      output.each{ |decorated| decorated.should be_instance_of(Draper::Base) }
+    subject { Draper::Base.decorate(source) }
+
+    context "when given a collection of source objects" do
+      let(:source) { [Product.new, Product.new] }
+
+      its(:size) { should == source.size }
+
+      it "returns a collection of wrapped objects" do
+        subject.each{ |decorated| decorated.should be_instance_of(Draper::Base) }
+      end
     end
 
-    it "should return a single wrapped object when given a single source object" do
-      output = Draper::Base.decorate(source)
-      output.should be_instance_of(Draper::Base)
+    context "when given a single source object" do
+      let(:source) { Product.new }
+
+      it { should be_instance_of(Draper::Base) }
     end
   end
 
