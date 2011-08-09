@@ -2,16 +2,17 @@ module Draper
   class Base
     require 'active_support/core_ext/class/attribute'
     class_attribute :denied, :allowed, :model_class
-    attr_accessor :model
+    attr_accessor :context, :model
 
     DEFAULT_DENIED = Object.new.methods << :method_missing
     FORCED_PROXY = [:to_param]
     self.denied = DEFAULT_DENIED
 
-    def initialize(input)
+    def initialize(input, context = nil)
       input.inspect
       self.class.model_class = input.class if model_class.nil?
       @model = input
+      self.context = context
       build_methods
     end
 
@@ -35,8 +36,8 @@ module Draper
       self.allowed = input_allows
     end
 
-    def self.decorate(input)
-      input.respond_to?(:each) ? input.map{|i| new(i)} : new(input)
+    def self.decorate(input, context = nil)
+      input.respond_to?(:each) ? input.map{|i| new(i, context)} : new(input, context)
     end
 
     def helpers

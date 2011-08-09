@@ -75,22 +75,44 @@ describe Draper::Base do
   end
 
   context ".decorate" do
-    subject { Draper::Base.decorate(source) }
+    context "without any context" do
+      subject { Draper::Base.decorate(source) }
 
-    context "when given a collection of source objects" do
-      let(:source) { [Product.new, Product.new] }
+      context "when given a collection of source objects" do
+        let(:source) { [Product.new, Product.new] }
 
-      its(:size) { should == source.size }
+        its(:size) { should == source.size }
 
-      it "returns a collection of wrapped objects" do
-        subject.each{ |decorated| decorated.should be_instance_of(Draper::Base) }
+        it "returns a collection of wrapped objects" do
+          subject.each{ |decorated| decorated.should be_instance_of(Draper::Base) }
+        end
+      end
+
+      context "when given a single source object" do
+        let(:source) { Product.new }
+
+        it { should be_instance_of(Draper::Base) }
       end
     end
 
-    context "when given a single source object" do
-      let(:source) { Product.new }
+    context "with a context" do
+      let(:context) {{ :some => 'data' }}
 
-      it { should be_instance_of(Draper::Base) }
+      subject { Draper::Base.decorate(source, context) }
+
+      context "when given a collection of source objects" do
+        let(:source) { [Product.new, Product.new] }
+
+        it "returns a collection of wrapped objects with the context" do
+          subject.each{ |decorated| decorated.context.should eq(context) }
+        end
+      end
+
+      context "when given a single source object" do
+        let(:source) { Product.new }
+
+        its(:context) { should eq(context) }
+      end
     end
   end
 
