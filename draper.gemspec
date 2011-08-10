@@ -22,9 +22,15 @@ Gem::Specification.new do |s|
   s.add_development_dependency "rspec", "~> 2.0.1"
   s.add_development_dependency "activesupport", "~> 3.0.9"
   s.add_development_dependency "actionpack", "~> 3.0.9"
-  s.add_development_dependency "ruby-debug19"
   s.add_development_dependency "guard"
   s.add_development_dependency "guard-rspec"
   s.add_development_dependency "rb-fsevent"
-  s.add_development_dependency 'cover_me', '>= 1.0.0.rc6'
+  if RUBY_VERSION.to_f == "1.8"
+    s.add_development_dependency "ruby-debug"
+    s.add_development_dependency "rcov"
+    s.add_development_dependency "launchy"
+  else
+    s.add_development_dependency "ruby-debug19"
+    s.add_development_dependency 'cover_me', '>= 1.0.0.rc6'
+  end
 end
