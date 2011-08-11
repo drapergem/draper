@@ -56,6 +56,12 @@ describe Draper::Base do
     end
   end  
 
+  context 'the decorated model' do
+    it 'receives the mixin' do
+      source.class.ancestors.include?(Draper::ModelSupport)
+    end
+  end
+
   it "should wrap source methods so they still accept blocks" do
     subject.block{"marker"}.should == "marker"
   end

@@ -21,6 +21,7 @@ module Draper
     
     def self.decorates(input)
       self.model_class = input.to_s.classify.constantize
+      model_class.send :include, Draper::ModelSupport
     end
     
     def self.denies(*input_denied)
