@@ -1,7 +1,7 @@
 Description:
-    The draper:model generator creates a decorator model in /app/decorators.
+    The draper:decorator generator creates a decorator model in /app/decorators.
 
 Examples:
-    rails generate draper:model Article
+    rails generate draper:decorator Article
 
         file: app/decorators/article_decorator.rb
