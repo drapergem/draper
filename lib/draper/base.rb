@@ -60,8 +60,8 @@ module Draper
 
   private
     def select_methods
-      specified = self.allowed || (model.public_methods - denied)
-      (specified - self.public_methods) + FORCED_PROXY
+      specified = self.allowed || (model.public_methods.map{|s| s.to_sym} - denied.map{|s| s.to_sym})
+      (specified - self.public_methods.map{|s| s.to_sym}) + FORCED_PROXY
     end
 
     def build_methods
