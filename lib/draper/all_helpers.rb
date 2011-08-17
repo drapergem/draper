@@ -31,7 +31,7 @@ module Draper
           def url_for(*args)
             if args.last.is_a?(Hash) && !args.last[:only_path]
               args = args.dup
-              args << args.pop.merge(host: ActionMailer::Base.default_url_options[:host])
+              args << args.pop.merge('host' => ActionMailer::Base.default_url_options[:host])
             end
             super(*args)
           end
