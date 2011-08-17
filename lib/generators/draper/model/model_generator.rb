@@ -1,5 +1,5 @@
 module Draper
-  class DecoratorGenerator < Rails::Generators::NamedBase
+  class ModelGenerator < Rails::Generators::NamedBase
     source_root File.expand_path('../templates', __FILE__)
 
     DECORATORS_ROOT = 'app/decorators/'
@@ -11,7 +11,7 @@ module Draper
       unless File.exists?(APPLICATION_DECORATOR_PATH)
         template APPLICATION_DECORATOR, APPLICATION_DECORATOR_PATH
       end
-      template 'decorator.rb', "#{DECORATORS_ROOT}#{singular_name}_decorator.rb"
+      template 'model.rb', "#{DECORATORS_ROOT}#{singular_name}_decorator.rb"
     end
   end
 end
