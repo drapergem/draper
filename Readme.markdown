@@ -3,7 +3,7 @@
 ## Quick Start
 
 1. Add `gem 'draper'` to your `Gemfile` and `bundle`
-2. Run `rails g draper:model YourModel`
+2. Run `rails g draper:decorator YourModel`
 3. Edit `app/decorators/[your_model]_decorator.rb` using:
   1. `h` to proxy to Rails/application helpers like `h.current_user`
   2. `model` to access the wrapped object like `model.created_at`
@@ -143,7 +143,7 @@ If you want a helper, you can still call `rails generate helper` directly.
 To decorate a model named `Article`:
 
 ```
-rails generate draper:model Article
+rails generate draper:decorator Article
 ```
 
 ### Writing Methods
@@ -183,7 +183,7 @@ Hate seeing that `h.` proxy all over? Willing to mix a bazillion methods into yo
 ```ruby
 class ArticleDecorator < ApplicationDecorator
   decorates :article
-  include Draper::LazyHelpers
+  lazy_helpers
   
   def published_at
     date = content_tag(:span, model.published_at.strftime("%A, %B %e").squeeze(" "), :class => 'date')
@@ -250,7 +250,7 @@ First, follow the steps above to add the dependency and update your bundle.
 Since we're talking about the `Article` model we'll create an `ArticleDecorator` class. You could do it by hand, but use the provided generator:
 
 ```
-rails generate draper:model Article
+rails generate draper:decorator Article
 ```
 
 Now open up the created `app/decorators/article_decorator.rb` and you'll find an `ArticleDecorator` class. Add this method:
@@ -297,6 +297,8 @@ end
 
 * Documentation
   * Keep revising Readme for better organization/clarity
+  * Add more information about using "context"
+  * Add information about the `.decorator` method
   * Make clear the pattern of overriding accessor methods of the wrapped model  
   * Build sample Rails application(s)
   * Add a short screencast
@@ -305,7 +307,6 @@ end
 * Generators
   * Test coverage for generators (help!)
   * Implement hook so generating a controller/scaffold generates a decorator  
-  * Refactor the current generator from `draper:model` to `draper:decorator`
   * Add generators for...
     * `draper:model`: Model + Decorator
     * `draper:controller`: Controller setup with decoration calls

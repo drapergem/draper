@@ -6,7 +6,7 @@ class ApplicationDecorator < Draper::Base
   #        and probably sacrifice performance/memory
   #  
   #   Enable them by uncommenting this line:
-  #   include Draper::LazyHelpers
+  #   lazy_helpers
 
   # Shared Decorations
   #   Consider defining shared methods common to all your models.
