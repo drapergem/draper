@@ -4,23 +4,6 @@ require 'draper'
 describe Draper::Base do
   subject{ Draper::Base.new(source) }
   let(:source){ Product.new }
-  
-  context("classify_vs_camelize") do
-    it "should create 'Busines' when using classify" do
-      :business.to_s.classify.should == 'Busines'
-    end
-    
-    it "should create 'Business' when using camelize" do
-      :business.to_s.camelize.should == 'Business'
-    end
-    
-    it "should fail for 'decorates :business'" do
-      class Business; end
-      lambda do
-        Draper::Base.decorates(:business)
-      end.should_not raise_error
-    end
-  end
 
   context(".lazy_helpers") do
     it "makes Rails helpers available without using the h. proxy" do
@@ -37,7 +20,17 @@ describe Draper::Base do
 
   context(".decorates") do
     it "sets the model class for the decorator" do
-      ProductDecorator.new(source).model_class == Product
+      ProductDecorator.new(source).model_class.should == Product
+    end
+    
+    it "should handle plural-like words properly'" do
+      class Business; end
+      expect do
+        class BusinessDecorator < Draper::Base
+          decorates:business
+        end
+        BusinessDecorator.model_class.should == Business
+      end.should_not raise_error
     end
   end
 
