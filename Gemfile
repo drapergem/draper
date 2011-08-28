@@ -1,6 +1,6 @@
 source :rubygems
 
-gem 'rake', '0.8.7'
+gem 'rake'
 gem 'rspec', '~> 2.0.1'
 gem 'activesupport', '~> 3.0.10'
 gem 'actionpack', "~> 3.0.10", :require => 'action_view'
