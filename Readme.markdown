@@ -51,7 +51,7 @@ Or, in the course of formatting this data, did you wish you could access `curren
 
 How would you handle this in the model layer? You'd probably pass the `current_user` or some role/flag down to `to_json`. That should still feel slimy.
 
-When you use a decorator you have the power of a Ruby object but it's a part of the view layer. This is where your `to_xml` belongs. You can access your `current_user` helper method using the `h` proxy available in the decorator:
+When you use a decorator you have the power of a Ruby object but it's a part of the view layer. This is where your `to_json` belongs. You can access your `current_user` helper method using the `h` proxy available in the decorator:
 
 ```ruby
 class ArticleDecorator < ApplicationDecorator
@@ -59,9 +59,9 @@ class ArticleDecorator < ApplicationDecorator
   ADMIN_VISIBLE_ATTRIBUTES = [:title, :body, :author, :status]
   PUBLIC_VISIBLE_ATTRIBUTES = [:title, :body]
 
-  def to_xml
+  def to_json
     attr_set = h.current_user.admin? ? ADMIN_VISIBLE_ATTRIBUTES : PUBLIC_VISIBLE_ATTRIBUTES
-    model.to_xml(:only => attr_set)
+    model.to_json(:only => attr_set)
   end
 end
 ```
@@ -84,9 +84,9 @@ end
 Then, to test it:
 
 ```irb
-ruby-1.9.2-p290 :001 > ad = ArticleDecorator.find(1)
+ > ad = ArticleDecorator.find(1)
  => #<ArticleDecorator:0x000001020d7728 @model=#<Article id: 1, title: "Hello, World">> 
-ruby-1.9.2-p290 :002 > ad.title
+ > ad.title
 NoMethodError: undefined method `title' for #<ArticleDecorator:0x000001020d7728>
 ``` 
 
@@ -102,11 +102,11 @@ end
 ```
 
 ```irb
-ruby-1.9.2-p290 :001 > ad = ArticleDecorator.find(1)
+ > ad = ArticleDecorator.find(1)
  => #<ArticleDecorator:0x000001020d7728 @model=#<Article id: 1, title: "Hello, World">> 
-ruby-1.9.2-p290 :002 > ad.title
+ > ad.title
  => "Hello, World"
-ruby-1.9.2-p290 :003 > ad.created_at
+ > ad.created_at
 NoMethodError: undefined method `created_at' for #<ArticleDecorator:0x000001020d7728>
 ```
 
@@ -296,7 +296,6 @@ end
 ## Issues / Pending
 
 * Documentation
-  * Keep revising Readme for better organization/clarity
   * Add more information about using "context"
   * Add information about the `.decorator` method
   * Make clear the pattern of overriding accessor methods of the wrapped model  
