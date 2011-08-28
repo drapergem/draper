@@ -27,6 +27,12 @@ module Draper
         end
 
         proxy.instance_eval do
+          def controller
+            #Object.controller
+          end
+        end
+
+        proxy.instance_eval do
           # A hack since this proxy doesn't pick up default_url_options from anywhere
           def url_for(*args)
             if args.last.is_a?(Hash) && !args.last[:only_path]
