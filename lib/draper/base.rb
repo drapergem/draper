@@ -21,7 +21,7 @@ module Draper
     end
 
     def self.decorates(input)
-      self.model_class = input.to_s.classify.constantize
+      self.model_class = input.to_s.camelize.constantize
       model_class.send :include, Draper::ModelSupport
     end
 
