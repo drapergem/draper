@@ -9,7 +9,6 @@ module Draper
     self.denied = DEFAULT_DENIED
 
     def initialize(input, context = nil)
-      input.inspect
       self.class.model_class = input.class if model_class.nil?
       @model = input
       self.context = context
