@@ -1,0 +1,1222 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>
+  Class: Draper::Base
+  
+    &mdash; Documentation by YARD 0.7.2
+  
+</title>
+
+  <link rel="stylesheet" href="../css/style.css" type="text/css" media="screen" charset="utf-8" />
+
+  <link rel="stylesheet" href="../css/common.css" type="text/css" media="screen" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  relpath = '..';
+  if (relpath != '') relpath += '/';
+</script>
+
+  <script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
+
+  </head>
+  <body>
+    <script type="text/javascript" charset="utf-8">
+      if (window.top.frames.main) document.body.className = 'frames';
+    </script>
+    
+    <div id="header">
+      <div id="menu">
+  
+    <a href="../_index.html">Index (B)</a> &raquo; 
+    <span class='title'><span class='object_link'><a href="../Draper.html" title="Draper (module)">Draper</a></span></span>
+     &raquo; 
+    <span class="title">Base</span>
+  
+  
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  
+    <a id="class_list_link" href="#">Class List</a>
+  
+    <a id="method_list_link" href="#">Method List</a>
+  
+    <a id="file_list_link" href="#">File List</a>
+  
+</div>
+      <div class="clear"></div>
+    </div>
+    
+    <iframe id="search_frame"></iframe>
+    
+    <div id="content"><h1>Class: Draper::Base
+  
+  
+  
+</h1>
+
+<dl class="box">
+  
+    <dt class="r1">Inherits:</dt>
+    <dd class="r1">
+      <span class="inheritName">Object</span>
+      
+        <ul class="fullTree">
+          <li>Object</li>
+          
+            <li class="next">Draper::Base</li>
+          
+        </ul>
+        <a href="#" class="inheritanceTree">show all</a>
+      
+      </dd>
+    
+  
+  
+    
+  
+    
+  
+  
+  
+    <dt class="r2 last">Defined in:</dt>
+    <dd class="r2 last">lib/draper/base.rb</dd>
+  
+</dl>
+<div class="clear"></div>
+
+
+  <h2>Constant Summary</h2>
+  
+    <dl class="constants">
+      
+        <dt id="DEFAULT_DENIED-constant" class="">DEFAULT_DENIED =
+          
+        </dt>
+        <dd><pre class="code"><span class='Object constant id'>Object</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='dot token'>.</span><span class='methods identifier id'>methods</span> <span class='lshft op'>&lt;&lt;</span> <span class='symbol val'>:method_missing</span>
+</pre></dd>
+      
+        <dt id="FORCED_PROXY-constant" class="">FORCED_PROXY =
+          
+        </dt>
+        <dd><pre class="code"><span class='lbrack token'>[</span><span class='symbol val'>:to_param</span><span class='rbrack token'>]</span>
+</pre></dd>
+      
+    </dl>
+  
+
+
+  <h2>Instance Attribute Summary <small>(<a href="#" class="summary_toggle">collapse</a>)</small></h2>
+  <ul class="summary">
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#context-instance_method" title="#context (instance method)">- (Object) <strong>context</strong> </a>
+    
+
+    
+  </span>
+  
+  
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Returns the value of attribute context.</p>
+</div></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#model-instance_method" title="#model (instance method)">- (Object) <strong>model</strong> </a>
+    
+
+    
+  </span>
+  
+  
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Returns the value of attribute model.</p>
+</div></span>
+  
+</li>
+
+    
+  </ul>
+
+
+
+
+  
+    <h2>
+      Class Method Summary
+      <small>(<a href="#" class="summary_toggle">collapse</a>)</small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#allows-class_method" title="allows (class method)">+ (Object) <strong>allows</strong>(*input_allows) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Specifies a white list of methods which <em>may</em> be proxied to
+to the wrapped object.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#decorate-class_method" title="decorate (class method)">+ (Object) <strong>decorate</strong>(input, context = nil) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Initialize a new decorator instance by passing in
+an instance of the source class.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#decorates-class_method" title="decorates (class method)">+ (Object) <strong>decorates</strong>(input) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Typically called within a decorator definition, this method
+specifies the name of the wrapped object class.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#denies-class_method" title="denies (class method)">+ (Object) <strong>denies</strong>(*input_denied) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Specifies a black list of methods which may <em>not</em> be proxied to
+to the wrapped object.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#find-class_method" title="find (class method)">+ (Object) <strong>find</strong>(input) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Proxies to the class specified by <code>decorates</code> to automatically
+lookup an object in the database and decorate it.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#lazy_helpers-class_method" title="lazy_helpers (class method)">+ (Object) <strong>lazy_helpers</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Calling <code>lazy_helpers</code> will make the built-in and
+user-defined Rails helpers accessible as class methods
+in the decorator without using the <code>h.</code> or <code>helpers.</code> proxy.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#model_name-class_method" title="model_name (class method)">+ (ActiveModel::Name) <strong>model_name</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Use primarily by <code>form_for</code>, this returns an instance of
+<code>ActiveModel::Name</code> set to the wrapped model's class name.</p>
+</div></span>
+  
+</li>
+
+      
+    </ul>
+  
+    <h2>
+      Instance Method Summary
+      <small>(<a href="#" class="summary_toggle">collapse</a>)</small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#helpers-instance_method" title="#helpers (instance method)">- (Object) <strong>helpers</strong> </a>
+    
+
+    
+      (also: #h)
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Access the helpers proxy to call built-in and user-defined
+Rails helpers.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#initialize-instance_method" title="#initialize (instance method)">- (Base) <strong>initialize</strong>(input, context = nil) </a>
+    
+
+    
+  </span>
+  
+    <span class="note title constructor">constructor</span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Initialize a new decorator instance by passing in
+an instance of the source class.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#to_model-instance_method" title="#to_model (instance method)">- (Object) <strong>to_model</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Fetch the original wrapped model.</p>
+</div></span>
+  
+</li>
+
+      
+    </ul>
+  
+
+<div id="constructor_details" class="method_details_list">
+  <h2>Constructor Details</h2>
+  
+    <div class="method_details first">
+  <p class="signature first" id="initialize-instance_method">
+  
+    - (<tt><span class='object_link'><a href="" title="Draper::Base (class)">Base</a></span></tt>) <strong>initialize</strong>(input, context = nil) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Initialize a new decorator instance by passing in
+an instance of the source class. Pass in an optional
+context is stored for later use.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>instance</span>
+      
+      
+        <span class='type'>(<tt>Object</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>to wrap</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>context</span>
+      
+      
+        <span class='type'>(<tt>Object</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>nil</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'><p>(optional)</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+17
+18
+19
+20
+21
+22
+23</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/draper/base.rb', line 17</span>
+
+<span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span><span class='lparen token'>(</span><span class='input identifier id'>input</span><span class='comma token'>,</span> <span class='context identifier id'>context</span> <span class='assign token'>=</span> <span class='nil nil kw'>nil</span><span class='rparen token'>)</span>
+  <span class='input identifier id'>input</span><span class='dot token'>.</span><span class='inspect identifier id'>inspect</span> <span class='comment val'># forces evaluation of a lazy query from AR</span>
+  <span class='self self kw'>self</span><span class='dot token'>.</span><span class='class identifier id'>class</span><span class='dot token'>.</span><span class='model_class identifier id'>model_class</span> <span class='assign token'>=</span> <span class='input identifier id'>input</span><span class='dot token'>.</span><span class='class identifier id'>class</span> <span class='if if_mod kw'>if</span> <span class='model_class identifier id'>model_class</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span>
+  <span class='@model ivar id'>@model</span> <span class='assign token'>=</span> <span class='input identifier id'>input</span>
+  <span class='self self kw'>self</span><span class='dot token'>.</span><span class='context identifier id'>context</span> <span class='assign token'>=</span> <span class='context identifier id'>context</span>
+  <span class='build_methods identifier id'>build_methods</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+  
+</div>
+
+  <div id="instance_attr_details" class="attr_details">
+    <h2>Instance Attribute Details</h2>
+    
+      
+      <span id="context=-instance_method"></span>
+      <span id="context-instance_method"></span>
+      <div class="method_details first">
+  <p class="signature first" id="context-instance_method">
+  
+    - (<tt>Object</tt>) <strong>context</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Returns the value of attribute context</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+5
+6
+7</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/draper/base.rb', line 5</span>
+
+<span class='def def kw'>def</span> <span class='context identifier id'>context</span>
+  <span class='@context ivar id'>@context</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id="model=-instance_method"></span>
+      <span id="model-instance_method"></span>
+      <div class="method_details ">
+  <p class="signature " id="model-instance_method">
+  
+    - (<tt>Object</tt>) <strong>model</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Returns the value of attribute model</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+5
+6
+7</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/draper/base.rb', line 5</span>
+
+<span class='def def kw'>def</span> <span class='model identifier id'>model</span>
+  <span class='@model ivar id'>@model</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+
+  <div id="class_method_details" class="method_details_list">
+    <h2>Class Method Details</h2>
+    
+    
+      <div class="method_details first">
+  <p class="signature first" id="allows-class_method">
+  
+    + (<tt>Object</tt>) <strong>allows</strong>(*input_allows) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Specifies a white list of methods which <em>may</em> be proxied to
+to the wrapped object. When <code>allows</code> is used, only the listed
+methods and methods defined in the decorator itself will be
+available.</p>
+
+<p>Do not use both <code>.allows</code> and <code>.denies</code> together, either write
+a whitelist with <code>.allows</code> or a blacklist with <code>.denies</code></p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>methods</span>
+      
+      
+        <span class='type'>(<tt>Symbols*</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>to allow like <code>:find, :find_by_name</code></p>
+</div>
+      
+    </li>
+  
+</ul>
+<h3>Raises:</h3>
+<ul class="raise">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>ArgumentError</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+73
+74
+75
+76
+77</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/draper/base.rb', line 73</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='allows identifier id'>allows</span><span class='lparen token'>(</span><span class='mult op'>*</span><span class='input_allows identifier id'>input_allows</span><span class='rparen token'>)</span>
+  <span class='raise identifier id'>raise</span> <span class='ArgumentError constant id'>ArgumentError</span><span class='comma token'>,</span> <span class='string val'>&quot;Specify at least one method (as a symbol) to allow when using allows&quot;</span> <span class='if if_mod kw'>if</span> <span class='input_allows identifier id'>input_allows</span><span class='dot token'>.</span><span class='empty? fid id'>empty?</span>
+  <span class='raise identifier id'>raise</span> <span class='ArgumentError constant id'>ArgumentError</span><span class='comma token'>,</span> <span class='string val'>&quot;Use either 'allows' or 'denies', but not both.&quot;</span> <span class='unless unless_mod kw'>unless</span> <span class='lparen token'>(</span><span class='self self kw'>self</span><span class='dot token'>.</span><span class='denied identifier id'>denied</span> <span class='eq op'>==</span> <span class='DEFAULT_DENIED constant id'>DEFAULT_DENIED</span><span class='rparen token'>)</span>
+  <span class='self self kw'>self</span><span class='dot token'>.</span><span class='allowed identifier id'>allowed</span> <span class='assign token'>=</span> <span class='input_allows identifier id'>input_allows</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="decorate-class_method">
+  
+    + (<tt>Object</tt>) <strong>decorate</strong>(input, context = nil) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Initialize a new decorator instance by passing in
+an instance of the source class. Pass in an optional
+context is stored for later use.</p>
+
+<p>When passing in a single object, using <code>.decorate</code> is
+identical to calling <code>.new</code>. However, <code>.decorate</code> can
+also accept a collection and return a collection of
+individually decorated objects.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>instance(s)</span>
+      
+      
+        <span class='type'>(<tt>Object</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>to wrap</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>context</span>
+      
+      
+        <span class='type'>(<tt>Object</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>nil</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'><p>(optional)</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+90
+91
+92</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/draper/base.rb', line 90</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='decorate identifier id'>decorate</span><span class='lparen token'>(</span><span class='input identifier id'>input</span><span class='comma token'>,</span> <span class='context identifier id'>context</span> <span class='assign token'>=</span> <span class='nil nil kw'>nil</span><span class='rparen token'>)</span>
+  <span class='input identifier id'>input</span><span class='dot token'>.</span><span class='respond_to? fid id'>respond_to?</span><span class='lparen token'>(</span><span class='symbol val'>:each</span><span class='rparen token'>)</span> <span class='question op'>?</span> <span class='input identifier id'>input</span><span class='dot token'>.</span><span class='map identifier id'>map</span><span class='lbrace token'>{</span><span class='bitor op'>|</span><span class='i identifier id'>i</span><span class='bitor op'>|</span> <span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='i identifier id'>i</span><span class='comma token'>,</span> <span class='context identifier id'>context</span><span class='rparen token'>)</span><span class='rbrace token'>}</span> <span class='colon op'>:</span> <span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='input identifier id'>input</span><span class='comma token'>,</span> <span class='context identifier id'>context</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="decorates-class_method">
+  
+    + (<tt>Object</tt>) <strong>decorates</strong>(input) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Typically called within a decorator definition, this method
+specifies the name of the wrapped object class.</p>
+
+<p>For instance, a <code>ProductDecorator</code> class might call <code>decorates :product</code></p>
+
+<p>But they don't have to match in name, so a <code>EmployeeDecorator</code>
+class could call <code>decorates :person</code> to wrap instances of <code>Person</code></p>
+
+<p>This is primarilly set so the <code>.find</code> method knows which class
+to query.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>class_name</span>
+      
+      
+        <span class='type'>(<tt>Symbol</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>snakecase name of the decorated class, like <code>:product</code></p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+46
+47
+48
+49</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/draper/base.rb', line 46</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='decorates identifier id'>decorates</span><span class='lparen token'>(</span><span class='input identifier id'>input</span><span class='rparen token'>)</span>
+  <span class='self self kw'>self</span><span class='dot token'>.</span><span class='model_class identifier id'>model_class</span> <span class='assign token'>=</span> <span class='input identifier id'>input</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span><span class='dot token'>.</span><span class='camelize identifier id'>camelize</span><span class='dot token'>.</span><span class='constantize identifier id'>constantize</span>
+  <span class='model_class identifier id'>model_class</span><span class='dot token'>.</span><span class='send identifier id'>send</span> <span class='symbol val'>:include</span><span class='comma token'>,</span> <span class='Draper constant id'>Draper</span><span class='colon2 op'>::</span><span class='ModelSupport constant id'>ModelSupport</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="denies-class_method">
+  
+    + (<tt>Object</tt>) <strong>denies</strong>(*input_denied) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Specifies a black list of methods which may <em>not</em> be proxied to
+to the wrapped object.</p>
+
+<p>Do not use both <code>.allows</code> and <code>.denies</code> together, either write
+a whitelist with <code>.allows</code> or a blacklist with <code>.denies</code></p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>methods</span>
+      
+      
+        <span class='type'>(<tt>Symbols*</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>to deny like <code>:find, :find_by_name</code></p>
+</div>
+      
+    </li>
+  
+</ul>
+<h3>Raises:</h3>
+<ul class="raise">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>ArgumentError</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+58
+59
+60
+61
+62</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/draper/base.rb', line 58</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='denies identifier id'>denies</span><span class='lparen token'>(</span><span class='mult op'>*</span><span class='input_denied identifier id'>input_denied</span><span class='rparen token'>)</span>
+  <span class='raise identifier id'>raise</span> <span class='ArgumentError constant id'>ArgumentError</span><span class='comma token'>,</span> <span class='string val'>&quot;Specify at least one method (as a symbol) to exclude when using denies&quot;</span> <span class='if if_mod kw'>if</span> <span class='input_denied identifier id'>input_denied</span><span class='dot token'>.</span><span class='empty? fid id'>empty?</span>
+  <span class='raise identifier id'>raise</span> <span class='ArgumentError constant id'>ArgumentError</span><span class='comma token'>,</span> <span class='string val'>&quot;Use either 'allows' or 'denies', but not both.&quot;</span> <span class='if if_mod kw'>if</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='allowed? fid id'>allowed?</span>
+  <span class='self self kw'>self</span><span class='dot token'>.</span><span class='denied identifier id'>denied</span> <span class='opasgn op'>+=</span> <span class='input_denied identifier id'>input_denied</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="find-class_method">
+  
+    + (<tt>Object</tt>) <strong>find</strong>(input) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Proxies to the class specified by <code>decorates</code> to automatically
+lookup an object in the database and decorate it.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>id</span>
+      
+      
+        <span class='type'>(<tt>Symbol or String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>to lookup</p>
+</div>
+      
+    </li>
+  
+</ul>
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Object</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>instance of this decorator class</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+30
+31
+32</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/draper/base.rb', line 30</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='find identifier id'>find</span><span class='lparen token'>(</span><span class='input identifier id'>input</span><span class='rparen token'>)</span>
+  <span class='self self kw'>self</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='model_class identifier id'>model_class</span><span class='dot token'>.</span><span class='find identifier id'>find</span><span class='lparen token'>(</span><span class='input identifier id'>input</span><span class='rparen token'>)</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="lazy_helpers-class_method">
+  
+    + (<tt>Object</tt>) <strong>lazy_helpers</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Calling <code>lazy_helpers</code> will make the built-in and
+user-defined Rails helpers accessible as class methods
+in the decorator without using the <code>h.</code> or <code>helpers.</code> proxy.</p>
+
+<p>The drawback is that you dump many methods into your decorator's
+namespace and collisions could create unexpected results.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+109
+110
+111</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/draper/base.rb', line 109</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='lazy_helpers identifier id'>lazy_helpers</span>
+  <span class='self self kw'>self</span><span class='dot token'>.</span><span class='send identifier id'>send</span><span class='lparen token'>(</span><span class='symbol val'>:include</span><span class='comma token'>,</span> <span class='Draper constant id'>Draper</span><span class='colon2 op'>::</span><span class='LazyHelpers constant id'>LazyHelpers</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="model_name-class_method">
+  
+    + (<tt>ActiveModel::Name</tt>) <strong>model_name</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Use primarily by <code>form_for</code>, this returns an instance of
+<code>ActiveModel::Name</code> set to the wrapped model's class name</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>ActiveModel::Name</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>model_name</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+117
+118
+119</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/draper/base.rb', line 117</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='model_name identifier id'>model_name</span>
+  <span class='ActiveModel constant id'>ActiveModel</span><span class='colon2 op'>::</span><span class='Name constant id'>Name</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='model_class identifier id'>model_class</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+  <div id="instance_method_details" class="method_details_list">
+    <h2>Instance Method Details</h2>
+    
+    
+      <div class="method_details first">
+  <p class="signature first" id="helpers-instance_method">
+  
+    - (<tt>Object</tt>) <strong>helpers</strong> 
+  
+
+  
+    <span class="aliases">Also known as:
+    <span class="names"><span id='h-instance_method'>h</span></span>
+    </span>
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Access the helpers proxy to call built-in and user-defined
+Rails helpers. Aliased to <code>.h</code> for convinience.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Object</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>proxy</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+98
+99
+100</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/draper/base.rb', line 98</span>
+
+<span class='def def kw'>def</span> <span class='helpers identifier id'>helpers</span>
+  <span class='@helpers ivar id'>@helpers</span> <span class='opasgn op'>||=</span> <span class='ApplicationController constant id'>ApplicationController</span><span class='colon2 op'>::</span><span class='all_helpers identifier id'>all_helpers</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="to_model-instance_method">
+  
+    - (<tt>Object</tt>) <strong>to_model</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Fetch the original wrapped model.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Object</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>original_model</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+124
+125
+126</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/draper/base.rb', line 124</span>
+
+<span class='def def kw'>def</span> <span class='to_model identifier id'>to_model</span>
+  <span class='@model ivar id'>@model</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+    
+    <div id="footer">
+  Generated on Thu Sep  1 01:13:37 2011 by 
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.7.2 (ruby-1.8.7).
+</div>
+
+  </body>
+</html>

@@ -1,0 +1,1 @@
+yardoc 'lib/draper/**/*.rb' -m markdown

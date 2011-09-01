@@ -9,5 +9,6 @@ gem 'guard-rspec'
 gem 'launchy'  
 gem 'rcov', :platforms => [:mri_18]
 gem 'cover_me', '>= 1.0.0.rc6', :platforms => [:mri_19]  
+gem 'yard'
 
 gemspec
