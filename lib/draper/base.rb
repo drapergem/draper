@@ -9,7 +9,7 @@ module Draper
     self.denied = DEFAULT_DENIED
 
     def initialize(input, context = nil)
-      input.inspect
+      input.inspect # forces evaluation of a lazy query from AR
       self.class.model_class = input.class if model_class.nil?
       @model = input
       self.context = context
