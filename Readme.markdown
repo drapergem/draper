@@ -102,11 +102,11 @@ end
 ```
 
 ```irb
- > ad = ArticleDecorator.find(1)
- => #<ArticleDecorator:0x000001020d7728 @model=#<Article id: 1, title: "Hello, World">> 
- > ad.title
- => "Hello, World"
- > ad.created_at
+> ad = ArticleDecorator.find(1)
+=> #<ArticleDecorator:0x000001020d7728 @model=#<Article id: 1, title: "Hello, World">> 
+> ad.title
+=> "Hello, World"
+> ad.created_at
 NoMethodError: undefined method `created_at' for #<ArticleDecorator:0x000001020d7728>
 ```
 
@@ -199,20 +199,22 @@ When writing your controller actions, you have three options:
 
 * Call `.new` and pass in the object to be wrapped
 
-  ```ruby
-  ArticleDecorator.new(Article.find(params[:id]))`
-  ```
+```ruby
+ArticleDecorator.new(Article.find(params[:id]))`
+```
 
 * Call `.decorate` and pass in an object or collection of objects to be wrapped:
-  ```ruby
-  ArticleDecorator.decorate(Article.first) # Returns one instance of ArticleDecorator
-  ArticleDecorator.decorate(Article.all)   # Returns an array of ArticleDecorator instances
-  ```
+
+```ruby
+ArticleDecorator.decorate(Article.first) # Returns one instance of ArticleDecorator
+ArticleDecorator.decorate(Article.all)   # Returns an array of ArticleDecorator instances
+```
   
 * Call `.find` to do automatically do a lookup on the `decorates` class:
-  ```ruby
-  ArticleDecorator.find(1)
-  ```
+
+```ruby
+ArticleDecorator.find(1)
+```
   
 ### In Your Views
 
