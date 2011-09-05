@@ -91,12 +91,16 @@ module Draper
       input.respond_to?(:each) ? input.map{|i| new(i, context)} : new(input, context)
     end
 
+    def self.helper
+      @helper ||= Helper.new
+    end
+
     # Access the helpers proxy to call built-in and user-defined
     # Rails helpers. Aliased to `.h` for convinience.
     #
     # @return [Object] proxy   
     def helpers
-      @helpers ||= ApplicationController::all_helpers
+      @helpers ||= Base.helper
     end
     alias :h :helpers
 
