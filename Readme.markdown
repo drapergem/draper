@@ -143,7 +143,7 @@ If you want a helper, you can still call `rails generate helper` directly.
 To decorate a model named `Article`:
 
 ```
-rails generate draper:decorator Article
+rails generate draper:model Article
 ```
 
 ### Writing Methods
@@ -252,7 +252,7 @@ First, follow the steps above to add the dependency and update your bundle.
 Since we're talking about the `Article` model we'll create an `ArticleDecorator` class. You could do it by hand, but use the provided generator:
 
 ```
-rails generate draper:decorator Article
+rails generate draper:model Article
 ```
 
 Now open up the created `app/decorators/article_decorator.rb` and you'll find an `ArticleDecorator` class. Add this method:
