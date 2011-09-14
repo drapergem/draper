@@ -135,8 +135,18 @@ config.generators do |g|
   g.helper false
 end
 ```
-
 If you want a helper, you can still call `rails generate helper` directly.
+
+
+#### Replace Rails Helper Generation with Decorator Generation (Optional) 
+
+If you want to completely replace the helper generation with the decorator generator, just add this to your `config/application.rb`
+
+```ruby
+config.generators do |g|
+  g.helper :decorator
+end
+```
 
 ### Generate the Decorator
 
