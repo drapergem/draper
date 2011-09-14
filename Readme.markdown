@@ -138,15 +138,18 @@ end
 If you want a helper, you can still call `rails generate helper` directly.
 
 
-#### Replace Rails Helper Generation with Decorator Generation (Optional) 
+#### Add DecoratorGenerator to ActiveRecord Generator (Optional) 
 
-If you want to completely replace the helper generation with the decorator generator, just add this to your `config/application.rb`
+Add the following to your `config/application.rb`
 
 ```ruby
 config.generators do |g|
-  g.helper :decorator
+  g.orm :decorator, :invoke_after_finished => "active_record:model"
 end
 ```
+
+From now on, every model you generate will first invoke the DecoratorGenerator. The Decorator will then invoke the active_record:model Generator.
+
 
 ### Generate the Decorator
 
