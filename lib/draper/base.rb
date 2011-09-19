@@ -125,6 +125,13 @@ module Draper
       @model
     end
 
+    # Delegates == to the decorated models
+    #
+    # @return [Boolean] true if other's model == self's model 
+    def ==(other)
+      @model == other.model
+    end
+
   private
     def select_methods
       specified = self.allowed || (model.public_methods.map{|s| s.to_sym} - denied.map{|s| s.to_sym})
