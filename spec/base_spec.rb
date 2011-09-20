@@ -132,6 +132,13 @@ describe Draper::Base do
     end
   end
 
+  context('.==') do
+    it "should compare the decorated models" do
+      other = Draper::Base.new(source)
+      subject.should == other
+    end
+  end
+
   describe "a sample usage with denies" do
     let(:subject_with_denies){ DecoratorWithDenies.new(source) }
 
