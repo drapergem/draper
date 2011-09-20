@@ -14,8 +14,9 @@ module Draper
     #
     # @param [Object] instance to wrap
     # @param [Object] context (optional)
-    def initialize(input, context = nil)
+    def initialize(input, context = {})
       input.inspect # forces evaluation of a lazy query from AR
+      input.inspect
       self.class.model_class = input.class if model_class.nil?
       @model = input
       self.context = context
@@ -87,7 +88,7 @@ module Draper
     #
     # @param [Object] instance(s) to wrap
     # @param [Object] context (optional)
-    def self.decorate(input, context = nil)
+    def self.decorate(input, context = {})
       input.respond_to?(:each) ? input.map{|i| new(i, context)} : new(input, context)
     end
 
