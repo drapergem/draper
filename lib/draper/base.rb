@@ -6,6 +6,11 @@ module Draper
 
     DEFAULT_DENIED = Object.new.methods << :method_missing
     FORCED_PROXY = [:to_param]
+    FORCED_PROXY.each do |method|
+      define_method method do |*args, &block|
+        model.send method, *args, &block
+      end
+    end
     self.denied = DEFAULT_DENIED
 
     # Initialize a new decorator instance by passing in
@@ -20,7 +25,6 @@ module Draper
       self.class.model_class = input.class if model_class.nil?
       @model = input
       self.context = context
-      build_methods
     end
 
     # Proxies to the class specified by `decorates` to automatically
@@ -133,20 +137,26 @@ module Draper
       @model == other.model
     end
 
+    def respond_to?(method)
+      if select_methods.include?(method)
+        model.repsond_to?(method)
+      else
+        super
+      end
+    end
+
+    def method_missing(method, *args, &block)
+      if select_methods.include?(method)
+        model.send(method, *args, &block)
+      else
+        super
+      end
+    end
+
   private
     def select_methods
       specified = self.allowed || (model.public_methods.map{|s| s.to_sym} - denied.map{|s| s.to_sym})
       (specified - self.public_methods.map{|s| s.to_sym}) + FORCED_PROXY
-    end
-
-    def build_methods
-      select_methods.each do |method|
-        (class << self; self; end).class_eval do
-          define_method method do |*args, &block|
-            model.send method, *args, &block
-          end
-        end
-      end
     end
   end
 end
