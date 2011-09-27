@@ -92,8 +92,15 @@ module Draper
     #
     # @param [Object] instance(s) to wrap
     # @param [Object] context (optional)
-    def self.decorate(input, context = {})
-      input.respond_to?(:each) ? input.map{|i| new(i, context)} : new(input, context)
+    # @param [Hash]   options (optional)
+    #   Setting :infer to true will let each item in the
+    #   list guess what its decorator should be.
+    def self.decorate(input, context = {}, options = {})
+      if input.respond_to?(:map)
+        input.map {|item| self.decorator item, context, options}
+      else
+        new(input, context)
+      end
     end
 
     # Access the helpers proxy to call built-in and user-defined
@@ -157,6 +164,10 @@ module Draper
     def select_methods
       specified = self.allowed || (model.public_methods.map{|s| s.to_sym} - denied.map{|s| s.to_sym})
       (specified - self.public_methods.map{|s| s.to_sym}) + FORCED_PROXY
+    end
+
+    def self.decorator(item, context = {}, options = {:infer => false})
+      options[:infer] ? item.decorator(context) : new(item, context)
     end
   end
 end

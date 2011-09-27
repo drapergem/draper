@@ -37,7 +37,7 @@ describe Draper::Base do
     it "sets the model class for the decorator" do
       ProductDecorator.new(source).model_class.should == Product
     end
-    
+
     it "should handle plural-like words properly'" do
       class Business; end
       expect do
@@ -148,6 +148,28 @@ describe Draper::Base do
         let(:source) { Product.new }
 
         its(:context) { should eq(context) }
+      end
+    end
+
+    context "does not infer by default" do
+      subject { Draper::Base.decorate(source, nil) }
+
+      let(:source) { [Product.new, Widget.new] }
+
+      it "returns a mixed collection of wrapped objects" do
+        subject.first.class.should eql Draper::Base
+        subject.last.class.should eql Draper::Base
+      end
+    end
+
+    context "when given a collection of mixed objects" do
+      subject { Draper::Base.decorate(source, nil, :infer => true) }
+
+      let(:source) { [Product.new, Widget.new] }
+
+      it "returns a mixed collection of wrapped objects" do
+        subject.first.class.should eql ProductDecorator
+        subject.last.class.should eql WidgetDecorator
       end
     end
   end
