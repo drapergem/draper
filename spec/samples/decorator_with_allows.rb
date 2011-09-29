@@ -1,3 +1,3 @@
 class DecoratorWithAllows < Draper::Base  
-  allows :upcase
+  allows :goodnight_moon
 end

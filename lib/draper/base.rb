@@ -139,7 +139,7 @@ module Draper
 
     def respond_to?(method)
       if select_methods.include?(method)
-        model.repsond_to?(method)
+        model.respond_to?(method)
       else
         super
       end
