@@ -163,11 +163,11 @@ describe Draper::Base do
     let(:subject_with_allows){ DecoratorWithAllows.new(source) }
 
     it "should echo the allowed method" do
-      subject_with_allows.should respond_to(:upcase)
+      subject_with_allows.should respond_to(:goodnight_moon)
     end
 
     it "should echo _only_ the allowed method" do
-      subject_with_allows.should_not respond_to(:downcase)
+      subject_with_allows.should_not respond_to(:hello_world)
     end
   end
 
