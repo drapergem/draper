@@ -32,8 +32,8 @@ module Draper
     #
     # @param [Symbol or String] id to lookup
     # @return [Object] instance of this decorator class
-    def self.find(input)
-      self.new(model_class.find(input))
+    def self.find(input, context = {})
+      self.new(model_class.find(input), context)
     end
 
     # Typically called within a decorator definition, this method

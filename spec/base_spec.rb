@@ -89,6 +89,11 @@ describe Draper::Base do
       pd.should be_instance_of(ProductDecorator)
       pd.model.should be_instance_of(Product)
     end
+    
+    it "should accept and store a context" do
+      pd = ProductDecorator.find(1, :admin)
+      pd.context.should == :admin
+    end
   end
 
   context ".decorate" do
