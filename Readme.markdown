@@ -306,7 +306,6 @@ end
   * Add YARD documentation to source
   * Add a section about contributing
 * Generators
-  * Test coverage for generators (help!)
   * Implement hook so generating a controller/scaffold generates a decorator  
   * Add generators for...
     * `draper:model`: Model + Decorator
