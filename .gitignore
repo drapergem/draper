@@ -6,3 +6,4 @@ pkg/*
 coverage.data
 coverage/*
 .yardoc
+tmp
