@@ -1,7 +1,7 @@
 module Draper
   class Base
     require 'active_support/core_ext/class/attribute'
-    class_attribute :denied, :allowed, :model_class
+    class_attribute :denied, :allowed, :model_class, :helper
     attr_accessor :context, :model
 
     DEFAULT_DENIED = Object.new.methods << :method_missing
@@ -101,7 +101,7 @@ module Draper
     #
     # @return [Object] proxy   
     def helpers
-      @helpers ||= ApplicationController::all_helpers
+      @helpers ||= Base.helper
     end
     alias :h :helpers
 

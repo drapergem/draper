@@ -1,7 +1,9 @@
 module Draper
-  class System    
+  class System
     def self.setup
-      ActionController::Base.send(:extend, Draper::AllHelpers) if defined?(ActionController::Base)
+      ActionController::Base.prepend_before_filter do
+        Draper::Base.helper = self.view_context_class.new(nil, {}, self)
+      end if defined?(ActionController::Base)
     end
   end
 end
