@@ -105,16 +105,6 @@ module Draper
     end
     alias :h :helpers
 
-    # Calling `lazy_helpers` will make the built-in and
-    # user-defined Rails helpers accessible as class methods
-    # in the decorator without using the `h.` or `helpers.` proxy.
-    #
-    # The drawback is that you dump many methods into your decorator's
-    # namespace and collisions could create unexpected results.
-    def self.lazy_helpers
-      self.send(:include, Draper::LazyHelpers)
-    end
-
     # Use primarily by `form_for`, this returns an instance of 
     # `ActiveModel::Name` set to the wrapped model's class name
     #
