@@ -5,9 +5,9 @@ describe Draper::Base do
   subject{ Draper::Base.new(source) }
   let(:source){ Product.new }
 
-  context(".lazy_helpers") do
-    it "makes Rails helpers available without using the h. proxy" do
-      Draper::Base.lazy_helpers
+  context("module LazyHelpers") do
+    it "makes Rails helpers available without using the h. proxy by including it" do
+      Draper::Base.send(:include, Draper::LazyHelpers)
       subject.send(:pluralize, 5, "cat").should == "5 cats"
     end
   end
