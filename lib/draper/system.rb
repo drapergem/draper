@@ -1,7 +1,7 @@
 module Draper
   class System    
     def self.setup
-      ActionController::Base.send(:extend, Draper::AllHelpers) if defined?(ActionController::Base)
+      ApplicationController.send(:include, Draper::ViewContext) if defined?(ApplicationController)
     end
   end
 end

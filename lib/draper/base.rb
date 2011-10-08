@@ -101,7 +101,7 @@ module Draper
     #
     # @return [Object] proxy   
     def helpers
-      @helpers ||= ApplicationController::all_helpers
+      @helpers ||= ApplicationController.current_view_context
     end
     alias :h :helpers
 

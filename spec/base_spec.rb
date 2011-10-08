@@ -2,8 +2,13 @@ require 'spec_helper'
 require 'draper'
 
 describe Draper::Base do
+  before(:each){ ApplicationController.new.set_current_view_context }
   subject{ Draper::Base.new(source) }
   let(:source){ Product.new }
+
+  it "should get a valid view_context" do
+    ApplicationController.current_view_context.should be
+  end
 
   context(".lazy_helpers") do
     it "makes Rails helpers available without using the h. proxy" do
