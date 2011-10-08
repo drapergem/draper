@@ -1,5 +1,7 @@
 # Draper: View Models for Rails
 
+![TravisCI Build Status](https://secure.travis-ci.org/jcasimir/draper.png)
+
 ## Quick Start
 
 1. Add `gem 'draper'` to your `Gemfile` and `bundle`
