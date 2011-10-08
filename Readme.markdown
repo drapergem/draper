@@ -196,7 +196,7 @@ Hate seeing that `h.` proxy all over? Willing to mix a bazillion methods into yo
 ```ruby
 class ArticleDecorator < ApplicationDecorator
   decorates :article
-  lazy_helpers
+  include Draper::LazyHelpers
   
   def published_at
     date = content_tag(:span, model.published_at.strftime("%A, %B %e").squeeze(" "), :class => 'date')
