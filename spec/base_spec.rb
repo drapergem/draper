@@ -6,8 +6,10 @@ describe Draper::Base do
   subject{ Draper::Base.new(source) }
   let(:source){ Product.new }
 
-  it "should get a valid view_context" do
-    ApplicationController.current_view_context.should be
+  context(".helpers") do
+    it "should have a valid view_context" do
+      subject.helpers.should be
+    end    
   end
 
   context(".lazy_helpers") do
