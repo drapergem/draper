@@ -10,20 +10,8 @@ describe Draper::ViewContext do
     app_controller.new
   end
   
-  it "implements .current_view_context" do
-    app_controller.should respond_to(:current_view_context)
-  end
-  
   it "implements #set_current_view_context" do
     app_controller_instance.should respond_to(:set_current_view_context)
-  end
-  
-  it "sets and returns the view context" do
-    fake_context = Object.new
-    Thread.current[:current_view_context] = nil
-    app_controller_instance.class.send(:view_context=, fake_context)
-    app_controller_instance.set_current_view_context
-    app_controller.current_view_context.should === fake_context
   end
   
   it "calls #before_filter with #set_current_view_context" do
