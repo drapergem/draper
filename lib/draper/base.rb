@@ -115,14 +115,6 @@ module Draper
       self.send(:include, Draper::LazyHelpers)
     end
 
-    # Use primarily by `form_for`, this returns an instance of 
-    # `ActiveModel::Name` set to the wrapped model's class name
-    #
-    # @return [ActiveModel::Name] model_name   
-    def self.model_name
-      ActiveModel::Name.new(model_class)
-    end
-
     # Fetch the original wrapped model.
     #
     # @return [Object] original_model
@@ -137,7 +129,7 @@ module Draper
       @model == other.model
     end
 
-    def respond_to?(method)
+    def respond_to?(method, include_private = false)
       if select_methods.include?(method)
         model.respond_to?(method)
       else
@@ -151,6 +143,14 @@ module Draper
       else
         super
       end
+    end
+    
+    def self.method_missing(method, *args, &block)
+      model_class.send(method, *args, &block)
+    end
+    
+    def self.respond_to?(method, include_private = false)
+      super || model_class.respond_to?(method)
     end
 
   private

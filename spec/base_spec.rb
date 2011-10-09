@@ -3,8 +3,22 @@ require 'draper'
 
 describe Draper::Base do
   before(:each){ ApplicationController.new.set_current_view_context }
-  subject{ Draper::Base.new(source) }
+  subject{ Decorator.new(source) }
   let(:source){ Product.new }
+
+  context("proxying class methods") do
+    it "should pass missing class method calls on to the wrapped class" do
+      subject.class.sample_class_method.should == "sample class method"
+    end
+    
+    it "should respond_to a wrapped class method" do
+      subject.class.should respond_to(:sample_class_method)
+    end
+    
+    it "should still respond_to it's own class methods" do
+      subject.class.should respond_to(:own_class_method)
+    end
+  end
 
   context(".helpers") do
     it "should have a valid view_context" do
@@ -16,12 +30,6 @@ describe Draper::Base do
     it "makes Rails helpers available without using the h. proxy" do
       Draper::Base.lazy_helpers
       subject.send(:pluralize, 5, "cat").should == "5 cats"
-    end
-  end
-
-  context(".model_name") do
-    it "should return an ActiveModel::Name instance" do
-      Draper::Base.model_name.should be_instance_of(ActiveModel::Name)
     end
   end
 

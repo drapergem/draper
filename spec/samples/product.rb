@@ -3,6 +3,10 @@ class Product < ActiveRecord::Base
     return Product.new
   end
   
+  def self.sample_class_method
+    "sample class method"
+  end
+  
   def hello_world
     "Hello, World"
   end
