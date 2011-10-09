@@ -99,7 +99,7 @@ module Draper
       if input.respond_to?(:map)
         input.map {|item| self.decorator item, context, options}
       else
-        new(input, context)
+        self.decorator input, context, options
       end
     end
 

@@ -162,6 +162,16 @@ describe Draper::Base do
       end
     end
 
+    context "does not infer single items by default" do
+      subject { Draper::Base.decorate(source, nil) }
+
+      let(:source) { Product.new }
+
+      it "returns a decorator of the type explicity used in the call" do
+        subject.class.should eql Draper::Base
+      end
+    end
+
     context "when given a collection of mixed objects" do
       subject { Draper::Base.decorate(source, nil, :infer => true) }
 
@@ -170,6 +180,16 @@ describe Draper::Base do
       it "returns a mixed collection of wrapped objects" do
         subject.first.class.should eql ProductDecorator
         subject.last.class.should eql WidgetDecorator
+      end
+    end
+
+    context "when given a single object" do
+      subject { Draper::Base.decorate(source, nil, :infer => true) }
+
+      let(:source) { Product.new }
+
+      it "can also infer its decorator" do
+        subject.class.should eql ProductDecorator
       end
     end
   end
