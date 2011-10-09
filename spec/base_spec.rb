@@ -10,11 +10,11 @@ describe Draper::Base do
     it "should pass missing class method calls on to the wrapped class" do
       subject.class.sample_class_method.should == "sample class method"
     end
-    
+
     it "should respond_to a wrapped class method" do
       subject.class.should respond_to(:sample_class_method)
     end
-    
+
     it "should still respond_to it's own class methods" do
       subject.class.should respond_to(:own_class_method)
     end
@@ -23,7 +23,7 @@ describe Draper::Base do
   context(".helpers") do
     it "should have a valid view_context" do
       subject.helpers.should be
-    end    
+    end
   end
 
   context(".lazy_helpers") do
@@ -59,7 +59,7 @@ describe Draper::Base do
   context("selecting methods") do
     it "echos the methods of the wrapped class except default exclusions" do
       source.methods.each do |method|
-        unless Draper::Base::DEFAULT_DENIED.include?(method)        
+        unless Draper::Base::DEFAULT_DENIED.include?(method)
           subject.should respond_to(method.to_sym)
         end
       end
@@ -103,7 +103,7 @@ describe Draper::Base do
       pd.should be_instance_of(ProductDecorator)
       pd.model.should be_instance_of(Product)
     end
-    
+
     it "should accept and store a context" do
       pd = ProductDecorator.find(1, :admin)
       pd.context.should == :admin

@@ -44,7 +44,7 @@ module Draper
     # But they don't have to match in name, so a `EmployeeDecorator`
     # class could call `decorates :person` to wrap instances of `Person`
     #
-    # This is primarilly set so the `.find` method knows which class 
+    # This is primarilly set so the `.find` method knows which class
     # to query.
     #
     # @param [Symbol] class_name snakecase name of the decorated class, like `:product`
@@ -106,7 +106,7 @@ module Draper
     # Access the helpers proxy to call built-in and user-defined
     # Rails helpers. Aliased to `.h` for convinience.
     #
-    # @return [Object] proxy   
+    # @return [Object] proxy
     def helpers
       Thread.current[:current_view_context]
     end
@@ -131,7 +131,7 @@ module Draper
 
     # Delegates == to the decorated models
     #
-    # @return [Boolean] true if other's model == self's model 
+    # @return [Boolean] true if other's model == self's model
     def ==(other)
       @model == other.model
     end
@@ -151,11 +151,11 @@ module Draper
         super
       end
     end
-    
+
     def self.method_missing(method, *args, &block)
       model_class.send(method, *args, &block)
     end
-    
+
     def self.respond_to?(method, include_private = false)
       super || model_class.respond_to?(method)
     end
