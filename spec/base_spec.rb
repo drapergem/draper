@@ -151,12 +151,12 @@ describe Draper::Base do
       end
     end
 
-    context "does not infer by default" do
+    context "does not infer collections by default" do
       subject { Draper::Base.decorate(source, nil) }
 
       let(:source) { [Product.new, Widget.new] }
 
-      it "returns a mixed collection of wrapped objects" do
+      it "returns a collection containing only the explicit decorator used in the call" do
         subject.first.class.should eql Draper::Base
         subject.last.class.should eql Draper::Base
       end
