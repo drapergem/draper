@@ -150,12 +150,39 @@ describe Draper::Base do
         its(:context) { should eq(context) }
       end
     end
+
   end
 
   context('.==') do
     it "should compare the decorated models" do
       other = Draper::Base.new(source)
       subject.should == other
+    end
+  end
+
+  describe "collection decoration" do
+    
+    # Implementation of #decorate that returns an array
+    # of decorated objects is insufficient to deal with 
+    # situations where the original collection has been 
+    # expanded with the use of modules (as often the case
+    # with paginator gems) or is just more complex then 
+    # an array. 
+    module Paginator; def page_number; "magic_value"; end; end
+    Array.send(:include, Paginator)
+    let(:paged_array) { [Product.new, Product.new] }
+    subject { ProductDecorator.decorate(paged_array) }
+
+    it "should proxy all calls to decorated collection" do
+      paged_array.page_number.should == "magic_value"
+      subject.page_number.should == "magic_value"
+    end
+
+    it "should support Rails partial lookup for a collection" do
+      # to support Rails render @collection the returned collection 
+      # (or its proxy) should implement #to_ary. 
+      subject.respond_to?(:to_ary).should be true
+      subject.to_a.first.should == ProductDecorator.decorate(paged_array.first)
     end
   end
 
