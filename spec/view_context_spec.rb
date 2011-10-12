@@ -1,7 +1,7 @@
 require 'spec_helper'
-require 'draper'
+require 'drapper'
 
-describe Draper::ViewContext do
+describe Drapper::ViewContext do
   let (:app_controller) do
     ApplicationController
   end
