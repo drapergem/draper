@@ -29,4 +29,4 @@ class ApplicationController < ActionController::Base
   end
 end
 
-Draper::System.setup
+Drapper::System.setup

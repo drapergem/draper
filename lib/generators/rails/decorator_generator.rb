@@ -1,7 +1,7 @@
-require File.expand_path('../../draper/decorator/decorator_generator.rb', __FILE__)
-class Rails::DecoratorGenerator < Draper::DecoratorGenerator
+require File.expand_path('../../drapper/decorator/decorator_generator.rb', __FILE__)
+class Rails::DecoratorGenerator < Drapper::DecoratorGenerator
   
-  source_root File.expand_path('../../draper/decorator/templates', __FILE__)
+  source_root File.expand_path('../../drapper/decorator/templates', __FILE__)
   
   class_option :invoke_after_finished, :type => :string, :description => "Generator to invoke when finished"
 

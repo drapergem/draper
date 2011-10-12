@@ -1,4 +1,4 @@
-module Draper
+module Drapper
   class Base
     require 'active_support/core_ext/class/attribute'
     class_attribute :denied, :allowed, :model_class
@@ -50,7 +50,7 @@ module Draper
     # @param [Symbol] class_name snakecase name of the decorated class, like `:product`
     def self.decorates(input)
       self.model_class = input.to_s.camelize.constantize
-      model_class.send :include, Draper::ModelSupport
+      model_class.send :include, Drapper::ModelSupport
     end
 
     # Specifies a black list of methods which may *not* be proxied to
@@ -112,7 +112,7 @@ module Draper
     # The drawback is that you dump many methods into your decorator's
     # namespace and collisions could create unexpected results.
     def self.lazy_helpers
-      self.send(:include, Draper::LazyHelpers)
+      self.send(:include, Drapper::LazyHelpers)
     end
 
     # Fetch the original wrapped model.

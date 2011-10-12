@@ -1,4 +1,4 @@
-class ApplicationDecorator < Draper::Base
+class ApplicationDecorator < Drapper::Base
   # Lazy Helpers
   #   PRO: Call Rails helpers without the h. proxy
   #        ex: number_to_currency(model.price)

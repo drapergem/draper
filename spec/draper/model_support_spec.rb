@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Draper::ModelSupport do
+describe Drapper::ModelSupport do
   subject { Product.new }
 
   describe '#decorator' do

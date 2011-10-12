@@ -1,7 +1,7 @@
 require 'spec_helper'
-require 'draper'
+require 'drapper'
 
-describe Draper::Base do
+describe Drapper::Base do
   before(:each){ ApplicationController.new.set_current_view_context }
   subject{ Decorator.new(source) }
   let(:source){ Product.new }
@@ -28,7 +28,7 @@ describe Draper::Base do
 
   context(".lazy_helpers") do
     it "makes Rails helpers available without using the h. proxy" do
-      Draper::Base.lazy_helpers
+      Drapper::Base.lazy_helpers
       subject.send(:pluralize, 5, "cat").should == "5 cats"
     end
   end
@@ -41,7 +41,7 @@ describe Draper::Base do
     it "should handle plural-like words properly'" do
       class Business; end
       expect do
-        class BusinessDecorator < Draper::Base
+        class BusinessDecorator < Drapper::Base
           decorates:business
         end
         BusinessDecorator.model_class.should == Business
@@ -59,7 +59,7 @@ describe Draper::Base do
   context("selecting methods") do
     it "echos the methods of the wrapped class except default exclusions" do
       source.methods.each do |method|
-        unless Draper::Base::DEFAULT_DENIED.include?(method)        
+        unless Drapper::Base::DEFAULT_DENIED.include?(method)        
           subject.should respond_to(method.to_sym)
         end
       end
@@ -71,7 +71,7 @@ describe Draper::Base do
 
     it "should always proxy to_param" do
       source.send :class_eval, "def to_param; 1; end"
-      Draper::Base.new(source).to_param.should == 1
+      Drapper::Base.new(source).to_param.should == 1
     end
 
     it "should not copy the .class, .inspect, or other existing methods" do
@@ -83,7 +83,7 @@ describe Draper::Base do
 
   context 'the decorated model' do
     it 'receives the mixin' do
-      source.class.ancestors.include?(Draper::ModelSupport)
+      source.class.ancestors.include?(Drapper::ModelSupport)
     end
   end
 
@@ -112,7 +112,7 @@ describe Draper::Base do
 
   context ".decorate" do
     context "without any context" do
-      subject { Draper::Base.decorate(source) }
+      subject { Drapper::Base.decorate(source) }
 
       context "when given a collection of source objects" do
         let(:source) { [Product.new, Product.new] }
@@ -120,21 +120,21 @@ describe Draper::Base do
         its(:size) { should == source.size }
 
         it "returns a collection of wrapped objects" do
-          subject.each{ |decorated| decorated.should be_instance_of(Draper::Base) }
+          subject.each{ |decorated| decorated.should be_instance_of(Drapper::Base) }
         end
       end
 
       context "when given a single source object" do
         let(:source) { Product.new }
 
-        it { should be_instance_of(Draper::Base) }
+        it { should be_instance_of(Drapper::Base) }
       end
     end
 
     context "with a context" do
       let(:context) {{ :some => 'data' }}
 
-      subject { Draper::Base.decorate(source, context) }
+      subject { Drapper::Base.decorate(source, context) }
 
       context "when given a collection of source objects" do
         let(:source) { [Product.new, Product.new] }
@@ -154,7 +154,7 @@ describe Draper::Base do
 
   context('.==') do
     it "should compare the decorated models" do
-      other = Draper::Base.new(source)
+      other = Drapper::Base.new(source)
       subject.should == other
     end
   end
@@ -193,26 +193,26 @@ describe Draper::Base do
 
   describe "invalid usages of allows and denies" do
     let(:blank_allows){
-      class DecoratorWithInvalidAllows < Draper::Base
+      class DecoratorWithInvalidAllows < Drapper::Base
         allows
       end
     }
 
     let(:blank_denies){
-      class DecoratorWithInvalidDenies < Draper::Base
+      class DecoratorWithInvalidDenies < Drapper::Base
         denies
       end
     }
 
     let(:using_allows_then_denies){
-      class DecoratorWithAllowsAndDenies < Draper::Base
+      class DecoratorWithAllowsAndDenies < Drapper::Base
         allows :hello_world
         denies :goodnight_moon
       end
     }
 
     let(:using_denies_then_allows){
-      class DecoratorWithDeniesAndAllows < Draper::Base
+      class DecoratorWithDeniesAndAllows < Drapper::Base
         denies :goodnight_moon
         allows :hello_world
       end

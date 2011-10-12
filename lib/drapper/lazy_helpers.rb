@@ -1,4 +1,4 @@
-module Draper
+module Drapper
   module LazyHelpers
     def method_missing(method_name, *args, &block)
       begin

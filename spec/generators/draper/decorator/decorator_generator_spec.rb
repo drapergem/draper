@@ -1,9 +1,9 @@
 require 'spec_helper'
 
 # Generators are not automatically loaded by Rails
-require 'generators/draper/decorator/decorator_generator'
+require 'generators/drapper/decorator/decorator_generator'
 
-describe Draper::DecoratorGenerator do
+describe Drapper::DecoratorGenerator do
   # Tell the generator where to put its output (what it thinks of as Rails.root)
   destination File.expand_path("../../../../../tmp", __FILE__)
 
@@ -15,7 +15,7 @@ describe Draper::DecoratorGenerator do
     describe 'app/decorators/application_decorator.rb' do
       subject { file('app/decorators/application_decorator.rb') }
       it { should exist }
-      it { should contain "class ApplicationDecorator < Draper::Base" }
+      it { should contain "class ApplicationDecorator < Drapper::Base" }
     end
 
     describe 'app/decorators/products_decorator.rb' do
