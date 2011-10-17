@@ -13,5 +13,7 @@ module Draper
       end
       template 'decorator.rb', "#{DECORATORS_ROOT}#{singular_name}_decorator.rb"
     end
+
+    hook_for :test_framework
   end
 end
