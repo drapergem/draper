@@ -40,6 +40,11 @@ describe Draper::Base do
         BusinessDecorator.model_class.should == Business
       end.should_not raise_error
     end
+    
+    it "creates a named accessor for the wrapped model" do
+      pd = ProductDecorator.new(source)
+      pd.send(:product).should == source
+    end
   end
 
   context(".model / .to_model") do

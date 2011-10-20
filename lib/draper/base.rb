@@ -51,6 +51,7 @@ module Draper
     def self.decorates(input)
       self.model_class = input.to_s.camelize.constantize
       model_class.send :include, Draper::ModelSupport
+      define_method(input){ @model }
     end
 
     # Specifies a black list of methods which may *not* be proxied to
