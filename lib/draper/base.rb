@@ -130,16 +130,16 @@ module Draper
     end
 
     def respond_to?(method, include_private = false)
-      if select_methods.include?(method)
-        model.respond_to?(method)
-      else
-        super
-      end
+      super || (allow?(method) && model.respond_to?(method))
     end
 
     def method_missing(method, *args, &block)
-      if select_methods.include?(method)
-        model.send(method, *args, &block)
+      if allow?(method)
+        begin
+          model.send(method, *args, &block)
+        rescue NoMethodError
+          super
+        end
       else
         super
       end
@@ -154,9 +154,8 @@ module Draper
     end
 
   private
-    def select_methods
-      specified = self.allowed || (model.public_methods.map{|s| s.to_sym} - denied.map{|s| s.to_sym})
-      (specified - self.public_methods.map{|s| s.to_sym}) + FORCED_PROXY
+    def allow?(method)
+      (!allowed? || allowed.include?(method) || FORCED_PROXY.include?(method)) && !denied.include?(method)
     end
 
     class DecoratedEnumerableProxy
