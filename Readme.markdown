@@ -133,11 +133,7 @@ Add the dependency to your `Gemfile`:
 gem "draper"
 ```
 
-Run bundle:
-
-```
-bundle
-```
+Then run `bundle` from the project directory.
 
 ### Generate the Decorator
 
@@ -149,7 +145,7 @@ rails generate draper:decorator Article
 
 ### Writing Methods
 
-Open the decorator model (ex: `app/decorators/article_decorator.rb`) and add normal instance methods. To access the wrapped source object, use a method named by the source object passed to `decorates`:
+Open the decorator model (ex: `app/decorators/article_decorator.rb`) and add normal instance methods. To access the wrapped source object, use a method named after the `decorates` argument:
 
 ```ruby
 class ArticleDecorator < ApplicationDecorator
@@ -208,7 +204,7 @@ ArticleDecorator.new(Article.find(params[:id]))`
 
 ```ruby
 ArticleDecorator.decorate(Article.first) # Returns one instance of ArticleDecorator
-ArticleDecorator.decorate(Article.all)   # Returns an array of ArticleDecorator instances
+ArticleDecorator.decorate(Article.all)   # Returns an enumeration proxy of ArticleDecorator instances
 ```
   
 * Call `.find` to do automatically do a lookup on the `decorates` class:
