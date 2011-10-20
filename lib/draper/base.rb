@@ -101,9 +101,20 @@ module Draper
     #
     # @return [Object] proxy   
     def helpers
-      Thread.current[:current_view_context]
+      self.class.helpers
     end
     alias :h :helpers
+
+    # Access the helpers proxy to call built-in and user-defined
+    # Rails helpers from a class context.
+    #
+    # @return [Object] proxy   
+    class << self
+      def helpers
+        Thread.current[:current_view_context]
+      end
+      alias :h :helpers
+    end    
 
     # Fetch the original wrapped model.
     #

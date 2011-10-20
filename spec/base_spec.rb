@@ -23,7 +23,21 @@ describe Draper::Base do
   context(".helpers") do
     it "should have a valid view_context" do
       subject.helpers.should be
+    end
+    
+    it "should be aliased to .h" do
+      subject.h.should == subject.helpers
     end    
+  end
+  
+  context("#helpers") do
+    it "should have a valid view_context" do
+      Decorator.helpers.should be
+    end
+    
+    it "should be aliased to #h" do
+      Decorator.h.should == Decorator.helpers
+    end
   end
 
   context(".decorates") do
