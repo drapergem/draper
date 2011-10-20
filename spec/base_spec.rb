@@ -10,11 +10,11 @@ describe Draper::Base do
     it "should pass missing class method calls on to the wrapped class" do
       subject.class.sample_class_method.should == "sample class method"
     end
-    
+
     it "should respond_to a wrapped class method" do
       subject.class.should respond_to(:sample_class_method)
     end
-    
+
     it "should still respond_to it's own class methods" do
       subject.class.should respond_to(:own_class_method)
     end
@@ -23,7 +23,7 @@ describe Draper::Base do
   context(".helpers") do
     it "should have a valid view_context" do
       subject.helpers.should be
-    end    
+    end
   end
 
   context(".lazy_helpers") do
@@ -37,7 +37,7 @@ describe Draper::Base do
     it "sets the model class for the decorator" do
       ProductDecorator.new(source).model_class.should == Product
     end
-    
+
     it "should handle plural-like words properly'" do
       class Business; end
       expect do
@@ -59,7 +59,7 @@ describe Draper::Base do
   context("selecting methods") do
     it "echos the methods of the wrapped class except default exclusions" do
       source.methods.each do |method|
-        unless Draper::Base::DEFAULT_DENIED.include?(method)        
+        unless Draper::Base::DEFAULT_DENIED.include?(method)
           subject.should respond_to(method.to_sym)
         end
       end
@@ -103,7 +103,7 @@ describe Draper::Base do
       pd.should be_instance_of(ProductDecorator)
       pd.model.should be_instance_of(Product)
     end
-    
+
     it "should accept and store a context" do
       pd = ProductDecorator.find(1, :admin)
       pd.context.should == :admin
@@ -148,6 +148,48 @@ describe Draper::Base do
         let(:source) { Product.new }
 
         its(:context) { should eq(context) }
+      end
+    end
+
+    context "does not infer collections by default" do
+      subject { Draper::Base.decorate(source, nil) }
+
+      let(:source) { [Product.new, Widget.new] }
+
+      it "returns a collection containing only the explicit decorator used in the call" do
+        subject.first.class.should eql Draper::Base
+        subject.last.class.should eql Draper::Base
+      end
+    end
+
+    context "does not infer single items by default" do
+      subject { Draper::Base.decorate(source, nil) }
+
+      let(:source) { Product.new }
+
+      it "returns a decorator of the type explicity used in the call" do
+        subject.class.should eql Draper::Base
+      end
+    end
+
+    context "when given a collection of mixed objects" do
+      subject { Draper::Base.decorate(source, nil, :infer => true) }
+
+      let(:source) { [Product.new, Widget.new] }
+
+      it "returns a mixed collection of wrapped objects" do
+        subject.first.class.should eql ProductDecorator
+        subject.last.class.should eql WidgetDecorator
+      end
+    end
+
+    context "when given a single object" do
+      subject { Draper::Base.decorate(source, nil, :infer => true) }
+
+      let(:source) { Product.new }
+
+      it "can also infer its decorator" do
+        subject.class.should eql ProductDecorator
       end
     end
   end

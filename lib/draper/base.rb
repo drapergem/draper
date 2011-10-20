@@ -44,7 +44,7 @@ module Draper
     # But they don't have to match in name, so a `EmployeeDecorator`
     # class could call `decorates :person` to wrap instances of `Person`
     #
-    # This is primarilly set so the `.find` method knows which class 
+    # This is primarilly set so the `.find` method knows which class
     # to query.
     #
     # @param [Symbol] class_name snakecase name of the decorated class, like `:product`
@@ -92,14 +92,21 @@ module Draper
     #
     # @param [Object] instance(s) to wrap
     # @param [Object] context (optional)
-    def self.decorate(input, context = {})
-      input.respond_to?(:each) ? input.map{|i| new(i, context)} : new(input, context)
+    # @param [Hash]   options (optional)
+    #   Setting :infer to true will let each item in the
+    #   list guess what its decorator should be.
+    def self.decorate(input, context = {}, options = {})
+      if input.respond_to?(:map)
+        input.map {|item| self.decorator item, context, options}
+      else
+        self.decorator input, context, options
+      end
     end
 
     # Access the helpers proxy to call built-in and user-defined
     # Rails helpers. Aliased to `.h` for convinience.
     #
-    # @return [Object] proxy   
+    # @return [Object] proxy
     def helpers
       Thread.current[:current_view_context]
     end
@@ -124,7 +131,7 @@ module Draper
 
     # Delegates == to the decorated models
     #
-    # @return [Boolean] true if other's model == self's model 
+    # @return [Boolean] true if other's model == self's model
     def ==(other)
       @model == other.model
     end
@@ -144,11 +151,11 @@ module Draper
         super
       end
     end
-    
+
     def self.method_missing(method, *args, &block)
       model_class.send(method, *args, &block)
     end
-    
+
     def self.respond_to?(method, include_private = false)
       super || model_class.respond_to?(method)
     end
@@ -157,6 +164,10 @@ module Draper
     def select_methods
       specified = self.allowed || (model.public_methods.map{|s| s.to_sym} - denied.map{|s| s.to_sym})
       (specified - self.public_methods.map{|s| s.to_sym}) + FORCED_PROXY
+    end
+
+    def self.decorator(item, context = {}, options = {:infer => false})
+      options[:infer] ? item.decorator(context) : new(item, context)
     end
   end
 end
