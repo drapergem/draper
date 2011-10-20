@@ -111,7 +111,7 @@ module Draper
     # @return [Object] proxy   
     class << self
       def helpers
-        Thread.current[:current_view_context]
+        Draper::ViewContext.current
       end
       alias :h :helpers
     end    

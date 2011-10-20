@@ -1,7 +1,17 @@
 module Draper
   module ViewContext
+    def self.current
+      Thread.current[:current_view_context]
+    end
+
+    def self.current=(input)
+      Thread.current[:current_view_context] = input
+    end
+  end
+  
+  module ViewContextFilter
     def set_current_view_context
-      Thread.current[:current_view_context] = self.view_context
+      Draper::ViewContext.current = self.view_context
     end
     
     def self.included(source)
