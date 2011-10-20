@@ -10,11 +10,11 @@ describe Draper::Base do
     it "should pass missing class method calls on to the wrapped class" do
       subject.class.sample_class_method.should == "sample class method"
     end
-    
+
     it "should respond_to a wrapped class method" do
       subject.class.should respond_to(:sample_class_method)
     end
-    
+
     it "should still respond_to it's own class methods" do
       subject.class.should respond_to(:own_class_method)
     end
@@ -24,17 +24,17 @@ describe Draper::Base do
     it "should have a valid view_context" do
       subject.helpers.should be
     end
-    
+
     it "should be aliased to .h" do
       subject.h.should == subject.helpers
-    end    
+    end
   end
-  
+
   context("#helpers") do
     it "should have a valid view_context" do
       Decorator.helpers.should be
     end
-    
+
     it "should be aliased to #h" do
       Decorator.h.should == Decorator.helpers
     end
@@ -44,7 +44,7 @@ describe Draper::Base do
     it "sets the model class for the decorator" do
       ProductDecorator.new(source).model_class.should == Product
     end
-    
+
     it "should handle plural-like words properly'" do
       class Business; end
       expect do
@@ -54,7 +54,7 @@ describe Draper::Base do
         BusinessDecorator.model_class.should == Business
       end.should_not raise_error
     end
-    
+
     it "creates a named accessor for the wrapped model" do
       pd = ProductDecorator.new(source)
       pd.send(:product).should == source
@@ -71,7 +71,7 @@ describe Draper::Base do
   context("selecting methods") do
     it "echos the methods of the wrapped class except default exclusions" do
       source.methods.each do |method|
-        unless Draper::Base::DEFAULT_DENIED.include?(method)        
+        unless Draper::Base::DEFAULT_DENIED.include?(method)
           subject.should respond_to(method.to_sym)
         end
       end
@@ -120,7 +120,7 @@ describe Draper::Base do
       pd.should be_instance_of(ProductDecorator)
       pd.model.should be_instance_of(Product)
     end
-    
+
     it "should accept and store a context" do
       pd = ProductDecorator.find(1, :admin)
       pd.context.should == :admin
@@ -178,13 +178,13 @@ describe Draper::Base do
   end
 
   describe "collection decoration" do
-    
+
     # Implementation of #decorate that returns an array
-    # of decorated objects is insufficient to deal with 
-    # situations where the original collection has been 
+    # of decorated objects is insufficient to deal with
+    # situations where the original collection has been
     # expanded with the use of modules (as often the case
-    # with paginator gems) or is just more complex then 
-    # an array. 
+    # with paginator gems) or is just more complex then
+    # an array.
     module Paginator; def page_number; "magic_value"; end; end
     Array.send(:include, Paginator)
     let(:paged_array) { [Product.new, Product.new] }
@@ -196,10 +196,10 @@ describe Draper::Base do
     end
 
     it "should support Rails partial lookup for a collection" do
-      # to support Rails render @collection the returned collection 
-      # (or its proxy) should implement #to_ary. 
+      # to support Rails render @collection the returned collection
+      # (or its proxy) should implement #to_ary.
       subject.respond_to?(:to_ary).should be true
-      subject.to_a.first.should == ProductDecorator.decorate(paged_array.first)
+      subject.to_ary.first.should == ProductDecorator.decorate(paged_array.first)
     end
   end
 
