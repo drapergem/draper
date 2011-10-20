@@ -26,13 +26,6 @@ describe Draper::Base do
     end    
   end
 
-  context(".lazy_helpers") do
-    it "makes Rails helpers available without using the h. proxy" do
-      Draper::Base.lazy_helpers
-      subject.send(:pluralize, 5, "cat").should == "5 cats"
-    end
-  end
-
   context(".decorates") do
     it "sets the model class for the decorator" do
       ProductDecorator.new(source).model_class.should == Product
