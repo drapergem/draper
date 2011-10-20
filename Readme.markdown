@@ -8,7 +8,7 @@
 2. Run `rails g draper:decorator YourModel`
 3. Edit `app/decorators/[your_model]_decorator.rb` using:
   1. `h` to proxy to Rails/application helpers like `h.current_user`
-  2. `model` to access the wrapped object like `model.created_at`
+  2. `[your_model]` to access the wrapped object like `article.created_at`
 4. Put common decorations in `app/decorators/application.rb`  
 5. Wrap models in your controller with the decorator using:
   1. `.find` automatic lookup & wrap
@@ -22,8 +22,9 @@
 
 ## What's New
 
-### Version 0.9.0
+### Version 0.9.1
 
+* Automatically generate a named accessor for the wrapped object, so now inside of `ArticleDecorator` you can use `article` instead of just `model`
 * Removed the `lazy_helpers` method to favor using `include Draper::LazyHelpers`
 * Refactored how methods are selected for delegation to the wrapped model
 * Fixed how the view context is stored in the `Thread.current` to resolve cross-request issues
@@ -48,8 +49,8 @@ A decorator wraps an object with presentation-related accessor methods. For inst
 class ArticleDecorator < ApplicationDecorator
   decorates :article
   def published_at
-    date = h.content_tag(:span, model.published_at.strftime("%A, %B %e").squeeze(" "), :class => 'date')
-    time = h.content_tag(:span, model.published_at.strftime("%l:%M%p"), :class => 'time').delete(" ")
+    date = h.content_tag(:span, article.published_at.strftime("%A, %B %e").squeeze(" "), :class => 'date')
+    time = h.content_tag(:span, article.published_at.strftime("%l:%M%p"), :class => 'time').delete(" ")
     h.content_tag :span, date + time, :class => 'created_at'
   end
 end
@@ -73,7 +74,7 @@ class ArticleDecorator < ApplicationDecorator
 
   def to_json
     attr_set = h.current_user.admin? ? ADMIN_VISIBLE_ATTRIBUTES : PUBLIC_VISIBLE_ATTRIBUTES
-    model.to_json(:only => attr_set)
+    article.to_json(:only => attr_set)
   end
 end
 ```
@@ -173,14 +174,14 @@ rails generate draper:decorator Article
 
 ### Writing Methods
 
-Open the decorator model (ex: `app/decorators/article_decorator.rb`) and add normal instance methods. To access the wrapped source object, use the `model` method:
+Open the decorator model (ex: `app/decorators/article_decorator.rb`) and add normal instance methods. To access the wrapped source object, use a method named by the source object passed to `decorates`:
 
 ```ruby
 class ArticleDecorator < ApplicationDecorator
   decorates :article
   
   def author_name
-    model.author.first_name + " " + model.author.last_name
+    article.author.first_name + " " + article.author.last_name
   end
 end
 ```
@@ -194,8 +195,8 @@ class ArticleDecorator < ApplicationDecorator
   decorates :article
   
   def published_at
-    date = h.content_tag(:span, model.published_at.strftime("%A, %B %e").squeeze(" "), :class => 'date')
-    time = h.content_tag(:span, model.published_at.strftime("%l:%M%p"), :class => 'time').delete(" ")
+    date = h.content_tag(:span, article.published_at.strftime("%A, %B %e").squeeze(" "), :class => 'date')
+    time = h.content_tag(:span, article.published_at.strftime("%l:%M%p"), :class => 'time').delete(" ")
     h.content_tag :span, date + time, :class => 'created_at'
   end
 end
@@ -211,8 +212,8 @@ class ArticleDecorator < ApplicationDecorator
   include Draper::LazyHelpers
   
   def published_at
-    date = content_tag(:span, model.published_at.strftime("%A, %B %e").squeeze(" "), :class => 'date')
-    time = content_tag(:span, model.published_at.strftime("%l:%M%p"), :class => 'time').delete(" ")
+    date = content_tag(:span, article.published_at.strftime("%A, %B %e").squeeze(" "), :class => 'date')
+    time = content_tag(:span, article.published_at.strftime("%l:%M%p"), :class => 'time').delete(" ")
     content_tag :span, date + time, :class => 'created_at'
   end
 end
@@ -284,8 +285,8 @@ Now open up the created `app/decorators/article_decorator.rb` and you'll find an
 
 ```ruby
 def published_at
-  date = h.content_tag(:span, model.published_at.strftime("%A, %B %e").squeeze(" "), :class => 'date')
-  time = h.content_tag(:span, model.published_at.strftime("%l:%M%p").delete(" "), :class => 'time')
+  date = h.content_tag(:span, article.published_at.strftime("%A, %B %e").squeeze(" "), :class => 'date')
+  time = h.content_tag(:span, article.published_at.strftime("%l:%M%p").delete(" "), :class => 'time')
   h.content_tag :span, date + time, :class => 'published_at'
 end
 ```
@@ -313,8 +314,8 @@ class ArticleDecorator < ApplicationDecorator
   decorates :article
   
   def published_at
-    date = h.content_tag(:span, model.published_at.strftime("%A, %B %e").squeeze(" "), :class => 'date')
-    time = h.content_tag(:span, model.published_at.strftime("%l:%M%p"), :class => 'time').delete(" ")
+    date = h.content_tag(:span, article.published_at.strftime("%A, %B %e").squeeze(" "), :class => 'date')
+    time = h.content_tag(:span, article.published_at.strftime("%l:%M%p"), :class => 'time').delete(" ")
     h.content_tag :span, date + time, :class => 'published_at'
   end
 end
@@ -327,8 +328,6 @@ end
   * Add information about the `.decorator` method
   * Make clear the pattern of overriding accessor methods of the wrapped model  
   * Build sample Rails application(s)
-  * Add a short screencast
-  * Add YARD documentation to source
   * Add a section about contributing
 * Generators
   * Implement hook so generating a controller/scaffold generates a decorator  
