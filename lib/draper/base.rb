@@ -5,7 +5,7 @@ module Draper
     attr_accessor :context, :model
 
     DEFAULT_DENIED = Object.new.methods << :method_missing
-    FORCED_PROXY = [:to_param]
+    FORCED_PROXY = [:to_param, :id]
     FORCED_PROXY.each do |method|
       define_method method do |*args, &block|
         model.send method, *args, &block
