@@ -22,14 +22,14 @@
 
 ## What's New
 
-### Version 0.9.1
+### Version 0.9.2
 
 * Automatically generate a named accessor for the wrapped object, so now inside of `ArticleDecorator` you can use `article` instead of just `model`
 * Removed the `lazy_helpers` method to favor using `include Draper::LazyHelpers`
 * Refactored how methods are selected for delegation to the wrapped model
 * Fixed how the view context is stored in the `Thread.current` to resolve cross-request issues
 * Decorated collections now return a collection proxy instead of an array, which fixes many compatibility issues
-* Automatically generate `RSpec` stub for decorators [PENDING: Make this work properly for `Test::Unit` -- help?]
+* Automatically generate RSpec/Test::Unit stub for decorator class
 
 ## Goals
 
