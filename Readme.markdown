@@ -20,6 +20,16 @@
 6. Output the instance methods in your view templates
   ex: `@article_decorator.created_at`
 
+## What's New
+
+### Version 0.9.0
+
+* Removed the `lazy_helpers` method to favor using `include Draper::LazyHelpers`
+* Refactored how methods are selected for delegation to the wrapped model
+* Fixed how the view context is stored in the `Thread.current` to resolve cross-request issues
+* Decorated collections now return a collection proxy instead of an array, which fixes many compatibility issues
+* Automatically generate `RSpec` stub for decorators [PENDING: Make this work properly for `Test::Unit` -- help?]
+
 ## Goals
 
 This gem makes it easy to apply the decorator pattern to domain models in a Rails application. This pattern gives you three wins:
