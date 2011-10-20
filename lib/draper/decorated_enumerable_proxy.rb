@@ -20,6 +20,10 @@ module Draper
       @wrapped_collection.send(meth, *args, &block)
     end
 
+    def respond_to?(meth)
+      super || @wrapped_collection.respond_to?(meth)
+    end
+
     def to_s
       "#<DecoratedEnumerableProxy of #{@klass} for #{@wrapped_collection.inspect}>"
     end

@@ -188,6 +188,7 @@ describe Draper::Base do
     module Paginator; def page_number; "magic_value"; end; end
     Array.send(:include, Paginator)
     let(:paged_array) { [Product.new, Product.new] }
+    let(:empty_collection) { [] }
     subject { ProductDecorator.decorate(paged_array) }
 
     it "should proxy all calls to decorated collection" do
@@ -200,6 +201,19 @@ describe Draper::Base do
       # (or its proxy) should implement #to_ary. 
       subject.respond_to?(:to_ary).should be true
       subject.to_a.first.should == ProductDecorator.decorate(paged_array.first)
+    end
+
+    it "should delegate respond_to? to the wrapped collection" do
+      decorator = ProductDecorator.decorate(paged_array)
+      paged_array.should_receive(:respond_to?).with(:whatever)
+      decorator.respond_to?(:whatever)
+    end
+
+    it "should return blank for a decorated empty collection" do
+      # This tests that respond_to? is defined for the DecoratedEnumerableProxy
+      # since activesupport calls respond_to?(:empty) in #blank
+      decorator = ProductDecorator.decorate(empty_collection)
+      decorator.should be_blank
     end
   end
 
