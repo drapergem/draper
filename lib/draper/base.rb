@@ -21,7 +21,6 @@ module Draper
     # @param [Object] context (optional)
     def initialize(input, context = {})
       input.inspect # forces evaluation of a lazy query from AR
-      input.inspect
       self.class.model_class = input.class if model_class.nil?
       @model = input
       self.context = context
