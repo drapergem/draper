@@ -22,8 +22,9 @@
 
 ## What's New
 
-### Version 0.9.2
+### Version 0.9.3
 
+* Helpers are available from the decorator class level, so you could call `ArticleDecorator.new_article_link`
 * Automatically generate a named accessor for the wrapped object, so now inside of `ArticleDecorator` you can use `article` instead of just `model`
 * Removed the `lazy_helpers` method to favor using `include Draper::LazyHelpers`
 * Refactored how methods are selected for delegation to the wrapped model
