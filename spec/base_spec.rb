@@ -74,6 +74,11 @@ describe Draper::Base do
       Draper::Base.new(source).to_param.should == 1
     end
 
+    it "should always proxy id" do
+      source.send :class_eval, "def id; 123456789; end"
+      Draper::Base.new(source).id.should == 123456789
+    end
+
     it "should not copy the .class, .inspect, or other existing methods" do
       source.class.should_not == subject.class
       source.inspect.should_not == subject.inspect
