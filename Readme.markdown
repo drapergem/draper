@@ -139,31 +139,6 @@ Run bundle:
 bundle
 ```
 
-#### Disable Rails Helper Generation (Optional) 
-
-When you generate a scaffold, Rails will create a matching helper file. If you're using decorators, this is probably unnecessary. You can disable the helper file creation by adding this to your `config/application.rb`
-
-```ruby
-config.generators do |g|
-  g.helper false
-end
-```
-If you want a helper, you can still call `rails generate helper` directly.
-
-
-#### Add DecoratorGenerator to ActiveRecord Generator (Optional) 
-
-Add the following to your `config/application.rb`
-
-```ruby
-config.generators do |g|
-  g.orm :decorator, :invoke_after_finished => "active_record:model"
-end
-```
-
-From now on, every model you generate will first invoke the DecoratorGenerator. The Decorator will then invoke the active_record:model Generator.
-
-
 ### Generate the Decorator
 
 To decorate a model named `Article`:
