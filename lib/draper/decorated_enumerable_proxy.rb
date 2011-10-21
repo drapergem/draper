@@ -6,7 +6,7 @@ module Draper
       @wrapped_collection, @klass, @context = collection, klass, context
     end
 
-    # Implementation of Enumerable#each that proxyes to the wrapped collection
+    # Implementation of Enumerable#each that proxies to the wrapped collection
     def each(&block)
       @wrapped_collection.each { |member| block.call(@klass.new(member, @context)) }
     end
@@ -16,12 +16,12 @@ module Draper
       @wrapped_collection.to_ary
     end
 
-    def method_missing (meth, *args, &block)
-      @wrapped_collection.send(meth, *args, &block)
+    def method_missing (method, *args, &block)
+      @wrapped_collection.send(method, *args, &block)
     end
 
-    def respond_to?(meth)
-      super || @wrapped_collection.respond_to?(meth)
+    def respond_to?(method)
+      super || @wrapped_collection.respond_to?(method)
     end
 
     def to_s
