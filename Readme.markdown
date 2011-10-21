@@ -20,17 +20,24 @@
 6. Output the instance methods in your view templates
   ex: `@article_decorator.created_at`
 
+## Watch the RailsCast
+
+Ryan Bates has put together an excellent RailsCast on Draper based on the 0.8.0 release:
+
+[![RailsCast #286](https://img.skitch.com/20111021-dgxmqntq22d37fthky6pttk59n.jpg "RailsCast #286 - Draper")](http://railscasts.com/episodes/286-draper)
+
 ## What's New
 
-### Version 0.9.3
+### Version 0.9.X
 
-* Helpers are available from the decorator class level, so you could write a `ArticleDecorator.new_article_link` that uses `h.link_to`
-* Automatically generate a named accessor for the wrapped object, so now inside of `ArticleDecorator` you can use `article` instead of just `model`
-* Removed the `lazy_helpers` method to favor using `include Draper::LazyHelpers`
-* Refactored how methods are selected for delegation to the wrapped model
-* Fixed how the view context is stored to resolve cross-request issues
-* Decorated collections now return a collection proxy instead of an array, which fixes many compatibility issues
-* Automatically generate RSpec/Test::Unit stub for decorator class
+* `.4`: Improved the collection proxy's `respond_to` and `to_ary` to play nicely with Rails' `render`
+* `.3`: Helpers are available from the decorator class level, so you could write a `ArticleDecorator.new_article_link` that uses `h.link_to`
+* `.2`: Automatically generate a named accessor for the wrapped object, so now inside of `ArticleDecorator` you can use `article` instead of just `model`
+* `.2`: Automatically generate RSpec/Test::Unit stub for decorator class
+* `.1`: Removed the `lazy_helpers` method to favor using `include Draper::LazyHelpers`
+* `.1`: Refactored how methods are selected for delegation to the wrapped model
+* `.0`: Fixed how the view context is stored to resolve cross-request issues
+* `.0`: Decorated collections now return a collection proxy instead of an array, which fixes many compatibility issues
 
 ## Goals
 
