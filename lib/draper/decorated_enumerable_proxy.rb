@@ -13,7 +13,7 @@ module Draper
 
     # Implement to_arry so that render @decorated_collection is happy
     def to_ary
-      @wrapped_collection.to_ary
+      @wrapped_collection.map { |member| @klass.new(member, @context) }
     end
 
     def method_missing (method, *args, &block)
