@@ -6,12 +6,10 @@ module Draper
       @wrapped_collection, @klass, @context = collection, klass, context
     end
 
-    # Implementation of Enumerable#each that proxies to the wrapped collection
     def each(&block)
       @wrapped_collection.each { |member| block.call(@klass.new(member, @context)) }
     end
 
-    # Implement to_arry so that render @decorated_collection is happy
     def to_ary
       @wrapped_collection.map { |member| @klass.new(member, @context) }
     end
