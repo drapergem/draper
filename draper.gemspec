@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.authors     = ["Jeff Casimir"]
   s.email       = ["jeff@casimircreative.com"]
   s.homepage    = "http://github.com/jcasimir/draper"
-  s.summary     = "Decorator pattern implmentation for Rails."
+  s.summary     = "Decorator pattern implementation for Rails."
   s.description = "Draper reimagines the role of helpers in the view layer of a Rails application, allowing an object-oriented approach rather than procedural."
 
   s.rubyforge_project = "draper"
