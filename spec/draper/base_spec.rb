@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'draper'
 
 describe Draper::Base do
   before(:each){ ApplicationController.new.set_current_view_context }
