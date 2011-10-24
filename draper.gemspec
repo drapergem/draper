@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.authors     = ["Jeff Casimir"]
   s.email       = ["jeff@casimircreative.com"]
   s.homepage    = "http://github.com/jcasimir/draper"
-  s.summary     = "Decorator pattern implmentation for Rails."
+  s.summary     = "Decorator pattern implementation for Rails."
   s.description = "Draper implements a decorator or presenter pattern for Rails applications."
   s.rubyforge_project = "draper"
   s.files         = `git ls-files`.split("\n")
