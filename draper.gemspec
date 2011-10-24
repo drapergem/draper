@@ -9,12 +9,11 @@ Gem::Specification.new do |s|
   s.email       = ["jeff@casimircreative.com"]
   s.homepage    = "http://github.com/jcasimir/draper"
   s.summary     = "Decorator pattern implmentation for Rails."
-  s.description = "Draper reimagines the role of helpers in the view layer of a Rails application, allowing an object-oriented approach rather than procedural."
-
+  s.description = "Draper implements a decorator or presenter pattern for Rails applications."
   s.rubyforge_project = "draper"
-
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ["lib"]
+  s.add_dependency('activesupport', '>= 2.3.10')
 end
