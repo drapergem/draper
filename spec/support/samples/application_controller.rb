@@ -1,3 +1,5 @@
+require './spec/support/samples/application_helper'
+
 module ActionController
   class Base
     @@before_filters = []
