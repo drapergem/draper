@@ -215,6 +215,14 @@ describe Draper::Base do
       decorator = ProductDecorator.decorate(empty_collection)
       decorator.should be_blank
     end
+    it "should return whether the member is in the array for a decorated wrapped collection" do
+      # This tests that include? is defined for the DecoratedEnumerableProxy
+      member = paged_array.first
+      subject.respond_to?(:include?)
+      subject.include?(member).should == true
+      subject.include?(subject.first).should == true
+      subject.include?(Product.new).should == false
+    end
   end
 
   describe "a sample usage with denies" do
