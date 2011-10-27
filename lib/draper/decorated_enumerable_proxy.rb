@@ -22,6 +22,10 @@ module Draper
       super || @wrapped_collection.respond_to?(method)
     end
 
+    def ==(other)
+      @wrapped_collection == other
+    end
+
     def to_s
       "#<DecoratedEnumerableProxy of #{@klass} for #{@wrapped_collection.inspect}>"
     end
