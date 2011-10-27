@@ -127,7 +127,7 @@ module Draper
     #
     # @return [Boolean] true if other's model == self's model 
     def ==(other)
-      @model == other.model
+      @model == (other.respond_to?(:model) ? other.model : other)
     end
 
     def respond_to?(method, include_private = false)
