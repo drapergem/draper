@@ -1,4 +1,14 @@
 class Product < ActiveRecord::Base
+  include Draper::ModelSupport
+
+  def self.scoped
+    [Product.new]
+  end
+
+  def self.model_name
+    "Product"
+  end
+
   def self.find(id)
     return Product.new
   end
