@@ -229,6 +229,21 @@ Use the new methods in your views like any other model method (ex: `@article.pub
 <h1><%= @article.title %> <%= @article.published_at %></h1>
 ```
 
+### Using in Mailers
+
+To use decorators in mailers that use helpers, you have to call `set_current_view_context` in your
+mailer method:
+
+```ruby
+class ActicleMailer < ActionMailer::Base
+  def new_article(article)
+    set_current_view_context
+    @article_decorator = ArticleDecorator.decorate(article)
+    mail(:to => 'come@me.bro', :subject => "New Article: #{@article_decorator.title}")
+  end
+end
+```
+
 ## Possible Decoration Methods
 
 Here are some ideas of what you might do in decorator methods:
