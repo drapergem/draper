@@ -9,6 +9,9 @@ module ActionController
     def self.before_filter(name)
       @@before_filters << name
     end
+    def self.helper(mod)
+      extend mod
+    end
   end
 end
 
@@ -28,6 +31,15 @@ class ApplicationController < ActionController::Base
   
   def self.hello
     "Hello!"
+  end
+  
+  def self.capture(&block)
+    @@capture = true
+    block.call
+  end
+  
+  def self.capture_triggered
+    @@capture ||= false
   end
 end
 
