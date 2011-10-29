@@ -12,4 +12,16 @@ describe Draper::ModelSupport do
       a.should eql "Awesome Title"
     end
   end
+
+  describe '#decorate - decorate collections of AR objects' do
+    subject { Product.limit }
+    its(:decorate) { should be_kind_of(Draper::DecoratedEnumerableProxy) }
+
+    it "should decorate the collection" do
+      subject.decorate.size.should == 1
+      subject.decorate.to_ary[0].model.should be_a(Product)
+    end
+
+
+  end
 end
