@@ -11,6 +11,10 @@ describe Draper::ModelSupport do
       a = Product.new.decorator { |d| d.awesome_title }
       a.should eql "Awesome Title"
     end
+    
+    it 'should be aliased to .decorate' do
+      subject.decorator.model.should == subject.decorate.model
+    end
   end
 
   describe '#decorate - decorate collections of AR objects' do
@@ -21,7 +25,5 @@ describe Draper::ModelSupport do
       subject.decorate.size.should == 1
       subject.decorate.to_ary[0].model.should be_a(Product)
     end
-
-
   end
 end

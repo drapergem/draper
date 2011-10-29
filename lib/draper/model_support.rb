@@ -3,6 +3,8 @@ module Draper::ModelSupport
     @decorator ||= "#{self.class.name}Decorator".constantize.decorate(self)
     block_given? ? yield(@decorator) : @decorator
   end
+  
+  alias :decorate :decorator
 
   module ClassMethods
     def decorate(context = {})
