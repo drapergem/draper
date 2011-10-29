@@ -175,6 +175,24 @@ describe Draper::Base do
       subject.should == other
     end
   end
+  
+  context 'position accessors' do
+    [:first, :last].each do |method|
+      context "##{method}" do
+        it "should return a decorated instance" do
+          ProductDecorator.send(method).should be_instance_of ProductDecorator
+        end
+
+        it "should return the #{method} instance of the wrapped class" do
+          ProductDecorator.send(method).model.should == Product.send(method)
+        end
+
+        it "should accept an optional context" do
+          ProductDecorator.send(method, :admin).context.should == :admin
+        end
+      end      
+    end
+  end
 
   describe "collection decoration" do
 

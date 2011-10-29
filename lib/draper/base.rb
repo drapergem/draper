@@ -103,6 +103,14 @@ module Draper
     def self.all(context = {})
       Draper::DecoratedEnumerableProxy.new(model_class.all, self, context)
     end
+    
+    def self.first(context = {})
+      decorate(model_class.first, context)
+    end
+
+    def self.last(context = {})
+      decorate(model_class.last, context)
+    end
 
     # Access the helpers proxy to call built-in and user-defined
     # Rails helpers. Aliased to `.h` for convinience.

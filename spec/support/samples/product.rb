@@ -1,5 +1,13 @@
 class Product < ActiveRecord::Base
   include Draper::ModelSupport
+
+  def self.first
+    @@first ||= Product.new
+  end
+
+  def self.last
+    @@last ||= Product.new
+  end
   
   def self.all
     [Product.new, Product.new]
