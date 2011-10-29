@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'draper'
 
 describe Draper::ViewContext do
   let (:app_controller) do
@@ -21,15 +20,5 @@ describe Draper::ViewContext do
   it "raises an exception if the view_context is fetched without being set" do
     Draper::ViewContext.current = nil
     expect {app_controller.current_view_context}.should raise_exception(Exception)
-  end
-  
-  it "sets view_context every time" do
-    app_controller_instance.stub(:view_context) { 'first' }
-    app_controller_instance.set_current_view_context
-    Draper::ViewContext.current.should == 'first'
-    
-    app_controller_instance.stub(:view_context) { 'second' }
-    app_controller_instance.set_current_view_context
-    Draper::ViewContext.current.should == 'second'
   end
 end
