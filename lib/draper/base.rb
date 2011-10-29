@@ -95,6 +95,14 @@ module Draper
     def self.decorate(input, context = {})
       input.respond_to?(:each) ? Draper::DecoratedEnumerableProxy.new(input, self, context) : new(input, context)
     end
+    
+    # Fetch all instances of the decorated class and decorate them.
+    #
+    # @param [Object] context (optional)
+    # @return [Draper::DecoratedEnumerableProxy]
+    def self.all(context = {})
+      Draper::DecoratedEnumerableProxy.new(model_class.all, self, context)
+    end
 
     # Access the helpers proxy to call built-in and user-defined
     # Rails helpers. Aliased to `.h` for convinience.

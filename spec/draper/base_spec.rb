@@ -237,6 +237,16 @@ describe Draper::Base do
       subject_one.should_not == subject_two
     end
 
+    context '#all' do
+      it "should return a decorated collection" do
+        ProductDecorator.all.first.should be_instance_of ProductDecorator
+      end
+      
+      it "should accept a context" do
+        collection = ProductDecorator.all(:admin)
+        collection.first.context.should == :admin
+      end
+    end
   end
 
   describe "a sample usage with denies" do

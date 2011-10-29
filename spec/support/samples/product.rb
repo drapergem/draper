@@ -1,5 +1,9 @@
 class Product < ActiveRecord::Base
   include Draper::ModelSupport
+  
+  def self.all
+    [Product.new, Product.new]
+  end
 
   def self.scoped
     [Product.new]
