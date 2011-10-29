@@ -30,6 +30,10 @@ Ryan Bates has put together an excellent RailsCast on Draper based on the 0.8.0 
 
 ### Version 0.9.X
 
+* `.5`: Render the `decorate` helper, passing a source object and a block in a view template to auto-decorate and render the block (ISSUE: see https://github.com/jcasimir/draper/issues/32)
+* `.5`: `ArticleDecorator.first` and `ArticleDecorator.last` will return decorated instances as you'd expect
+* `.5`: Calling `ArticleDecorator.all` will now return a `DecoratedEnumerableProxy` of the objects from `Article.all`
+* `.5`: More love for `DecoratedEnumerableProxy` including better use of `respond_to`, `include?`, and overriding `.all` to return a 
 * `.4`: Improved the collection proxy's `respond_to` and `to_ary` to play nicely with Rails' `render`
 * `.3`: Helpers are available from the decorator class level, so you could write a `ArticleDecorator.new_article_link` that uses `h.link_to`
 * `.2`: Automatically generate a named accessor for the wrapped object, so now inside of `ArticleDecorator` you can use `article` instead of just `model`
