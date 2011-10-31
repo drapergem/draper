@@ -58,6 +58,20 @@ describe Draper::Base do
       pd = ProductDecorator.new(source)
       pd.send(:product).should == source
     end
+
+    context("namespaced model supporting") do
+      let(:source){ Namespace::Product.new }
+
+      it "sets the model class for the decorator" do
+        decorator = Namespace::ProductDecorator.new(source)
+        decorator.model_class.should == Namespace::Product
+      end
+
+      it "creates a named accessor for the wrapped model" do
+        pd = Namespace::ProductDecorator.new(source)
+        pd.send(:product).should == source
+      end
+    end
   end
 
   context(".model / .to_model") do

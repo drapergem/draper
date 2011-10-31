@@ -26,4 +26,14 @@ describe Draper::ModelSupport do
       subject.decorate.to_ary[0].model.should be_a(Product)
     end
   end
+
+  describe '#decorate - decorate collections of namespaced AR objects' do
+    subject { Namespace::Product.limit }
+    its(:decorate) { should be_kind_of(Draper::DecoratedEnumerableProxy) }
+
+    it "should decorate the collection" do
+      subject.decorate.size.should == 1
+      subject.decorate.to_ary[0].model.should be_a(Namespace::Product)
+    end
+  end
 end
