@@ -146,6 +146,11 @@ module Draper
       @model == (other.respond_to?(:model) ? other.model : other)
     end
 
+    def kind_of?(klass)
+      return true if klass == model.class
+      super
+    end
+
     def respond_to?(method, include_private = false)
       super || (allow?(method) && model.respond_to?(method))
     end
