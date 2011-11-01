@@ -147,8 +147,7 @@ module Draper
     end
 
     def kind_of?(klass)
-      return true if klass == model.class
-      super
+      super || model.kind_of?(klass)
     end
 
     def respond_to?(method, include_private = false)
