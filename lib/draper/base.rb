@@ -47,8 +47,8 @@ module Draper
     # to query.
     #
     # @param [Symbol] class_name snakecase name of the decorated class, like `:product`
-    def self.decorates(input)
-      self.model_class = input.to_s.camelize.constantize
+    def self.decorates(input, options = {})
+      self.model_class = options[:class] || input.to_s.camelize.constantize
       model_class.send :include, Draper::ModelSupport
       define_method(input){ @model }
     end
