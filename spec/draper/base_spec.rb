@@ -362,4 +362,10 @@ describe Draper::Base do
       decorator.sample_truncate.should == "Once..."
     end
   end
+
+  describe "decorator in cancan rules" do
+    it "should answer yes to kind_of? source class" do
+      subject.kind_of?(source.class).should == true
+    end
+  end
 end
