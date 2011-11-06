@@ -7,8 +7,8 @@ class <%= singular_name.camelize %>Decorator < ApplicationDecorator
   #   Normal Usage: helpers.number_to_currency(2)
   #   Abbreviated : h.number_to_currency(2)
   #   
-  #   Or, optionally enable "lazy helpers" by calling this method:
-  #     lazy_helpers
+  #   Or, optionally enable "lazy helpers" by include this module :
+  #     include Draper::LazyHelpers
   #   Then use the helpers with no proxy:
   #     number_to_currency(2)
 
