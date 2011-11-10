@@ -181,6 +181,47 @@ describe Draper::Base do
       end
     end
 
+    context "does not infer collections by default" do
+      subject { Draper::Base.decorate(source).to_ary }
+
+      let(:source) { [Product.new, Widget.new] }
+
+      it "returns a collection of wrapped objects all with the same decorator" do
+        subject.first.class.name.should eql 'Draper::Base'
+        subject.last.class.name.should eql  'Draper::Base'
+      end
+    end
+
+    context "does not infer single items by default" do
+      subject { Draper::Base.decorate(source) }
+
+      let(:source) { Product.new }
+
+      it "returns a decorator of the type explicity used in the call" do
+        subject.class.should eql Draper::Base
+      end
+    end
+
+    context "returns a collection containing only the explicit decorator used in the call" do
+      subject { Draper::Base.decorate(source, :infer => true).to_ary }
+
+      let(:source) { [Product.new, Widget.new] }
+
+      it "returns a mixed collection of wrapped objects" do
+        subject.first.class.should eql ProductDecorator
+        subject.last.class.should eql WidgetDecorator
+      end
+    end
+
+    context "when given a single object" do
+      subject { Draper::Base.decorate(source, :infer => true) }
+
+      let(:source) { Product.new }
+
+      it "can also infer its decorator" do
+        subject.class.should eql ProductDecorator
+      end
+    end
   end
 
   context('.==') do

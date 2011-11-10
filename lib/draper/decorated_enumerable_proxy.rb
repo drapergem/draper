@@ -7,11 +7,11 @@ module Draper
     end
 
     def each(&block)
-      @wrapped_collection.each { |member| block.call(@klass.new(member, @options)) }
+      @wrapped_collection.each { |member| block.call(@klass.decorate(member, @options)) }
     end
 
     def to_ary
-      @wrapped_collection.map { |member| @klass.new(member, @options) }
+      @wrapped_collection.map { |member| @klass.decorate(member, @options) }
     end
 
     def method_missing (method, *args, &block)
