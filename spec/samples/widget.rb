@@ -1,2 +1,0 @@
-class Widget < Product
-end
