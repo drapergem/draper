@@ -53,6 +53,22 @@ module Draper
       define_method(input){ @model }
     end
 
+    # Typically called withing a decorator definition, this method causes
+    # the assocation to be decorated when it is retrieved.
+    #
+    # @param [Symbol] name of association to decorate, like `:products`
+    def self.decorates_association(association_symbol)
+      define_method(association_symbol) do
+        orig_association = model.send(association_symbol)
+        return nil  if orig_association.nil?
+        if orig_association.respond_to? :proxy_reflection # The association is a collection
+          "#{orig_association.proxy_reflection.klass}Decorator".constantize.decorate(orig_association)
+        else
+          "#{orig_association.class}Decorator".constantize.decorate(orig_association)
+        end
+      end
+    end
+
     # Specifies a black list of methods which may *not* be proxied to
     # to the wrapped object.
     #

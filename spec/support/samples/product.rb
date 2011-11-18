@@ -44,4 +44,16 @@ class Product < ActiveRecord::Base
   def block
     yield
   end
+
+  def similar_products
+    result = [Product.new, Product.new]
+    def result.proxy_reflection
+      OpenStruct.new(:klass => Product)
+    end
+    result
+  end
+
+  def previous_version
+    Product.new
+  end
 end
