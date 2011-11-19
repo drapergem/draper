@@ -95,6 +95,16 @@ describe Draper::Base do
     end
   end
 
+  context('.decorates_associations') do
+    subject { Decorator }
+    it "decorates each of the associations" do
+      subject.should_receive(:decorates_association).with(:similar_products)
+      subject.should_receive(:decorates_association).with(:previous_version)
+
+      subject.decorates_associations :similar_products, :previous_version
+    end
+  end
+
   context(".model / .to_model") do
     it "should return the wrapped object" do
       subject.to_model.should == source
