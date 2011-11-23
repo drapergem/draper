@@ -26,6 +26,10 @@ module Draper
       @wrapped_collection == other
     end
 
+    def [](index)
+      @klass.new(@wrapped_collection[index], @context)
+    end
+
     def to_s
       "#<DecoratedEnumerableProxy of #{@klass} for #{@wrapped_collection.inspect}>"
     end
