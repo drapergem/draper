@@ -27,7 +27,7 @@ module Draper
     end
 
     def [](index)
-      @klass.new(@wrapped_collection[index], @context)
+      @klass.new(@wrapped_collection[index], @options)
     end
 
     def to_s

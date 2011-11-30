@@ -312,7 +312,6 @@ describe Draper::Base do
 
     it "should allow decorated access by index" do
       subject = ProductDecorator.decorate(paged_array)
-
       subject[0].should be_instance_of ProductDecorator
     end
 
