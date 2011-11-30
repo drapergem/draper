@@ -12,12 +12,6 @@ describe TestUnit::DecoratorGenerator do
   describe 'no arguments' do
     before { run_generator %w(products)  }
 
-    describe 'test/decorators/application_decorator_test.rb' do
-      subject { file('test/decorators/application_decorator_test.rb') }
-      it { should exist }
-      it { should contain "class ApplicationDecoratorTest < ActiveSupport::TestCase" }
-    end
-
     describe 'test/decorators/products_decorator_test.rb' do
       subject { file('test/decorators/products_decorator_test.rb') }
       it { should exist }
