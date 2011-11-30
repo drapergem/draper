@@ -2,16 +2,16 @@ module Draper
   class DecoratedEnumerableProxy
     include Enumerable
 
-    def initialize(collection, klass, context)
-      @wrapped_collection, @klass, @context = collection, klass, context
+    def initialize(collection, klass, options = {})
+      @wrapped_collection, @klass, @options = collection, klass, options
     end
 
     def each(&block)
-      @wrapped_collection.each { |member| block.call(@klass.new(member, @context)) }
+      @wrapped_collection.each { |member| block.call(@klass.new(member, @options)) }
     end
 
     def to_ary
-      @wrapped_collection.map { |member| @klass.new(member, @context) }
+      @wrapped_collection.map { |member| @klass.new(member, @options) }
     end
 
     def method_missing (method, *args, &block)
