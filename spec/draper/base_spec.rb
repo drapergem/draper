@@ -382,4 +382,21 @@ describe Draper::Base do
       subject.kind_of?(source.class).should == true
     end
   end
+  
+  describe "#method_missing" do
+    context "when #hello_world is called for the first time" do
+      it "hits method missing" do
+        subject.should_receive(:method_missing)
+        subject.hello_world
+      end
+    end
+    
+    context "when #hello_world is called again" do
+      before { subject.hello_world }
+      it "proxies method directly after first hit" do
+        subject.should_not_receive(:method_missing)
+        subject.hello_world
+      end
+    end
+  end
 end
