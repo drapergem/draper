@@ -135,7 +135,7 @@ describe Draper::Base do
     end
 
     it "should accept and store a context" do
-      pd = ProductDecorator.find(1, :admin)
+      pd = ProductDecorator.find(1, :context => :admin)
       pd.context.should == :admin
     end
   end
@@ -164,7 +164,7 @@ describe Draper::Base do
     context "with a context" do
       let(:context) {{ :some => 'data' }}
 
-      subject { Draper::Base.decorate(source, context) }
+      subject { Draper::Base.decorate(source, :context => context) }
 
       context "when given a collection of source objects" do
         let(:source) { [Product.new, Product.new] }
@@ -189,7 +189,7 @@ describe Draper::Base do
       subject.should == other
     end
   end
-  
+
   context 'position accessors' do
     [:first, :last].each do |method|
       context "##{method}" do
@@ -202,9 +202,9 @@ describe Draper::Base do
         end
 
         it "should accept an optional context" do
-          ProductDecorator.send(method, :admin).context.should == :admin
+          ProductDecorator.send(method, :context => :admin).context.should == :admin
         end
-      end      
+      end
     end
   end
 
@@ -273,9 +273,9 @@ describe Draper::Base do
       it "should return a decorated collection" do
         ProductDecorator.all.first.should be_instance_of ProductDecorator
       end
-      
+
       it "should accept a context" do
-        collection = ProductDecorator.all(:admin)
+        collection = ProductDecorator.all(:context => :admin)
         collection.first.context.should == :admin
       end
     end
