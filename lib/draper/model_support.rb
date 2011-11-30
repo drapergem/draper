@@ -1,9 +1,9 @@
 module Draper::ModelSupport
   def decorator(options = {})
-    @decorator ||= "#{self.class.name}Decorator".constantize.decorate(self, options)
+    @decorator ||= "#{self.class.name}Decorator".constantize.decorate(self, options.merge(:infer => false))
     block_given? ? yield(@decorator) : @decorator
   end
-  
+
   alias :decorate :decorator
 
   module ClassMethods

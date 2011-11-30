@@ -93,7 +93,13 @@ module Draper
     # @param [Object] instance(s) to wrap
     # @param [Hash] options (optional)
     def self.decorate(input, options = {})
-      input.respond_to?(:each) ? Draper::DecoratedEnumerableProxy.new(input, self, options) : new(input, options)
+      if input.respond_to?(:each)
+        Draper::DecoratedEnumerableProxy.new(input, self, options)
+      elsif options[:infer]
+        input.decorator(options)
+      else
+        new(input, options)
+      end
     end
 
     # Fetch all instances of the decorated class and decorate them.
