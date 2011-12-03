@@ -1,3 +1,5 @@
+require 'rspec/core' # Expose RSpec.configure
+
 module Draper
   module DecoratorExampleGroup
     extend ActiveSupport::Concern
