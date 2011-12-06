@@ -45,12 +45,12 @@ class Product < ActiveRecord::Base
     yield
   end
 
+  def self.reflect_on_association(association_symbol)
+    OpenStruct.new(:klass => self)
+  end
+
   def similar_products
-    result = [Product.new, Product.new]
-    def result.proxy_reflection
-      OpenStruct.new(:klass => Product)
-    end
-    result
+    [Product.new, Product.new]
   end
 
   def previous_version

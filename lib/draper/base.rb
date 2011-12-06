@@ -60,12 +60,9 @@ module Draper
     def self.decorates_association(association_symbol)
       define_method(association_symbol) do
         orig_association = model.send(association_symbol)
-        return nil  if orig_association.nil?
-        if orig_association.respond_to? :proxy_reflection # The association is a collection
-          "#{orig_association.proxy_reflection.klass}Decorator".constantize.decorate(orig_association)
-        else
-          "#{orig_association.class}Decorator".constantize.decorate(orig_association)
-        end
+        return orig_association  if orig_association.nil?
+        reflection = model.class.reflect_on_association(association_symbol)
+        "#{reflection.klass}Decorator".constantize.decorate(orig_association)
       end
     end
 
