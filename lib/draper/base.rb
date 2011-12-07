@@ -175,6 +175,11 @@ module Draper
       end
     end
 
+    def kind_of?(klass)
+      model.kind_of?(klass) || super(klass)
+    end
+    alias :is_a? :kind_of?
+
     def self.method_missing(method, *args, &block)
       model_class.send(method, *args, &block)
     end

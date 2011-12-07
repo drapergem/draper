@@ -445,4 +445,24 @@ describe Draper::Base do
       end
     end
   end
+
+  describe "#kind_of?" do
+    context "pretends to be of kind of model class" do      
+      it "#kind_of? Decorator" do
+        subject.should be_kind_of Decorator
+      end
+
+      it "#is_a? Decorator" do
+        subject.is_a?(Decorator).should be_true
+      end
+
+      it "#kind_of? Product" do
+        subject.should be_kind_of Product
+      end
+
+      it "#is_a? Product" do
+        subject.is_a?(Product).should be_true
+      end
+    end
+  end
 end
