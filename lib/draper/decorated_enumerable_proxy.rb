@@ -23,7 +23,7 @@ module Draper
     end
     
     def kind_of?(klass)
-      @wrapped_collection.kind_of?(klass) || super(klass)
+      super || @wrapped_collection.kind_of?(klass)
     end
     alias :is_a? :kind_of?
 
