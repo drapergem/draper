@@ -318,6 +318,13 @@ class ArticleDecorator < ApplicationDecorator
   end
 end
 ```
+### Integration with RSpec
+
+Using the provided generator, Draper will place specs for your new decorator in `spec/decorators/`. 
+By default, specs in `spec/decorators` will be tagged as `type => :decorator`. Any spec tagged as `decorator`
+will run `ApplicationController.new.set_current_view_context` which makes helpers available to the decorator.
+
+Note: If you're using Spork, you need to `require 'draper/rspec_integration'` in your Spork.prefork block.
 
 ## Issues / Pending
 
