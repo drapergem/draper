@@ -38,6 +38,13 @@ describe Draper::Base do
       Decorator.h.should == Decorator.helpers
     end
   end
+  
+  describe ".initialize_decorator_registration" do
+    it "responds to :registered_decorators after initialization" do
+      ProductDecorator.decorate(source)
+      Product.should respond_to :registered_decorators
+    end
+  end
 
   context(".decorates") do
     it "sets the model class for the decorator" do
@@ -57,6 +64,20 @@ describe Draper::Base do
     it "creates a named accessor for the wrapped model" do
       pd = ProductDecorator.new(source)
       pd.send(:product).should == source
+    end
+
+    context "when using default decorator version" do
+      it "sets default version proxy to current decorator" do
+        ProductDecorator.decorate(source)
+        Product.registered_decorators[:default].should == "ProductDecorator"
+      end
+    end
+    
+    context "when using a versioned decorator" do
+      it "creates a proxy for versioned decorator in model" do
+        Api::ProductDecorator.decorate(:source)
+        Product.registered_decorators[:api].should == "Api::ProductDecorator"
+      end
     end
 
     context("namespaced model supporting") do
