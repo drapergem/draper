@@ -55,7 +55,7 @@ describe Draper::Base do
       class Business; end
       expect do
         class BusinessDecorator < Draper::Base
-          decorates:business
+          decorates :business
         end
         BusinessDecorator.model_class.should == Business
       end.should_not raise_error
@@ -77,6 +77,16 @@ describe Draper::Base do
       it "creates a proxy for versioned decorator in model" do
         Api::ProductDecorator.decorate(:source)
         Product.registered_decorators[:api].should == "Api::ProductDecorator"
+      end
+    end
+    
+    context "when using a unconventional decorator name without version option" do
+      it "returns ArgumentError" do
+        expect {
+          class ErrorProductDecorator < Draper::Base
+            decorates :product
+          end
+        }.to raise_error(ArgumentError, "Specify a :version option for decorators that doen't follow basic naming conventions")
       end
     end
 

@@ -49,6 +49,7 @@ module Draper
     # @param [ Symbol ] input Snakecase name of the decorated class, like `:product`
     # @param options [ Symbol ] :class Usefull when using namespaced classes or some class alias
     # @param options [ Symbol ] :version An Alternative decorator version
+    # @raise ArgumentError When using unconventional decorator naming without providing a :version name
     # 
     # @example A decorator for a namespaced class +User::Profile+
     #   class ProfileDecorator < ApplicationDecorator
@@ -78,10 +79,13 @@ module Draper
     #   p.decorator.name #=> api-1-Vanilla
     def self.decorates(input, options = {})
       self.model_class = options[:class] || input.to_s.camelize.constantize
+      inferred_decorator_name = "#{self.model_class}Decorator"
       if version = options[:version]
         decorator_version = { version => self.name }
+      elsif version.blank? && self.name == inferred_decorator_name
+        decorator_version = { :default => inferred_decorator_name }
       else
-        decorator_version = { :default => "#{self.model_class}Decorator" }
+        raise ArgumentError, "Specify a :version option for decorators that doen't follow basic naming conventions"
       end
       unless defined? self.model_class.registered_decorators
         initialize_decorator_registration
