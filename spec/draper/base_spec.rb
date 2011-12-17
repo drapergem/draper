@@ -93,6 +93,13 @@ describe Draper::Base do
         subject.previous_version.should be_nil
       end
     end
+
+    context "with a specific decorator specified" do
+      before(:each){ subject.class_eval{ decorates_association :previous_version, :with => SpecificProductDecorator } }
+      it "causes the association to be decorated with the specified association" do
+        subject.previous_version.should be_instance_of(SpecificProductDecorator)
+      end
+    end
   end
 
   context('.decorates_associations') do

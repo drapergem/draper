@@ -1,0 +1,2 @@
+class SpecificProductDecorator < ProductDecorator
+end
