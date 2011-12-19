@@ -46,11 +46,66 @@ module Draper
     # This is primarilly set so the `.find` method knows which class
     # to query.
     #
-    # @param [Symbol] class_name snakecase name of the decorated class, like `:product`
+    # @param [ Symbol ] input Snakecase name of the decorated class, like `:product`
+    # @param options [ Symbol ] :class Usefull when using namespaced classes or some class alias
+    # @param options [ Symbol ] :version An Alternative decorator version
+    # @raise ArgumentError When using unconventional decorator naming without providing a :version name
+    # 
+    # @example A decorator for a namespaced class +User::Profile+
+    #   class ProfileDecorator < ApplicationDecorator
+    #     decorates :profile, :class => User::Profile
+    #   end
+    # 
+    # @example A default decorator for +Product+
+    #   class ProductDecorator < ApplicationDecorator
+    #     decorates :product
+    #     def name
+    #       "#{id}-#{name}"
+    #     end
+    #   end
+    #   p = Product.new(:name => "Vanilla")
+    #   p.id #=> 1
+    #   p.decorator.name #=> 1-Vanilla
+    # 
+    # @example A special decorator for +Product+
+    #   class Api::ProductDecorator < ApplicationDecorator
+    #     decorates :product, :version => :api
+    #     def name
+    #       "api-#{id}-#{name}"
+    #     end
+    #   end
+    #   p = Product.new(:name => "Vanilla")
+    #   p.id #=> 1
+    #   p.decorator.name #=> api-1-Vanilla
     def self.decorates(input, options = {})
       self.model_class = options[:class] || input.to_s.camelize.constantize
-      model_class.send :include, Draper::ModelSupport
+      inferred_decorator_name = "#{self.model_class}Decorator"
+      if version = options[:version]
+        decorator_version = { version => self.name }
+      elsif version.blank? && self.name == inferred_decorator_name
+        decorator_version = { :default => inferred_decorator_name }
+      else
+        raise ArgumentError, "Specify a :version option for decorators that doen't follow basic naming conventions"
+      end
+      unless defined? self.model_class.registered_decorators
+        initialize_decorator_registration
+      end
+      self.registered_decorators ||= {}
+      self.registered_decorators.merge!(decorator_version)
       define_method(input){ @model }
+    end
+    
+    # Defines a class variable to hold all versions of related decorators
+    # and includes +Drapper::ModelSupport+ methods in +model_class+.
+    # @see .decorates
+    # @see Drapper::ModelSupport
+    def self.initialize_decorator_registration
+      self.model_class.class_eval <<-RUBY
+        class << self
+          attr_accessor :registered_decorators
+        end
+      RUBY
+      model_class.send :include, Draper::ModelSupport
     end
 
     # Specifies a black list of methods which may *not* be proxied to
