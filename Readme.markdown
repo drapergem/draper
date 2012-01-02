@@ -219,7 +219,7 @@ ArticleDecorator.decorate(Article.first) # Returns one instance of ArticleDecora
 ArticleDecorator.decorate(Article.all)   # Returns an enumeration proxy of ArticleDecorator instances
 ```
   
-* Call `.find` to do automatically do a lookup on the `decorates` class:
+* Call `.find` to automatically do a lookup on the `decorates` class:
 
 ```ruby
 ArticleDecorator.find(1)
