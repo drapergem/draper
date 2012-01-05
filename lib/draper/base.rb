@@ -155,6 +155,7 @@ module Draper
     def kind_of?(klass)
       super || model.kind_of?(klass)
     end
+    alias :is_a? :kind_of?
 
     def respond_to?(method, include_private = false)
       super || (allow?(method) && model.respond_to?(method))
