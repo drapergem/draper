@@ -53,6 +53,32 @@ module Draper
       define_method(input){ @model }
     end
 
+    # Typically called withing a decorator definition, this method causes
+    # the assocation to be decorated when it is retrieved.
+    #
+    # @param [Symbol] name of association to decorate, like `:products`
+    # @option opts [Class] :with The decorator to decorate the association with
+    def self.decorates_association(association_symbol, options = {})
+      define_method(association_symbol) do
+        orig_association = model.send(association_symbol)
+        return orig_association  if orig_association.nil?
+        if options[:with]
+          options[:with].decorate(orig_association)
+        else
+          reflection = model.class.reflect_on_association(association_symbol)
+          "#{reflection.klass}Decorator".constantize.decorate(orig_association)
+        end
+      end
+    end
+
+    # A convenience method for decorating multiple associations. Calls
+    # decorates_association on each of the given symbols.
+    #
+    # @param [Symbols*] name of associations to decorate
+    def self.decorates_associations(*association_symbols)
+      association_symbols.each{ |sym| decorates_association(sym) }
+    end
+
     # Specifies a black list of methods which may *not* be proxied to
     # to the wrapped object.
     #
