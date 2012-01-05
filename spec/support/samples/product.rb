@@ -44,4 +44,16 @@ class Product < ActiveRecord::Base
   def block
     yield
   end
+
+  def self.reflect_on_association(association_symbol)
+    OpenStruct.new(:klass => self)
+  end
+
+  def similar_products
+    [Product.new, Product.new]
+  end
+
+  def previous_version
+    Product.new
+  end
 end
