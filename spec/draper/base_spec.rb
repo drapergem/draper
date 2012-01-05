@@ -442,12 +442,6 @@ describe Draper::Base do
       decorator.sample_truncate.should == "Once..."
     end
   end
-
-  describe "decorator in cancan rules" do
-    it "should answer yes to kind_of? source class" do
-      subject.kind_of?(source.class).should == true
-    end
-  end
   
   describe "#method_missing" do
     context "when #hello_world is called for the first time" do
@@ -462,6 +456,26 @@ describe Draper::Base do
       it "proxies method directly after first hit" do
         subject.should_not_receive(:method_missing)
         subject.hello_world
+      end
+    end
+  end
+
+  describe "#kind_of?" do
+    context "pretends to be of kind of model class" do      
+      it "#kind_of? decorator class" do
+        subject.should be_kind_of subject.class
+      end
+
+      it "#is_a? decorator class" do
+        subject.is_a?(subject.class).should be_true
+      end
+
+      it "#kind_of? source class" do
+        subject.should be_kind_of source.class
+      end
+
+      it "#is_a? source class" do
+        subject.is_a?(source.class).should be_true
       end
     end
   end
