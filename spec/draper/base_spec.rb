@@ -314,6 +314,26 @@ describe Draper::Base do
       subject = ProductDecorator.decorate(paged_array)
       subject[0].should be_instance_of ProductDecorator
     end
+    
+    context "pretends to be of kind of wrapped collection class" do
+      subject { ProductDecorator.decorate(paged_array) }
+      
+      it "#kind_of? DecoratedEnumerableProxy" do
+        subject.should be_kind_of Draper::DecoratedEnumerableProxy
+      end
+
+      it "#is_a? DecoratedEnumerableProxy" do
+        subject.is_a?(Draper::DecoratedEnumerableProxy).should be_true
+      end
+
+      it "#kind_of? Array" do
+        subject.should be_kind_of Array
+      end
+
+      it "#is_a? Array" do
+        subject.is_a?(Array).should be_true
+      end
+    end
 
     context '#all' do
       it "should return a decorated collection" do
