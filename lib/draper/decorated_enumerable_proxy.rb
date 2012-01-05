@@ -21,6 +21,11 @@ module Draper
     def respond_to?(method)
       super || @wrapped_collection.respond_to?(method)
     end
+    
+    def kind_of?(klass)
+      super || @wrapped_collection.kind_of?(klass)
+    end
+    alias :is_a? :kind_of?
 
     def ==(other)
       @wrapped_collection == other
