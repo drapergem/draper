@@ -247,6 +247,15 @@ class ActicleMailer < ActionMailer::Base
   end
 end
 ```
+### Integration with RSpec
+
+Using the provided generator, Draper will place specs for your new decorator in `spec/decorators/`. 
+
+By default, specs in `spec/decorators` will be tagged as `type => :decorator`. Any spec tagged as `decorator` will run `ApplicationController.new.set_current_view_context` which makes helpers available to the decorator.
+
+If your decorator specs live somewhere else, which they shouldn't, make sure to tag them with `type => :decorator`. If you don't tag them, Draper's helpers won't be available to your decorator while testing. 
+
+Note: If you're using Spork, you need to `require 'draper/rspec_integration'` in your Spork.prefork block.
 
 ## Possible Decoration Methods
 
@@ -318,7 +327,6 @@ class ArticleDecorator < ApplicationDecorator
   end
 end
 ```
-
 ## Issues / Pending
 
 * Documentation
