@@ -53,7 +53,7 @@ module Draper
       define_method(input){ @model }
     end
 
-    # Typically called withing a decorator definition, this method causes
+    # Typically called within a decorator definition, this method causes
     # the assocation to be decorated when it is retrieved.
     #
     # @param [Symbol] name of association to decorate, like `:products`
