@@ -1,6 +1,7 @@
 # Draper: View Models for Rails
 
-![TravisCI Build Status](https://secure.travis-ci.org/jcasimir/draper.png)
+[![TravisCI Build Status](https://secure.travis-ci.org/jcasimir/draper.png)](http://travis-ci.org/jcasimir/draper)
+[![Gemnasium Build Status](https://gemnasium.com/jcasimir/draper.png)](https://gemnasium.com/jcasimir/draper)
 
 ## Quick Start
 
