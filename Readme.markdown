@@ -210,7 +210,7 @@ When writing your controller actions, you have three options:
 * Call `.new` and pass in the object to be wrapped
 
 ```ruby
-ArticleDecorator.new(Article.find(params[:id]))`
+ArticleDecorator.new(Article.find(params[:id]))
 ```
 
 * Call `.decorate` and pass in an object or collection of objects to be wrapped:
