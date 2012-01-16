@@ -30,20 +30,17 @@ Ryan Bates has put together an excellent RailsCast on Draper based on the 0.8.0 
 
 ## What's New
 
-### Version 0.9.X
+Check out the full commit history at https://github.com/jcasimir/draper/compare/ad94f54369deabd11315fc241c66b74a30adec0a...04bb00505b7832419fddba20e5068317610eb38d
 
-* `.5`: Render the `decorate` helper, passing a source object and a block in a view template to auto-decorate and render the block (ISSUE: see https://github.com/jcasimir/draper/issues/32)
-* `.5`: `ArticleDecorator.first` and `ArticleDecorator.last` will return decorated instances as you'd expect
-* `.5`: Calling `ArticleDecorator.all` will now return a `DecoratedEnumerableProxy` of the objects from `Article.all`
-* `.5`: More love for `DecoratedEnumerableProxy` including better use of `respond_to`, `include?`, and overriding `.all` to return a 
-* `.4`: Improved the collection proxy's `respond_to` and `to_ary` to play nicely with Rails' `render`
-* `.3`: Helpers are available from the decorator class level, so you could write a `ArticleDecorator.new_article_link` that uses `h.link_to`
-* `.2`: Automatically generate a named accessor for the wrapped object, so now inside of `ArticleDecorator` you can use `article` instead of just `model`
-* `.2`: Automatically generate RSpec/Test::Unit stub for decorator class
-* `.1`: Removed the `lazy_helpers` method to favor using `include Draper::LazyHelpers`
-* `.1`: Refactored how methods are selected for delegation to the wrapped model
-* `.0`: Fixed how the view context is stored to resolve cross-request issues
-* `.0`: Decorated collections now return a collection proxy instead of an array, which fixes many compatibility issues
+In summary, you can now:
+
+* [Namespace the `decorates` call](https://github.com/jcasimir/draper/commit/1c3d5667b8406b80b490d876257379087b129f92)
+* [Use your decorators with CanCan](https://github.com/jcasimir/draper/commit/ac1f3083989107d877e2b1c918c3a3e792db99e8)
+* [Use a more generalized `options` hash in decorator initialization](https://github.com/jcasimir/draper/commit/03910877d0461356da0968a87346592908f292a7)
+* [Get better performance by generating methods](https://github.com/jcasimir/draper/commit/ebe30511b79eac82276413ca7ae54a4a4d86d4dc)
+* [Automatically decorate associated objects](https://github.com/jcasimir/draper/commit/1580baa287997ed4e356aae0ffeeb8fe9c326ced)
+
+Thanks to [steveklabnik](http://github.com/steveklabnik), [i0rek](http://github.com/i0rek), [laserlemon](http://github.com/laserlemon), [michaelfairley](http://github.com/michaelfairley), [dnagir](http://github.com/dnagir), [ubermajestix](http://github.com/ubermajestix), [tmaier](http://github.com/tmaier), [angelim](http://github.com/angelim), [duncanbeevers](http://github.com/duncanbeevers), Albert Peng & JR Boyens, [leocassarani](http://github.com/leocassarani), [Jeff Felchner](http://github.com/Felchner), [shingara](http://github.com/shingara), [momolog](http://github.com/momolog), and [ayamomiji](http://github.com/shingara) for their contributions to this version!
 
 ## Goals
 
