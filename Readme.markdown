@@ -6,19 +6,20 @@
 ## Quick Start
 
 1. Add `gem 'draper'` to your `Gemfile` and `bundle`
-2. Run `rails g draper:decorator YourModel`
-3. Edit `app/decorators/[your_model]_decorator.rb` using:
+2. Run `rails g draper:install` to create the directory and `ApplicationDecorator`
+3. Run `rails g draper:decorator YourModel`
+4. Edit `app/decorators/[your_model]_decorator.rb` using:
   1. `h` to proxy to Rails/application helpers like `h.current_user`
   2. `[your_model]` to access the wrapped object like `article.created_at`
-4. Put common decorations in `app/decorators/application.rb`  
-5. Wrap models in your controller with the decorator using:
+5. Put common decorations in `app/decorators/application.rb`  
+6. Wrap models in your controller with the decorator using:
   1. `.find` automatic lookup & wrap
     ex: `ArticleDecorator.find(1)`
   2. `.decorate` method with single object or collection, 
     ex: `ArticleDecorator.decorate(Article.all)`
   3. `.new` method with single object
     ex: `ArticleDecorator.new(Article.first)`
-6. Output the instance methods in your view templates
+7. Output the instance methods in your view templates
   ex: `@article_decorator.created_at`
 
 ## Watch the RailsCast
