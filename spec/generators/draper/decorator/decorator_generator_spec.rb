@@ -12,12 +12,6 @@ describe Draper::DecoratorGenerator do
   describe 'no arguments' do
     before { run_generator %w(products)  }
 
-    describe 'app/decorators/application_decorator.rb' do
-      subject { file('app/decorators/application_decorator.rb') }
-      it { should exist }
-      it { should contain "class ApplicationDecorator < Draper::Base" }
-    end
-
     describe 'app/decorators/products_decorator.rb' do
       subject { file('app/decorators/products_decorator.rb') }
       it { should exist }

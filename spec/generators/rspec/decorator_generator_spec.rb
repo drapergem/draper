@@ -12,12 +12,6 @@ describe Rspec::DecoratorGenerator do
   describe 'no arguments' do
     before { run_generator %w(products)  }
 
-    describe 'spec/decorators/application_decorator_spec.rb' do
-      subject { file('spec/decorators/application_decorator_spec.rb') }
-      it { should exist }
-      it { should contain "describe ApplicationDecorator do" }
-    end
-
     describe 'spec/decorators/products_decorator_spec.rb' do
       subject { file('spec/decorators/products_decorator_spec.rb') }
       it { should exist }
