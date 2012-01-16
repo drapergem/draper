@@ -40,7 +40,7 @@ In summary, you can now:
 * [Get better performance by generating methods](https://github.com/jcasimir/draper/commit/ebe30511b79eac82276413ca7ae54a4a4d86d4dc)
 * [Automatically decorate associated objects](https://github.com/jcasimir/draper/commit/1580baa287997ed4e356aae0ffeeb8fe9c326ced)
 
-Thanks to [steveklabnik](http://github.com/steveklabnik), [i0rek](http://github.com/i0rek), [laserlemon](http://github.com/laserlemon), [michaelfairley](http://github.com/michaelfairley), [dnagir](http://github.com/dnagir), [ubermajestix](http://github.com/ubermajestix), [tmaier](http://github.com/tmaier), [angelim](http://github.com/angelim), [duncanbeevers](http://github.com/duncanbeevers), Albert Peng & JR Boyens, [leocassarani](http://github.com/leocassarani), [Jeff Felchner](http://github.com/Felchner), [shingara](http://github.com/shingara), [momolog](http://github.com/momolog), and [ayamomiji](http://github.com/shingara) for their contributions to this version!
+Thanks to [steveklabnik](http://github.com/steveklabnik), [i0rek](http://github.com/i0rek), [laserlemon](http://github.com/laserlemon), [michaelfairley](http://github.com/michaelfairley), [dnagir](http://github.com/dnagir), [ubermajestix](http://github.com/ubermajestix), [tmaier](http://github.com/tmaier), [angelim](http://github.com/angelim), [duncanbeevers](http://github.com/duncanbeevers), Albert Peng & JR Boyens, [leocassarani](http://github.com/leocassarani), [Jeff Felchner](http://github.com/Felchner), [shingara](http://github.com/shingara), [momolog](http://github.com/momolog), and [ayamomiji](http://github.com/ayamomiji) for their contributions to this version!
 
 ## Goals
 
