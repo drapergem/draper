@@ -2,7 +2,7 @@ module Draper
   class Base
     require 'active_support/core_ext/class/attribute'
     class_attribute :denied, :allowed, :model_class
-    attr_accessor :context, :model
+    attr_accessor :model, :options
 
     DEFAULT_DENIED = Object.new.methods << :method_missing
     FORCED_PROXY = [:to_param, :id]
@@ -23,7 +23,7 @@ module Draper
       input.inspect # forces evaluation of a lazy query from AR
       self.class.model_class = input.class if model_class.nil?
       @model = input
-      self.context = options.fetch(:context, {})
+      self.options = options
     end
 
     # Proxies to the class specified by `decorates` to automatically
@@ -119,7 +119,10 @@ module Draper
     # @param [Object] instance(s) to wrap
     # @param [Hash] options (optional)
     def self.decorate(input, options = {})
-      if input.respond_to?(:each)
+      if input.instance_of?(self)
+        input.options = options unless options.empty?
+        return input
+      elsif input.respond_to?(:each)
         Draper::DecoratedEnumerableProxy.new(input, self, options)
       elsif options[:infer]
         input.decorator(options)
@@ -212,6 +215,14 @@ module Draper
 
     def self.respond_to?(method, include_private = false)
       super || model_class.respond_to?(method)
+    end
+
+    def context
+      options.fetch(:context, {})      
+    end
+    
+    def context=(input)
+      options[:context] = input
     end
 
   private

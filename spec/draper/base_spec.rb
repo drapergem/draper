@@ -224,6 +224,25 @@ describe Draper::Base do
         let(:source) { Product.new }
 
         it { should be_instance_of(Draper::Base) }
+        
+        context "when the input is already decorated" do
+          it "does not perform double-decoration" do
+            decorated = ProductDecorator.decorate(source)
+            ProductDecorator.decorate(decorated).object_id.should == decorated.object_id
+          end
+        
+          it "overwrites options with provided options" do
+            first_run = ProductDecorator.decorate(source, :context => {:role => :user})
+            second_run = ProductDecorator.decorate(first_run, :context => {:role => :admin})
+            second_run.context[:role].should == :admin
+          end
+          
+          it "leaves existing options if none are supplied" do
+            first_run = ProductDecorator.decorate(source, :context => {:role => :user})
+            second_run = ProductDecorator.decorate(first_run)
+            second_run.context[:role].should == :user
+          end
+        end
       end
     end
 
@@ -245,6 +264,14 @@ describe Draper::Base do
 
         its(:context) { should eq(context) }
       end
+    end
+    
+    context "with options" do
+      let(:options) {{ :more => "settings" }}
+      
+      subject { Draper::Base.decorate(source, options ) }
+      
+      its(:options) { should eq(options) }
     end
 
     context "does not infer collections by default" do
