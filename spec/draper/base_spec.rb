@@ -177,6 +177,34 @@ describe Draper::Base do
       pd.context.should == :admin
     end
   end
+  
+  context ".find_by_(x)" do
+    it "runs the similarly named finder" do
+      Product.should_receive(:find_by_name)
+      ProductDecorator.find_by_name("apples")
+    end
+    
+    it "returns a decorated result" do
+      ProductDecorator.find_by_name("apples").should be_kind_of(ProductDecorator)
+    end
+    
+    it "runs complex finders" do
+      Product.should_receive(:find_by_name_and_size)
+      ProductDecorator.find_by_name_and_size("apples", "large")
+    end
+    
+    it "accepts an options hash" do
+      Product.should_receive(:find_by_name_and_size).with("apples", "large", {:role => :admin})
+      ProductDecorator.find_by_name_and_size("apples", "large", {:role => :admin})
+    end
+    
+    it "uses the options hash in the decorator instantiation" do
+      pending "Figure out an implementation that supports multiple args (find_by_name_and_count_and_size) plus an options hash"
+      Product.should_receive(:find_by_name_and_size).with("apples", "large", {:role => :admin})
+      pd = ProductDecorator.find_by_name_and_size("apples", "large", {:role => :admin})
+      pd.context[:role].should == :admin
+    end
+  end
 
   context ".decorate" do
     context "without any context" do

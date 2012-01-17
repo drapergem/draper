@@ -190,9 +190,9 @@ module Draper
     def method_missing(method, *args, &block)
       if allow?(method)
         begin
-          self.class.send :define_method, method do |*args, &block|
+          self.class.send :define_method, method do |*args, &block|            
             model.send(method, *args, &block)
-          end
+          end                        
           self.send(method, *args, &block)
         rescue NoMethodError
           super
@@ -203,7 +203,11 @@ module Draper
     end
 
     def self.method_missing(method, *args, &block)
-      model_class.send(method, *args, &block)
+      if method.to_s.match(/^find_by.*/)
+        self.decorate(model_class.send(method, *args, &block))
+      else
+        model_class.send(method, *args, &block)
+      end
     end
 
     def self.respond_to?(method, include_private = false)
