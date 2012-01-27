@@ -220,12 +220,18 @@ module Draper
     def context
       options.fetch(:context, {})      
     end
-    
+
     def context=(input)
       options[:context] = input
     end
 
+    def source
+      model
+    end
+    alias_method :to_source, :model
+
   private
+
     def allow?(method)
       (!allowed? || allowed.include?(method) || FORCED_PROXY.include?(method)) && !denied.include?(method)
     end

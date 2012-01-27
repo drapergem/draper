@@ -119,6 +119,13 @@ describe Draper::Base do
     end
   end
 
+  context(".source / .to_source") do
+    it "should return the wrapped object" do
+      subject.to_source == source
+      subject.source == source
+    end
+  end
+
   context("selecting methods") do
     it "echos the methods of the wrapped class except default exclusions" do
       source.methods.each do |method|
@@ -436,6 +443,13 @@ describe Draper::Base do
       it "should accept a context" do
         collection = ProductDecorator.all(:context => :admin)
         collection.first.context.should == :admin
+      end
+    end
+
+    context(".source / .to_source") do
+      it "should return the wrapped object" do
+        subject.to_source == source
+        subject.source == source
       end
     end
   end
