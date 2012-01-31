@@ -193,9 +193,9 @@ module Draper
     def method_missing(method, *args, &block)
       if allow?(method)
         begin
-          self.class.send :define_method, method do |*args, &block|            
+          self.class.send :define_method, method do |*args, &block|
             model.send(method, *args, &block)
-          end                        
+          end
           self.send(method, *args, &block)
         rescue NoMethodError
           super
@@ -218,9 +218,9 @@ module Draper
     end
 
     def context
-      options.fetch(:context, {})      
+      options.fetch(:context, {})
     end
-    
+
     def context=(input)
       options[:context] = input
     end
