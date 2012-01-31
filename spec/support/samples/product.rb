@@ -45,6 +45,10 @@ class Product < ActiveRecord::Base
     "Sample Title"
   end
 
+  def some_action
+    self.nonexistant_method
+  end
+
   def block
     yield
   end

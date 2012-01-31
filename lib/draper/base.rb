@@ -197,8 +197,9 @@ module Draper
             model.send(method, *args, &block)
           end
           self.send(method, *args, &block)
-        rescue NoMethodError
-          super
+        rescue NoMethodError => no_method_error
+          super if no_method_error.name == method
+          raise no_method_error
         end
       else
         super

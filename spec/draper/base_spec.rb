@@ -551,6 +551,18 @@ describe Draper::Base do
         subject.hello_world
       end
     end
+
+    context "when the delegated method calls a non-existant method" do
+      it "raises the correct NoMethodError" do
+        begin
+          subject.some_action
+        rescue NoMethodError => e
+          e.name.should_not == :some_action
+        else
+          fail("No exception raised")
+        end
+      end
+    end
   end
 
   describe "#kind_of?" do
