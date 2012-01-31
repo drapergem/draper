@@ -8,8 +8,8 @@ module Draper::ModelSupport
 
   module ClassMethods
     def decorate(options = {})
-      @decorator_proxy ||= "#{model_name}Decorator".constantize.decorate(self.scoped, options)
-      block_given? ? yield(@decorator_proxy) : @decorator_proxy
+      decorator_proxy = "#{model_name}Decorator".constantize.decorate(self.scoped, options)
+      block_given? ? yield(decorator_proxy) : decorator_proxy
     end
   end
 
