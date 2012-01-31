@@ -38,5 +38,10 @@ module Draper
     def to_s
       "#<DecoratedEnumerableProxy of #{@klass} for #{@wrapped_collection.inspect}>"
     end
+
+    def source
+      @wrapped_collection
+    end
+    alias_method :to_source, :source
   end
 end
