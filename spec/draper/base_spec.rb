@@ -53,6 +53,44 @@ describe Draper::Base do
         BusinessDecorator.model_class.should == Business
       end.should_not raise_error
     end
+    
+    context("accepts ActiveRecord like :class_name option too") do
+      it "accepts constants for :class" do
+        expect do
+        class CustomDecorator < Draper::Base
+          decorates :product, :class => Product
+        end
+        CustomDecorator.model_class.should == Product
+        end.should_not raise_error
+      end
+      
+      it "accepts constants for :class_name" do
+        expect do
+        class CustomDecorator < Draper::Base
+          decorates :product, :class_name => Product
+        end
+        CustomDecorator.model_class.should == Product
+        end.should_not raise_error
+      end
+      
+      it "accepts strings for :class" do
+        expect do
+        class CustomDecorator < Draper::Base
+          decorates :product, :class => 'Product'
+        end
+        CustomDecorator.model_class.should == Product
+        end.should_not raise_error
+      end
+      
+      it "accepts strings for :class_name" do
+        expect do
+        class CustomDecorator < Draper::Base
+          decorates :product, :class_name => 'Product'
+        end
+        CustomDecorator.model_class.should == Product
+        end.should_not raise_error
+      end
+    end
 
     it "creates a named accessor for the wrapped model" do
       pd = ProductDecorator.new(source)
@@ -116,6 +154,13 @@ describe Draper::Base do
     it "should return the wrapped object" do
       subject.to_model.should == source
       subject.model.should == source
+    end
+  end
+
+  context(".source / .to_source") do
+    it "should return the wrapped object" do
+      subject.to_source == source
+      subject.source == source
     end
   end
 
@@ -436,6 +481,13 @@ describe Draper::Base do
       it "should accept a context" do
         collection = ProductDecorator.all(:context => :admin)
         collection.first.context.should == :admin
+      end
+    end
+
+    context(".source / .to_source") do
+      it "should return the wrapped object" do
+        subject.to_source == source
+        subject.source == source
       end
     end
   end

@@ -48,7 +48,8 @@ module Draper
     #
     # @param [Symbol] class_name snakecase name of the decorated class, like `:product`
     def self.decorates(input, options = {})
-      self.model_class = options[:class] || input.to_s.camelize.constantize
+      self.model_class = options[:class] || options[:class_name] || input.to_s.camelize
+      self.model_class = model_class.constantize if model_class.respond_to?(:constantize)
       model_class.send :include, Draper::ModelSupport
       define_method(input){ @model }
     end
@@ -226,7 +227,13 @@ module Draper
       options[:context] = input
     end
 
+    def source
+      model
+    end
+    alias_method :to_source, :model
+
   private
+
     def allow?(method)
       (!allowed? || allowed.include?(method) || FORCED_PROXY.include?(method)) && !denied.include?(method)
     end
