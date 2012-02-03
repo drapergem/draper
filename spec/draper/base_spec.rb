@@ -53,6 +53,44 @@ describe Draper::Base do
         BusinessDecorator.model_class.should == Business
       end.should_not raise_error
     end
+    
+    context("accepts ActiveRecord like :class_name option too") do
+      it "accepts constants for :class" do
+        expect do
+        class CustomDecorator < Draper::Base
+          decorates :product, :class => Product
+        end
+        CustomDecorator.model_class.should == Product
+        end.should_not raise_error
+      end
+      
+      it "accepts constants for :class_name" do
+        expect do
+        class CustomDecorator < Draper::Base
+          decorates :product, :class_name => Product
+        end
+        CustomDecorator.model_class.should == Product
+        end.should_not raise_error
+      end
+      
+      it "accepts strings for :class" do
+        expect do
+        class CustomDecorator < Draper::Base
+          decorates :product, :class => 'Product'
+        end
+        CustomDecorator.model_class.should == Product
+        end.should_not raise_error
+      end
+      
+      it "accepts strings for :class_name" do
+        expect do
+        class CustomDecorator < Draper::Base
+          decorates :product, :class_name => 'Product'
+        end
+        CustomDecorator.model_class.should == Product
+        end.should_not raise_error
+      end
+    end
 
     it "creates a named accessor for the wrapped model" do
       pd = ProductDecorator.new(source)
@@ -119,6 +157,13 @@ describe Draper::Base do
     end
   end
 
+  context(".source / .to_source") do
+    it "should return the wrapped object" do
+      subject.to_source == source
+      subject.source == source
+    end
+  end
+
   context("selecting methods") do
     it "echos the methods of the wrapped class except default exclusions" do
       source.methods.each do |method|
@@ -177,27 +222,27 @@ describe Draper::Base do
       pd.context.should == :admin
     end
   end
-  
+
   context ".find_by_(x)" do
     it "runs the similarly named finder" do
       Product.should_receive(:find_by_name)
       ProductDecorator.find_by_name("apples")
     end
-    
+
     it "returns a decorated result" do
       ProductDecorator.find_by_name("apples").should be_kind_of(ProductDecorator)
     end
-    
+
     it "runs complex finders" do
       Product.should_receive(:find_by_name_and_size)
       ProductDecorator.find_by_name_and_size("apples", "large")
     end
-    
+
     it "accepts an options hash" do
       Product.should_receive(:find_by_name_and_size).with("apples", "large", {:role => :admin})
       ProductDecorator.find_by_name_and_size("apples", "large", {:role => :admin})
     end
-    
+
     it "uses the options hash in the decorator instantiation" do
       pending "Figure out an implementation that supports multiple args (find_by_name_and_count_and_size) plus an options hash"
       Product.should_receive(:find_by_name_and_size).with("apples", "large", {:role => :admin})
@@ -224,19 +269,19 @@ describe Draper::Base do
         let(:source) { Product.new }
 
         it { should be_instance_of(Draper::Base) }
-        
+
         context "when the input is already decorated" do
           it "does not perform double-decoration" do
             decorated = ProductDecorator.decorate(source)
             ProductDecorator.decorate(decorated).object_id.should == decorated.object_id
           end
-        
+
           it "overwrites options with provided options" do
             first_run = ProductDecorator.decorate(source, :context => {:role => :user})
             second_run = ProductDecorator.decorate(first_run, :context => {:role => :admin})
             second_run.context[:role].should == :admin
           end
-          
+
           it "leaves existing options if none are supplied" do
             first_run = ProductDecorator.decorate(source, :context => {:role => :user})
             second_run = ProductDecorator.decorate(first_run)
@@ -265,12 +310,12 @@ describe Draper::Base do
         its(:context) { should eq(context) }
       end
     end
-    
+
     context "with options" do
       let(:options) {{ :more => "settings" }}
-      
+
       subject { Draper::Base.decorate(source, options ) }
-      
+
       its(:options) { should eq(options) }
     end
 
@@ -407,10 +452,10 @@ describe Draper::Base do
       subject = ProductDecorator.decorate(paged_array)
       subject[0].should be_instance_of ProductDecorator
     end
-    
+
     context "pretends to be of kind of wrapped collection class" do
       subject { ProductDecorator.decorate(paged_array) }
-      
+
       it "#kind_of? DecoratedEnumerableProxy" do
         subject.should be_kind_of Draper::DecoratedEnumerableProxy
       end
@@ -436,6 +481,13 @@ describe Draper::Base do
       it "should accept a context" do
         collection = ProductDecorator.all(:context => :admin)
         collection.first.context.should == :admin
+      end
+    end
+
+    context(".source / .to_source") do
+      it "should return the wrapped object" do
+        subject.to_source == source
+        subject.source == source
       end
     end
   end
@@ -535,7 +587,7 @@ describe Draper::Base do
       decorator.sample_truncate.should == "Once..."
     end
   end
-  
+
   describe "#method_missing" do
     context "when #hello_world is called for the first time" do
       it "hits method missing" do
@@ -543,7 +595,7 @@ describe Draper::Base do
         subject.hello_world
       end
     end
-    
+
     context "when #hello_world is called again" do
       before { subject.hello_world }
       it "proxies method directly after first hit" do
@@ -551,10 +603,22 @@ describe Draper::Base do
         subject.hello_world
       end
     end
+
+    context "when the delegated method calls a non-existant method" do
+      it "raises the correct NoMethodError" do
+        begin
+          subject.some_action
+        rescue NoMethodError => e
+          e.name.should_not == :some_action
+        else
+          fail("No exception raised")
+        end
+      end
+    end
   end
 
   describe "#kind_of?" do
-    context "pretends to be of kind of model class" do      
+    context "pretends to be of kind of model class" do
       it "#kind_of? decorator class" do
         subject.should be_kind_of subject.class
       end
