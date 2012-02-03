@@ -266,7 +266,7 @@ Here are some ideas of what you might do in decorator methods:
 
 ## Example Using a Decorator
 
-For a brief tutorial with sample project, check this out: http://tutorials.jumpstartlab.com/rails/topics/decorators.html
+For a brief tutorial with sample project, check this out: http://tutorials.jumpstartlab.com/topics/decorators.html
 
 Say I have a publishing system with `Article` resources. My designer decides that whenever we print the `published_at` timestamp, it should be constructed like this:
 
