@@ -7,7 +7,7 @@ module Draper
                     generates: "app/decorators/article_decorator"
                                "spec/decorators/article_decorator_spec"
     DESC
-    
+
     source_root File.expand_path('../templates', __FILE__)
 
     DECORATORS_ROOT = 'app/decorators/'
