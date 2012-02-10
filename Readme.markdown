@@ -38,7 +38,7 @@ In summary, you can now:
 * [Use your decorators with CanCan](https://github.com/jcasimir/draper/commit/ac1f3083989107d877e2b1c918c3a3e792db99e8)
 * [Use a more generalized `options` hash in decorator initialization](https://github.com/jcasimir/draper/commit/03910877d0461356da0968a87346592908f292a7)
 * [Get better performance by generating methods](https://github.com/jcasimir/draper/commit/ebe30511b79eac82276413ca7ae54a4a4d86d4dc)
-* [Automatically decorate associated objects](https://github.com/jcasimir/draper/commit/1580baa287997ed4e356aae0ffeeb8fe9c326ced)
+* [Automatically decorate associated objects](https://github.com/jcasimir/draper/commit/1580baa287997ed4e356aae0ffeeb8fe9c326ced) See Example near bottom of Readme
 
 Thanks to [steveklabnik](http://github.com/steveklabnik), [i0rek](http://github.com/i0rek), [laserlemon](http://github.com/laserlemon), [michaelfairley](http://github.com/michaelfairley), [dnagir](http://github.com/dnagir), [ubermajestix](http://github.com/ubermajestix), [tmaier](http://github.com/tmaier), [angelim](http://github.com/angelim), [duncanbeevers](http://github.com/duncanbeevers), Albert Peng & JR Boyens, [leocassarani](http://github.com/leocassarani), [Jeff Felchner](http://github.com/Felchner), [shingara](http://github.com/shingara), [momolog](http://github.com/momolog), and [ayamomiji](http://github.com/ayamomiji) for their contributions to this version!
 
@@ -326,6 +326,32 @@ class ArticleDecorator < ApplicationDecorator
   end
 end
 ```
+
+### Example of Decorated Associations
+
+Add a `decorates_association :association_name` to gain access to a decorated version of your target association.
+
+```ruby
+class ArticleDecorator < ApplicationDecorator
+  decorates :article
+  decorates_association :author # belongs_to :author association  
+end
+
+class AuthorDecorator < ApplicationDecorator
+  decorates :author
+  
+  def fancy_name
+    "#{model.title}. #{model.first_name} #{model.middle_name[0]}. #{model.last_name}"
+  end
+end
+```
+
+Now when you call the association it will use a decorator.
+
+```ruby
+<%= @article.author.fancy_name %>
+```
+
 ## Issues / Pending
 
 * Documentation
