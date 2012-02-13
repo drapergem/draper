@@ -6,7 +6,7 @@ module Draper
         Generate application and spec decorators in your application.
     DESC
     
-    class_option "test-framework", :type => :string, :default => "rspec", :aliases => "-t", :desc => "Test framework to be invoked"
+    class_option "test-framework", :type => :string, :default => "test_unit", :aliases => "-t", :desc => "Test framework to be invoked"
     
     source_root File.expand_path('../templates', __FILE__)
 
