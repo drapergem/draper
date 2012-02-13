@@ -105,7 +105,8 @@ module Draper
     def self.allows(*input_allows)
       raise ArgumentError, "Specify at least one method (as a symbol) to allow when using allows" if input_allows.empty?
       raise ArgumentError, "Use either 'allows' or 'denies', but not both." unless (self.denied == DEFAULT_DENIED)
-      self.allowed = input_allows
+      self.allowed ||= []
+      self.allowed += input_allows
     end
 
     # Initialize a new decorator instance by passing in
