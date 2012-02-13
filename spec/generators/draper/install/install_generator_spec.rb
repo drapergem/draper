@@ -19,24 +19,24 @@ describe Draper::InstallGenerator do
         it { should contain "class ApplicationDecorator < Draper::Base" }
       end
     end
-    
+
     describe 'spec/decorators/application_decorator_spec.rb' do
       subject { file('spec/decorators/application_decorator_spec.rb') }
       it { should exist }
       it { should contain "describe ApplicationDecorator do" }
     end
   end
-  
+
   context "using test_unit" do
     before { run_generator ["", "-t=test_unit"]  }
-    
+
     it_should_behave_like "ApplicationDecoratorGenerator"
-    
+
     describe 'spec/decorators/application_decorator_spec.rb' do
       subject { file('spec/decorators/application_decorator_spec.rb') }
       it { should_not exist }
     end
-    
+
     describe 'spec/decorators/application_decorator_test.rb' do
       subject { file('test/decorators/application_decorator_test.rb') }
       it { should exist }

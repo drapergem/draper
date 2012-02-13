@@ -44,7 +44,7 @@ function createFullTreeLinks() {
 
 function fixBoxInfoHeights() {
     $('dl.box dd.r1, dl.box dd.r2').each(function() {
-       $(this).prev().height($(this).height()); 
+       $(this).prev().height($(this).height());
     });
 }
 
@@ -113,7 +113,7 @@ function summaryToggle() {
     if (next.hasClass('compact')) {
       next.toggle();
       next.next().toggle();
-    } 
+    }
     else if (next.hasClass('summary')) {
       var list = $('<ul class="summary compact" />');
       list.html(next.html());
@@ -159,13 +159,13 @@ function generateTOC() {
       if ($('#' + proposedId).length > 0) { proposedId += counter; counter++; }
       this.id = proposedId;
     }
-    if (thisTag > lastTag) { 
-      for (i = 0; i < thisTag - lastTag; i++) { 
-        var tmp = $('<ol/>'); toc.append(tmp); toc = tmp; 
-      } 
+    if (thisTag > lastTag) {
+      for (i = 0; i < thisTag - lastTag; i++) {
+        var tmp = $('<ol/>'); toc.append(tmp); toc = tmp;
+      }
     }
-    if (thisTag < lastTag) { 
-      for (i = 0; i < lastTag - thisTag; i++) toc = toc.parent(); 
+    if (thisTag < lastTag) {
+      for (i = 0; i < lastTag - thisTag; i++) toc = toc.parent();
     }
     toc.append('<li><a href="#' + this.id + '">' + $(this).text() + '</a></li>');
     lastTag = thisTag;
@@ -174,7 +174,7 @@ function generateTOC() {
   html = '<div id="toc"><p class="title"><a class="hide_toc" href="#"><strong>Table of Contents</strong></a> <small>(<a href="#" class="float_toc">left</a>)</small></p></div>';
   $('#content').prepend(html);
   $('#toc').append(_toc);
-  $('#toc .hide_toc').toggle(function() { 
+  $('#toc .hide_toc').toggle(function() {
     $('#toc .top').slideUp('fast');
     $('#toc').toggleClass('hidden');
     $('#toc .title small').toggle();
@@ -183,7 +183,7 @@ function generateTOC() {
     $('#toc').toggleClass('hidden');
     $('#toc .title small').toggle();
   });
-  $('#toc .float_toc').toggle(function() { 
+  $('#toc .float_toc').toggle(function() {
     $(this).text('float');
     $('#toc').toggleClass('nofloat');
   }, function() {

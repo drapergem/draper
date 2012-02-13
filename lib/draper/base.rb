@@ -5,6 +5,7 @@ module Draper
     attr_accessor :model, :options
 
     DEFAULT_DENIED = Object.new.methods << :method_missing
+    DEFAULT_ALLOWED = []
     FORCED_PROXY = [:to_param, :id]
     FORCED_PROXY.each do |method|
       define_method method do |*args, &block|
@@ -12,6 +13,7 @@ module Draper
       end
     end
     self.denied = DEFAULT_DENIED
+    self.allowed = DEFAULT_ALLOWED
 
     # Initialize a new decorator instance by passing in
     # an instance of the source class. Pass in an optional
@@ -89,7 +91,7 @@ module Draper
     # @param [Symbols*] methods to deny like `:find, :find_by_name`
     def self.denies(*input_denied)
       raise ArgumentError, "Specify at least one method (as a symbol) to exclude when using denies" if input_denied.empty?
-      raise ArgumentError, "Use either 'allows' or 'denies', but not both." if self.allowed?
+      raise ArgumentError, "Use either 'allows' or 'denies', but not both." unless (self.allowed == DEFAULT_ALLOWED)
       self.denied += input_denied
     end
 
@@ -105,7 +107,7 @@ module Draper
     def self.allows(*input_allows)
       raise ArgumentError, "Specify at least one method (as a symbol) to allow when using allows" if input_allows.empty?
       raise ArgumentError, "Use either 'allows' or 'denies', but not both." unless (self.denied == DEFAULT_DENIED)
-      self.allowed = input_allows
+      self.allowed += input_allows
     end
 
     # Initialize a new decorator instance by passing in
@@ -235,7 +237,7 @@ module Draper
   private
 
     def allow?(method)
-      (!allowed? || allowed.include?(method) || FORCED_PROXY.include?(method)) && !denied.include?(method)
+      (allowed.empty? || allowed.include?(method) || FORCED_PROXY.include?(method)) && !denied.include?(method)
     end
   end
 end

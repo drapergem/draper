@@ -10,7 +10,7 @@ function fullListSearch() {
     var link = $(this).find('.object_link a');
     searchCache.push({name:link.text(), node:$(this), link:link});
   });
-  
+
   $('#search input').keyup(function() {
     searchString = this.value.toLowerCase();
     if (searchString === "") {
@@ -18,9 +18,9 @@ function fullListSearch() {
       inSearch = null;
       $('#full_list, #content').removeClass('insearch');
       $('#full_list li').removeClass('found').each(function() {
-        
+
         var link = $(this).find('.object_link a');
-        link.text(link.text()); 
+        link.text(link.text());
       });
       if (clicked) {
         clicked.parents('ul').each(function() {
@@ -38,7 +38,7 @@ function fullListSearch() {
       searchItem();
     }
   });
-  
+
   $('#search input').focus();
   $('#full_list').after("<div id='noresults'></div>");
 }
@@ -54,8 +54,8 @@ function searchItem() {
       item.node.css('padding-left', '10px').addClass('found');
       item.node.removeClass(lastRowClass).addClass(lastRowClass == 'r1' ? 'r2' : 'r1');
       lastRowClass = item.node.hasClass('r1') ? 'r1' : 'r2';
-      item.link.html(item.name.replace(new RegExp("(" + 
-        searchString.replace(/([\/.*+?|()\[\]{}\\])/g, "\\$1") + ")", "ig"), 
+      item.link.html(item.name.replace(new RegExp("(" +
+        searchString.replace(/([\/.*+?|()\[\]{}\\])/g, "\\$1") + ")", "ig"),
         '<strong>$1</strong>'));
     }
 
@@ -110,10 +110,10 @@ function linkList() {
 
 function collapse() {
   if (!$('#full_list').hasClass('class')) return;
-  $('#full_list.class a.toggle').click(function() { 
+  $('#full_list.class a.toggle').click(function() {
     $(this).parent().toggleClass('collapsed').next().toggleClass('collapsed');
     highlight();
-    return false; 
+    return false;
   });
   $('#full_list.class ul').each(function() {
     $(this).addClass('collapsed').prev().addClass('collapsed');

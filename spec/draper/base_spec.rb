@@ -53,7 +53,7 @@ describe Draper::Base do
         BusinessDecorator.model_class.should == Business
       end.should_not raise_error
     end
-    
+
     context("accepts ActiveRecord like :class_name option too") do
       it "accepts constants for :class" do
         expect do
@@ -63,7 +63,7 @@ describe Draper::Base do
         CustomDecorator.model_class.should == Product
         end.should_not raise_error
       end
-      
+
       it "accepts constants for :class_name" do
         expect do
         class CustomDecorator < Draper::Base
@@ -72,7 +72,7 @@ describe Draper::Base do
         CustomDecorator.model_class.should == Product
         end.should_not raise_error
       end
-      
+
       it "accepts strings for :class" do
         expect do
         class CustomDecorator < Draper::Base
@@ -81,7 +81,7 @@ describe Draper::Base do
         CustomDecorator.model_class.should == Product
         end.should_not raise_error
       end
-      
+
       it "accepts strings for :class_name" do
         expect do
         class CustomDecorator < Draper::Base
@@ -515,12 +515,23 @@ describe Draper::Base do
   describe "a sample usage with allows" do
     let(:subject_with_allows){ DecoratorWithAllows.new(source) }
 
+    let(:subject_with_multiple_allows){ DecoratorWithMultipleAllows.new(source) }
+
     it "should echo the allowed method" do
       subject_with_allows.should respond_to(:goodnight_moon)
     end
 
     it "should echo _only_ the allowed method" do
       subject_with_allows.should_not respond_to(:hello_world)
+    end
+
+    it "should echo the combined allowed methods" do
+      subject_with_multiple_allows.should respond_to(:goodnight_moon)
+      subject_with_multiple_allows.should respond_to(:hello_world)
+    end
+
+    it "should echo _only_ the combined allowed methods" do
+      subject_with_multiple_allows.should_not respond_to(:title)
     end
   end
 
