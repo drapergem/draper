@@ -1,3 +1,3 @@
-class DecoratorWithAllows < Draper::Base  
+class DecoratorWithAllows < Draper::Base
   allows :goodnight_moon
 end

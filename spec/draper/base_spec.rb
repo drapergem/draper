@@ -53,7 +53,7 @@ describe Draper::Base do
         BusinessDecorator.model_class.should == Business
       end.should_not raise_error
     end
-    
+
     context("accepts ActiveRecord like :class_name option too") do
       it "accepts constants for :class" do
         expect do
@@ -63,7 +63,7 @@ describe Draper::Base do
         CustomDecorator.model_class.should == Product
         end.should_not raise_error
       end
-      
+
       it "accepts constants for :class_name" do
         expect do
         class CustomDecorator < Draper::Base
@@ -72,7 +72,7 @@ describe Draper::Base do
         CustomDecorator.model_class.should == Product
         end.should_not raise_error
       end
-      
+
       it "accepts strings for :class" do
         expect do
         class CustomDecorator < Draper::Base
@@ -81,7 +81,7 @@ describe Draper::Base do
         CustomDecorator.model_class.should == Product
         end.should_not raise_error
       end
-      
+
       it "accepts strings for :class_name" do
         expect do
         class CustomDecorator < Draper::Base

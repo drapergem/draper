@@ -1,11 +1,11 @@
 require "./performance/models"
 class ProductDecorator < Draper::Base
   decorates :product
-  
+
   def awesome_title
     "Awesome Title"
   end
-  
+
   # Original #method_missing
   def method_missing(method, *args, &block)
     if allow?(method)
@@ -23,11 +23,11 @@ end
 
 class FastProductDecorator < Draper::Base
   decorates :product
-  
+
   def awesome_title
     "Awesome Title"
   end
-  
+
   # Modified #method_missing
   def method_missing(method, *args, &block)
     if allow?(method)
