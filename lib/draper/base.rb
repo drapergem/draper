@@ -151,13 +151,21 @@ module Draper
     end
 
     # Access the helpers proxy to call built-in and user-defined
-    # Rails helpers. Aliased to `.h` for convinience.
+    # Rails helpers. Aliased to `.h` for convenience.
     #
     # @return [Object] proxy
     def helpers
       self.class.helpers
     end
     alias :h :helpers
+
+    # Localize is something that's used quite often. Even though
+    # it's available through helpers, that's annoying. Aliased
+    # to `.l` for convenience.
+    def localize(str)
+      self.class.helpers.localize(str)
+    end
+    alias :l :localize
 
     # Access the helpers proxy to call built-in and user-defined
     # Rails helpers from a class context.

@@ -597,6 +597,12 @@ describe Draper::Base do
     it "should be able to use the pluralize helper" do
       decorator.sample_truncate.should == "Once..."
     end
+
+    it "should be able to use l rather than helpers.l" do
+      now = Time.now
+      decorator.helpers.should_receive(:localize).with(now)
+      decorator.l now
+    end
   end
 
   describe "#method_missing" do
