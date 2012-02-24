@@ -1,9 +1,12 @@
 module Draper
   class System
-    def self.setup
-      ActionController::Base.send(:include, Draper::ViewContextFilter) if defined?(ActionController::Base)
-      ActionMailer::Base.send(:include, Draper::ViewContextFilter) if defined?(ActionMailer::Base)
-      ActionController::Base.send(:helper, Draper::HelperSupport) if defined?(ActionController::Base)
+    def self.setup(component)
+      if component == :action_controller
+        ActionController::Base.send(:include, Draper::ViewContextFilter)
+        ActionController::Base.extend(Draper::HelperSupport)
+      elsif component == :action_mailer
+        ActionMailer::Base.send(:include, Draper::ViewContextFilter)
+      end
     end
   end
 end
