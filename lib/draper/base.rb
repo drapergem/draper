@@ -69,7 +69,7 @@ module Draper
           options[:with].decorate(orig_association)
         else
           reflection = model.class.reflect_on_association(association_symbol)
-          "#{reflection.klass}Decorator".constantize.decorate(orig_association)
+          "#{reflection.klass}Decorator".constantize.decorate(orig_association, options)
         end
       end
     end
