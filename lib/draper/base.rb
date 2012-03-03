@@ -202,19 +202,16 @@ module Draper
     end
 
     def method_missing(method, *args, &block)
-      if allow?(method)
-        begin
-          self.class.send :define_method, method do |*args, &block|
-            model.send(method, *args, &block)
-          end
-          self.send(method, *args, &block)
-        rescue NoMethodError => no_method_error
-          super if no_method_error.name == method
-          raise no_method_error
-        end
-      else
-        super
+      super unless allow?(method)
+
+      self.class.send :define_method, method do |*args, &block|
+        model.send(method, *args, &block)
       end
+      self.send(method, *args, &block)
+
+    rescue NoMethodError => no_method_error
+      super if no_method_error.name == method
+      raise no_method_error
     end
 
     def self.method_missing(method, *args, &block)
