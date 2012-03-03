@@ -7,7 +7,7 @@ gem 'actionpack', "~> 3.1.3", :require => 'action_view'
 gem 'ammeter', '~> 0.2.2', :require => 'ammeter/init'
 gem 'guard'
 gem 'guard-rspec'
-gem 'launchy'  
+gem 'launchy'
 gem 'yard'
 
 gemspec
