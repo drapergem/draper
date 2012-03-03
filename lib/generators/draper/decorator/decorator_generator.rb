@@ -10,7 +10,7 @@ module Draper
 
     argument :resource_name, :type => :string
     class_option "test-framework", :type => :string, :default => "rspec", :aliases => "-t", :desc => "Test framework to be invoked"
-    
+
     source_root File.expand_path('../templates', __FILE__)
 
     DECORATORS_ROOT = 'app/decorators/'
@@ -18,7 +18,7 @@ module Draper
     def build_model_decorator
       template 'decorator.rb', "#{DECORATORS_ROOT}#{resource_name.singularize}_decorator.rb"
     end
-#
+
     def build_decorator_tests
       case options["test-framework"]
         when "rspec"

@@ -48,7 +48,6 @@ describe Draper::DecoratorGenerator do
       it { should contain "class ProductDecoratorTest < ActiveSupport::TestCase" }
     end
   end
-  
 end
 
 
@@ -63,7 +62,7 @@ end
     end
   end
 
-  
+
   context 'simple' do
     before { run_generator %w(products)  }
 
