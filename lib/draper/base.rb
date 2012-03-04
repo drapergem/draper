@@ -216,7 +216,7 @@ module Draper
     end
 
     def self.method_missing(method, *args, &block)
-      instance = model_class.send(method, *args, &block)
+      instance = model_class.send method, *args, &block
 
       @options ||= {}
       @options.merge!({:context => args.last }) if args.last.is_a? Hash
