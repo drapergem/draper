@@ -63,8 +63,8 @@ module Draper
     # @option opts [Class] :with The decorator to decorate the association with
     def self.decorates_association(association_symbol, options = {})
       define_method(association_symbol) do
-        orig_association = model.send(association_symbol)
-        return orig_association  if orig_association.nil?
+        return unless orig_association = model.send(association_symbol)
+
         if options[:with]
           options[:with].decorate(orig_association)
         else
@@ -216,11 +216,14 @@ module Draper
     end
 
     def self.method_missing(method, *args, &block)
-      if method.to_s.match(/^find_by.*/)
-        self.decorate(model_class.send(method, *args, &block))
-      else
-        model_class.send(method, *args, &block)
-      end
+      instance = model_class.send(method, *args, &block)
+
+      @options ||= {}
+      @options.merge!({:context => args.last }) if args.last.is_a? Hash
+
+      instance = self.decorate(instance, @options) if method.to_s.match(/^find_by.*/)
+
+      instance
     end
 
     def self.respond_to?(method, include_private = false)

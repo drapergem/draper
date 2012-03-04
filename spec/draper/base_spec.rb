@@ -234,7 +234,7 @@ describe Draper::Base do
     end
 
     it "runs complex finders" do
-      Product.should_receive(:find_by_name_and_size)
+      Product.should_receive(:find_by_name_and_size).with("apples", "large")
       ProductDecorator.find_by_name_and_size("apples", "large")
     end
 
@@ -244,9 +244,13 @@ describe Draper::Base do
     end
 
     it "uses the options hash in the decorator instantiation" do
-      pending "Figure out an implementation that supports multiple args (find_by_name_and_count_and_size) plus an options hash"
-      Product.should_receive(:find_by_name_and_size).with("apples", "large", {:role => :admin})
-      pd = ProductDecorator.find_by_name_and_size("apples", "large", {:role => :admin})
+      #pending "Figure out an implementation that supports multiple args (find_by_name_and_count_and_size)
+      #plus an options hash"
+
+      Product.should_receive(:find_by_name_and_count_and_size).
+        with("apples", 7, "large", {:role => :admin}).and_return Product.first
+
+      pd = ProductDecorator.find_by_name_and_count_and_size("apples", 7, "large", {:role => :admin})
       pd.context[:role].should == :admin
     end
   end
