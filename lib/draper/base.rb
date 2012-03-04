@@ -73,9 +73,8 @@ module Draper
           klass = model.class.reflect_on_association(association_symbol).klass
         elsif orig_association.respond_to?(:first)
           klass = orig_association.first.class
-        else
-          klass = orig_association.class
-        end
+         end
+
         "#{klass}Decorator".constantize.decorate(orig_association, options)
       end
     end
@@ -226,7 +225,7 @@ module Draper
     end
 
     def self.method_missing(method, *args, &block)
-      instance = model_class.send method, *args, &block
+      instance = model_class.send(method, *args, &block)
 
       @options ||= {}
       @options.merge!({:context => args.last }) if args.last.is_a? Hash
