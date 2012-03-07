@@ -235,15 +235,11 @@ Use the new methods in your views like any other model method (ex: `@article.pub
 ### Using in Mailers
 
 To use decorators in mailers that use helpers, you have to call `set_current_view_context` in your
-mailer method:
+ActionMailer class.
 
 ```ruby
 class ArticleMailer < ActionMailer::Base
-  def new_article(article)
-    set_current_view_context
-    @article_decorator = ArticleDecorator.decorate(article)
-    mail(:to => 'come@me.bro', :subject => "New Article: #{@article_decorator.title}")
-  end
+  defaults 'init-draper' => Proc.new { set_current_view_context }
 end
 ```
 ### Integration with RSpec
