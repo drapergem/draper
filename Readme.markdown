@@ -238,7 +238,7 @@ To use decorators in mailers that use helpers, you have to call `set_current_vie
 mailer method:
 
 ```ruby
-class ActicleMailer < ActionMailer::Base
+class ArticleMailer < ActionMailer::Base
   def new_article(article)
     set_current_view_context
     @article_decorator = ArticleDecorator.decorate(article)
