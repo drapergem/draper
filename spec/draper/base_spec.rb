@@ -113,22 +113,31 @@ describe Draper::Base do
   end
 
   context(".decorates_association") do
-    context "for collection associations" do
+    context "for ActiveModel collection associations" do
       before(:each){ subject.class_eval{ decorates_association :similar_products } }
       it "causes the association's method to return a collection of wrapped objects" do
         subject.similar_products.each{ |decorated| decorated.should be_instance_of(ProductDecorator) }
       end
     end
 
-    context "for a singular association" do
+    context "for Plain Old Ruby Object collection associations" do
+      before(:each){ subject.class_eval{ decorates_association :poro_similar_products } }
+      it "causes the association's method to return a collection of wrapped objects" do
+        subject.poro_similar_products.each{ |decorated| decorated.should be_instance_of(ProductDecorator) }
+      end
+    end
+
+    context "for an ActiveModel singular association" do
       before(:each){ subject.class_eval{ decorates_association :previous_version } }
       it "causes the association's method to return a single wrapped object if the association is singular" do
         subject.previous_version.should be_instance_of(ProductDecorator)
       end
+    end
 
-      it "causes the association's method to return nil if the association is nil" do
-        source.stub(:previous_version){ nil }
-        subject.previous_version.should be_nil
+    context "for a Plain Old Ruby Object singular association" do
+      before(:each){ subject.class_eval{ decorates_association :poro_previous_version } }
+      it "causes the association's method to return a single wrapped object" do
+        subject.poro_previous_version.should be_instance_of(ProductDecorator)
       end
     end
 
@@ -143,6 +152,16 @@ describe Draper::Base do
       before(:each){ subject.class_eval{ decorates_association :thing, :polymorphic => true } }
       it "causes the association to be decorated with the right decorator" do
         subject.thing.should be_instance_of(SomeThingDecorator)
+      end
+    end
+
+    context "when the association is nil" do
+      before(:each) do
+        subject.class_eval{ decorates_association :previous_version }
+        source.stub(:previous_version){ nil }
+      end
+      it "causes the association's method to return nil" do
+        subject.previous_version.should be_nil
       end
     end
   end
