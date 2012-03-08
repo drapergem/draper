@@ -67,6 +67,8 @@ module Draper
         return orig_association  if orig_association.nil?
         if options[:with]
           options[:with].decorate(orig_association)
+        elsif options[:polymorphic]
+          "#{orig_association.class}Decorator".constantize.decorate(orig_association)
         else
           reflection = model.class.reflect_on_association(association_symbol)
           "#{reflection.klass}Decorator".constantize.decorate(orig_association)
