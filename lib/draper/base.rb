@@ -210,6 +210,8 @@ module Draper
         end
 
         send method, *args, &block
+      else
+        super
       end
 
     rescue NoMethodError => no_method_error
