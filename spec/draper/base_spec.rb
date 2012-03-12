@@ -630,6 +630,10 @@ describe Draper::Base do
     end
 
     context "when the delegated method calls a non-existant method" do
+      it 'should not try to delegate to non-existant methods to not confuse Kernel#Array' do
+        Array(subject).should be_kind_of(Array)
+      end
+
       it "raises the correct NoMethodError" do
         begin
           subject.some_action
