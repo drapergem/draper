@@ -64,4 +64,8 @@ class Product < ActiveRecord::Base
   def previous_version
     Product.new
   end
+
+  def thing
+    SomeThing.new
+  end
 end
