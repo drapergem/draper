@@ -138,6 +138,13 @@ describe Draper::Base do
         subject.previous_version.should be_instance_of(SpecificProductDecorator)
       end
     end
+
+    context "for a polymorphic association" do
+      before(:each){ subject.class_eval{ decorates_association :thing, :polymorphic => true } }
+      it "causes the association to be decorated with the right decorator" do
+        subject.thing.should be_instance_of(SomeThingDecorator)
+      end
+    end
   end
 
   context('.decorates_associations') do
