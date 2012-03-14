@@ -68,8 +68,8 @@ module Draper
 
         klass = if options[:polymorphic]
           orig_association.class
-        elsif model.class.respond_to?(:reflect_on_association) && model.class.reflect_on_association(association_symbol)
-          model.class.reflect_on_association(association_symbol).klass
+        elsif klass = model.class.try(:reflect_on_association, association_symbol).try(:klass)
+          klass
         elsif orig_association.respond_to?(:first)
           orig_association.first.class
         else
