@@ -193,6 +193,23 @@ module Draper
       @model
     end
 
+    def page(num)
+      @model.page(num)
+    end
+
+    def paginate(options)
+      @model.paginate(options)
+    end
+
+    def current_page
+      @model.current_page
+    end
+
+    def curent_page=(value)
+      @model.current_page = value
+    end
+
+
     # Delegates == to the decorated models
     #
     # @return [Boolean] true if other's model == self's model
