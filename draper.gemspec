@@ -5,8 +5,8 @@ require "draper/version"
 Gem::Specification.new do |s|
   s.name        = "draper"
   s.version     = Draper::VERSION
-  s.authors     = ["Jeff Casimir"]
-  s.email       = ["jeff@casimircreative.com"]
+  s.authors     = ["Jeff Casimir", "Steve Klabnik"]
+  s.email       = ["jeff@casimircreative.com", "steve@steveklabnik.com"]
   s.homepage    = "http://github.com/jcasimir/draper"
   s.summary     = "Decorator pattern implementation for Rails."
   s.description = "Draper implements a decorator or presenter pattern for Rails applications."
