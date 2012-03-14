@@ -1,0 +1,9 @@
+= Draper Changelog
+
+= Master
+
+* Added Changelog
+
+== 0.11.1
+
+* Fixed regression, we don't want to introduce a hard dependency on Rails. #107
