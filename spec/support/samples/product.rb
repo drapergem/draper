@@ -54,7 +54,7 @@ class Product < ActiveRecord::Base
   end
 
   def self.reflect_on_association(association_symbol)
-    OpenStruct.new(:klass => self)
+    association_symbol.to_s.starts_with?("poro") ? nil : OpenStruct.new(:klass => self)
   end
 
   def similar_products
@@ -68,4 +68,13 @@ class Product < ActiveRecord::Base
   def thing
     SomeThing.new
   end
+
+  def poro_similar_products
+    [Product.new, Product.new]
+  end
+
+  def poro_previous_version
+    Product.new
+  end
+
 end
