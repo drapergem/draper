@@ -64,16 +64,17 @@ module Draper
     def self.decorates_association(association_symbol, options = {})
       define_method(association_symbol) do
         return unless orig_association = model.send(association_symbol)
-
         return options[:with].decorate(orig_association) if options[:with]
 
-        if options[:polymorphic]
-          "#{orig_association.class}Decorator".constantize.decorate(orig_association)
+        klass = if options[:polymorphic]
+          orig_association.class
         elsif model.class.respond_to?(:reflect_on_association) && model.class.reflect_on_association(association_symbol)
-          klass = model.class.reflect_on_association(association_symbol).klass
+          model.class.reflect_on_association(association_symbol).klass
         elsif orig_association.respond_to?(:first)
-          klass = orig_association.first.class
-         end
+          orig_association.first.class
+        else
+          orig_association.class
+        end
 
         "#{klass}Decorator".constantize.decorate(orig_association, options)
       end
