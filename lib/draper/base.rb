@@ -211,11 +211,15 @@ module Draper
       super unless allow?(method)
       super unless model.respond_to? method
 
-      self.class.send :define_method, method do |*args, &block|
-        model.send method, *args, &block
-      end
+      if model.respond_to?(method)
+        self.class.send :define_method, method do |*args, &block|
+          model.send method, *args, &block
+        end
 
-      send method, *args, &block
+        send method, *args, &block
+      else
+        super
+      end
 
     rescue NoMethodError => no_method_error
       super if no_method_error.name == method
