@@ -208,7 +208,8 @@ module Draper
     end
 
     def method_missing(method, *args, &block)
-      super unless respond_to? method
+      super unless allow?(method)
+      super unless model.respond_to? method
 
       self.class.send :define_method, method do |*args, &block|
         model.send method, *args, &block
