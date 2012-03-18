@@ -60,7 +60,7 @@ module Draper
     # the assocation to be decorated when it is retrieved.
     #
     # @param [Symbol] name of association to decorate, like `:products`
-    # @option opts [Class] :with The decorator to decorate the association with
+    # @option options [Class] :with The decorator to decorate the association with
     def self.decorates_association(association_symbol, options = {})
       define_method(association_symbol) do
         orig_association = model.send(association_symbol)
@@ -129,6 +129,8 @@ module Draper
     #
     # @param [Object] instance(s) to wrap
     # @param [Hash] options (optional)
+    # @option options [Boolean] :infer If true, each model will be
+    #   wrapped by its inferred decorator.
     def self.decorate(input, options = {})
       if input.instance_of?(self)
         input.options = options unless options.empty?
