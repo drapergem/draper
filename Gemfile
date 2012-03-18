@@ -10,4 +10,8 @@ gem 'guard-rspec'
 gem 'launchy'
 gem 'yard'
 
+group :development do
+  gem 'redcarpet'
+end
+
 gemspec
