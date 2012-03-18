@@ -63,21 +63,19 @@ module Draper
     # @option options [Class] :with The decorator to decorate the association with
     def self.decorates_association(association_symbol, options = {})
       define_method(association_symbol) do
-        orig_association = model.send(association_symbol)
-
-        return orig_association if orig_association.nil?
-
+        return unless orig_association = model.send(association_symbol)
         return options[:with].decorate(orig_association) if options[:with]
 
-        if options[:polymorphic]
-          klass = orig_association.class
-        elsif model.class.respond_to?(:reflect_on_association) && model.class.reflect_on_association(association_symbol)
-          klass = model.class.reflect_on_association(association_symbol).klass
+        klass = if options[:polymorphic]
+          orig_association.class
+        elsif klass = model.class.try(:reflect_on_association, association_symbol).try(:klass)
+          klass
         elsif orig_association.respond_to?(:first)
-          klass = orig_association.first.class
+          orig_association.first.class
         else
-          klass = orig_association.class
+          orig_association.class
         end
+
         "#{klass}Decorator".constantize.decorate(orig_association, options)
       end
     end
@@ -213,16 +211,13 @@ module Draper
 
     def method_missing(method, *args, &block)
       super unless allow?(method)
+      super unless model.respond_to? method
 
-      if model.respond_to?(method)
-        self.class.send :define_method, method do |*args, &block|
-          model.send method, *args, &block
-        end
-
-        send method, *args, &block
-      else
-        super
+      self.class.send :define_method, method do |*args, &block|
+        model.send method, *args, &block
       end
+
+      send method, *args, &block
 
     rescue NoMethodError => no_method_error
       super if no_method_error.name == method
@@ -230,11 +225,14 @@ module Draper
     end
 
     def self.method_missing(method, *args, &block)
-      if method.to_s.match(/^find_by.*/)
-        self.decorate(model_class.send(method, *args, &block))
-      else
-        model_class.send(method, *args, &block)
-      end
+      instance = model_class.send(method, *args, &block)
+
+      @options ||= {}
+      @options.merge!({:context => args.last }) if args.last.is_a? Hash
+
+      instance = self.decorate(instance, @options) if method.to_s.match(/^find_by.*/)
+
+      instance
     end
 
     def self.respond_to?(method, include_private = false)

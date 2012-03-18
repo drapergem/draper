@@ -7,3 +7,4 @@ coverage.data
 coverage/*
 .yardoc
 tmp
+*.swp
