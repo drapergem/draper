@@ -264,6 +264,26 @@ describe Draper::Base do
       ProductDecorator.find_by_name_and_size("apples", "large")
     end
 
+    it "runs find_all_by_(x) finders" do
+      Product.should_receive(:find_all_by_name_and_size)
+      ProductDecorator.find_all_by_name_and_size("apples", "large")
+    end
+
+    it "runs find_last_by_(x) finders" do
+      Product.should_receive(:find_last_by_name_and_size)
+      ProductDecorator.find_last_by_name_and_size("apples", "large")
+    end
+
+    it "runs find_or_initialize_by_(x) finders" do
+      Product.should_receive(:find_or_initialize_by_name_and_size)
+      ProductDecorator.find_or_initialize_by_name_and_size("apples", "large")
+    end
+
+    it "runs find_or_create_by_(x) finders" do
+      Product.should_receive(:find_or_create_by_name_and_size)
+      ProductDecorator.find_or_create_by_name_and_size("apples", "large")
+    end
+
     it "accepts an options hash" do
       Product.should_receive(:find_by_name_and_size).with("apples", "large", {:role => :admin})
       ProductDecorator.find_by_name_and_size("apples", "large", {:role => :admin})
