@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Draper::Base do
-  before(:each){ ApplicationController.new.set_current_view_context }
+  before{ ApplicationController.new.set_current_view_context }
   subject{ Decorator.new(source) }
   let(:source){ Product.new }
 
@@ -114,49 +114,49 @@ describe Draper::Base do
 
   context(".decorates_association") do
     context "for ActiveModel collection associations" do
-      before(:each){ subject.class_eval{ decorates_association :similar_products } }
+      before{ subject.class_eval{ decorates_association :similar_products } }
       it "causes the association's method to return a collection of wrapped objects" do
         subject.similar_products.each{ |decorated| decorated.should be_instance_of(ProductDecorator) }
       end
     end
 
     context "for Plain Old Ruby Object collection associations" do
-      before(:each){ subject.class_eval{ decorates_association :poro_similar_products } }
+      before{ subject.class_eval{ decorates_association :poro_similar_products } }
       it "causes the association's method to return a collection of wrapped objects" do
         subject.poro_similar_products.each{ |decorated| decorated.should be_instance_of(ProductDecorator) }
       end
     end
 
     context "for an ActiveModel singular association" do
-      before(:each){ subject.class_eval{ decorates_association :previous_version } }
+      before{ subject.class_eval{ decorates_association :previous_version } }
       it "causes the association's method to return a single wrapped object if the association is singular" do
         subject.previous_version.should be_instance_of(ProductDecorator)
       end
     end
 
     context "for a Plain Old Ruby Object singular association" do
-      before(:each){ subject.class_eval{ decorates_association :poro_previous_version } }
+      before{ subject.class_eval{ decorates_association :poro_previous_version } }
       it "causes the association's method to return a single wrapped object" do
         subject.poro_previous_version.should be_instance_of(ProductDecorator)
       end
     end
 
     context "with a specific decorator specified" do
-      before(:each){ subject.class_eval{ decorates_association :previous_version, :with => SpecificProductDecorator } }
+      before{ subject.class_eval{ decorates_association :previous_version, :with => SpecificProductDecorator } }
       it "causes the association to be decorated with the specified association" do
         subject.previous_version.should be_instance_of(SpecificProductDecorator)
       end
     end
 
     context "for a polymorphic association" do
-      before(:each){ subject.class_eval{ decorates_association :thing, :polymorphic => true } }
+      before{ subject.class_eval{ decorates_association :thing, :polymorphic => true } }
       it "causes the association to be decorated with the right decorator" do
         subject.thing.should be_instance_of(SomeThingDecorator)
       end
     end
 
     context "when the association is nil" do
-      before(:each) do
+      before do
         subject.class_eval{ decorates_association :previous_version }
         source.stub(:previous_version){ nil }
       end
