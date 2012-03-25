@@ -230,7 +230,7 @@ module Draper
     end
 
     def self.method_missing(method, *args, &block)
-      if method.to_s.match(/^find_by.*/)
+      if method.to_s.match(/^find_((all_|last_)?by_|or_(initialize|create)_by_).*/)
         self.decorate(model_class.send(method, *args, &block))
       else
         model_class.send(method, *args, &block)
