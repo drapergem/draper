@@ -69,15 +69,16 @@ module Draper
 
         return options[:with].decorate(orig_association) if options[:with]
 
-        if options[:polymorphic]
-          klass = orig_association.class
-        elsif model.class.respond_to?(:reflect_on_association) && model.class.reflect_on_association(association_symbol)
-          klass = model.class.reflect_on_association(association_symbol).klass
-        elsif orig_association.respond_to?(:first)
-          klass = orig_association.first.class
-        else
-          klass = orig_association.class
-        end
+        klass = if options[:polymorphic]
+                  orig_association.class
+                elsif association_reflection = find_association_reflection(association_symbol)
+                  association_reflection.klass
+                elsif orig_association.respond_to?(:first)
+                  orig_association.first.class
+                else
+                  orig_association.class
+                end
+
         "#{klass}Decorator".constantize.decorate(orig_association, options)
       end
     end
@@ -258,6 +259,12 @@ module Draper
 
     def allow?(method)
       (allowed.empty? || allowed.include?(method) || FORCED_PROXY.include?(method)) && !denied.include?(method)
+    end
+
+    def find_association_reflection(association)
+      if model.class.respond_to?(:reflect_on_association)
+        model.class.reflect_on_association(association)
+      end
     end
   end
 end
