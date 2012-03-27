@@ -1,6 +1,8 @@
 module Draper
   class Base
     require 'active_support/core_ext/class/attribute'
+    require 'active_support/core_ext/array/extract_options'
+
     class_attribute :denied, :allowed, :model_class
     attr_accessor :model, :options
 
@@ -232,7 +234,7 @@ module Draper
 
     def self.method_missing(method, *args, &block)
       if method.to_s.match(/^find_((all_|last_)?by_|or_(initialize|create)_by_).*/)
-        self.decorate(model_class.send(method, *args, &block))
+        self.decorate(model_class.send(method, *args, &block), :context => args.dup.extract_options!)
       else
         model_class.send(method, *args, &block)
       end
