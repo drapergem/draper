@@ -16,7 +16,7 @@ module Draper
     DECORATORS_ROOT = 'app/decorators/'
 
     def build_model_decorator
-      template 'decorator.rb', "#{DECORATORS_ROOT}#{resource_name.singularize}_decorator.rb"
+      template 'decorator.rb', "#{DECORATORS_ROOT}#{decorator_name}_decorator.rb"
     end
 
     def build_decorator_tests
@@ -31,13 +31,16 @@ module Draper
     private
     def build_decorator_spec
       empty_directory 'spec/decorators'
-      template 'decorator_spec.rb', File.join('spec/decorators', "#{resource_name.singularize}_decorator_spec.rb")
+      template 'decorator_spec.rb', File.join('spec/decorators', "#{decorator_name}_decorator_spec.rb")
     end
 
     def build_decorator_test
       empty_directory 'test/decorators/'
-      template 'decorator_test.rb', File.join('test/decorators', "#{resource_name.singularize}_decorator_test.rb")
+      template 'decorator_test.rb', File.join('test/decorators', "#{decorator_name}_decorator_test.rb")
     end
 
+    def decorator_name
+      resource_name.downcase.singularize
+    end
   end
 end
