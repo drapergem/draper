@@ -290,7 +290,6 @@ describe Draper::Base do
     end
 
     it "uses the options hash in the decorator instantiation" do
-      pending "Figure out an implementation that supports multiple args (find_by_name_and_count_and_size) plus an options hash"
       Product.should_receive(:find_by_name_and_size).with("apples", "large", {:role => :admin})
       pd = ProductDecorator.find_by_name_and_size("apples", "large", {:role => :admin})
       pd.context[:role].should == :admin
