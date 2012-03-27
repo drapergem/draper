@@ -19,6 +19,16 @@ describe Draper::DecoratorGenerator do
     end
   end
 
+  context 'decorator name' do
+    before { run_generator ["Product"]  }
+
+    describe 'spec/decorators/product_decorator_spec.rb' do
+      subject { file('spec/decorators/product_decorator_spec.rb') }
+      it { should exist }
+      it { should contain "describe ProductDecorator" }
+    end
+  end
+
   context 'default test framework' do
     before { run_generator ["product"]  }
 
