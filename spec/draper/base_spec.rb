@@ -14,7 +14,7 @@ describe Draper::Base do
       subject.class.should respond_to(:sample_class_method)
     end
 
-    it "should still respond_to it's own class methods" do
+    it "should still respond_to its own class methods" do
       subject.class.should respond_to(:own_class_method)
     end
   end
