@@ -1,13 +1,8 @@
 require 'spec_helper'
 
 describe Draper::ViewContext do
-  let (:app_controller) do
-    ApplicationController
-  end
-
-  let (:app_controller_instance) do
-    app_controller.new
-  end
+  let(:app_controller) { ApplicationController }
+  let(:app_controller_instance) { app_controller.new }
 
   it "implements #set_current_view_context" do
     app_controller_instance.should respond_to(:set_current_view_context)
