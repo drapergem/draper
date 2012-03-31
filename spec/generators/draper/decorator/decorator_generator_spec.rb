@@ -10,52 +10,53 @@ describe Draper::DecoratorGenerator do
   before { prepare_destination }
 
   context 'decorator context' do
-    before { run_generator ["product"]  }
+    before { run_generator ["YourModel"]  }
 
-    describe 'app/decorators/product_decorator.rb' do
-      subject { file('app/decorators/product_decorator.rb') }
+    describe 'app/decorators/your_model_decorator.rb' do
+      subject { file('app/decorators/your_model_decorator.rb') }
       it { should exist }
-      it { should contain "class ProductDecorator < ApplicationDecorator" }
+      it { should contain "class YourModelDecorator < ApplicationDecorator" }
+      it { should contain "decorates :your_model" }
     end
   end
 
   context 'decorator name' do
-    before { run_generator ["Product"]  }
+    before { run_generator ["YourModel"]  }
 
-    describe 'spec/decorators/product_decorator_spec.rb' do
-      subject { file('spec/decorators/product_decorator_spec.rb') }
+    describe 'spec/decorators/your_model_decorator_spec.rb' do
+      subject { file('spec/decorators/your_model_decorator_spec.rb') }
       it { should exist }
-      it { should contain "describe ProductDecorator" }
+      it { should contain "describe YourModelDecorator" }
     end
   end
 
   context 'default test framework' do
-    before { run_generator ["product"]  }
+    before { run_generator ["YourModel"]  }
 
-    describe 'spec/decorators/product_decorator_spec.rb' do
-      subject { file('spec/decorators/product_decorator_spec.rb') }
+    describe 'spec/decorators/your_model_decorator_spec.rb' do
+      subject { file('spec/decorators/your_model_decorator_spec.rb') }
       it { should exist }
-      it { should contain "describe ProductDecorator" }
+      it { should contain "describe YourModelDecorator" }
     end
   end
 
   context 'using rspec' do
-    before { run_generator ["product", "-t=rspec"]  }
+    before { run_generator ["YourModel", "-t=rspec"]  }
 
-    describe 'spec/decorators/product_decorator_spec.rb' do
-      subject { file('spec/decorators/product_decorator_spec.rb') }
+    describe 'spec/decorators/your_model_decorator_spec.rb' do
+      subject { file('spec/decorators/your_model_decorator_spec.rb') }
       it { should exist }
-      it { should contain "describe ProductDecorator" }
+      it { should contain "describe YourModelDecorator" }
     end
   end
 
   context 'using rspec' do
-    before { run_generator ["product", "-t=test_unit"]  }
+    before { run_generator ["YourModel", "-t=test_unit"]  }
 
-    describe 'test/decorators/product_decorator_test.rb' do
-      subject { file('test/decorators/product_decorator_test.rb') }
+    describe 'test/decorators/YourModel_decorator_test.rb' do
+      subject { file('test/decorators/your_model_decorator_test.rb') }
       it { should exist }
-      it { should contain "class ProductDecoratorTest < ActiveSupport::TestCase" }
+      it { should contain "class YourModelDecoratorTest < ActiveSupport::TestCase" }
     end
   end
 end
