@@ -40,7 +40,7 @@ module Draper
     end
 
     def decorator_name
-      resource_name.downcase.singularize
+      resource_name.underscore.singularize
     end
   end
 end
