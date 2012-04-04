@@ -239,7 +239,7 @@ ActionMailer class.
 
 ```ruby
 class ArticleMailer < ActionMailer::Base
-  defaults 'init-draper' => Proc.new { set_current_view_context }
+  default 'init-draper' => Proc.new { set_current_view_context }
 end
 ```
 ### Integration with RSpec
