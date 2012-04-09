@@ -356,6 +356,14 @@ Now when you call the association it will use a decorator.
 <%= @article.author.fancy_name %>
 ```
 
+## Contributing
+
+1. Fork it.
+2. Create a branch (`git checkout -b my_awesome_branch`)
+3. Commit your changes (`git commit -am "Added some magic"`)
+4. Push to the branch (`git push origin my_awesome_branch`)
+5. Send pull request
+
 ## Issues / Pending
 
 * Documentation
@@ -363,7 +371,6 @@ Now when you call the association it will use a decorator.
   * Add information about the `.decorator` method
   * Make clear the pattern of overriding accessor methods of the wrapped model  
   * Build sample Rails application(s)
-  * Add a section about contributing
 * Generators
   * Implement hook so generating a controller/scaffold generates a decorator  
   * Add generators for...
