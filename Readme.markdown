@@ -151,7 +151,7 @@ Then run `bundle` from the project directory.
 This will create the `app/decorators` directory and the `ApplicationDecorator` inside it.
 
 ```
-rails generate drapper:install
+rails generate draper:install
 ```
 
 ### Generate the Decorator
