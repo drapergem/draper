@@ -468,8 +468,8 @@ describe Draper::Base do
 
     it "should delegate respond_to? to the wrapped collection" do
       decorator = ProductDecorator.decorate(paged_array)
-      paged_array.should_receive(:respond_to?).with(:whatever)
-      decorator.respond_to?(:whatever)
+      paged_array.should_receive(:respond_to?).with(:whatever, true)
+      decorator.respond_to?(:whatever, true)
     end
 
     it "should return blank for a decorated empty collection" do
