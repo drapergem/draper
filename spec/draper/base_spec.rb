@@ -414,6 +414,14 @@ describe Draper::Base do
     end
   end
 
+  context ".respond_to?" do
+    it "should delegate respond_to? to the decorated model" do
+      other = Draper::Base.new(source)
+      source.should_receive(:respond_to?).with(:whatever, true)
+      subject.respond_to?(:whatever, true)
+    end
+  end
+
   context 'position accessors' do
     [:first, :last].each do |method|
       context "##{method}" do
