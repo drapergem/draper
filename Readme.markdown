@@ -146,6 +146,14 @@ gem "draper"
 
 Then run `bundle` from the project directory.
 
+### Run the draper:install command
+
+This will create the `app/decorators` directory and the `ApplicationDecorator` inside it.
+
+```
+rails generate draper:install
+```
+
 ### Generate the Decorator
 
 To decorate a model named `Article`:
