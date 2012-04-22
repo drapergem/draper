@@ -18,8 +18,8 @@ module Draper
       @wrapped_collection.send(method, *args, &block)
     end
 
-    def respond_to?(method)
-      super || @wrapped_collection.respond_to?(method)
+    def respond_to?(method, include_private = false)
+      super || @wrapped_collection.respond_to?(method, include_private)
     end
 
     def kind_of?(klass)

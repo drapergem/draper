@@ -414,6 +414,14 @@ describe Draper::Base do
     end
   end
 
+  context ".respond_to?" do
+    it "should delegate respond_to? to the decorated model" do
+      other = Draper::Base.new(source)
+      source.should_receive(:respond_to?).with(:whatever, true)
+      subject.respond_to?(:whatever, true)
+    end
+  end
+
   context 'position accessors' do
     [:first, :last].each do |method|
       context "##{method}" do
@@ -460,8 +468,8 @@ describe Draper::Base do
 
     it "should delegate respond_to? to the wrapped collection" do
       decorator = ProductDecorator.decorate(paged_array)
-      paged_array.should_receive(:respond_to?).with(:whatever)
-      decorator.respond_to?(:whatever)
+      paged_array.should_receive(:respond_to?).with(:whatever, true)
+      decorator.respond_to?(:whatever, true)
     end
 
     it "should return blank for a decorated empty collection" do
