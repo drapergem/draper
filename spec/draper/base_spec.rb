@@ -44,6 +44,11 @@ describe Draper::Base do
       ProductDecorator.new(source).model_class.should == Product
     end
 
+    it "returns decorator if it's decorated model already" do
+      product_decorator = ProductDecorator.new(source)
+      ProductDecorator.new(product_decorator).model.should be_instance_of Product
+    end
+
     it "should handle plural-like words properly'" do
       class Business; end
       expect do
