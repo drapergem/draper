@@ -26,7 +26,7 @@ module Draper
     def initialize(input, options = {})
       input.inspect # forces evaluation of a lazy query from AR
       self.class.model_class = input.class if model_class.nil?
-      @model = input
+      @model = input.kind_of?(Draper::Base) ? input.model : input
       self.options = options
     end
 
