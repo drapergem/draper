@@ -19,4 +19,3 @@ module Draper
     end
   end
 end
-
