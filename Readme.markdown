@@ -159,7 +159,7 @@ rails generate draper:install
 To decorate a model named `Article`:
 
 ```
-rails generate draper:decorator Article
+rails generate draper:decorator article
 ```
 
 ### Writing Methods
