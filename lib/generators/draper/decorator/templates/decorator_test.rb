@@ -9,4 +9,3 @@ class <%= resource_name.singularize.camelize %>DecoratorTest < ActiveSupport::Te
   #   assert true
   # end
 end
-
