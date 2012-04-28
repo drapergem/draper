@@ -1,5 +1,7 @@
 require 'rubygems'
 require 'bundler/setup'
+require 'rails'
+
 Bundler.require
 
 require './spec/support/samples/active_record.rb'
