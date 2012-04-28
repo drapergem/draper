@@ -1,16 +1,18 @@
 require 'spec_helper'
 
 # Generators are not automatically loaded by Rails
-require 'generators/draper/install/install_generator'
+require 'generators/draper/install_generator'
 
-describe Draper::InstallGenerator do
+describe Draper::Generators::InstallGenerator do
   # Tell the generator where to put its output (what it thinks of as Rails.root)
   destination File.expand_path("../../../../../tmp", __FILE__)
 
   before { prepare_destination }
 
   context 'using rspec' do
-    before { run_generator }
+    before do
+      run_generator ['', "-t=rspec"]
+    end
 
     shared_examples_for "ApplicationDecoratorGenerator" do
       describe 'app/decorators/application_decorator.rb' do

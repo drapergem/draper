@@ -1,5 +1,5 @@
-class <%= resource_name.singularize.camelize %>Decorator < ApplicationDecorator
-  decorates :<%= resource_name.singularize.underscore.to_sym %>
+class <%= singular_name.camelize %>Decorator < ApplicationDecorator
+  decorates :<%= singular_name %>
 
   # Accessing Helpers
   #   You can access any helper via a proxy
