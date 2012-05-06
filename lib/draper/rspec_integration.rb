@@ -14,6 +14,9 @@ module Draper
     config.around do |example|
       if :decorator == example.metadata[:type]
         ApplicationController.new.set_current_view_context
+        Draper::ViewContext.current.controller.request ||= ActionController::TestRequest.new
+        Draper::ViewContext.current.request            ||= Draper::ViewContext.current.controller.request
+        Draper::ViewContext.current.params             ||= {}
       end
       example.call
     end
