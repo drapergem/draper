@@ -4,6 +4,7 @@ describe Draper::Base do
   before(:each){ ApplicationController.new.set_current_view_context }
   subject{ Decorator.new(source) }
   let(:source){ Product.new }
+  let(:non_active_model_source){ NonActiveModelProduct.new }
 
   context("proxying class methods") do
     it "should pass missing class method calls on to the wrapped class" do
@@ -195,7 +196,7 @@ describe Draper::Base do
     end
   end
 
-  context("selecting methods") do
+  describe "method selection" do
     it "echos the methods of the wrapped class except default exclusions" do
       source.methods.each do |method|
         unless Draper::Base::DEFAULT_DENIED.include?(method)
@@ -208,26 +209,47 @@ describe Draper::Base do
       DecoratorWithApplicationHelper.new(source).length.should == "overridden"
     end
 
-    it "should always proxy to_param" do
-      source.send :class_eval, "def to_param; 1; end"
-      Draper::Base.new(source).to_param.should == 1
-    end
-
-    it "should always proxy id" do
-      source.send :class_eval, "def id; 123456789; end"
-      Draper::Base.new(source).id.should == 123456789
-    end
-
     it "should not copy the .class, .inspect, or other existing methods" do
       source.class.should_not == subject.class
       source.inspect.should_not == subject.inspect
       source.to_s.should_not == subject.to_s
+    end
+
+    context "when an ActiveModel descendant" do
+      it "should always proxy to_param" do
+        source.stub(:to_param).and_return(1)
+        Draper::Base.new(source).to_param.should == 1
+      end
+
+      it "should always proxy id" do
+        source.stub(:id).and_return(123456789)
+        Draper::Base.new(source).id.should == 123456789
+      end
+
+      it "should always proxy errors" do
+        Draper::Base.new(source).errors.should be_an_instance_of ActiveModel::Errors
+      end
+    end
+
+    context "when not an ActiveModel descendant" do
+      it "does not proxy to_param" do
+        non_active_model_source.stub(:to_param).and_return(1)
+        Draper::Base.new(non_active_model_source).to_param.should_not == 1
+      end
+
+      it "does not proxy errors" do
+        Draper::Base.new(non_active_model_source).should_not respond_to :errors
+      end
     end
   end
 
   context 'the decorated model' do
     it 'receives the mixin' do
       source.class.ancestors.include?(Draper::ModelSupport)
+    end
+
+    it 'includes ActiveModel support' do
+      source.class.ancestors.include?(Draper::ActiveModelSupport)
     end
   end
 
