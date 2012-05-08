@@ -313,6 +313,11 @@ describe Draper::Base do
         it "returns a collection of wrapped objects" do
           subject.each{ |decorated| decorated.should be_instance_of(Draper::Base) }
         end
+
+        it 'should accepted and store a context for a collection' do
+          subject.context = :admin
+          subject.each { |decorated| decorated.context.should == :admin }
+        end
       end
 
       context "when given a single source object" do
