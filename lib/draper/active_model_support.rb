@@ -1,6 +1,6 @@
 module Draper::ActiveModelSupport
   module Proxies
-    def create_proxies
+    def self.extended(base)
       # These methods (as keys) will be created only if the correspondent
       # model descends from a specific class (as value)
       proxies = {}
@@ -9,11 +9,11 @@ module Draper::ActiveModelSupport
       proxies[:id]       = ActiveRecord::Base if defined?(ActiveRecord::Base)
 
       proxies.each do |method_name, dependency|
-        if model.kind_of?(dependency) || dependency.nil?
-          class << self
+        if base.model.kind_of?(dependency) || dependency.nil?
+          class << base
             self
           end.class_eval do
-            self.send(:define_method, method_name) do |*args, &block|
+            send(:define_method, method_name) do |*args, &block|
               model.send(method_name, *args, &block)
             end
           end
