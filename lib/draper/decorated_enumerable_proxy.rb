@@ -38,6 +38,10 @@ module Draper
     def to_s
       "#<DecoratedEnumerableProxy of #{@klass} for #{@wrapped_collection.inspect}>"
     end
+    
+    def context=(input)
+      self.map { |member| member.context = input }
+    end
 
     def source
       @wrapped_collection
