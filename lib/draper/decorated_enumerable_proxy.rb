@@ -15,7 +15,13 @@ module Draper
     end
 
     def method_missing (method, *args, &block)
-      @wrapped_collection.send(method, *args, &block)
+      # this is absolutely gross, but for now, it works.
+      # There should be a better solution, for sure.
+      if method == :last && @wrapped_collection.respond_to?(:last)
+        @klass.decorate(@wrapped_collection.last)
+      else
+        @wrapped_collection.send(method, *args, &block)
+      end
     end
 
     def respond_to?(method, include_private = false)
@@ -23,7 +29,7 @@ module Draper
     end
 
     def kind_of?(klass)
-      super || @wrapped_collection.kind_of?(klass)
+      @wrapped_collection.kind_of?(klass) || super
     end
     alias :is_a? :kind_of?
 
