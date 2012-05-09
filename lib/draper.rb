@@ -8,3 +8,14 @@ require 'draper/view_context'
 require 'draper/decorated_enumerable_proxy'
 require 'draper/rspec_integration' if defined?(RSpec) and RSpec.respond_to?(:configure)
 require 'draper/railtie' if defined?(Rails)
+
+if defined?(Rails)
+  module ActiveModel
+    class Railtie < Rails::Railtie
+      generators do |app|
+        Rails::Generators.configure!(app.config.generators)
+        require "generators/resource_override"
+      end
+    end
+  end
+end

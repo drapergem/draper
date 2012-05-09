@@ -1,4 +1,4 @@
 require 'spec_helper'
 
-describe <%= singular_name.camelize %>Decorator do
+describe <%= class_name %>Decorator do
 end

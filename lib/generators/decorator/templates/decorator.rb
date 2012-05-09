@@ -1,4 +1,5 @@
-class <%= singular_name.camelize %>Decorator < ApplicationDecorator
+<% module_namespacing do -%>
+class <%= class_name %>Decorator < ApplicationDecorator
   decorates :<%= singular_name %>
 
   # Accessing Helpers
@@ -30,3 +31,4 @@ class <%= singular_name.camelize %>Decorator < ApplicationDecorator
   #                   :class => 'timestamp'
   #   end
 end
+<% end -%>
