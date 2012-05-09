@@ -1,5 +1,14 @@
 require 'rails/railtie'
 
+module ActiveModel
+  class Railtie < Rails::Railtie
+    generators do |app|
+      Rails::Generators.configure!(app.config.generators)
+      require "generators/resource_override"
+    end
+  end
+end
+
 module Draper
   class Railtie < Rails::Railtie
 
