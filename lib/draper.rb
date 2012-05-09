@@ -1,5 +1,4 @@
 require 'action_view'
-require 'ammeter/init'
 
 require 'draper/version'
 require 'draper/system'
