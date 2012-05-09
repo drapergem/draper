@@ -15,6 +15,15 @@ Gem::Specification.new do |s|
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ["lib"]
-  s.add_dependency('activesupport', '>= 2.3.10')
-  s.add_development_dependency('redcarpet')
+
+  s.add_dependency 'activesupport', '>= 2.3.10'
+  s.add_dependency 'rake'
+  s.add_dependency 'rspec', '~> 2.0'
+  s.add_dependency 'activesupport', '~> 3.1.3'
+  s.add_dependency 'actionpack', "~> 3.1.3"
+  s.add_dependency 'ammeter', '~> 0.2.2'
+  s.add_dependency 'guard'
+  s.add_dependency 'guard-rspec'
+  s.add_dependency 'launchy'
+  s.add_dependency 'yard'
 end

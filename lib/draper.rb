@@ -1,4 +1,7 @@
-require "draper/version"
+require 'action_view'
+require 'ammeter/init'
+
+require 'draper/version'
 require 'draper/system'
 require 'draper/active_model_support'
 require 'draper/base'
