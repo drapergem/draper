@@ -8,14 +8,10 @@ module Draper
 
     DEFAULT_DENIED = Object.instance_methods << :method_missing
     DEFAULT_ALLOWED = []
-    FORCED_PROXY = [:to_param, :id]
-    FORCED_PROXY.each do |method|
-      define_method method do |*args, &block|
-        model.send method, *args, &block
-      end
-    end
     self.denied = DEFAULT_DENIED
     self.allowed = DEFAULT_ALLOWED
+
+    include Draper::ActiveModelSupport::Proxies
 
     # Initialize a new decorator instance by passing in
     # an instance of the source class. Pass in an optional
@@ -28,6 +24,7 @@ module Draper
       self.class.model_class = input.class if model_class.nil?
       @model = input.kind_of?(Draper::Base) ? input.model : input
       self.options = options
+      create_proxies
     end
 
     # Proxies to the class specified by `decorates` to automatically
@@ -260,7 +257,7 @@ module Draper
   private
 
     def allow?(method)
-      (allowed.empty? || allowed.include?(method) || FORCED_PROXY.include?(method)) && !denied.include?(method)
+      (allowed.empty? || allowed.include?(method)) && !denied.include?(method)
     end
 
     def find_association_reflection(association)
