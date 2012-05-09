@@ -191,7 +191,7 @@ module Draper
     # Fetch the original wrapped model.
     #
     # @return [Object] original_model
-    def to_model
+    def wrapped_object
       @model
     end
 

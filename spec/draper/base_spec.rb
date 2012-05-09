@@ -182,10 +182,9 @@ describe Draper::Base do
     end
   end
 
-  context(".model / .to_model") do
+  context(".wrapped_object") do
     it "should return the wrapped object" do
-      subject.to_model.should == source
-      subject.model.should == source
+      subject.wrapped_object.should == source
     end
   end
 

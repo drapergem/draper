@@ -6,6 +6,8 @@
 
 * Dropped support for Rubies < 1.9.3
 
+* #to_model has been renamed to #wrapped_object
+
 == 0.12.1
 
 * Added Changelog
