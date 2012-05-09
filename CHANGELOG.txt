@@ -2,7 +2,21 @@
 
 = Master
 
+== 0.12.1
+
 * Added Changelog
+
+* Prevented double decoration, see #173
+
+* ActiveModel::Errors support, 19496f0c
+
+* Fixed autoloading issue, see #188
+
+* Re-did generators, see 9155e58f
+
+* Added capybara integration, see 57c8678e
+
+* Fixed a few bugs with the DecoratedEnumerableProxy
 
 == 0.11.1
 
