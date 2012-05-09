@@ -2,28 +2,19 @@ module Draper
   class DecoratedEnumerableProxy
     include Enumerable
 
+    delegate :as_json, :collect, :map, :each, :[], :all?, :include?, :first, :last, :shift, :to => :decorated_collection
+
     def initialize(collection, klass, options = {})
       @wrapped_collection, @klass, @options = collection, klass, options
     end
 
-    def each(&block)
-      @wrapped_collection.each { |member| block.call(@klass.decorate(member, @options)) }
+    def decorated_collection
+      @decorated_collection ||= @wrapped_collection.collect { |member| @klass.decorate(member, @options) }
     end
-
-    def to_ary
-      @wrapped_collection.map { |member| @klass.decorate(member, @options) }
-    end
+    alias_method :to_ary, :decorated_collection
 
     def method_missing (method, *args, &block)
-      # this is absolutely gross, but for now, it works.
-      # There should be a better solution, for sure.
-      if method == :last && @wrapped_collection.respond_to?(:last)
-        @klass.decorate(@wrapped_collection.last)
-      elsif method == :shift && @wrapped_collection.respond_to?(:shift)
-        @klass.decorate(@wrapped_collection.shift)
-      else
-        @wrapped_collection.send(method, *args, &block)
-      end
+      @wrapped_collection.send(method, *args, &block)
     end
 
     def respond_to?(method, include_private = false)
