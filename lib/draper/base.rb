@@ -11,7 +11,7 @@ module Draper
     self.denied = DEFAULT_DENIED
     self.allowed = DEFAULT_ALLOWED
 
-    include Draper::ActiveModelSupport::Proxies
+
 
     # Initialize a new decorator instance by passing in
     # an instance of the source class. Pass in an optional
@@ -24,7 +24,7 @@ module Draper
       self.class.model_class = input.class if model_class.nil?
       @model = input.kind_of?(Draper::Base) ? input.model : input
       self.options = options
-      create_proxies
+      self.extend Draper::ActiveModelSupport::Proxies
     end
 
     # Proxies to the class specified by `decorates` to automatically
