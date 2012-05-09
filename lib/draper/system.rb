@@ -6,7 +6,7 @@ module Draper
 
     def self.load_app_local_decorators
       decorator_files = Dir[ "#{ Rails.root }/#{ app_local_decorator_glob }" ]
-      decorator_files.each { |d| load d }
+      decorator_files.each { |d| require_dependency d }
     end
 
     def self.setup(component)
