@@ -2,6 +2,10 @@
 
 = Master
 
+* Upgraded all dependencies
+
+* Dropped support for Rubies < 1.9.3
+
 == 0.12.1
 
 * Added Changelog
