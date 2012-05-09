@@ -19,6 +19,8 @@ module Draper
       # There should be a better solution, for sure.
       if method == :last && @wrapped_collection.respond_to?(:last)
         @klass.decorate(@wrapped_collection.last)
+      elsif method == :shift && @wrapped_collection.respond_to?(:shift)
+        @klass.decorate(@wrapped_collection.shift)
       else
         @wrapped_collection.send(method, *args, &block)
       end
