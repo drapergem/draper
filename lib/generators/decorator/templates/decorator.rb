@@ -1,5 +1,5 @@
 <% module_namespacing do -%>
-class <%= class_name %>Decorator < ApplicationDecorator
+class <%= class_name %>Decorator < <%= parent_class_name %>
   decorates :<%= singular_name %>
 
   # Accessing Helpers
