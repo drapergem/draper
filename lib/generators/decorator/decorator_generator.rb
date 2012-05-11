@@ -17,7 +17,7 @@ module Rails
       def parent_class_name
         if options[:parent]
           options[:parent]
-        elsif defined?(:ApplicationDecorator)
+        elsif defined?(ApplicationDecorator)
           "ApplicationDecorator"
         else
           "Draper::Base"
