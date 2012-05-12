@@ -2,6 +2,10 @@
 
 = Master
 
+== v0.12.2
+
+* Backport 738074f, which fixes Rails console
+
 == 0.12.1
 
 * Added Changelog
