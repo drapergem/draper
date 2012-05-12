@@ -1,6 +1,6 @@
 = Draper Changelog
 
-= Master
+= 0.13.0
 
 * Upgraded all dependencies
 
@@ -8,7 +8,18 @@
 
 * #to_model has been renamed to #wrapped_object
 
-== 0.12.1
+* Allow proper overriding of special ActiveModel methods
+
+== 0.12.2
+
+* Fix bug with initializing ammeter
+
+* Some gems are now development only in the gemspec
+
+* Fix bug where generated models were still inheriting from
+ApplicationDecorator
+
+== 0.12.0
 
 * Added Changelog
 
