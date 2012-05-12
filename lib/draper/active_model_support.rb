@@ -13,8 +13,10 @@ module Draper::ActiveModelSupport
           class << base
             self
           end.class_eval do
-            send(:define_method, method_name) do |*args, &block|
-              model.send(method_name, *args, &block)
+            if !base.class.instance_methods.include?(method_name) || base.class.instance_method(method_name).owner === Draper::Base
+              send(:define_method, method_name) do |*args, &block|
+                model.send(method_name, *args, &block)
+              end
             end
           end
         end

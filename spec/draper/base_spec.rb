@@ -215,18 +215,32 @@ describe Draper::Base do
     end
 
     context "when an ActiveModel descendant" do
-      it "should always proxy to_param" do
+      it "should always proxy to_param if it is not defined on the decorator itself" do
         source.stub(:to_param).and_return(1)
         Draper::Base.new(source).to_param.should == 1
       end
 
-      it "should always proxy id" do
+      it "should always proxy id if it is not defined on the decorator itself" do
         source.stub(:id).and_return(123456789)
         Draper::Base.new(source).id.should == 123456789
       end
 
-      it "should always proxy errors" do
+      it "should always proxy errors if it is not defined on the decorator itself" do
         Draper::Base.new(source).errors.should be_an_instance_of ActiveModel::Errors
+      end
+
+      it "should never proxy to_param if it is defined on the decorator itself" do
+        source.stub(:to_param).and_return(1)
+        DecoratorWithSpecialMethods.new(source).to_param.should == "foo"
+      end
+
+      it "should never proxy id if it is defined on the decorator itself" do
+        source.stub(:id).and_return(123456789)
+        DecoratorWithSpecialMethods.new(source).id.should == 1337
+      end
+
+      it "should never proxy errors if it is defined on the decorator itself" do
+        DecoratorWithSpecialMethods.new(source).errors.should be_an_instance_of Array
       end
     end
 
