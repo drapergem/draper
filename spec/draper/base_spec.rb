@@ -7,35 +7,35 @@ describe Draper::Base do
   let(:non_active_model_source){ NonActiveModelProduct.new }
 
   context("proxying class methods") do
-    it "should pass missing class method calls on to the wrapped class" do
+    it "pass missing class method calls on to the wrapped class" do
       subject.class.sample_class_method.should == "sample class method"
     end
 
-    it "should respond_to a wrapped class method" do
+    it "respond_to a wrapped class method" do
       subject.class.should respond_to(:sample_class_method)
     end
 
-    it "should still respond_to its own class methods" do
+    it "still respond_to its own class methods" do
       subject.class.should respond_to(:own_class_method)
     end
   end
 
   context(".helpers") do
-    it "should have a valid view_context" do
+    it "have a valid view_context" do
       subject.helpers.should be
     end
 
-    it "should be aliased to .h" do
+    it "is aliased to .h" do
       subject.h.should == subject.helpers
     end
   end
 
   context("#helpers") do
-    it "should have a valid view_context" do
+    it "have a valid view_context" do
       Decorator.helpers.should be
     end
 
-    it "should be aliased to #h" do
+    it "is aliased to #h" do
       Decorator.h.should == Decorator.helpers
     end
   end
@@ -50,7 +50,7 @@ describe Draper::Base do
       ProductDecorator.new(product_decorator).model.should be_instance_of Product
     end
 
-    it "should handle plural-like words properly'" do
+    it "handle plural-like words properly'" do
       class Business; end
       expect do
         class BusinessDecorator < Draper::Base
@@ -183,13 +183,13 @@ describe Draper::Base do
   end
 
   context(".wrapped_object") do
-    it "should return the wrapped object" do
+    it "return the wrapped object" do
       subject.wrapped_object.should == source
     end
   end
 
   context(".source / .to_source") do
-    it "should return the wrapped object" do
+    it "return the wrapped object" do
       subject.to_source == source
       subject.source == source
     end
@@ -204,42 +204,42 @@ describe Draper::Base do
       end
     end
 
-    it "should not override a defined method with a source method" do
+    it "not override a defined method with a source method" do
       DecoratorWithApplicationHelper.new(source).length.should == "overridden"
     end
 
-    it "should not copy the .class, .inspect, or other existing methods" do
+    it "not copy the .class, .inspect, or other existing methods" do
       source.class.should_not == subject.class
       source.inspect.should_not == subject.inspect
       source.to_s.should_not == subject.to_s
     end
 
     context "when an ActiveModel descendant" do
-      it "should always proxy to_param if it is not defined on the decorator itself" do
+      it "always proxy to_param if it is not defined on the decorator itself" do
         source.stub(:to_param).and_return(1)
         Draper::Base.new(source).to_param.should == 1
       end
 
-      it "should always proxy id if it is not defined on the decorator itself" do
+      it "always proxy id if it is not defined on the decorator itself" do
         source.stub(:id).and_return(123456789)
         Draper::Base.new(source).id.should == 123456789
       end
 
-      it "should always proxy errors if it is not defined on the decorator itself" do
+      it "always proxy errors if it is not defined on the decorator itself" do
         Draper::Base.new(source).errors.should be_an_instance_of ActiveModel::Errors
       end
 
-      it "should never proxy to_param if it is defined on the decorator itself" do
+      it "never proxy to_param if it is defined on the decorator itself" do
         source.stub(:to_param).and_return(1)
         DecoratorWithSpecialMethods.new(source).to_param.should == "foo"
       end
 
-      it "should never proxy id if it is defined on the decorator itself" do
+      it "never proxy id if it is defined on the decorator itself" do
         source.stub(:id).and_return(123456789)
         DecoratorWithSpecialMethods.new(source).id.should == 1337
       end
 
-      it "should never proxy errors if it is defined on the decorator itself" do
+      it "never proxy errors if it is defined on the decorator itself" do
         DecoratorWithSpecialMethods.new(source).errors.should be_an_instance_of Array
       end
     end
@@ -266,24 +266,24 @@ describe Draper::Base do
     end
   end
 
-  it "should wrap source methods so they still accept blocks" do
+  it "wrap source methods so they still accept blocks" do
     subject.block{"marker"}.should == "marker"
   end
 
   context ".find" do
-    it "should lookup the associated model when passed an integer" do
+    it "lookup the associated model when passed an integer" do
       pd = ProductDecorator.find(1)
       pd.should be_instance_of(ProductDecorator)
       pd.model.should be_instance_of(Product)
     end
 
-    it "should lookup the associated model when passed a string" do
+    it "lookup the associated model when passed a string" do
       pd = ProductDecorator.find("1")
       pd.should be_instance_of(ProductDecorator)
       pd.model.should be_instance_of(Product)
     end
 
-    it "should accept and store a context" do
+    it "accept and store a context" do
       pd = ProductDecorator.find(1, :context => :admin)
       pd.context.should == :admin
     end
@@ -453,14 +453,14 @@ describe Draper::Base do
   end
 
   context('.==') do
-    it "should compare the decorated models" do
+    it "compare the decorated models" do
       other = Draper::Base.new(source)
       subject.should == other
     end
   end
 
   context ".respond_to?" do
-    it "should delegate respond_to? to the decorated model" do
+    it "delegate respond_to? to the decorated model" do
       other = Draper::Base.new(source)
       source.should_receive(:respond_to?).with(:whatever, true)
       subject.respond_to?(:whatever, true)
@@ -470,15 +470,15 @@ describe Draper::Base do
   context 'position accessors' do
     [:first, :last].each do |method|
       context "##{method}" do
-        it "should return a decorated instance" do
+        it "return a decorated instance" do
           ProductDecorator.send(method).should be_instance_of ProductDecorator
         end
 
-        it "should return the #{method} instance of the wrapped class" do
+        it "return the #{method} instance of the wrapped class" do
           ProductDecorator.send(method).model.should == Product.send(method)
         end
 
-        it "should accept an optional context" do
+        it "accept an optional context" do
           ProductDecorator.send(method, :context => :admin).context.should == :admin
         end
       end
@@ -499,32 +499,32 @@ describe Draper::Base do
     let(:empty_collection) { [] }
     subject { ProductDecorator.decorate(paged_array) }
 
-    it "should proxy all calls to decorated collection" do
+    it "proxy all calls to decorated collection" do
       paged_array.page_number.should == "magic_value"
       subject.page_number.should == "magic_value"
     end
 
-    it "should support Rails partial lookup for a collection" do
+    it "support Rails partial lookup for a collection" do
       # to support Rails render @collection the returned collection
       # (or its proxy) should implement #to_ary.
       subject.respond_to?(:to_ary).should be true
       subject.to_ary.first.should == ProductDecorator.decorate(paged_array.first)
     end
 
-    it "should delegate respond_to? to the wrapped collection" do
+    it "delegate respond_to? to the wrapped collection" do
       decorator = ProductDecorator.decorate(paged_array)
       paged_array.should_receive(:respond_to?).with(:whatever, true)
       decorator.respond_to?(:whatever, true)
     end
 
-    it "should return blank for a decorated empty collection" do
+    it "return blank for a decorated empty collection" do
       # This tests that respond_to? is defined for the DecoratedEnumerableProxy
       # since activesupport calls respond_to?(:empty) in #blank
       decorator = ProductDecorator.decorate(empty_collection)
       decorator.should be_blank
     end
 
-    it "should return whether the member is in the array for a decorated wrapped collection" do
+    it "return whether the member is in the array for a decorated wrapped collection" do
       # This tests that include? is defined for the DecoratedEnumerableProxy
       member = paged_array.first
       subject.respond_to?(:include?)
@@ -533,20 +533,20 @@ describe Draper::Base do
       subject.include?(Product.new).should == false
     end
 
-    it "should equal each other when decorating the same collection" do
+    it "equal each other when decorating the same collection" do
       subject_one = ProductDecorator.decorate(paged_array)
       subject_two = ProductDecorator.decorate(paged_array)
       subject_one.should == subject_two
     end
 
-    it "should not equal each other when decorating different collections" do
+    it "not equal each other when decorating different collections" do
       subject_one = ProductDecorator.decorate(paged_array)
       new_paged_array = paged_array + [Product.new]
       subject_two = ProductDecorator.decorate(new_paged_array)
       subject_one.should_not == subject_two
     end
 
-    it "should allow decorated access by index" do
+    it "allow decorated access by index" do
       subject = ProductDecorator.decorate(paged_array)
       subject[0].should be_instance_of ProductDecorator
     end
@@ -572,18 +572,18 @@ describe Draper::Base do
     end
 
     context '#all' do
-      it "should return a decorated collection" do
+      it "return a decorated collection" do
         ProductDecorator.all.first.should be_instance_of ProductDecorator
       end
 
-      it "should accept a context" do
+      it "accept a context" do
         collection = ProductDecorator.all(:context => :admin)
         collection.first.context.should == :admin
       end
     end
 
     context(".source / .to_source") do
-      it "should return the wrapped object" do
+      it "return the wrapped object" do
         subject.to_source == source
         subject.source == source
       end
@@ -593,19 +593,19 @@ describe Draper::Base do
   describe "a sample usage with denies" do
     let(:subject_with_denies){ DecoratorWithDenies.new(source) }
 
-    it "should proxy methods not listed in denies" do
+    it "proxy methods not listed in denies" do
       subject_with_denies.should respond_to(:hello_world)
     end
 
-    it "should not echo methods specified with denies" do
+    it "not echo methods specified with denies" do
       subject_with_denies.should_not respond_to(:goodnight_moon)
     end
 
-    it "should not clobber other decorators' methods" do
+    it "not clobber other decorators' methods" do
       subject.should respond_to(:hello_world)
     end
 
-    it "should not allow method_missing to circumvent a deny" do
+    it "not allow method_missing to circumvent a deny" do
       expect{subject_with_denies.title}.to raise_error(NoMethodError)
     end
   end
@@ -615,20 +615,20 @@ describe Draper::Base do
 
     let(:subject_with_multiple_allows){ DecoratorWithMultipleAllows.new(source) }
 
-    it "should echo the allowed method" do
+    it "echo the allowed method" do
       subject_with_allows.should respond_to(:goodnight_moon)
     end
 
-    it "should echo _only_ the allowed method" do
+    it "echo _only_ the allowed method" do
       subject_with_allows.should_not respond_to(:hello_world)
     end
 
-    it "should echo the combined allowed methods" do
+    it "echo the combined allowed methods" do
       subject_with_multiple_allows.should respond_to(:goodnight_moon)
       subject_with_multiple_allows.should respond_to(:hello_world)
     end
 
-    it "should echo _only_ the combined allowed methods" do
+    it "echo _only_ the combined allowed methods" do
       subject_with_multiple_allows.should_not respond_to(:title)
     end
   end
@@ -660,19 +660,19 @@ describe Draper::Base do
       end
     }
 
-    it "should raise an exception for a blank allows" do
+    it "raise an exception for a blank allows" do
       expect {blank_allows}.should raise_error(ArgumentError)
     end
 
-    it "should raise an exception for a blank denies" do
+    it "raise an exception for a blank denies" do
       expect {blank_denies}.should raise_error(ArgumentError)
     end
 
-    it "should raise an exception for calling allows then denies" do
+    it "raise an exception for calling allows then denies" do
       expect {using_allows_then_denies}.should raise_error(ArgumentError)
     end
 
-    it "should raise an exception for calling denies then allows" do
+    it "raise an exception for calling denies then allows" do
       expect {using_denies_then_allows}.should raise_error(ArgumentError)
     end
   end
@@ -680,23 +680,23 @@ describe Draper::Base do
   context "in a Rails application" do
     let(:decorator){ DecoratorWithApplicationHelper.decorate(Object.new) }
 
-    it "should have access to ApplicationHelper helpers" do
+    it "have access to ApplicationHelper helpers" do
       decorator.uses_hello_world == "Hello, World!"
     end
 
-    it "should be able to use the content_tag helper" do
+    it "is able to use the content_tag helper" do
       decorator.sample_content.to_s.should == "<span>Hello, World!</span>"
     end
 
-    it "should be able to use the link_to helper" do
+    it "is able to use the link_to helper" do
       decorator.sample_link.should == "<a href=\"/World\">Hello</a>"
     end
 
-    it "should be able to use the pluralize helper" do
+    it "is able to use the pluralize helper" do
       decorator.sample_truncate.should == "Once..."
     end
 
-    it "should be able to use l rather than helpers.l" do
+    it "is able to use l rather than helpers.l" do
       now = Time.now
       decorator.helpers.should_receive(:localize).with(now)
       decorator.l now
