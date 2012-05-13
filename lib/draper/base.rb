@@ -11,8 +11,6 @@ module Draper
     self.denied = DEFAULT_DENIED
     self.allowed = DEFAULT_ALLOWED
 
-
-
     # Initialize a new decorator instance by passing in
     # an instance of the source class. Pass in an optional
     # context inside the options hash is stored for later use.
