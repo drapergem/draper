@@ -1,4 +1,3 @@
-require 'rubygems'
 require 'bundler/setup'
 require 'ammeter/init'
 require 'rails'
