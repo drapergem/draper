@@ -19,6 +19,12 @@ module Draper::ActiveModelSupport
           end
         end
       end
+
+      base.class_eval do
+        def to_model
+          self
+        end
+      end
     end
   end
 end
