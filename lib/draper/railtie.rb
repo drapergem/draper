@@ -30,7 +30,7 @@ module Draper
     # This is the standard "Rails Way" to add paths from which constants
     # can be loaded.
     #
-    config.before_initialize do |app|
+    config.after_initialize do |app|
       app.config.paths.add 'app/decorators', :eager_load => true
     end
 
