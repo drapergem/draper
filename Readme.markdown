@@ -357,6 +357,26 @@ Now when you call the association it will use a decorator.
 <%= @article.author.fancy_name %>
 ```
 
+### A note on Rails configuration
+
+Draper loads your application's decorators when Rails start. This may lead to an issue with configuring I18n, whereby the settings you provide in `./config/application.rb` are ignored. This happens when you use the `I18n` constant at the class-level in one of the models that have a decorator, as in the following example:
+
+```ruby
+# app/models/user.rb
+class User < ActiveRecord::Base
+  validates :email, presence: { message: I18n.t('invalid_email') }
+end
+
+# app/decorators/user_decorator.rb
+class UserDecorator < ApplicationDecorator
+  decorates :user
+end
+```
+
+Note how the `validates` line is executed when the `User` class is loaded, triggering the initialization of the I18n framework _before_ Rails had a chance to apply its configuration.
+
+Using `I18n` directly in your model definition **is an antipattern**. The preferred solution would be to not override the `message` option in your `validates` macro, but provide the `activerecord.errors.models.attributes.user.email.presence` key in your translation files.
+
 ## Contributing
 
 1. Fork it.
