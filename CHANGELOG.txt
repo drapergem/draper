@@ -2,6 +2,10 @@
 
 = Master
 
+== v0.12.3
+
+* Fix i18n issue, see #202
+
 == v0.12.2
 
 * Backport 738074f, which fixes Rails console
