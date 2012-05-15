@@ -10,6 +10,10 @@
 
 * Allow proper overriding of special ActiveModel methods
 
+== v0.12.3
+
+* Fix i18n issue, see #202
+
 == 0.12.2
 
 * Fix bug with initializing ammeter
