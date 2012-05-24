@@ -66,8 +66,9 @@ Why hate normal helpers? In Ruby/Rails we approach everything from an Object-Ori
 A decorator wraps an object with presentation-related accessor methods. For instance, if you had an `Article` object, then the decorator could override `.published_at` to use formatted output like this:
 
 ```ruby
-class ArticleDecorator < ApplicationDecorator
+class ArticleDecorator < Draper::Base
   decorates :article
+
   def published_at
     date = h.content_tag(:span, article.published_at.strftime("%A, %B %e").squeeze(" "), :class => 'date')
     time = h.content_tag(:span, article.published_at.strftime("%l:%M%p"), :class => 'time').delete(" ")
@@ -89,6 +90,7 @@ When you use a decorator you have the power of a Ruby object but it's a part of 
 ```ruby
 class ArticleDecorator < ApplicationDecorator
   decorates :article
+  
   ADMIN_VISIBLE_ATTRIBUTES = [:title, :body, :author, :status]
   PUBLIC_VISIBLE_ATTRIBUTES = [:title, :body]
 
@@ -289,7 +291,7 @@ First, follow the steps above to add the dependency and update your bundle.
 Since we're talking about the `Article` model we'll create an `ArticleDecorator` class. You could do it by hand, but use the provided generator:
 
 ```
-rails generate draper:decorator Article
+rails generate decorator Article
 ```
 
 Now open up the created `app/decorators/article_decorator.rb` and you'll find an `ArticleDecorator` class. Add this method:
