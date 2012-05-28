@@ -9,10 +9,10 @@ module ActionController
     def self.before_filter(name)
       @@before_filters << name
     end
+
+    Draper::System.setup(self)
   end
 end
-
-Draper::System.setup(:action_controller)
 
 class ApplicationController < ActionController::Base
   extend ActionView::Helpers
