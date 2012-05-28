@@ -10,11 +10,9 @@ module Draper
     end
 
     def self.setup(component)
-      if component == :action_controller
-        ActionController::Base.send(:include, Draper::ViewContextFilter)
-        ActionController::Base.extend(Draper::HelperSupport)
-      elsif component == :action_mailer
-        ActionMailer::Base.send(:include, Draper::ViewContextFilter)
+      component.class_eval do
+        include Draper::ViewContextFilter
+        extend  Draper::HelperSupport unless defined?(::ActionMailer) && self.is_a?(::ActionMailer::Base)
       end
     end
   end
