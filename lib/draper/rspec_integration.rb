@@ -12,14 +12,15 @@ RSpec.configure do |config|
   }
 
   # Specs tagged type: :decorator set the Draper view context
-  config.around do |example|
-    if :decorator == example.metadata[:type]
-      ApplicationController.new.set_current_view_context
-      Draper::ViewContext.current.controller.request ||= ActionController::TestRequest.new
-      Draper::ViewContext.current.request            ||= Draper::ViewContext.current.controller.request
-      Draper::ViewContext.current.params             ||= {}
-    end
-    example.call
+  config.before :type => :decorator do
+    ApplicationController.new.set_current_view_context
+    Draper::ViewContext.current.controller.request ||= ActionController::TestRequest.new
+    Draper::ViewContext.current.request            ||= Draper::ViewContext.current.controller.request
+    Draper::ViewContext.current.params             ||= {}
+  end
+
+  config.before :type => :view do
+    controller.set_current_view_context
   end
 end
 
