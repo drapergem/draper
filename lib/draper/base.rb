@@ -213,8 +213,8 @@ module Draper
       super unless allow?(method)
 
       if model.respond_to?(method)
-        self.class.send :define_method, method do |*args, &block|
-          model.send method, *args, &block
+        self.class.send :define_method, method do |*args, &blokk|
+          model.send method, *args, &blokk
         end
 
         send method, *args, &block
