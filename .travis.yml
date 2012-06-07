@@ -1,4 +1,4 @@
 rvm:
   - 1.9.3
-#  - rbx-19mode # not until rbx bug #1692 is resolved
+  - rbx-19mode
   - jruby-19mode
