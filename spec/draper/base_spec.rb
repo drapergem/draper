@@ -712,10 +712,10 @@ describe Draper::Base do
     end
 
     context "when #hello_world is called again" do
-      before { subject.hello_world }
       it "proxies method directly after first hit" do
-        subject.should_not_receive(:method_missing)
+        subject.methods.should_not include(:hello_world)
         subject.hello_world
+        subject.methods.should include(:hello_world)
       end
     end
 
