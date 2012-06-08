@@ -39,7 +39,7 @@ Ryan Bates has put together an excellent RailsCast on Draper based on the 0.8.0 
 
 ## What's New
 
-Check out the full commit history at https://github.com/jcasimir/draper/compare/ad94f54369deabd11315fc241c66b74a30adec0a...04bb00505b7832419fddba20e5068317610eb38d
+Check out the full commit history at http://github.com/jcasimir/draper/commits
 
 In summary, you can now:
 
