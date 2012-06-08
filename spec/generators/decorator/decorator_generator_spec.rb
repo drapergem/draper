@@ -45,6 +45,10 @@ describe Rails::Generators::DecoratorGenerator do
        run_generator ["YourModel"]
       end
 
+      after do
+        Object.send(:remove_const, :ApplicationDecorator)
+      end
+
       subject { file('app/decorators/your_model_decorator.rb') }
       it { should exist }
       it { should contain "class YourModelDecorator < ApplicationDecorator" }
