@@ -154,6 +154,14 @@ describe Draper::Base do
       end
     end
 
+    context "with a scope specified" do
+      before(:each){ subject.class_eval{ decorates_association :thing, :scope => :foo } }
+      it "applies the scope before decoration" do
+        SomeThing.any_instance.should_receive(:foo).and_return(:bar)
+        subject.thing.model.should == :bar
+      end
+    end
+
     context "for a polymorphic association" do
       before(:each){ subject.class_eval{ decorates_association :thing, :polymorphic => true } }
       it "causes the association to be decorated with the right decorator" do
