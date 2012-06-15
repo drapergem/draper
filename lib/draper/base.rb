@@ -57,12 +57,15 @@ module Draper
     # the assocation to be decorated when it is retrieved.
     #
     # @param [Symbol] name of association to decorate, like `:products`
-    # @option options [Class] :with The decorator to decorate the association with
+    # @option options [Hash] :with The decorator to decorate the association with
+    #                        :scope The scope to apply to the association
     def self.decorates_association(association_symbol, options = {})
       define_method(association_symbol) do
         orig_association = model.send(association_symbol)
 
         return orig_association if orig_association.nil?
+
+        orig_association = orig_association.send(options[:scope]) if options[:scope]
 
         return options[:with].decorate(orig_association) if options[:with]
 
