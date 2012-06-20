@@ -18,13 +18,10 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'activesupport', '~> 3.2'
   s.add_dependency 'actionpack', '~> 3.2'
-  s.add_dependency 'minitest', '~> 3.0' if RUBY_PLATFORM == "java"
 
   s.add_development_dependency 'ammeter', '~> 0.2.2'
-  s.add_development_dependency 'guard'
-  s.add_development_dependency 'guard-rspec'
-  s.add_development_dependency 'launchy'
   s.add_development_dependency 'rake', '~> 0.9.2'
   s.add_development_dependency 'rspec', '~> 2.10'
   s.add_development_dependency 'yard'
+  s.add_development_dependency 'minitest', '~> 3.0' if RUBY_PLATFORM == "java"
 end
