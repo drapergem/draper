@@ -9,7 +9,8 @@ require 'draper/model_support'
 require 'draper/helper_support'
 require 'draper/view_context'
 require 'draper/decorated_enumerable_proxy'
-require 'draper/rspec_integration' if defined?(RSpec) and RSpec.respond_to?(:configure)
-require 'draper/minitest_integration'
 require 'draper/railtie' if defined?(Rails)
 
+# Test Support
+require 'draper/test/rspec_integration'    if defined?(RSpec) and RSpec.respond_to?(:configure)
+require 'draper/test/minitest_integration' if defined?(MiniTest::Spec)

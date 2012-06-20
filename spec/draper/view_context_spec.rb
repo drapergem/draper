@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'draper/test/view_context'
 
 describe Draper::ViewContext do
   let(:app_controller) { ApplicationController }
@@ -15,5 +16,9 @@ describe Draper::ViewContext do
   it "raises an exception if the view_context is fetched without being set" do
     Draper::ViewContext.current = nil
     expect {app_controller.current_view_context}.should raise_exception(Exception)
+  end
+
+  it "provides a method to create a view context while testing" do
+    Draper::ViewContext.should respond_to(:infect!)
   end
 end
