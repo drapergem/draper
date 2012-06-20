@@ -13,18 +13,6 @@ module Draper
   class Railtie < Rails::Railtie
 
     ##
-    # Decorators are loaded in
-    # => at app boot in non-development environments
-    # => after each request in the development environment
-    #
-    # This is necessary because we might never explicitly reference
-    # Decorator constants.
-    #
-    config.to_prepare do
-      ::Draper::System.load_app_local_decorators
-    end
-
-    ##
     # The `app/decorators` path is eager loaded
     #
     # This is the standard "Rails Way" to add paths from which constants
