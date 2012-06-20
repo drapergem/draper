@@ -713,6 +713,7 @@ describe Draper::Base do
 
   describe "#method_missing" do
     context "when #hello_world is called for the first time" do
+      subject{ Decorator.new(source) }
       it "hits method missing" do
         subject.should_receive(:method_missing)
         subject.hello_world
