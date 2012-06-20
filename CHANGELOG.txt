@@ -1,5 +1,19 @@
 = Draper Changelog
 
+= 0.15.0
+
+* Proper minitest integration
+
+* We can properly decorate scoped associations, see #223
+
+* Fixed awkward eager loading, see 7dc3510b
+
+= 0.14.0
+
+* Properly prime the view context in Rails Console 738074f
+
+* Make more gems development requirements only
+
 = 0.13.0
 
 * Upgraded all dependencies
