@@ -712,20 +712,10 @@ describe Draper::Base do
   end
 
   describe "#method_missing" do
-    context "when #hello_world is called for the first time" do
-      subject{ Decorator.new(source) }
-      it "hits method missing" do
-        subject.should_receive(:method_missing)
-        subject.hello_world
-      end
-    end
-
-    context "when #hello_world is called again" do
-      it "proxies method directly after first hit" do
-        subject.methods.should_not include(:hello_world)
-        subject.hello_world
-        subject.methods.should include(:hello_world)
-      end
+    it "proxies method directly" do
+      subject.methods.should_not include(:hello_world)
+      subject.hello_world
+      subject.methods.should include(:hello_world)
     end
 
     context "when the delegated method calls a non-existant method" do
