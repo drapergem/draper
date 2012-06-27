@@ -15,10 +15,7 @@ RSpec.configure do |config|
 
   # Specs tagged type: :decorator set the Draper view context
   config.before :type => :decorator do
-    ApplicationController.new.set_current_view_context
-    Draper::ViewContext.current.controller.request ||= ActionController::TestRequest.new
-    Draper::ViewContext.current.request            ||= Draper::ViewContext.current.controller.request
-    Draper::ViewContext.current.params             ||= {}
+    Draper::ViewContext.infect!(self)
   end
 
   config.before :type => :view do
