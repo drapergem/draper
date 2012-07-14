@@ -57,7 +57,7 @@ describe Draper::Base do
           decorates:business
         end
         BusinessDecorator.model_class.should == Business
-      end.should_not raise_error
+      end.to_not raise_error
     end
 
     context("accepts ActiveRecord like :class_name option too") do
@@ -67,7 +67,7 @@ describe Draper::Base do
           decorates :product, :class => Product
         end
         CustomDecorator.model_class.should == Product
-        end.should_not raise_error
+        end.to_not raise_error
       end
 
       it "accepts constants for :class_name" do
@@ -76,7 +76,7 @@ describe Draper::Base do
           decorates :product, :class_name => Product
         end
         CustomDecorator.model_class.should == Product
-        end.should_not raise_error
+        end.to_not raise_error
       end
 
       it "accepts strings for :class" do
@@ -85,7 +85,7 @@ describe Draper::Base do
           decorates :product, :class => 'Product'
         end
         CustomDecorator.model_class.should == Product
-        end.should_not raise_error
+        end.to_not raise_error
       end
 
       it "accepts strings for :class_name" do
@@ -94,7 +94,7 @@ describe Draper::Base do
           decorates :product, :class_name => 'Product'
         end
         CustomDecorator.model_class.should == Product
-        end.should_not raise_error
+        end.to_not raise_error
       end
     end
 
@@ -669,19 +669,19 @@ describe Draper::Base do
     }
 
     it "raise an exception for a blank allows" do
-      expect {blank_allows}.should raise_error(ArgumentError)
+      expect {blank_allows}.to raise_error(ArgumentError)
     end
 
     it "raise an exception for a blank denies" do
-      expect {blank_denies}.should raise_error(ArgumentError)
+      expect {blank_denies}.to raise_error(ArgumentError)
     end
 
     it "raise an exception for calling allows then denies" do
-      expect {using_allows_then_denies}.should raise_error(ArgumentError)
+      expect {using_allows_then_denies}.to raise_error(ArgumentError)
     end
 
     it "raise an exception for calling denies then allows" do
-      expect {using_denies_then_allows}.should raise_error(ArgumentError)
+      expect {using_denies_then_allows}.to raise_error(ArgumentError)
     end
   end
 
