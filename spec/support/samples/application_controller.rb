@@ -10,7 +10,14 @@ module ActionController
       @@before_filters << name
     end
 
-    Draper::System.setup(self)
+    def view_context
+#      puts "zomg view context"
+      @view_context ||= ApplicationController
+    end
+
+    def view_context=(input)
+      @view_context = input
+    end
   end
 end
 
@@ -19,14 +26,6 @@ class ApplicationController < ActionController::Base
   extend ActionView::Helpers::TagHelper
   extend ActionView::Helpers::UrlHelper
   extend ApplicationHelper
-
-  def view_context
-    @view_context ||= ApplicationController
-  end
-
-  def view_context=(input)
-    @view_context = input
-  end
 
   def self.hello
     "Hello!"

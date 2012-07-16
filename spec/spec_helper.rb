@@ -2,11 +2,13 @@ require 'bundler/setup'
 require 'ammeter/init'
 require 'rails'
 
+require 'action_view'
+require './spec/support/samples/application_controller'
+
 Bundler.require
 
 require './spec/support/samples/active_model'
 require './spec/support/samples/active_record'
-require './spec/support/samples/application_controller'
 require './spec/support/samples/application_helper'
 require './spec/support/samples/decorator'
 require './spec/support/samples/decorator_with_allows'
@@ -24,3 +26,9 @@ require './spec/support/samples/some_thing'
 require './spec/support/samples/some_thing_decorator'
 require './spec/support/samples/widget'
 require './spec/support/samples/widget_decorator'
+
+module ActionController
+  class Base
+    Draper::System.setup(self)
+  end
+end
