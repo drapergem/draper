@@ -212,6 +212,14 @@ module Draper
       super || (allow?(method) && model.respond_to?(method, include_private))
     end
 
+    # We always want to delegate present, in case we decorate a nil object.
+    #
+    # I don't like the idea of decorating a nil object, but we'll deal with
+    # that later.
+    def present?
+      model.present?
+    end
+
     def method_missing(method, *args, &block)
       super unless allow?(method)
 
