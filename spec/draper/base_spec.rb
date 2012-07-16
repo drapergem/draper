@@ -363,6 +363,15 @@ describe Draper::Base do
         end
       end
 
+      context "when given a collection of objects which respond to #each" do
+        # Sequel models implement #each
+        let(:source) { [SequelProduct.new, SequelProduct.new] }
+
+        it "returns a collection of wrapped objects" do
+          subject.each{ |decorated| decorated.should be_instance_of(Draper::Base) }
+        end
+      end
+
       context "when given a single source object" do
         let(:source) { Product.new }
 
