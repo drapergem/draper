@@ -706,8 +706,12 @@ describe Draper::Base do
 
     it "is able to use l rather than helpers.l" do
       now = Time.now
-      decorator.helpers.should_receive(:localize).with(now)
+      decorator.helpers.instance_variable_get(:@helpers).should_receive(:localize).with(now)
       decorator.l now
+    end
+
+    it "is able to access html_escape, a private method" do
+      decorator.sample_html_escaped_text.should == '&lt;script&gt;danger&lt;/script&gt;'
     end
   end
 

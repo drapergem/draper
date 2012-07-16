@@ -161,12 +161,30 @@ module Draper
       decorate(model_class.last, options)
     end
 
+    # Some helpers are private, for example html_escape... as a workaround
+    # we are wrapping the helpers in a delegator that passes the methods
+    # along through a send, which will ignore private/public distinctions
+    class HelpersWrapper
+      def initialize(helpers)
+        @helpers = helpers
+      end
+
+      def method_missing(method, *args, &block)
+        @helpers.send(method, *args, &block)
+      end
+
+      #needed for tests
+      def ==(other)
+        other.instance_variable_get(:@helpers) == @helpers
+      end
+    end
+
     # Access the helpers proxy to call built-in and user-defined
     # Rails helpers. Aliased to `.h` for convenience.
     #
     # @return [Object] proxy
     def helpers
-      self.class.helpers
+      HelpersWrapper.new self.class.helpers
     end
     alias :h :helpers
 
