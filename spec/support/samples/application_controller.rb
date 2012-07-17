@@ -1,22 +1,22 @@
 require './spec/support/samples/application_helper'
 
 module ActionController
-  class Base
+  class AbstractController
+    def view_context
+      @view_context ||= ApplicationController
+    end
+
+    def view_context=(input)
+      @view_context = input
+    end
+  end
+  class Base < AbstractController
     @@before_filters = []
     def self.before_filters
       @@before_filters
     end
     def self.before_filter(name)
       @@before_filters << name
-    end
-
-    def view_context
-#      puts "zomg view context"
-      @view_context ||= ApplicationController
-    end
-
-    def view_context=(input)
-      @view_context = input
     end
   end
 end

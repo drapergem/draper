@@ -6,4 +6,4 @@ module DraperViewContext
   end
 end
 
-ApplicationController.send(:include, DraperViewContext)
+ActionController::Base.send(:include, DraperViewContext)
