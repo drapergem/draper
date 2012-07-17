@@ -36,7 +36,7 @@ module Draper
 
     console do
       require 'action_controller/test_case'
-      ApplicationController.new.set_current_view_context
+      ApplicationController.new.view_context
       Draper::ViewContext.current.controller.request ||= ActionController::TestRequest.new
       Draper::ViewContext.current.request            ||= Draper::ViewContext.current.controller.request
       Draper::ViewContext.current.params             ||= {}

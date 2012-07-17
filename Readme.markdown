@@ -244,19 +244,19 @@ Use the new methods in your views like any other model method (ex: `@article.pub
 
 ### Using in Mailers
 
-To use decorators in mailers that use helpers, you have to call `set_current_view_context` in your
+To use decorators in mailers that use helpers, you have to call `view_context` in your
 ActionMailer class.
 
 ```ruby
 class ArticleMailer < ActionMailer::Base
-  default 'init-draper' => Proc.new { set_current_view_context }
+  default 'init-draper' => Proc.new { ArticleMailer.new.view_context }
 end
 ```
 ### Integration with RSpec
 
 Using the provided generator, Draper will place specs for your new decorator in `spec/decorators/`. 
 
-By default, specs in `spec/decorators` will be tagged as `type => :decorator`. Any spec tagged as `decorator` will run `ApplicationController.new.set_current_view_context` which makes helpers available to the decorator.
+By default, specs in `spec/decorators` will be tagged as `type => :decorator`. Any spec tagged as `decorator` will make helpers available to the decorator.
 
 If your decorator specs live somewhere else, which they shouldn't, make sure to tag them with `type => :decorator`. If you don't tag them, Draper's helpers won't be available to your decorator while testing. 
 

@@ -19,7 +19,7 @@ RSpec.configure do |config|
   end
 
   config.before :type => :view do
-    controller.set_current_view_context
+    controller.view_context
   end
 end
 
