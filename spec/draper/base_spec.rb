@@ -252,16 +252,20 @@ describe Draper::Base do
       end
     end
 
-    context "when not an ActiveModel descendant" do
-      it "does not proxy to_param" do
-        non_active_model_source.stub(:to_param).and_return(1)
-        Draper::Base.new(non_active_model_source).to_param.should_not == 1
-      end
-
-      it "does not proxy errors" do
-        Draper::Base.new(non_active_model_source).should_not respond_to :errors
-      end
-    end
+    # Why not? If it does not proxy to_param while the method itself is available
+    # in the model, it will use Object#to_param from the ActiveSomething core_ext,
+    # which will lead to broken URL helpers.
+    # Equivalent for errors. This is why I disabled this test.
+    #context "when not an ActiveModel descendant" do
+    #  it "does not proxy to_param" do
+    #    non_active_model_source.stub(:to_param).and_return(1)
+    #    Draper::Base.new(non_active_model_source).to_param.should_not == 1
+    #  end
+    #
+    #  it "does not proxy errors" do
+    #    Draper::Base.new(non_active_model_source).should_not respond_to :errors
+    #  end
+    #end
   end
 
   context 'the decorated model' do
@@ -477,10 +481,13 @@ describe Draper::Base do
   end
 
   context ".respond_to?" do
+    # respond_to? is called by some proxies (id, to_param, errors).
+    # This is, why I stub it this way.
     it "delegate respond_to? to the decorated model" do
       other = Draper::Base.new(source)
-      source.should_receive(:respond_to?).with(:whatever, true)
-      subject.respond_to?(:whatever, true)
+      source.stub(:respond_to?).and_return(false)
+      source.stub(:respond_to?).with(:whatever, true).once.and_return("mocked")
+      subject.respond_to?(:whatever, true).should == "mocked"
     end
   end
 
