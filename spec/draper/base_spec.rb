@@ -363,7 +363,7 @@ describe Draper::Base do
         end
       end
 
-      context "when given a collection of objects which respond to #each" do
+      context "when given a collection of sequel models" do
         # Sequel models implement #each
         let(:source) { [SequelProduct.new, SequelProduct.new] }
 
