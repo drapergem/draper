@@ -18,4 +18,8 @@ class DecoratorWithApplicationHelper < Draper::Base
   def length
     "overridden"
   end
+
+  def sample_html_escaped_text
+    h.html_escape '<script>danger</script>'
+  end
 end
