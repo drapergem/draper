@@ -233,7 +233,7 @@ ArticleDecorator.decorate(Article.all)   # Returns an enumeration proxy of Artic
 ```ruby
 ArticleDecorator.find(1)
 ```
-  
+
 ### In Your Views
 
 Use the new methods in your views like any other model method (ex: `@article.published_at`):
@@ -242,16 +242,6 @@ Use the new methods in your views like any other model method (ex: `@article.pub
 <h1><%= @article.title %> <%= @article.published_at %></h1>
 ```
 
-### Using in Mailers
-
-To use decorators in mailers that use helpers, you have to call `view_context` in your
-ActionMailer class.
-
-```ruby
-class ArticleMailer < ActionMailer::Base
-  default 'init-draper' => Proc.new { ArticleMailer.new.view_context }
-end
-```
 ### Integration with RSpec
 
 Using the provided generator, Draper will place specs for your new decorator in `spec/decorators/`. 

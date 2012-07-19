@@ -7,5 +7,11 @@ module Draper
     def self.current=(input)
       Thread.current[:current_view_context] = input
     end
+
+    def view_context
+      super.tap do |context|
+        Draper::ViewContext.current = context
+      end
+    end
   end
 end
