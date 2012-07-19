@@ -10,7 +10,6 @@ require 'draper/helper_support'
 require 'draper/view_context'
 require 'draper/decorated_enumerable_proxy'
 require 'draper/railtie' if defined?(Rails)
-require 'draper/action_controller/base'
 
 # Test Support
 require 'draper/test/rspec_integration'    if defined?(RSpec) and RSpec.respond_to?(:configure)
