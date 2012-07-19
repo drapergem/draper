@@ -17,10 +17,6 @@ RSpec.configure do |config|
   config.before :type => :decorator do
     Draper::ViewContext.infect!(self)
   end
-
-  config.before :type => :view do
-    controller.view_context
-  end
 end
 
 if defined?(Capybara)
@@ -30,4 +26,3 @@ if defined?(Capybara)
     config.include Capybara::RSpecMatchers, :type => :decorator
   end
 end
-
