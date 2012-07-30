@@ -250,7 +250,7 @@ By default, specs in `spec/decorators` will be tagged as `type => :decorator`. A
 
 If your decorator specs live somewhere else, which they shouldn't, make sure to tag them with `type => :decorator`. If you don't tag them, Draper's helpers won't be available to your decorator while testing. 
 
-Note: If you're using Spork, you need to `require 'draper/rspec_integration'` in your Spork.prefork block.
+Note: If you're using Spork, you need to `require 'draper/test/rspec_integration'` in your Spork.prefork block.
 
 ## Possible Decoration Methods
 
