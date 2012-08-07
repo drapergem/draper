@@ -9,7 +9,16 @@ module MiniTest
 end
 
 class MiniTest::Unit::DecoratorTestCase < MiniTest::Unit::TestCase
-  add_setup_hook { Draper::ViewContext.infect!(self) }
+  if method_defined?(:before_setup)
+    # for minitext >= 2.11
+    def before_setup
+      super
+      Draper::ViewContext.infect!(self)
+    end
+  else
+    # for older minitest, like what ships w/Ruby 1.9
+    add_setup_hook { Draper::ViewContext.infect!(self) }
+  end
 end
 
 MiniTest::Spec.register_spec_type(MiniTest::Spec::Decorator) do |desc|
