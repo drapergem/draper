@@ -2,14 +2,11 @@ module Draper::ActiveModelSupport
   module Proxies
     def self.extended(base)
       # These methods (as keys) will be created only if the correspondent
-      # model descends from a specific class (as value)
-      proxies = {}
-      proxies[:to_param] = ActiveModel::Conversion if defined?(ActiveModel::Conversion)
-      proxies[:errors]   = ActiveModel::Validations if defined?(ActiveModel::Validations)
-      proxies[:id]       = ActiveRecord::Base if defined?(ActiveRecord::Base)
+      # model responds to the method
+      proxies = [:to_param, :errors, :id]
 
-      proxies.each do |method_name, dependency|
-        if base.model.kind_of?(dependency) || dependency.nil?
+      proxies.each do |method_name|
+        if base.model.respond_to?(method_name)
           base.singleton_class.class_eval do
             if !base.class.instance_methods.include?(method_name) || base.class.instance_method(method_name).owner === Draper::Base
               define_method(method_name) do |*args, &block|
