@@ -258,17 +258,6 @@ describe Draper::Base do
         DecoratorWithSpecialMethods.new(source).errors.should be_an_instance_of Array
       end
     end
-
-    context "when not an ActiveModel descendant" do
-      it "does not proxy to_param" do
-        non_active_model_source.stub(:to_param).and_return(1)
-        Draper::Base.new(non_active_model_source).to_param.should_not == 1
-      end
-
-      it "does not proxy errors" do
-        Draper::Base.new(non_active_model_source).should_not respond_to :errors
-      end
-    end
   end
 
   context 'the decorated model' do
@@ -367,6 +356,15 @@ describe Draper::Base do
         it 'should accepted and store a context for a collection' do
           subject.context = :admin
           subject.each { |decorated| decorated.context.should == :admin }
+        end
+      end
+
+      context "when given a collection of sequel models" do
+        # Sequel models implement #each
+        let(:source) { [SequelProduct.new, SequelProduct.new] }
+
+        it "returns a collection of wrapped objects" do
+          subject.each{ |decorated| decorated.should be_instance_of(Draper::Base) }
         end
       end
 
@@ -475,10 +473,13 @@ describe Draper::Base do
   end
 
   context ".respond_to?" do
+    # respond_to? is called by some proxies (id, to_param, errors).
+    # This is, why I stub it this way.
     it "delegate respond_to? to the decorated model" do
       other = Draper::Base.new(source)
-      source.should_receive(:respond_to?).with(:whatever, true)
-      subject.respond_to?(:whatever, true)
+      source.stub(:respond_to?).and_return(false)
+      source.stub(:respond_to?).with(:whatever, true).once.and_return("mocked")
+      subject.respond_to?(:whatever, true).should == "mocked"
     end
   end
 
