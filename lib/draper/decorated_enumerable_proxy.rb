@@ -27,7 +27,7 @@ module Draper
     alias :is_a? :kind_of?
 
     def ==(other)
-      @wrapped_collection == other
+      @wrapped_collection == (other.respond_to?(:source) ? other.source : other)
     end
 
     def to_s
