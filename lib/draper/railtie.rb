@@ -34,6 +34,12 @@ module Draper
       end
     end
 
+    initializer "draper.extend_active_record_base" do |app|
+      ActiveSupport.on_load(:active_record) do
+        self.send(:include, Draper::ModelSupport)
+      end
+    end
+
     console do
       require 'action_controller/test_case'
       ApplicationController.new.view_context
