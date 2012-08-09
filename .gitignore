@@ -8,3 +8,6 @@ coverage/*
 .yardoc
 tmp
 vendor/bundle
+*.swp
+*.swo
+*.DS_Store
