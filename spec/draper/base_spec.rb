@@ -251,21 +251,6 @@ describe Draper::Base do
         DecoratorWithSpecialMethods.new(source).errors.should be_an_instance_of Array
       end
     end
-
-    # Why not? If it does not proxy to_param while the method itself is available
-    # in the model, it will use Object#to_param from the ActiveSomething core_ext,
-    # which will lead to broken URL helpers.
-    # Equivalent for errors. This is why I disabled this test.
-    #context "when not an ActiveModel descendant" do
-    #  it "does not proxy to_param" do
-    #    non_active_model_source.stub(:to_param).and_return(1)
-    #    Draper::Base.new(non_active_model_source).to_param.should_not == 1
-    #  end
-    #
-    #  it "does not proxy errors" do
-    #    Draper::Base.new(non_active_model_source).should_not respond_to :errors
-    #  end
-    #end
   end
 
   context 'the decorated model' do
