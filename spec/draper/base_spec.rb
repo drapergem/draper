@@ -183,10 +183,17 @@ describe Draper::Base do
   context('.decorates_associations') do
     subject { Decorator }
     it "decorates each of the associations" do
-      subject.should_receive(:decorates_association).with(:similar_products)
-      subject.should_receive(:decorates_association).with(:previous_version)
+      subject.should_receive(:decorates_association).with(:similar_products, {})
+      subject.should_receive(:decorates_association).with(:previous_version, {})
 
       subject.decorates_associations :similar_products, :previous_version
+    end
+
+    it "dispatches options" do
+      subject.should_receive(:decorates_association).with(:similar_products, :with => ProductDecorator)
+      subject.should_receive(:decorates_association).with(:previous_version, :with => ProductDecorator)
+
+      subject.decorates_associations :similar_products, :previous_version, :with => ProductDecorator
     end
   end
 

@@ -88,7 +88,8 @@ module Draper
     #
     # @param [Symbols*] name of associations to decorate
     def self.decorates_associations(*association_symbols)
-      association_symbols.each{ |sym| decorates_association(sym) }
+      options = association_symbols.extract_options!
+      association_symbols.each{ |sym| decorates_association(sym, options) }
     end
 
     # Specifies a black list of methods which may *not* be proxied to
