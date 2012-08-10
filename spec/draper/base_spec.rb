@@ -693,6 +693,74 @@ describe Draper::Base do
     end
   end
 
+
+  describe "a sample usage with denies_all" do
+    let(:subject_with_denies_all){ DecoratorWithDeniesAll.new(source) }
+
+# it{   puts "\nInstance Methods: #{source.instance_methods.inspect}"}
+    # it "echo the allowed method" do
+    #   subject_with_allows.should respond_to(:goodnight_moon)
+    # end
+
+    # it "echo _only_ the allowed method" do
+    #   subject_with_allows.should_not respond_to(:hello_world)
+    # end
+
+    # it "echo the combined allowed methods" do
+    #   subject_with_multiple_allows.should respond_to(:goodnight_moon)
+    #   subject_with_multiple_allows.should respond_to(:hello_world)
+    # end
+
+    # it "echo _only_ the combined allowed methods" do
+    #   subject_with_multiple_allows.should_not respond_to(:title)
+    # end
+  end
+
+  describe "invalid usages of denies_all" do
+    let(:using_allows_then_denies_all) {
+      class DecoratorWithAllowsAndDeniesAll < Draper::Base
+        allows :hello_world
+        denies_all
+      end
+    }
+    let(:using_denies_then_denies_all) {
+      class DecoratorWithDeniesAndDeniesAll < Draper::Base
+        denies :goodnight_moon
+        denies_all
+      end
+    }
+    let(:using_denies_all_then_allows) {
+      class DecoratorWithDeniesAllAndAllows < Draper::Base
+        denies_all
+        allows :hello_world
+      end
+    }
+    let(:using_denies_all_then_denies) {
+      class DecoratorWithDeniesAllAndDenies < Draper::Base
+        denies_all
+        denies :goodnight_moon
+      end
+    }
+
+    it "raises an exception when calling allows then denies_all" do
+      expect {using_allows_then_denies_all}.to raise_error(ArgumentError)
+    end
+
+    it "raises an exception when calling denies then denies_all" do
+      expect {using_denies_then_denies_all}.to raise_error(ArgumentError)
+    end
+
+    it "raises an exception when calling denies_all then allows" do
+      expect {using_denies_all_then_allows}.to raise_error(ArgumentError)
+    end
+
+    it "raises an exception when calling denies_all then denies" do
+      expect {using_denies_all_then_denies}.to raise_error(ArgumentError)
+    end
+  end
+
+
+
   context "in a Rails application" do
     let(:decorator){ DecoratorWithApplicationHelper.decorate(Object.new) }
 
