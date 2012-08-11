@@ -368,6 +368,10 @@ Note how the `validates` line is executed when the `User` class is loaded, trigg
 
 Using `I18n` directly in your model definition **is an antipattern**. The preferred solution would be to not override the `message` option in your `validates` macro, but provide the `activerecord.errors.models.attributes.user.email.presence` key in your translation files.
 
+## Extension gems
+
+For automatic decoration, check out [decorates_before_rendering](https://github.com/ohwillie/decorates_before_rendering).
+
 ## Contributing
 
 1. Fork it.
