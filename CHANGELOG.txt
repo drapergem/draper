@@ -1,5 +1,17 @@
 = Draper Changelog
 
+= 0.16.0
+
+* Automatically prime view_context, see 057ab4
+
+* Fixed bug where rspec eq matchers didn't work, see 57617b
+
+* Sequel ORM support, see 7d4942
+
+* Fixed issues with newer minitest
+
+* changed the way the view_context gets set. See 0b039c
+
 = 0.15.0
 
 * Proper minitest integration
