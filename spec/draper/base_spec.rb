@@ -693,27 +693,25 @@ describe Draper::Base do
     end
   end
 
-
   describe "a sample usage with denies_all" do
     let(:subject_with_denies_all){ DecoratorWithDeniesAll.new(source) }
 
-# it{   puts "\nInstance Methods: #{source.instance_methods.inspect}"}
-    # it "echo the allowed method" do
-    #   subject_with_allows.should respond_to(:goodnight_moon)
-    # end
+    [:goodnight_moon, :hello_world, :title].each do |method|
+      it "does echo #{method} method" do
+        subject_with_denies_all.should_not respond_to(method)
+      end
+    end
 
-    # it "echo _only_ the allowed method" do
-    #   subject_with_allows.should_not respond_to(:hello_world)
-    # end
+    let(:using_denies_all_then_denies_all) {
+      class DecoratorWithDeniesAllAndDeniesAll < Draper::Base
+        denies_all
+        denies_all
+      end
+    }
 
-    # it "echo the combined allowed methods" do
-    #   subject_with_multiple_allows.should respond_to(:goodnight_moon)
-    #   subject_with_multiple_allows.should respond_to(:hello_world)
-    # end
-
-    # it "echo _only_ the combined allowed methods" do
-    #   subject_with_multiple_allows.should_not respond_to(:title)
-    # end
+    it "allows multple calls to .denies_all" do
+      expect { using_denies_all_then_denies_all }.to_not raise_error(ArgumentError)
+    end
   end
 
   describe "invalid usages of denies_all" do
@@ -741,7 +739,6 @@ describe Draper::Base do
         denies :goodnight_moon
       end
     }
-
     it "raises an exception when calling allows then denies_all" do
       expect {using_allows_then_denies_all}.to raise_error(ArgumentError)
     end
@@ -758,8 +755,6 @@ describe Draper::Base do
       expect {using_denies_all_then_denies}.to raise_error(ArgumentError)
     end
   end
-
-
 
   context "in a Rails application" do
     let(:decorator){ DecoratorWithApplicationHelper.decorate(Object.new) }
