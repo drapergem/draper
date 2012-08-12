@@ -693,6 +693,69 @@ describe Draper::Base do
     end
   end
 
+  describe "a sample usage with denies_all" do
+    let(:subject_with_denies_all){ DecoratorWithDeniesAll.new(source) }
+
+    [:goodnight_moon, :hello_world, :title].each do |method|
+      it "does echo #{method} method" do
+        subject_with_denies_all.should_not respond_to(method)
+      end
+    end
+
+    let(:using_denies_all_then_denies_all) {
+      class DecoratorWithDeniesAllAndDeniesAll < Draper::Base
+        denies_all
+        denies_all
+      end
+    }
+
+    it "allows multple calls to .denies_all" do
+      expect { using_denies_all_then_denies_all }.to_not raise_error(ArgumentError)
+    end
+  end
+
+  describe "invalid usages of denies_all" do
+    let(:using_allows_then_denies_all) {
+      class DecoratorWithAllowsAndDeniesAll < Draper::Base
+        allows :hello_world
+        denies_all
+      end
+    }
+    let(:using_denies_then_denies_all) {
+      class DecoratorWithDeniesAndDeniesAll < Draper::Base
+        denies :goodnight_moon
+        denies_all
+      end
+    }
+    let(:using_denies_all_then_allows) {
+      class DecoratorWithDeniesAllAndAllows < Draper::Base
+        denies_all
+        allows :hello_world
+      end
+    }
+    let(:using_denies_all_then_denies) {
+      class DecoratorWithDeniesAllAndDenies < Draper::Base
+        denies_all
+        denies :goodnight_moon
+      end
+    }
+    it "raises an exception when calling allows then denies_all" do
+      expect {using_allows_then_denies_all}.to raise_error(ArgumentError)
+    end
+
+    it "raises an exception when calling denies then denies_all" do
+      expect {using_denies_then_denies_all}.to raise_error(ArgumentError)
+    end
+
+    it "raises an exception when calling denies_all then allows" do
+      expect {using_denies_all_then_allows}.to raise_error(ArgumentError)
+    end
+
+    it "raises an exception when calling denies_all then denies" do
+      expect {using_denies_all_then_denies}.to raise_error(ArgumentError)
+    end
+  end
+
   context "in a Rails application" do
     let(:decorator){ DecoratorWithApplicationHelper.decorate(Object.new) }
 
