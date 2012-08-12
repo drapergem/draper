@@ -105,6 +105,16 @@ module Draper
       self.denied += input_denied
     end
 
+    # Specifies that all methods may *not* be proxied to
+    # to the wrapped object.
+    #
+    # Do not use `.allows` and `.denies` in combination with '.denies_all'
+    def self.denies_all
+      raise ArgumentError, "Use either 'allows' or 'denies', but not both." unless ((self.allowed == DEFAULT_ALLOWED && self.denied == DEFAULT_DENIED) || (self.allowed != DEFAULT_ALLOWED && self.denied != DEFAULT_DENIED))
+      self.denied  += [nil]  # Add dummy value to denied to prevent calls to #allows.  Hacky???
+      self.allowed += [nil]  # Add dummy value to allowed to prevent calls to #denies
+    end
+
     # Specifies a white list of methods which *may* be proxied to
     # to the wrapped object. When `allows` is used, only the listed
     # methods and methods defined in the decorator itself will be
