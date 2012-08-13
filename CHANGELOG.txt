@@ -10,7 +10,7 @@
 
 * Fixed issues with newer minitest
 
-* changed the way the view_context gets set. See 0b039c
+* changed the way the view_context gets set. See 0b03d9c
 
 = 0.15.0
 
