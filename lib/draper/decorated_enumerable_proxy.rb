@@ -1,3 +1,4 @@
+require 'active_support/core_ext/object/blank'
 module Draper
   class DecoratedEnumerableProxy
     include Enumerable
@@ -12,6 +13,16 @@ module Draper
       @decorated_collection ||= @wrapped_collection.collect { |member| @klass.decorate(member, @options) }
     end
     alias_method :to_ary, :decorated_collection
+
+    def find(ifnone_or_id = nil, &blk)
+      if block_given?
+        source.find(ifnone_or_id, &blk)
+      else
+        obj = decorated_collection.first
+        return nil if obj.blank?
+        obj.class.find(ifnone_or_id)
+      end
+    end
 
     def method_missing (method, *args, &block)
       @wrapped_collection.send(method, *args, &block)

@@ -64,6 +64,7 @@ module Draper
         orig_association = model.send(association_symbol)
 
         return orig_association if orig_association.nil?
+        return decorated_associations[association_symbol] if decorated_associations[association_symbol]
 
         orig_association = orig_association.send(options[:scope]) if options[:scope]
 
@@ -79,7 +80,7 @@ module Draper
                   orig_association.class
                 end
 
-        "#{klass}Decorator".constantize.decorate(orig_association, options)
+        decorated_associations[association_symbol] = "#{klass}Decorator".constantize.decorate(orig_association, options)
       end
     end
 
@@ -302,6 +303,10 @@ module Draper
       if model.class.respond_to?(:reflect_on_association)
         model.class.reflect_on_association(association)
       end
+    end
+
+    def decorated_associations
+      @decorated_associations ||= {}
     end
   end
 end

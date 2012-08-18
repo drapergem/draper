@@ -178,6 +178,23 @@ describe Draper::Base do
         subject.previous_version.should be_nil
       end
     end
+
+    context "#find" do
+      before(:each){ subject.class_eval{ decorates_association :similar_products } }
+      context "with a block" do
+        it "delegates to #each" do
+          subject.similar_products.source.should_receive :find
+          subject.similar_products.find {|p| p.title == "title" }
+        end
+      end
+
+      context "without a block" do
+        it "calls a finder method" do
+          subject.similar_products.source.should_not_receive :find
+          subject.similar_products.find 1
+        end
+      end
+    end
   end
 
   context('.decorates_associations') do
