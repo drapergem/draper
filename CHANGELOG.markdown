@@ -1,5 +1,11 @@
 # Draper Changelog
 
+## 0.17.0
+
+* [Fix earlier fix of `view_context` priming](https://github.com/jcasimir/draper/commit/5da44336)
+* [Add `denies_all`](https://github.com/jcasimir/draper/commit/148e732)
+* [Properly proxy associations with regard to `find`](https://github.com/jcasimir/draper/commit/d46d19205e)
+
 ## 0.16.0
 
 * [Automatically prime `view_context`](https://github.com/jcasimir/draper/commit/057ab4e8)
