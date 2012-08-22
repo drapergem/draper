@@ -59,7 +59,7 @@ describe Draper::Base do
     end
 
     it "returns a Decorator when a scope is called on the decorator" do
-      class ActiveRecord::Relatio; end
+      class ActiveRecord::Relation; end
       proxy = ProductDecorator
       klass = source.class
       klass.class_eval { def self.some_scope ; ActiveRecord::Relation.new ; end }
