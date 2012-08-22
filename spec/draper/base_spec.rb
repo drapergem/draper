@@ -50,6 +50,22 @@ describe Draper::Base do
       ProductDecorator.new(product_decorator).model.should be_instance_of Product
     end
 
+    it "returns a Decorator when a scope is called on decorated object" do
+       class ActiveRecord::Relation; end
+       proxy = ProductDecorator.new(source)
+       klass = proxy.model.class
+       klass.class_eval { def some_scope ; ActiveRecord::Relation.new ; end }
+       proxy.some_scope.should be_instance_of(proxy.class)
+    end
+
+    it "returns a Decorator when a scope is called on the decorator" do
+      class ActiveRecord::Relatio; end
+      proxy = ProductDecorator
+      klass = source.class
+      klass.class_eval { def self.some_scope ; ActiveRecord::Relation.new ; end }
+      proxy.some_scope.should be_instance_of(proxy)
+    end
+
     it "handle plural-like words properly'" do
       class Business; end
       expect do
@@ -159,6 +175,18 @@ describe Draper::Base do
       it "applies the scope before decoration" do
         SomeThing.any_instance.should_receive(:foo).and_return(:bar)
         subject.thing.model.should == :bar
+      end
+    end
+
+    context "with a scope applied after decoration" do
+      it "returns a DecoratedEnumerableProxy when a scope is called" do
+        class ActiveRecord::Relation
+          def some_scope; self ;end
+        end
+        klass = subject.model.class
+        klass.class_eval { def self.some_scope ; ActiveRecord::Relation.new ; end }
+        proxy = Draper::DecoratedEnumerableProxy
+        proxy.new(ActiveRecord::Relation.new, klass).some_scope.should be_instance_of(proxy)
       end
     end
 
@@ -352,8 +380,7 @@ describe Draper::Base do
 
     it "uses the options hash in the decorator instantiation" do
       Product.should_receive(:find_by_name_and_size).with("apples", "large", {:role => :admin})
-      pd = ProductDecorator.find_by_name_and_size("apples", "large", {:role => :admin})
-      pd.context[:role].should == :admin
+      ProductDecorator.find_by_name_and_size("apples", "large", {:role => :admin})
     end
   end
 
