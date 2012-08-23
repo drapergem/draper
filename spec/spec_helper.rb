@@ -34,3 +34,8 @@ module ActionController
     Draper::System.setup(self)
   end
 end
+
+module ActiveRecord
+  class Relation
+  end
+end
