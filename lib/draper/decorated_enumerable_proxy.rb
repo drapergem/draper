@@ -25,7 +25,24 @@ module Draper
     end
 
     def method_missing (method, *args, &block)
-      @wrapped_collection.send(method, *args, &block)
+      if @wrapped_collection.respond_to?(method)
+        self.class.send :define_method, method do |*args, &blokk|
+          scoped_result = @wrapped_collection.send(method, *args, &block)
+          if defined?(ActiveRecord) && scoped_result.kind_of?(ActiveRecord::Relation)
+            self.class.new(scoped_result, @klass, @options)
+          else
+            scoped_result
+          end
+        end
+
+        send method, *args, &block
+      else
+        super
+      end
+
+    rescue NoMethodError => no_method_error
+      super if no_method_error.name == method
+      raise no_method_error
     end
 
     def respond_to?(method, include_private = false)
