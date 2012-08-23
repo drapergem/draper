@@ -256,7 +256,7 @@ module Draper
       if model.respond_to?(method)
         self.class.send :define_method, method do |*args, &blokk|
           result = model.send method, *args, &blokk
-          if result.class.name == "ActiveRecord::Relation"
+          if defined?(ActiveRecord) && result.kind_of?(ActiveRecord::Relation)
             self.class.new(model,self.options)
           else
             result
@@ -275,7 +275,8 @@ module Draper
 
     def self.method_missing(method, *args, &block)
       model_result = model_class.send(method, *args, &block)
-      if model_result.is_a?(model_class) || model_result.class.name == 'ActiveRecord::Relation'
+      if model_result.kind_of?(model_class) ||
+        (defined?(ActiveRecord) && model_result.kind_of?(ActiveRecord::Relation))
         self.decorate(model_result, :context => args.dup.extract_options!)
       else
         model_result

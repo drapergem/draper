@@ -28,7 +28,7 @@ module Draper
       if @wrapped_collection.respond_to?(method)
         self.class.send :define_method, method do |*args, &blokk|
           scoped_result = @wrapped_collection.send(method, *args, &block)
-          if scoped_result.class.name == "ActiveRecord::Relation"
+          if defined?(ActiveRecord) && scoped_result.kind_of?(ActiveRecord::Relation)
             self.class.new(scoped_result, @klass, @options)
           else
             scoped_result
