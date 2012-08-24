@@ -401,6 +401,15 @@ describe Draper::Base do
         end
       end
 
+      context "when given a struct" do
+        # Struct objects implement #each
+        let(:source) { Struct.new(:title).new("Godzilla") }
+
+        it "returns a wrapped object" do
+          subject.should be_instance_of(Draper::Base)
+        end
+      end
+
       context "when given a collection of sequel models" do
         # Sequel models implement #each
         let(:source) { [SequelProduct.new, SequelProduct.new] }
