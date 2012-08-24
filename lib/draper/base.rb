@@ -148,7 +148,7 @@ module Draper
       if input.instance_of?(self)
         input.options = options unless options.empty?
         return input
-      elsif input.respond_to?(:each) && (!defined?(Sequel) || !input.is_a?(Sequel::Model))
+      elsif input.respond_to?(:each) && !input.is_a?(Struct) && (!defined?(Sequel) || !input.is_a?(Sequel::Model))
         Draper::DecoratedEnumerableProxy.new(input, self, options)
       elsif options[:infer]
         input.decorator(options)
