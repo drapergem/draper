@@ -6,6 +6,7 @@ module Draper
       context.controller.request ||= ActionController::TestRequest.new
       context.request            ||= context.controller.request
       context.params             ||= {}
+      Thread.current[:current_view_context] = context
       context
     end
 
