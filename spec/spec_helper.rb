@@ -3,8 +3,6 @@ require 'ammeter/init'
 require 'rails'
 
 require 'action_view'
-require './spec/support/samples/application_controller'
-
 Bundler.require
 
 require './spec/support/samples/active_model'
@@ -29,6 +27,9 @@ require './spec/support/samples/some_thing_decorator'
 require './spec/support/samples/widget'
 require './spec/support/samples/widget_decorator'
 
+require 'action_controller'
+require 'action_controller/test_case'
+
 module ActionController
   class Base
     Draper::System.setup(self)
@@ -38,4 +39,15 @@ end
 module ActiveRecord
   class Relation
   end
+end
+
+require './spec/support/samples/application_helper'
+class ApplicationController < ActionController::Base
+  include ApplicationHelper
+  helper_method :hello_world
+end
+
+
+class << Rails
+  undef application # Avoid silly Rails bug: https://github.com/rails/rails/pull/6429
 end

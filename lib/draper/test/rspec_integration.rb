@@ -1,5 +1,3 @@
-require 'draper/test/view_context'
-
 module Draper
   module DecoratorExampleGroup
     extend ActiveSupport::Concern
@@ -13,10 +11,6 @@ RSpec.configure do |config|
     :file_path => /spec[\\\/]decorators/
   }
 
-  # Specs tagged type: :decorator set the Draper view context
-  config.before :type => :decorator do
-    Draper::ViewContext.infect!(self)
-  end
 end
 
 if defined?(Capybara)
