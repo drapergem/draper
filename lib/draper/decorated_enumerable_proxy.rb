@@ -89,6 +89,9 @@ module Draper
     end
     alias_method :to_source, :source
     
+    def h
+      Draper::ViewContext.current
+    end
     
     private
     def self.discern_class_from_my_class default_class
