@@ -5,9 +5,7 @@ require 'rails'
 require 'action_view'
 Bundler.require
 
-require './spec/support/samples/active_model'
 require './spec/support/samples/active_record'
-require './spec/support/samples/application_helper'
 require './spec/support/samples/decorator'
 require './spec/support/samples/decorator_with_allows'
 require './spec/support/samples/decorator_with_multiple_allows'
@@ -43,9 +41,10 @@ module ActiveRecord
   end
 end
 
-require './spec/support/samples/application_helper'
 class ApplicationController < ActionController::Base
-  include ApplicationHelper
+  def hello_world
+    "Hello, World!"
+  end
   helper_method :hello_world
 end
 
