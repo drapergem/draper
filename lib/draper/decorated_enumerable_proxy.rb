@@ -4,8 +4,6 @@ module Draper
     include Enumerable
 
     delegate :as_json, :collect, :map, :each, :[], :all?, :include?, :first, :last, :shift, :to => :decorated_collection
-    
-    
 
     # Initialize a new collection decorator instance by passing in
     # an instance of a collection. Pass in an optional
@@ -21,6 +19,9 @@ module Draper
               
     def self.decorate(collection, options = {})
       new( collection, discern_class_from_my_class(options.delete(:klass)), options)
+    end
+    class << self
+      alias_method :decorates, :decorate
     end
 
     def initialize(collection, klass, options = {})
@@ -89,14 +90,15 @@ module Draper
     end
     alias_method :to_source, :source
     
-    def h
+    def helpers
       Draper::ViewContext.current
     end
+    alias_method :h, :helpers
     
     private
     def self.discern_class_from_my_class default_class
       return default_class if default_class
-      name = InvoiceDecorator.to_s.gsub("Decorator", "")
+      name = self.to_s.gsub("Decorator", "")
       "#{name.singularize}Decorator".constantize
     rescue NameError
       raise NameError("You must supply a class (as the klass option) for the members of your collection or the class must be inferable from the name of this class ('#{new.class}')")
