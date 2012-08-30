@@ -296,7 +296,7 @@ end
 Then you need to perform the wrapping in your controller. Here's the simplest method:
 
 ```ruby
-class ArticlesController < Draper::Decorator
+class ArticlesController < ApplicationController
   def show
     @article = ArticleDecorator.find params[:id]
   end
