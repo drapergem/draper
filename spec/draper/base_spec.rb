@@ -782,6 +782,15 @@ describe Draper::Base do
     end
   end
 
+  describe "a sample usage with denies" do
+    let(:subject_with_callback){ DecoratorWithCallback.new(source) }
+  
+    it "should call the callback" do
+       subject_with_callback.test.should == "Yay I'm a callback"
+    end
+  
+  end
+
   context "in a Rails application" do
     let(:decorator){ DecoratorWithApplicationHelper.decorate(Object.new) }
 

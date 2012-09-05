@@ -23,6 +23,7 @@ module Draper
       @model = input.kind_of?(Draper::Base) ? input.model : input
       self.options = options
       self.extend Draper::ActiveModelSupport::Proxies
+      on_create
     end
 
     # Proxies to the class specified by `decorates` to automatically
@@ -171,6 +172,10 @@ module Draper
 
     def self.last(options = {})
       decorate(model_class.last, options)
+    end
+
+    # A Callback called when the decorator is created
+    def on_create
     end
 
     # Some helpers are private, for example html_escape... as a workaround
