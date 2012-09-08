@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Draper::Base do
-  before(:each){ ApplicationController.new.set_current_view_context }
+  before(:each){ ApplicationController.new.view_context }
   subject{ Decorator.new(source) }
   let(:source){ Product.new }
   let(:non_active_model_source){ NonActiveModelProduct.new }
