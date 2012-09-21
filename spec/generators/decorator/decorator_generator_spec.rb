@@ -65,13 +65,33 @@ describe Rails::Generators::DecoratorGenerator do
     end
   end
 
-  context 'using rspec' do
+  context 'using rspec with namespaced model' do
+    before { run_generator ["Namespace::YourModel", "-t=rspec"]  }
+
+    describe 'spec/decorators/your_model_decorator_spec.rb' do
+      subject { file('spec/decorators/namespace/your_model_decorator_spec.rb') }
+      it { should exist }
+      it { should contain "describe Namespace::YourModelDecorator" }
+    end
+  end
+
+  context 'using test-unit' do
     before { run_generator ["YourModel", "-t=test_unit"]  }
 
     describe 'test/decorators/YourModel_decorator_test.rb' do
       subject { file('test/decorators/your_model_decorator_test.rb') }
       it { should exist }
       it { should contain "class YourModelDecoratorTest < ActiveSupport::TestCase" }
+    end
+  end
+
+  context 'using test-unit with namespaced model' do
+    before { run_generator ["Namespace::YourModel", "-t=test_unit"]  }
+
+    describe 'test/decorators/your_model_decorator_test.rb' do
+      subject { file('test/decorators/namespace/your_model_decorator_test.rb') }
+      it { should exist }
+      it { should contain "class Namespace::YourModelDecoratorTest < ActiveSupport::TestCase" }
     end
   end
 end
