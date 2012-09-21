@@ -1,3 +1,4 @@
+require 'pry'
 module Draper
   module ViewContext
     def self.current
@@ -13,10 +14,10 @@ module Draper
         Draper::ViewContext.current = context
       end
     end
-    
+
     private
-    
-    def build_view_context
+
+    def self.build_view_context
       ApplicationController.new.view_context.tap do |context|
         context.controller.request ||= ActionController::TestRequest.new
         context.request            ||= context.controller.request
