@@ -1,4 +1,3 @@
-require 'pry'
 module Draper
   module ViewContext
     def self.current
