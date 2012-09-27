@@ -13,4 +13,4 @@ require 'draper/railtie' if defined?(Rails)
 
 # Test Support
 require 'draper/test/rspec_integration'    if defined?(RSpec) and RSpec.respond_to?(:configure)
-require 'draper/test/minitest_integration' if defined?(MiniTest::Spec)
+require 'draper/test/minitest_integration' if defined?(MiniTest::Rails)
