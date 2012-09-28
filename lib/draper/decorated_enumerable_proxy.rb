@@ -3,7 +3,7 @@ module Draper
   class DecoratedEnumerableProxy
     include Enumerable
 
-    delegate :as_json, :collect, :map, :each, :[], :all?, :include?, :first, :last, :shift, :to => :decorated_collection
+    delegate :as_json, :collect, :map, :each, :[], :all?, :include?, :first, :last, :shift, :in_groups_of, :to => :decorated_collection
 
     # Initialize a new collection decorator instance by passing in
     # an instance of a collection. Pass in an optional
