@@ -1,11 +1,19 @@
 module Draper
   module ViewContext
+    def self.current_controller
+      Thread.current[:current_controller] || ApplicationController.new
+    end
+
+    def self.current_controller=(controller)
+      Thread.current[:current_controller] = controller
+    end
+
     def self.current
       Thread.current[:current_view_context] ||= build_view_context
     end
 
-    def self.current=(input)
-      Thread.current[:current_view_context] = input
+    def self.current=(context)
+      Thread.current[:current_view_context] = context
     end
 
     def view_context
@@ -17,10 +25,12 @@ module Draper
     private
 
     def self.build_view_context
-      ApplicationController.new.view_context.tap do |context|
-        context.controller.request ||= ActionController::TestRequest.new
-        context.request            ||= context.controller.request
-        context.params             ||= {}
+      current_controller.view_context.tap do |context|
+        if defined?(ActionController::TestRequest)
+          context.controller.request ||= ActionController::TestRequest.new
+          context.request            ||= context.controller.request
+          context.params             ||= {}
+        end
       end
     end
   end
