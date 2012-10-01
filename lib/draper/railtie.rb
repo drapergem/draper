@@ -24,13 +24,13 @@ module Draper
 
     initializer "draper.extend_action_controller_base" do |app|
       ActiveSupport.on_load(:action_controller) do
-        Draper::System.setup(self)
+        Draper::System.setup_action_controller(self)
       end
     end
 
     initializer "draper.extend_action_mailer_base" do |app|
       ActiveSupport.on_load(:action_mailer) do
-        Draper::System.setup(self)
+        Draper::System.setup_action_mailer(self)
       end
     end
 

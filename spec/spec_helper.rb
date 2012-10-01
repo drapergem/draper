@@ -32,7 +32,7 @@ require 'action_controller/test_case'
 
 module ActionController
   class Base
-    Draper::System.setup(self)
+    Draper::System.setup_action_controller(self)
   end
 end
 
