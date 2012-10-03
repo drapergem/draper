@@ -18,9 +18,11 @@ module Draper
     # @param [Object] instance to wrap
     # @param [Hash] options (optional)
     def initialize(input, options = {})
+      raise ArgumentError, "Can't decorate an object twice with the same decorator" if input.is_a?(self.class)
+
       input.inspect # forces evaluation of a lazy query from AR
       self.class.model_class = input.class if model_class.nil?
-      @model = input.kind_of?(Draper::Base) ? input.model : input
+      @model = input
       self.options = options
       self.extend Draper::ActiveModelSupport::Proxies
     end
