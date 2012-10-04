@@ -18,7 +18,7 @@ module Draper
     # @param [Object] instance to wrap
     # @param [Hash] options (optional)
     def initialize(input, options = {})
-      input.inspect # forces evaluation of a lazy query from AR
+      input.to_a if input.respond_to?(:to_a) # forces evaluation of a lazy query from AR
       self.class.model_class = input.class if model_class.nil?
       @model = input.kind_of?(Draper::Base) ? input.model : input
       self.options = options
