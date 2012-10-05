@@ -6,19 +6,19 @@
 
 1. Add `gem 'draper'` to your `Gemfile` and `bundle`
 2. When you generate a resource with `rails g resource YourModel`, you get a decorator automatically!
-3. If YourModel exists, run `rails g decorator YourModel`
+3. If `YourModel` already exists, run `rails g decorator YourModel` to create `YourModelDecorator`
 4. Edit `app/decorators/[your_model]_decorator.rb` using:
   1. `h` to proxy to Rails/application helpers like `h.current_user`
-  2. `[your_model]` to access the wrapped object like `article.created_at`
+  2. the name of your decorated model to access the wrapped object like `article.created_at`
 5. Wrap models in your controller with the decorator using:
   1. `.find` automatic lookup & wrap
     ex: `ArticleDecorator.find(1)`
-  2. `.decorate` method with single object or collection, 
+  2. `.decorate` method with a single object or collection, 
     ex: `ArticleDecorator.decorate(Article.all)`
   3. `.new` method with single object
     ex: `ArticleDecorator.new(Article.first)`
-6. Output the instance methods in your view templates
-  ex: `@article_decorator.created_at`
+6. Call decorator methods from your view templates
+  ex: `<%= @article_decorator.created_at %>`
 
 If you need common methods in your decorators, create an `app/decorators/application_decorator.rb`:
 
@@ -29,26 +29,6 @@ end
 ```
 
 and make your decorators inherit from it. Newly generated decorators will respect this choice and inherit from `ApplicationDecorator`.
-
-## Watch the RailsCast
-
-Ryan Bates has put together an excellent RailsCast on Draper based on the 0.8.0 release:
-
-[![RailsCast #286](https://img.skitch.com/20111021-dgxmqntq22d37fthky6pttk59n.jpg "RailsCast #286 - Draper")](http://railscasts.com/episodes/286-draper)
-
-## What's New
-
-Check out the full commit history at http://github.com/jcasimir/draper/commits
-
-In summary, you can now:
-
-* [Namespace the `decorates` call](https://github.com/jcasimir/draper/commit/1c3d5667b8406b80b490d876257379087b129f92)
-* [Use your decorators with CanCan](https://github.com/jcasimir/draper/commit/ac1f3083989107d877e2b1c918c3a3e792db99e8)
-* [Use a more generalized `options` hash in decorator initialization](https://github.com/jcasimir/draper/commit/03910877d0461356da0968a87346592908f292a7)
-* [Get better performance by generating methods](https://github.com/jcasimir/draper/commit/ebe30511b79eac82276413ca7ae54a4a4d86d4dc)
-* [Automatically decorate associated objects](https://github.com/jcasimir/draper/commit/1580baa287997ed4e356aae0ffeeb8fe9c326ced) See Example near bottom of Readme
-
-Thanks to [steveklabnik](http://github.com/steveklabnik), [i0rek](http://github.com/i0rek), [laserlemon](http://github.com/laserlemon), [michaelfairley](http://github.com/michaelfairley), [dnagir](http://github.com/dnagir), [ubermajestix](http://github.com/ubermajestix), [tmaier](http://github.com/tmaier), [angelim](http://github.com/angelim), [duncanbeevers](http://github.com/duncanbeevers), Albert Peng & JR Boyens, [leocassarani](http://github.com/leocassarani), [Jeff Felchner](http://github.com/Felchner), [shingara](http://github.com/shingara), [momolog](http://github.com/momolog), and [ayamomiji](http://github.com/ayamomiji) for their contributions to this version!
 
 ## Goals
 
@@ -260,7 +240,13 @@ Here are some ideas of what you might do in decorator methods:
 * Format dates and times using `strftime`
 * Implement a commonly used representation of the data object like a `.name` method that combines `first_name` and `last_name` attributes
 
-## Example Using a Decorator
+## Learning Resources
+
+### RailsCast
+
+Ryan Bates has put together an excellent RailsCast on Draper based on the 0.8.0 release: http://railscasts.com/episodes/286-draper
+
+### Example Using a Decorator
 
 For a brief tutorial with sample project, check this out: http://tutorials.jumpstartlab.com/topics/decorators.html
 
@@ -379,23 +365,6 @@ For automatic decoration, check out [decorates_before_rendering](https://github.
 3. Commit your changes (`git commit -am "Added some magic"`)
 4. Push to the branch (`git push origin my_awesome_branch`)
 5. Send pull request
-
-## Issues / Pending
-
-* Documentation
-  * Add more information about using "context"
-  * Add information about the `.decorator` method
-  * Make clear the pattern of overriding accessor methods of the wrapped model  
-  * Build sample Rails application(s)
-* Generators
-  * Implement hook so generating a controller/scaffold generates a decorator  
-  * Add generators for...
-    * `draper:model`: Model + Decorator
-    * `draper:controller`: Controller setup with decoration calls
-    * `draper:scaffold`: Controller, Model, Decorator, Views, Tests
-* Other
-  * Implement a HATEOAS helper, maybe as a separate gem
-  * Build a fly website like http://fabricationgem.com
 
 ## Contributors
 
