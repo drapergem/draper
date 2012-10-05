@@ -405,6 +405,7 @@ Draper was conceived by Jeff Casimir and heavily refined by Steve Klabnik and a 
 
 * Jeff Casimir (jeff@jumpstartlab.com)
 * Steve Klabnik (steve@jumpstartlab.com)
+* Vasiliy Ermolovich
 
 ## License
 
