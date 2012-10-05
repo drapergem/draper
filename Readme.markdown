@@ -397,11 +397,18 @@ For automatic decoration, check out [decorates_before_rendering](https://github.
   * Implement a HATEOAS helper, maybe as a separate gem
   * Build a fly website like http://fabricationgem.com
 
+## Contributors
+
+Draper was concieved by Jeff Casimir and heavily refined by Steve Klabnik and a great community of open source contributors.
+
+### Core Team
+
+* Jeff Casimir (jeff@jumpstartlab.com)
+* Steve Klabnik (steve@jumpstartlab.com)
+
 ## License
 
 (The MIT License)
-
-Copyright © 2011 Jeff Casimir
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the ‘Software’), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
