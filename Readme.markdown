@@ -399,7 +399,7 @@ For automatic decoration, check out [decorates_before_rendering](https://github.
 
 ## Contributors
 
-Draper was concieved by Jeff Casimir and heavily refined by Steve Klabnik and a great community of open source contributors.
+Draper was conceived by Jeff Casimir and heavily refined by Steve Klabnik and a great community of open source contributors.
 
 ### Core Team
 
