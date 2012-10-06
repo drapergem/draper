@@ -26,8 +26,8 @@ describe Draper::DecoratedEnumerableProxy do
       EnumerableProxy.new([source], ProductDecorator).first.model.should == source
     end
 
-    it "decorates an empty array with the klass" do
-      EnumerableProxy.decorates([], klass: ProductDecorator).should be
+    it "decorates an empty array with the class" do
+      EnumerableProxy.decorates([], class: ProductDecorator).should be
     end
 
     it "discerns collection items decorator by the name of the decorator" do
