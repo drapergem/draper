@@ -12,13 +12,13 @@ module Draper
     #
     # @param [Object] instances to wrap
     # @param [Hash] options (optional)
-    # @option options [Class] :klass The decorator class to use 
+    # @option options [Class] :class The decorator class to use
     #   for each item in the collection.
     # @option options all other options are passed to Decorator
     #   class for each item.
-              
+
     def self.decorate(collection, options = {})
-      new( collection, discern_class_from_my_class(options.delete(:klass)), options)
+      new( collection, discern_class_from_my_class(options.delete(:class)), options)
     end
     class << self
       alias_method :decorates, :decorate
@@ -72,12 +72,12 @@ module Draper
       @wrapped_collection
     end
     alias_method :to_source, :source
-    
+
     def helpers
       Draper::ViewContext.current
     end
     alias_method :h, :helpers
-    
+
     private
     def self.discern_class_from_my_class default_class
       return default_class if default_class
