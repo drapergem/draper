@@ -803,8 +803,9 @@ describe Draper::Base do
 
     it "is able to use l rather than helpers.l" do
       now = Time.now
-      decorator.helpers.instance_variable_get(:@helpers).should_receive(:localize).with(now)
-      decorator.l now
+      helper_proxy = decorator.helpers.instance_variable_get(:@helpers)
+      helper_proxy.should_receive(:localize).with(now, :format => :long)
+      decorator.l now, :format => :long
     end
 
     it "is able to access html_escape, a private method" do
