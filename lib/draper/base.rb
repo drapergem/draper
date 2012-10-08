@@ -203,8 +203,8 @@ module Draper
     # Localize is something that's used quite often. Even though
     # it's available through helpers, that's annoying. Aliased
     # to `.l` for convenience.
-    def localize(str)
-      self.class.helpers.localize(str)
+    def localize(object, options = {})
+      self.class.helpers.localize(object, options)
     end
     alias :l :localize
 
