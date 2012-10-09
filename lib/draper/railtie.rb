@@ -36,7 +36,7 @@ module Draper
 
     initializer "draper.extend_active_record_base" do |app|
       ActiveSupport.on_load(:active_record) do
-        self.send(:include, Draper::ModelSupport)
+        self.send(:include, Draper::Decoratable)
       end
     end
 

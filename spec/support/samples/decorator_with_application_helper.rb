@@ -1,4 +1,4 @@
-class DecoratorWithApplicationHelper < Draper::Base
+class DecoratorWithApplicationHelper < Draper::Decorator
   def uses_hello_world
     h.hello_world
   end

@@ -1,6 +1,6 @@
 require 'active_support/core_ext/object/blank'
 module Draper
-  class DecoratedEnumerableProxy
+  class CollectionDecorator
     include Enumerable
 
     delegate :as_json, :collect, :map, :each, :[], :all?, :include?, :first, :last, :shift, :in_groups_of, :to => :decorated_collection
@@ -61,7 +61,7 @@ module Draper
     end
 
     def to_s
-      "#<DecoratedEnumerableProxy of #{@klass} for #{@wrapped_collection.inspect}>"
+      "#<CollectionDecorator of #{@klass} for #{@wrapped_collection.inspect}>"
     end
 
     def context=(input)

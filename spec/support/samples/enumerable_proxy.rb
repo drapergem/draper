@@ -1,3 +1,3 @@
-class EnumerableProxy < Draper::DecoratedEnumerableProxy
+class EnumerableProxy < Draper::CollectionDecorator
   
 end

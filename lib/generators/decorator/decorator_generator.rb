@@ -20,7 +20,7 @@ module Rails
         elsif defined?(ApplicationDecorator)
           "ApplicationDecorator"
         else
-          "Draper::Base"
+          "Draper::Decorator"
         end
       end
    end
