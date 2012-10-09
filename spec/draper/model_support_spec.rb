@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Draper::ModelSupport do
+describe Draper::Decoratable do
   subject { Product.new }
 
   describe '#decorator' do
@@ -17,8 +17,8 @@ describe Draper::ModelSupport do
     end
   end
 
-  describe Draper::ModelSupport::ClassMethods do
-    shared_examples_for "a call to Draper::ModelSupport::ClassMethods#decorate" do
+  describe Draper::Decoratable::ClassMethods do
+    shared_examples_for "a call to Draper::Decoratable::ClassMethods#decorate" do
       subject { klass.limit }
 
       its(:decorate) { should be_kind_of(Draper::CollectionDecorator) }
@@ -36,13 +36,13 @@ describe Draper::ModelSupport do
     describe '#decorate - decorate collections of AR objects' do
       let(:klass) { Product }
 
-      it_should_behave_like "a call to Draper::ModelSupport::ClassMethods#decorate"
+      it_should_behave_like "a call to Draper::Decoratable::ClassMethods#decorate"
     end
 
     describe '#decorate - decorate collections of namespaced AR objects' do
       let(:klass) { Namespace::Product }
 
-      it_should_behave_like "a call to Draper::ModelSupport::ClassMethods#decorate"
+      it_should_behave_like "a call to Draper::Decoratable::ClassMethods#decorate"
     end
   end
 end

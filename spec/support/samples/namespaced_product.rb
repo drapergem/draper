@@ -2,7 +2,7 @@ require './spec/support/samples/product'
 
 module Namespace
   class Product < ActiveRecord::Base
-    include Draper::ModelSupport
+    include Draper::Decoratable
 
     def self.first
       @@first ||= Namespace::Product.new
