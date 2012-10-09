@@ -39,6 +39,10 @@ module Draper
         self.send(:include, Draper::ModelSupport)
       end
     end
+    
+    initializer "draper.extend_array" do |app|
+      Array.send(:include, Draper::ArraySupport)
+    end
 
     console do
       require 'action_controller/test_case'
