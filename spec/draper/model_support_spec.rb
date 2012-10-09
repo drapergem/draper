@@ -21,7 +21,7 @@ describe Draper::ModelSupport do
     shared_examples_for "a call to Draper::ModelSupport::ClassMethods#decorate" do
       subject { klass.limit }
 
-      its(:decorate) { should be_kind_of(Draper::DecoratedEnumerableProxy) }
+      its(:decorate) { should be_kind_of(Draper::CollectionDecorator) }
 
       it "decorate the collection" do
         subject.decorate.size.should == 1

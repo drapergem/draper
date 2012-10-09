@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Draper::DecoratedEnumerableProxy do
+describe Draper::CollectionDecorator do
   before(:each){ ApplicationController.new.view_context }
   subject{ ProductsDecorator.new(source, ProductDecorator) }
   let(:source){ Product.new }

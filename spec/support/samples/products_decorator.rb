@@ -1,4 +1,4 @@
-class ProductsDecorator < Draper::DecoratedEnumerableProxy
+class ProductsDecorator < Draper::CollectionDecorator
 
   def link_to
     h.link_to 'sample', "#"

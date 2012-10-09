@@ -560,14 +560,14 @@ describe Draper::Decorator do
     end
 
     it "return blank for a decorated empty collection" do
-      # This tests that respond_to? is defined for the DecoratedEnumerableProxy
+      # This tests that respond_to? is defined for the CollectionDecorator
       # since activesupport calls respond_to?(:empty) in #blank
       decorator = ProductDecorator.decorate(empty_collection)
       decorator.should be_blank
     end
 
     it "return whether the member is in the array for a decorated wrapped collection" do
-      # This tests that include? is defined for the DecoratedEnumerableProxy
+      # This tests that include? is defined for the CollectionDecorator
       member = paged_array.first
       subject.respond_to?(:include?)
       subject.include?(member).should == true
@@ -596,12 +596,12 @@ describe Draper::Decorator do
     context "pretends to be of kind of wrapped collection class" do
       subject { ProductDecorator.decorate(paged_array) }
 
-      it "#kind_of? DecoratedEnumerableProxy" do
-        subject.should be_kind_of Draper::DecoratedEnumerableProxy
+      it "#kind_of? CollectionDecorator" do
+        subject.should be_kind_of Draper::CollectionDecorator
       end
 
-      it "#is_a? DecoratedEnumerableProxy" do
-        subject.is_a?(Draper::DecoratedEnumerableProxy).should be_true
+      it "#is_a? CollectionDecorator" do
+        subject.is_a?(Draper::CollectionDecorator).should be_true
       end
 
       it "#kind_of? Array" do

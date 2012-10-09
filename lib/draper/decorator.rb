@@ -149,7 +149,7 @@ module Draper
         input.options = options unless options.empty?
         return input
       elsif input.respond_to?(:each) && !input.is_a?(Struct) && (!defined?(Sequel) || !input.is_a?(Sequel::Model))
-        Draper::DecoratedEnumerableProxy.new(input, self, options)
+        Draper::CollectionDecorator.new(input, self, options)
       elsif options[:infer]
         input.decorator(options)
       else
@@ -160,9 +160,9 @@ module Draper
     # Fetch all instances of the decorated class and decorate them.
     #
     # @param [Hash] options (optional)
-    # @return [Draper::DecoratedEnumerableProxy]
+    # @return [Draper::CollectionDecorator]
     def self.all(options = {})
-      Draper::DecoratedEnumerableProxy.new(model_class.all, self, options)
+      Draper::CollectionDecorator.new(model_class.all, self, options)
     end
 
     def self.first(options = {})
