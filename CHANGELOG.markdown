@@ -1,5 +1,13 @@
 # Draper Changelog
 
+## 0.18.0
+
+* [Adds the ability to decorate an enumerable proxy](https://github.com/drapergem/draper/commit/67c7125192740a7586a3a635acd735ae01b97837)
+
+* Many bug fixes.
+
+* Last version of Draper in the 0.x series.
+
 ## 0.17.0
 
 * [Fix earlier fix of `view_context` priming](https://github.com/jcasimir/draper/commit/5da44336)
