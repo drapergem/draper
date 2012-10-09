@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Draper::Base do
+describe Draper::Decorator do
   before(:each){ ApplicationController.new.view_context }
   subject{ Decorator.new(source) }
   let(:source){ Product.new }
@@ -53,7 +53,7 @@ describe Draper::Base do
     it "handle plural-like words properly'" do
       class Business; end
       expect do
-        class BusinessDecorator < Draper::Base
+        class BusinessDecorator < Draper::Decorator
           decorates:business
         end
         BusinessDecorator.model_class.should == Business
@@ -63,7 +63,7 @@ describe Draper::Base do
     context("accepts ActiveRecord like :class_name option too") do
       it "accepts constants for :class" do
         expect do
-        class CustomDecorator < Draper::Base
+        class CustomDecorator < Draper::Decorator
           decorates :product, :class => Product
         end
         CustomDecorator.model_class.should == Product
@@ -72,7 +72,7 @@ describe Draper::Base do
 
       it "accepts constants for :class_name" do
         expect do
-        class CustomDecorator < Draper::Base
+        class CustomDecorator < Draper::Decorator
           decorates :product, :class_name => Product
         end
         CustomDecorator.model_class.should == Product
@@ -81,7 +81,7 @@ describe Draper::Base do
 
       it "accepts strings for :class" do
         expect do
-        class CustomDecorator < Draper::Base
+        class CustomDecorator < Draper::Decorator
           decorates :product, :class => 'Product'
         end
         CustomDecorator.model_class.should == Product
@@ -90,7 +90,7 @@ describe Draper::Base do
 
       it "accepts strings for :class_name" do
         expect do
-        class CustomDecorator < Draper::Base
+        class CustomDecorator < Draper::Decorator
           decorates :product, :class_name => 'Product'
         end
         CustomDecorator.model_class.should == Product
@@ -230,7 +230,7 @@ describe Draper::Base do
   describe "method selection" do
     it "echos the methods of the wrapped class except default exclusions" do
       source.methods.each do |method|
-        unless Draper::Base::DEFAULT_DENIED.include?(method)
+        unless Draper::Decorator::DEFAULT_DENIED.include?(method)
           subject.should respond_to(method.to_sym)
         end
       end
@@ -249,16 +249,16 @@ describe Draper::Base do
     context "when an ActiveModel descendant" do
       it "always proxy to_param if it is not defined on the decorator itself" do
         source.stub(:to_param).and_return(1)
-        Draper::Base.new(source).to_param.should == 1
+        Draper::Decorator.new(source).to_param.should == 1
       end
 
       it "always proxy id if it is not defined on the decorator itself" do
         source.stub(:id).and_return(123456789)
-        Draper::Base.new(source).id.should == 123456789
+        Draper::Decorator.new(source).id.should == 123456789
       end
 
       it "always proxy errors if it is not defined on the decorator itself" do
-        Draper::Base.new(source).errors.should be_an_instance_of ActiveModel::Errors
+        Draper::Decorator.new(source).errors.should be_an_instance_of ActiveModel::Errors
       end
 
       it "never proxy to_param if it is defined on the decorator itself" do
@@ -359,7 +359,7 @@ describe Draper::Base do
 
   context ".decorate" do
     context "without any context" do
-      subject { Draper::Base.decorate(source) }
+      subject { Draper::Decorator.decorate(source) }
 
       context "when given a collection of source objects" do
         let(:source) { [Product.new, Product.new] }
@@ -367,7 +367,7 @@ describe Draper::Base do
         its(:size) { should == source.size }
 
         it "returns a collection of wrapped objects" do
-          subject.each{ |decorated| decorated.should be_instance_of(Draper::Base) }
+          subject.each{ |decorated| decorated.should be_instance_of(Draper::Decorator) }
         end
 
         it 'should accepted and store a context for a collection' do
@@ -381,7 +381,7 @@ describe Draper::Base do
         let(:source) { Struct.new(:title).new("Godzilla") }
 
         it "returns a wrapped object" do
-          subject.should be_instance_of(Draper::Base)
+          subject.should be_instance_of(Draper::Decorator)
         end
       end
 
@@ -390,14 +390,14 @@ describe Draper::Base do
         let(:source) { [SequelProduct.new, SequelProduct.new] }
 
         it "returns a collection of wrapped objects" do
-          subject.each{ |decorated| decorated.should be_instance_of(Draper::Base) }
+          subject.each{ |decorated| decorated.should be_instance_of(Draper::Decorator) }
         end
       end
 
       context "when given a single source object" do
         let(:source) { Product.new }
 
-        it { should be_instance_of(Draper::Base) }
+        it { should be_instance_of(Draper::Decorator) }
 
         context "when the input is already decorated" do
           it "does not perform double-decoration" do
@@ -423,7 +423,7 @@ describe Draper::Base do
     context "with a context" do
       let(:context) {{ :some => 'data' }}
 
-      subject { Draper::Base.decorate(source, :context => context) }
+      subject { Draper::Decorator.decorate(source, :context => context) }
 
       context "when given a collection of source objects" do
         let(:source) { [Product.new, Product.new] }
@@ -443,34 +443,34 @@ describe Draper::Base do
     context "with options" do
       let(:options) {{ :more => "settings" }}
 
-      subject { Draper::Base.decorate(source, options ) }
+      subject { Draper::Decorator.decorate(source, options ) }
 
       its(:options) { should eq(options) }
     end
 
     context "does not infer collections by default" do
-      subject { Draper::Base.decorate(source).to_ary }
+      subject { Draper::Decorator.decorate(source).to_ary }
 
       let(:source) { [Product.new, Widget.new] }
 
       it "returns a collection of wrapped objects all with the same decorator" do
-        subject.first.class.name.should eql 'Draper::Base'
-        subject.last.class.name.should eql  'Draper::Base'
+        subject.first.class.name.should eql 'Draper::Decorator'
+        subject.last.class.name.should eql  'Draper::Decorator'
       end
     end
 
     context "does not infer single items by default" do
-      subject { Draper::Base.decorate(source) }
+      subject { Draper::Decorator.decorate(source) }
 
       let(:source) { Product.new }
 
       it "returns a decorator of the type explicity used in the call" do
-        subject.class.should eql Draper::Base
+        subject.class.should eql Draper::Decorator
       end
     end
 
     context "returns a collection containing only the explicit decorator used in the call" do
-      subject { Draper::Base.decorate(source, :infer => true).to_ary }
+      subject { Draper::Decorator.decorate(source, :infer => true).to_ary }
 
       let(:source) { [Product.new, Widget.new] }
 
@@ -481,7 +481,7 @@ describe Draper::Base do
     end
 
     context "when given a single object" do
-      subject { Draper::Base.decorate(source, :infer => true) }
+      subject { Draper::Decorator.decorate(source, :infer => true) }
 
       let(:source) { Product.new }
 
@@ -493,7 +493,7 @@ describe Draper::Base do
 
   context('.==') do
     it "compare the decorated models" do
-      other = Draper::Base.new(source)
+      other = Draper::Decorator.new(source)
       subject.should == other
     end
   end
@@ -502,7 +502,7 @@ describe Draper::Base do
     # respond_to? is called by some proxies (id, to_param, errors).
     # This is, why I stub it this way.
     it "delegate respond_to? to the decorated model" do
-      other = Draper::Base.new(source)
+      other = Draper::Decorator.new(source)
       source.stub(:respond_to?).and_return(false)
       source.stub(:respond_to?).with(:whatever, true).once.and_return("mocked")
       subject.respond_to?(:whatever, true).should == "mocked"
@@ -677,26 +677,26 @@ describe Draper::Base do
 
   describe "invalid usages of allows and denies" do
     let(:blank_allows){
-      class DecoratorWithInvalidAllows < Draper::Base
+      class DecoratorWithInvalidAllows < Draper::Decorator
         allows
       end
     }
 
     let(:blank_denies){
-      class DecoratorWithInvalidDenies < Draper::Base
+      class DecoratorWithInvalidDenies < Draper::Decorator
         denies
       end
     }
 
     let(:using_allows_then_denies){
-      class DecoratorWithAllowsAndDenies < Draper::Base
+      class DecoratorWithAllowsAndDenies < Draper::Decorator
         allows :hello_world
         denies :goodnight_moon
       end
     }
 
     let(:using_denies_then_allows){
-      class DecoratorWithDeniesAndAllows < Draper::Base
+      class DecoratorWithDeniesAndAllows < Draper::Decorator
         denies :goodnight_moon
         allows :hello_world
       end
@@ -729,7 +729,7 @@ describe Draper::Base do
     end
 
     let(:using_denies_all_then_denies_all) {
-      class DecoratorWithDeniesAllAndDeniesAll < Draper::Base
+      class DecoratorWithDeniesAllAndDeniesAll < Draper::Decorator
         denies_all
         denies_all
       end
@@ -742,25 +742,25 @@ describe Draper::Base do
 
   describe "invalid usages of denies_all" do
     let(:using_allows_then_denies_all) {
-      class DecoratorWithAllowsAndDeniesAll < Draper::Base
+      class DecoratorWithAllowsAndDeniesAll < Draper::Decorator
         allows :hello_world
         denies_all
       end
     }
     let(:using_denies_then_denies_all) {
-      class DecoratorWithDeniesAndDeniesAll < Draper::Base
+      class DecoratorWithDeniesAndDeniesAll < Draper::Decorator
         denies :goodnight_moon
         denies_all
       end
     }
     let(:using_denies_all_then_allows) {
-      class DecoratorWithDeniesAllAndAllows < Draper::Base
+      class DecoratorWithDeniesAllAndAllows < Draper::Decorator
         denies_all
         allows :hello_world
       end
     }
     let(:using_denies_all_then_denies) {
-      class DecoratorWithDeniesAllAndDenies < Draper::Base
+      class DecoratorWithDeniesAllAndDenies < Draper::Decorator
         denies_all
         denies :goodnight_moon
       end

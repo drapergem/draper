@@ -1,3 +1,3 @@
-class DecoratorWithDenies < Draper::Base
+class DecoratorWithDenies < Draper::Decorator
   denies :goodnight_moon, :title
 end

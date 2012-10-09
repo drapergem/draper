@@ -1,4 +1,4 @@
-class DecoratorWithSpecialMethods < Draper::Base
+class DecoratorWithSpecialMethods < Draper::Decorator
   def to_param
     "foo"
   end

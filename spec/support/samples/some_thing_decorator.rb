@@ -1,3 +1,3 @@
-class SomeThingDecorator < Draper::Base
+class SomeThingDecorator < Draper::Decorator
   decorates :some_thing
 end

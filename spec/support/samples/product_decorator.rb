@@ -1,4 +1,4 @@
-class ProductDecorator < Draper::Base
+class ProductDecorator < Draper::Decorator
   decorates :product
 
   def awesome_title

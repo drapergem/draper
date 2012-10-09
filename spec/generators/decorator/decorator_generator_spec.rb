@@ -15,7 +15,7 @@ describe Rails::Generators::DecoratorGenerator do
     describe 'app/decorators/your_model_decorator.rb' do
       subject { file('app/decorators/your_model_decorator.rb') }
       it { should exist }
-      it { should contain "class YourModelDecorator < Draper::Base" }
+      it { should contain "class YourModelDecorator < Draper::Decorator" }
       it { should contain "decorates :your_model" }
     end
   end
@@ -31,12 +31,12 @@ describe Rails::Generators::DecoratorGenerator do
   end
 
   context 'parent decorator' do
-    describe 'decorator inhereted from Draper::Base' do
+    describe 'decorator inhereted from Draper::Decorator' do
       before { run_generator ["YourModel"] }
 
       subject { file('app/decorators/your_model_decorator.rb') }
       it { should exist }
-      it { should contain "class YourModelDecorator < Draper::Base" }
+      it { should contain "class YourModelDecorator < Draper::Decorator" }
     end
 
     describe "decorator inhereted from ApplicationDecorator if it's present" do
