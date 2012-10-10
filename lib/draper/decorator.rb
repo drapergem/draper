@@ -1,5 +1,5 @@
 module Draper
-  class Base
+  class Decorator
     require 'active_support/core_ext/class/attribute'
     require 'active_support/core_ext/array/extract_options'
 
@@ -20,7 +20,7 @@ module Draper
     def initialize(input, options = {})
       input.to_a if input.respond_to?(:to_a) # forces evaluation of a lazy query from AR
       self.class.model_class = input.class if model_class.nil?
-      @model = input.kind_of?(Draper::Base) ? input.model : input
+      @model = input.kind_of?(Draper::Decorator) ? input.model : input
       self.options = options
       self.extend Draper::ActiveModelSupport::Proxies
     end
@@ -49,7 +49,7 @@ module Draper
     def self.decorates(input, options = {})
       self.model_class = options[:class] || options[:class_name] || input.to_s.camelize
       self.model_class = model_class.constantize if model_class.respond_to?(:constantize)
-      model_class.send :include, Draper::ModelSupport
+      model_class.send :include, Draper::Decoratable
       define_method(input){ @model }
     end
 
@@ -149,7 +149,7 @@ module Draper
         input.options = options unless options.empty?
         return input
       elsif input.respond_to?(:each) && !input.is_a?(Struct) && (!defined?(Sequel) || !input.is_a?(Sequel::Model))
-        Draper::DecoratedEnumerableProxy.new(input, self, options)
+        Draper::CollectionDecorator.new(input, self, options)
       elsif options[:infer]
         input.decorator(options)
       else
@@ -160,9 +160,9 @@ module Draper
     # Fetch all instances of the decorated class and decorate them.
     #
     # @param [Hash] options (optional)
-    # @return [Draper::DecoratedEnumerableProxy]
+    # @return [Draper::CollectionDecorator]
     def self.all(options = {})
-      Draper::DecoratedEnumerableProxy.new(model_class.all, self, options)
+      Draper::CollectionDecorator.new(model_class.all, self, options)
     end
 
     def self.first(options = {})

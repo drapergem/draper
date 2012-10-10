@@ -1,3 +1,3 @@
-class DecoratorWithDeniesAll < Draper::Base
+class DecoratorWithDeniesAll < Draper::Decorator
   denies_all
 end

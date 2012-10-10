@@ -1,5 +1,5 @@
 class Product < ActiveRecord::Base
-  include Draper::ModelSupport
+  include Draper::Decoratable
 
   def self.find_by_name(name)
     @@dummy ||= Product.new

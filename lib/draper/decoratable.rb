@@ -1,4 +1,4 @@
-module Draper::ModelSupport
+module Draper::Decoratable
   extend ActiveSupport::Concern
 
   def decorator(options = {})
