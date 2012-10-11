@@ -1,27 +1,11 @@
-module Draper::ActiveModelSupport
-  module Proxies
-    def self.extended(base)
-      # These methods (as keys) will be created only if the correspondent
-      # model responds to the method
-      proxies = [:to_param, :errors, :id]
+module Draper
+  module ActiveModelSupport
+    def to_model
+      self
+    end
 
-      proxies.each do |method_name|
-        if base.model.respond_to?(method_name)
-          base.singleton_class.class_eval do
-            if !base.class.instance_methods.include?(method_name) || base.class.instance_method(method_name).owner === Draper::Decorator
-              define_method(method_name) do |*args, &block|
-                model.send(method_name, *args, &block)
-              end
-            end
-          end
-        end
-      end
-
-      base.class_eval do
-        def to_model
-          self
-        end
-      end
+    def to_param
+      model.to_param
     end
   end
 end

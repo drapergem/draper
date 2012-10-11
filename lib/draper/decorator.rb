@@ -1,7 +1,9 @@
+require 'active_support/core_ext/class/attribute'
+require 'active_support/core_ext/array/extract_options'
+
 module Draper
   class Decorator
-    require 'active_support/core_ext/class/attribute'
-    require 'active_support/core_ext/array/extract_options'
+    include ActiveModelSupport
 
     class_attribute :denied, :allowed, :model_class
     attr_accessor :model, :options
@@ -22,7 +24,6 @@ module Draper
       self.class.model_class = input.class if model_class.nil?
       @model = input.kind_of?(Draper::Decorator) ? input.model : input
       self.options = options
-      self.extend Draper::ActiveModelSupport::Proxies
     end
 
     # Proxies to the class specified by `decorates` to automatically
