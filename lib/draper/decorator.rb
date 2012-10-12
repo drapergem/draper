@@ -5,13 +5,8 @@ module Draper
   class Decorator
     include ActiveModelSupport
 
-    class_attribute :denied, :allowed, :model_class
+    class_attribute :model_class
     attr_accessor :model, :options
-
-    DEFAULT_DENIED = Object.instance_methods << :method_missing
-    DEFAULT_ALLOWED = []
-    self.denied = DEFAULT_DENIED
-    self.allowed = DEFAULT_ALLOWED
 
     # Initialize a new decorator instance by passing in
     # an instance of the source class. Pass in an optional
@@ -95,30 +90,25 @@ module Draper
     end
 
     # Specifies a black list of methods which may *not* be proxied to
-    # to the wrapped object.
+    # the wrapped object.
     #
     # Do not use both `.allows` and `.denies` together, either write
     # a whitelist with `.allows` or a blacklist with `.denies`
     #
     # @param [Symbols*] methods to deny like `:find, :find_by_name`
-    def self.denies(*input_denied)
-      raise ArgumentError, "Specify at least one method (as a symbol) to exclude when using denies" if input_denied.empty?
-      raise ArgumentError, "Use either 'allows' or 'denies', but not both." unless (self.allowed == DEFAULT_ALLOWED)
-      self.denied += input_denied
+    def self.denies(*methods)
+      security.denies(*methods)
     end
 
-    # Specifies that all methods may *not* be proxied to
-    # to the wrapped object.
+    # Specifies that all methods may *not* be proxied to the wrapped object.
     #
     # Do not use `.allows` and `.denies` in combination with '.denies_all'
     def self.denies_all
-      raise ArgumentError, "Use either 'allows' or 'denies', but not both." unless ((self.allowed == DEFAULT_ALLOWED && self.denied == DEFAULT_DENIED) || (self.allowed != DEFAULT_ALLOWED && self.denied != DEFAULT_DENIED))
-      self.denied  += [nil]  # Add dummy value to denied to prevent calls to #allows.  Hacky???
-      self.allowed += [nil]  # Add dummy value to allowed to prevent calls to #denies
+      security.denies_all
     end
 
     # Specifies a white list of methods which *may* be proxied to
-    # to the wrapped object. When `allows` is used, only the listed
+    # the wrapped object. When `allows` is used, only the listed
     # methods and methods defined in the decorator itself will be
     # available.
     #
@@ -126,10 +116,8 @@ module Draper
     # a whitelist with `.allows` or a blacklist with `.denies`
     #
     # @param [Symbols*] methods to allow like `:find, :find_by_name`
-    def self.allows(*input_allows)
-      raise ArgumentError, "Specify at least one method (as a symbol) to allow when using allows" if input_allows.empty?
-      raise ArgumentError, "Use either 'allows' or 'denies', but not both." unless (self.denied == DEFAULT_DENIED)
-      self.allowed += input_allows
+    def self.allows(*methods)
+      security.allows(*methods)
     end
 
     # Initialize a new decorator instance by passing in
@@ -296,8 +284,12 @@ module Draper
 
   private
 
+    def self.security
+      @security ||= Security.new
+    end
+
     def allow?(method)
-      (allowed.empty? || allowed.include?(method)) && !denied.include?(method)
+      self.class.security.allow?(method)
     end
 
     def find_association_reflection(association)
