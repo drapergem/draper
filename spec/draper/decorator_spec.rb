@@ -275,13 +275,9 @@ describe Draper::Decorator do
     end
   end
 
-  context 'the decorated model' do
-    it 'receives the mixin' do
-      source.class.ancestors.include?(Draper::Decoratable)
-    end
-
-    it 'includes ActiveModel support' do
-      source.class.ancestors.include?(Draper::ActiveModelSupport)
+  context "the decorated model" do
+    it "receives the Decoratable mixin" do
+      source.should be_a_kind_of Draper::Decoratable
     end
   end
 
