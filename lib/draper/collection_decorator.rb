@@ -35,7 +35,7 @@ module Draper
 
     def find(ifnone_or_id = nil, &blk)
       if block_given?
-        source.find(ifnone_or_id, &blk)
+        decorated_collection.find(ifnone_or_id, &blk)
       else
         obj = decorated_collection.first
         return nil if obj.blank?

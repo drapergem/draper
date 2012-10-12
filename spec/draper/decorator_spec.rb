@@ -190,7 +190,7 @@ describe Draper::Decorator do
       before(:each){ subject.class_eval{ decorates_association :similar_products } }
       context "with a block" do
         it "delegates to #each" do
-          subject.similar_products.source.should_receive :find
+          subject.similar_products.decorated_collection.should_receive :find
           subject.similar_products.find {|p| p.title == "title" }
         end
       end
