@@ -90,7 +90,7 @@ module Draper
     end
 
     # Specifies a black list of methods which may *not* be proxied to
-    # to the wrapped object.
+    # the wrapped object.
     #
     # Do not use both `.allows` and `.denies` together, either write
     # a whitelist with `.allows` or a blacklist with `.denies`
@@ -100,8 +100,7 @@ module Draper
       security.denies(*methods)
     end
 
-    # Specifies that all methods may *not* be proxied to
-    # to the wrapped object.
+    # Specifies that all methods may *not* be proxied to the wrapped object.
     #
     # Do not use `.allows` and `.denies` in combination with '.denies_all'
     def self.denies_all
@@ -109,7 +108,7 @@ module Draper
     end
 
     # Specifies a white list of methods which *may* be proxied to
-    # to the wrapped object. When `allows` is used, only the listed
+    # the wrapped object. When `allows` is used, only the listed
     # methods and methods defined in the decorator itself will be
     # available.
     #
