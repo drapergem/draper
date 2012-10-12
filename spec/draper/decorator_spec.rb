@@ -228,11 +228,9 @@ describe Draper::Decorator do
   end
 
   describe "method selection" do
-    it "echos the methods of the wrapped class except default exclusions" do
+    it "echos the methods of the wrapped class" do
       source.methods.each do |method|
-        unless Draper::Decorator::DEFAULT_DENIED.include?(method)
-          subject.should respond_to(method.to_sym)
-        end
+        subject.should respond_to(method.to_sym)
       end
     end
 
@@ -632,153 +630,24 @@ describe Draper::Decorator do
     end
   end
 
-  describe "a sample usage with denies" do
-    let(:subject_with_denies){ DecoratorWithDenies.new(source) }
+  describe "method security", focus: true do
+    subject(:decorator_class) { Draper::Decorator }
+    let(:security) { stub }
+    before { decorator_class.stub(:security).and_return(security) }
 
-    it "proxy methods not listed in denies" do
-      subject_with_denies.should respond_to(:hello_world)
+    it "delegates denies to Draper::Security" do
+      security.should_receive(:denies).with(:foo, :bar)
+      decorator_class.denies :foo, :bar
     end
 
-    it "not echo methods specified with denies" do
-      subject_with_denies.should_not respond_to(:goodnight_moon)
+    it "delegates denies_all to Draper::Security" do
+      security.should_receive(:denies_all)
+      decorator_class.denies_all
     end
 
-    it "not clobber other decorators' methods" do
-      subject.should respond_to(:hello_world)
-    end
-
-    it "not allow method_missing to circumvent a deny" do
-      expect{subject_with_denies.title}.to raise_error(NoMethodError)
-    end
-  end
-
-  describe "a sample usage with allows" do
-    let(:subject_with_allows){ DecoratorWithAllows.new(source) }
-
-    let(:subject_with_multiple_allows){ DecoratorWithMultipleAllows.new(source) }
-
-    it "echo the allowed method" do
-      subject_with_allows.should respond_to(:goodnight_moon)
-    end
-
-    it "echo _only_ the allowed method" do
-      subject_with_allows.should_not respond_to(:hello_world)
-    end
-
-    it "echo the combined allowed methods" do
-      subject_with_multiple_allows.should respond_to(:goodnight_moon)
-      subject_with_multiple_allows.should respond_to(:hello_world)
-    end
-
-    it "echo _only_ the combined allowed methods" do
-      subject_with_multiple_allows.should_not respond_to(:title)
-    end
-  end
-
-  describe "invalid usages of allows and denies" do
-    let(:blank_allows){
-      class DecoratorWithInvalidAllows < Draper::Decorator
-        allows
-      end
-    }
-
-    let(:blank_denies){
-      class DecoratorWithInvalidDenies < Draper::Decorator
-        denies
-      end
-    }
-
-    let(:using_allows_then_denies){
-      class DecoratorWithAllowsAndDenies < Draper::Decorator
-        allows :hello_world
-        denies :goodnight_moon
-      end
-    }
-
-    let(:using_denies_then_allows){
-      class DecoratorWithDeniesAndAllows < Draper::Decorator
-        denies :goodnight_moon
-        allows :hello_world
-      end
-    }
-
-    it "raise an exception for a blank allows" do
-      expect {blank_allows}.to raise_error(ArgumentError)
-    end
-
-    it "raise an exception for a blank denies" do
-      expect {blank_denies}.to raise_error(ArgumentError)
-    end
-
-    it "raise an exception for calling allows then denies" do
-      expect {using_allows_then_denies}.to raise_error(ArgumentError)
-    end
-
-    it "raise an exception for calling denies then allows" do
-      expect {using_denies_then_allows}.to raise_error(ArgumentError)
-    end
-  end
-
-  describe "a sample usage with denies_all" do
-    let(:subject_with_denies_all){ DecoratorWithDeniesAll.new(source) }
-
-    [:goodnight_moon, :hello_world, :title].each do |method|
-      it "does echo #{method} method" do
-        subject_with_denies_all.should_not respond_to(method)
-      end
-    end
-
-    let(:using_denies_all_then_denies_all) {
-      class DecoratorWithDeniesAllAndDeniesAll < Draper::Decorator
-        denies_all
-        denies_all
-      end
-    }
-
-    it "allows multple calls to .denies_all" do
-      expect { using_denies_all_then_denies_all }.to_not raise_error(ArgumentError)
-    end
-  end
-
-  describe "invalid usages of denies_all" do
-    let(:using_allows_then_denies_all) {
-      class DecoratorWithAllowsAndDeniesAll < Draper::Decorator
-        allows :hello_world
-        denies_all
-      end
-    }
-    let(:using_denies_then_denies_all) {
-      class DecoratorWithDeniesAndDeniesAll < Draper::Decorator
-        denies :goodnight_moon
-        denies_all
-      end
-    }
-    let(:using_denies_all_then_allows) {
-      class DecoratorWithDeniesAllAndAllows < Draper::Decorator
-        denies_all
-        allows :hello_world
-      end
-    }
-    let(:using_denies_all_then_denies) {
-      class DecoratorWithDeniesAllAndDenies < Draper::Decorator
-        denies_all
-        denies :goodnight_moon
-      end
-    }
-    it "raises an exception when calling allows then denies_all" do
-      expect {using_allows_then_denies_all}.to raise_error(ArgumentError)
-    end
-
-    it "raises an exception when calling denies then denies_all" do
-      expect {using_denies_then_denies_all}.to raise_error(ArgumentError)
-    end
-
-    it "raises an exception when calling denies_all then allows" do
-      expect {using_denies_all_then_allows}.to raise_error(ArgumentError)
-    end
-
-    it "raises an exception when calling denies_all then denies" do
-      expect {using_denies_all_then_denies}.to raise_error(ArgumentError)
+    it "delegates allows to Draper::Security" do
+      security.should_receive(:allows).with(:foo, :bar)
+      decorator_class.allows :foo, :bar
     end
   end
 
