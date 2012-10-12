@@ -228,11 +228,9 @@ describe Draper::Decorator do
   end
 
   describe "method selection" do
-    it "echos the methods of the wrapped class except default exclusions" do
+    it "echos the methods of the wrapped class" do
       source.methods.each do |method|
-        unless Draper::Decorator::DEFAULT_DENIED.include?(method)
-          subject.should respond_to(method.to_sym)
-        end
+        subject.should respond_to(method.to_sym)
       end
     end
 
