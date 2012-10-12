@@ -28,6 +28,13 @@ describe Draper::Decorator do
     it "is aliased to .h" do
       subject.h.should == subject.helpers
     end
+
+    it "initializes the wrapper only once" do
+      helper_proxy = subject.helpers
+      helper_proxy.stub(:test_method) { "test_method" }
+      subject.helpers.test_method.should eq("test_method")
+      subject.helpers.test_method.should eq("test_method")
+    end
   end
 
   context("#helpers") do

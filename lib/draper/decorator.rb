@@ -196,7 +196,7 @@ module Draper
     #
     # @return [Object] proxy
     def helpers
-      HelpersWrapper.new self.class.helpers
+      @helpers ||= HelpersWrapper.new self.class.helpers
     end
     alias :h :helpers
 
