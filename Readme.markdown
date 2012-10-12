@@ -1,6 +1,6 @@
 # Draper: View Models for Rails
 
-[![TravisCI Build Status](https://secure.travis-ci.org/jcasimir/draper.png)](http://travis-ci.org/jcasimir/draper)
+[![TravisCI Build Status](https://secure.travis-ci.org/drapergem/draper.png)](http://travis-ci.org/drapergem/draper)
 
 ## Quick Start
 
@@ -13,7 +13,7 @@
 5. Wrap models in your controller with the decorator using:
   1. `.find` automatic lookup & wrap
     ex: `ArticleDecorator.find(1)`
-  2. `.decorate` method with a single object or collection, 
+  2. `.decorate` method with a single object or collection,
     ex: `ArticleDecorator.decorate(Article.all)`
   3. `.new` method with single object
     ex: `ArticleDecorator.new(Article.first)`
@@ -69,7 +69,7 @@ When you use a decorator you have the power of a Ruby object but it's a part of 
 ```ruby
 class ArticleDecorator < ApplicationDecorator
   decorates :article
-  
+
   ADMIN_VISIBLE_ATTRIBUTES = [:title, :body, :author, :status]
   PUBLIC_VISIBLE_ATTRIBUTES = [:title, :body]
 
@@ -99,10 +99,10 @@ Then, to test it:
 
 ```irb
  > ad = ArticleDecorator.find(1)
- => #<ArticleDecorator:0x000001020d7728 @model=#<Article id: 1, title: "Hello, World">> 
+ => #<ArticleDecorator:0x000001020d7728 @model=#<Article id: 1, title: "Hello, World">>
  > ad.title
 NoMethodError: undefined method `title' for #<ArticleDecorator:0x000001020d7728>
-``` 
+```
 
 #### Using `allows`
 
@@ -117,7 +117,7 @@ end
 
 ```irb
 > ad = ArticleDecorator.find(1)
-=> #<ArticleDecorator:0x000001020d7728 @model=#<Article id: 1, title: "Hello, World">> 
+=> #<ArticleDecorator:0x000001020d7728 @model=#<Article id: 1, title: "Hello, World">>
 > ad.title
 => "Hello, World"
 > ad.created_at
@@ -151,7 +151,7 @@ Open the decorator model (ex: `app/decorators/article_decorator.rb`) and add nor
 ```ruby
 class ArticleDecorator < Draper::Decorator
   decorates :article
-  
+
   def author_name
     article.author.first_name + " " + article.author.last_name
   end
@@ -165,7 +165,7 @@ You probably want to make use of Rails helpers and those defined in your applica
 ```ruby
 class ArticleDecorator < Draper::Decorator
   decorates :article
-  
+
   def published_at
     date = h.content_tag(:span, article.published_at.strftime("%A, %B %e").squeeze(" "), :class => 'date')
     time = h.content_tag(:span, article.published_at.strftime("%l:%M%p"), :class => 'time').delete(" ")
@@ -182,7 +182,7 @@ Hate seeing that `h.` proxy all over? Willing to mix a bazillion methods into yo
 class ArticleDecorator < Draper::Decorator
   decorates :article
   include Draper::LazyHelpers
-  
+
   def published_at
     date = content_tag(:span, article.published_at.strftime("%A, %B %e").squeeze(" "), :class => 'date')
     time = content_tag(:span, article.published_at.strftime("%l:%M%p"), :class => 'time').delete(" ")
@@ -207,7 +207,7 @@ ArticleDecorator.new(Article.find(params[:id]))
 ArticleDecorator.decorate(Article.first) # Returns one instance of ArticleDecorator
 ArticleDecorator.decorate(Article.all)   # Returns an enumeration proxy of ArticleDecorator instances
 ```
-  
+
 * Call `.find` to automatically do a lookup on the `decorates` class:
 
 ```ruby
@@ -224,11 +224,11 @@ Use the new methods in your views like any other model method (ex: `@article.pub
 
 ### Integration with RSpec
 
-Using the provided generator, Draper will place specs for your new decorator in `spec/decorators/`. 
+Using the provided generator, Draper will place specs for your new decorator in `spec/decorators/`.
 
 By default, specs in `spec/decorators` will be tagged as `type => :decorator`. Any spec tagged as `decorator` will make helpers available to the decorator.
 
-If your decorator specs live somewhere else, which they shouldn't, make sure to tag them with `type => :decorator`. If you don't tag them, Draper's helpers won't be available to your decorator while testing. 
+If your decorator specs live somewhere else, which they shouldn't, make sure to tag them with `type => :decorator`. If you don't tag them, Draper's helpers won't be available to your decorator while testing.
 
 Note: If you're using Spork, you need to `require 'draper/test/rspec_integration'` in your Spork.prefork block.
 
@@ -300,7 +300,7 @@ Ta-da! Object-oriented data formatting for your view layer. Below is the complet
 ```ruby
 class ArticleDecorator < Draper::Decorator
   decorates :article
-  
+
   def published_at
     date = h.content_tag(:span, article.published_at.strftime("%A, %B %e").squeeze(" "), :class => 'date')
     time = h.content_tag(:span, article.published_at.strftime("%l:%M%p"), :class => 'time').delete(" ")
@@ -316,12 +316,12 @@ Add a `decorates_association :association_name` to gain access to a decorated ve
 ```ruby
 class ArticleDecorator < Draper::Decorator
   decorates :article
-  decorates_association :author # belongs_to :author association  
+  decorates_association :author # belongs_to :author association
 end
 
 class AuthorDecorator < Draper::Decorator
   decorates :author
-  
+
   def fancy_name
     "#{model.title}. #{model.first_name} #{model.middle_name[0]}. #{model.last_name}"
   end
