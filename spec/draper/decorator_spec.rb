@@ -20,13 +20,13 @@ describe Draper::Decorator do
     end
   end
 
-  context(".helpers") do
-    it "have a valid view_context" do
-      subject.helpers.should be
+  describe "#helpers" do
+    it "returns a HelperProxy" do
+      subject.helpers.should be_a Draper::HelperProxy
     end
 
-    it "is aliased to .h" do
-      subject.h.should == subject.helpers
+    it "is aliased to #h" do
+      subject.h.should be subject.helpers
     end
 
     it "initializes the wrapper only once" do
@@ -37,13 +37,25 @@ describe Draper::Decorator do
     end
   end
 
-  context("#helpers") do
-    it "have a valid view_context" do
-      Decorator.helpers.should be
+  describe "#localize" do
+    before { subject.helpers.should_receive(:localize).with(:an_object, {some: "options"}) }
+
+    it "delegates to helpers" do
+      subject.localize(:an_object, some: "options")
     end
 
-    it "is aliased to #h" do
-      Decorator.h.should == Decorator.helpers
+    it "is aliased to #l" do
+      subject.l(:an_object, some: "options")
+    end
+  end
+
+  describe ".helpers" do
+    it "returns a HelperProxy" do
+      Decorator.helpers.should be_a Draper::HelperProxy
+    end
+
+    it "is aliased to .h" do
+      Decorator.h.should be Decorator.helpers
     end
   end
 
@@ -671,13 +683,6 @@ describe Draper::Decorator do
 
     it "is able to use the pluralize helper" do
       decorator.sample_truncate.should == "Once..."
-    end
-
-    it "is able to use l rather than helpers.l" do
-      now = Time.now
-      helper_proxy = decorator.helpers.instance_variable_get(:@helpers)
-      helper_proxy.should_receive(:localize).with(now, :format => :long)
-      decorator.l now, :format => :long
     end
 
     it "is able to access html_escape, a private method" do

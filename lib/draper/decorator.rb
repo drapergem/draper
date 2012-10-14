@@ -162,48 +162,30 @@ module Draper
       decorate(model_class.last, options)
     end
 
-    # Some helpers are private, for example html_escape... as a workaround
-    # we are wrapping the helpers in a delegator that passes the methods
-    # along through a send, which will ignore private/public distinctions
-    class HelpersWrapper
-      def initialize(helpers)
-        @helpers = helpers
-      end
-
-      def method_missing(method, *args, &block)
-        @helpers.send(method, *args, &block)
-      end
-
-      #needed for tests
-      def ==(other)
-        other.instance_variable_get(:@helpers) == @helpers
-      end
-    end
-
     # Access the helpers proxy to call built-in and user-defined
-    # Rails helpers. Aliased to `.h` for convenience.
+    # Rails helpers. Aliased to `h` for convenience.
     #
-    # @return [Object] proxy
+    # @return [HelperProxy] the helpers proxy
     def helpers
-      @helpers ||= HelpersWrapper.new self.class.helpers
+      self.class.helpers
     end
     alias :h :helpers
 
     # Localize is something that's used quite often. Even though
     # it's available through helpers, that's annoying. Aliased
-    # to `.l` for convenience.
-    def localize(object, options = {})
-      self.class.helpers.localize(object, options)
+    # to `l` for convenience.
+    def localize(*args)
+      helpers.localize(*args)
     end
     alias :l :localize
 
     # Access the helpers proxy to call built-in and user-defined
     # Rails helpers from a class context.
     #
-    # @return [Object] proxy
+    # @return [HelperProxy] the helpers proxy
     class << self
       def helpers
-        Draper::ViewContext.current
+        @helpers ||= HelperProxy.new
       end
       alias :h :helpers
     end
