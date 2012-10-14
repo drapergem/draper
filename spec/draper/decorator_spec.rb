@@ -7,10 +7,6 @@ describe Draper::Decorator do
   let(:non_active_model_source){ NonActiveModelProduct.new }
 
   describe "#initialize" do
-    it "sets the model class for the decorator" do
-      ProductDecorator.new(source).model_class.should == Product
-    end
-
     it "does not re-apply on instances of itself" do
       product_decorator = ProductDecorator.new(source)
       ProductDecorator.new(product_decorator).model.should be_instance_of Product
@@ -168,20 +164,6 @@ describe Draper::Decorator do
     end
   end
 
-  describe "proxying class methods" do
-    it "pass missing class method calls on to the wrapped class" do
-      subject.class.sample_class_method.should == "sample class method"
-    end
-
-    it "respond_to a wrapped class method" do
-      subject.class.should respond_to(:sample_class_method)
-    end
-
-    it "still respond_to its own class methods" do
-      subject.class.should respond_to(:own_class_method)
-    end
-  end
-
   describe "#helpers" do
     it "returns a HelperProxy" do
       subject.helpers.should be_a Draper::HelperProxy
@@ -218,75 +200,6 @@ describe Draper::Decorator do
 
     it "is aliased to .h" do
       Decorator.h.should be Decorator.helpers
-    end
-  end
-
-  context(".decorates") do
-    it "handle plural-like words properly'" do
-      class Business; end
-      expect do
-        class BusinessDecorator < Draper::Decorator
-          decorates:business
-        end
-        BusinessDecorator.model_class.should == Business
-      end.to_not raise_error
-    end
-
-    context("accepts ActiveRecord like :class_name option too") do
-      it "accepts constants for :class" do
-        expect do
-        class CustomDecorator < Draper::Decorator
-          decorates :product, :class => Product
-        end
-        CustomDecorator.model_class.should == Product
-        end.to_not raise_error
-      end
-
-      it "accepts constants for :class_name" do
-        expect do
-        class CustomDecorator < Draper::Decorator
-          decorates :product, :class_name => Product
-        end
-        CustomDecorator.model_class.should == Product
-        end.to_not raise_error
-      end
-
-      it "accepts strings for :class" do
-        expect do
-        class CustomDecorator < Draper::Decorator
-          decorates :product, :class => 'Product'
-        end
-        CustomDecorator.model_class.should == Product
-        end.to_not raise_error
-      end
-
-      it "accepts strings for :class_name" do
-        expect do
-        class CustomDecorator < Draper::Decorator
-          decorates :product, :class_name => 'Product'
-        end
-        CustomDecorator.model_class.should == Product
-        end.to_not raise_error
-      end
-    end
-
-    it "creates a named accessor for the wrapped model" do
-      pd = ProductDecorator.new(source)
-      pd.send(:product).should == source
-    end
-
-    context("namespaced model supporting") do
-      let(:source){ Namespace::Product.new }
-
-      it "sets the model class for the decorator" do
-        decorator = Namespace::ProductDecorator.new(source)
-        decorator.model_class.should == Namespace::Product
-      end
-
-      it "creates a named accessor for the wrapped model" do
-        pd = Namespace::ProductDecorator.new(source)
-        pd.send(:product).should == source
-      end
     end
   end
 
@@ -515,72 +428,6 @@ describe Draper::Decorator do
     subject.block{"marker"}.should == "marker"
   end
 
-  context ".find" do
-    it "lookup the associated model when passed an integer" do
-      pd = ProductDecorator.find(1)
-      pd.should be_instance_of(ProductDecorator)
-      pd.model.should be_instance_of(Product)
-    end
-
-    it "lookup the associated model when passed a string" do
-      pd = ProductDecorator.find("1")
-      pd.should be_instance_of(ProductDecorator)
-      pd.model.should be_instance_of(Product)
-    end
-
-    it "accept and store a context" do
-      pd = ProductDecorator.find(1, :context => :admin)
-      pd.context.should == :admin
-    end
-  end
-
-  context ".find_by_(x)" do
-    it "runs the similarly named finder" do
-      Product.should_receive(:find_by_name)
-      ProductDecorator.find_by_name("apples")
-    end
-
-    it "returns a decorated result" do
-      ProductDecorator.find_by_name("apples").should be_kind_of(ProductDecorator)
-    end
-
-    it "runs complex finders" do
-      Product.should_receive(:find_by_name_and_size)
-      ProductDecorator.find_by_name_and_size("apples", "large")
-    end
-
-    it "runs find_all_by_(x) finders" do
-      Product.should_receive(:find_all_by_name_and_size)
-      ProductDecorator.find_all_by_name_and_size("apples", "large")
-    end
-
-    it "runs find_last_by_(x) finders" do
-      Product.should_receive(:find_last_by_name_and_size)
-      ProductDecorator.find_last_by_name_and_size("apples", "large")
-    end
-
-    it "runs find_or_initialize_by_(x) finders" do
-      Product.should_receive(:find_or_initialize_by_name_and_size)
-      ProductDecorator.find_or_initialize_by_name_and_size("apples", "large")
-    end
-
-    it "runs find_or_create_by_(x) finders" do
-      Product.should_receive(:find_or_create_by_name_and_size)
-      ProductDecorator.find_or_create_by_name_and_size("apples", "large")
-    end
-
-    it "accepts an options hash" do
-      Product.should_receive(:find_by_name_and_size).with("apples", "large", {:role => :admin})
-      ProductDecorator.find_by_name_and_size("apples", "large", {:role => :admin})
-    end
-
-    it "uses the options hash in the decorator instantiation" do
-      Product.should_receive(:find_by_name_and_size).with("apples", "large", {:role => :admin})
-      pd = ProductDecorator.find_by_name_and_size("apples", "large", {:role => :admin})
-      pd.context[:role].should == :admin
-    end
-  end
-
   describe "#==" do
     it "compares the decorated models" do
       other = Draper::Decorator.new(source)
@@ -596,24 +443,6 @@ describe Draper::Decorator do
       source.stub(:respond_to?).and_return(false)
       source.should_receive(:respond_to?).with(:whatever, true).once.and_return("mocked")
       subject.respond_to?(:whatever, true).should == "mocked"
-    end
-  end
-
-  context 'position accessors' do
-    [:first, :last].each do |method|
-      context "##{method}" do
-        it "return a decorated instance" do
-          ProductDecorator.send(method).should be_instance_of ProductDecorator
-        end
-
-        it "return the #{method} instance of the wrapped class" do
-          ProductDecorator.send(method).model.should == Product.send(method)
-        end
-
-        it "accept an optional context" do
-          ProductDecorator.send(method, :context => :admin).context.should == :admin
-        end
-      end
     end
   end
 
@@ -720,4 +549,44 @@ describe Draper::Decorator do
     subject.kind_of?(subject.class).should be_true
     subject.is_a?(subject.class).should be_true
   end
+
+  describe ".add_finders" do
+    it "extends the Finders module" do
+      ProductDecorator.should be_a_kind_of Draper::Finders
+    end
+
+    context "with no options" do
+      it "infers the finder class" do
+        ProductDecorator.finder_class.should be Product
+      end
+
+      context "for a namespaced model" do
+        it "infers the finder class" do
+          Namespace::ProductDecorator.finder_class.should be Namespace::Product
+        end
+      end
+    end
+
+    context "with for: symbol" do
+      it "sets the finder class" do
+        FinderDecorator.add_finders for: :product
+        FinderDecorator.finder_class.should be Product
+      end
+    end
+
+    context "with for: string" do
+      it "sets the finder class" do
+        FinderDecorator.add_finders for: "some_thing"
+        FinderDecorator.finder_class.should be SomeThing
+      end
+    end
+
+    context "with for: class" do
+      it "sets the finder_class" do
+        FinderDecorator.add_finders for: Namespace::Product
+        FinderDecorator.finder_class.should be Namespace::Product
+      end
+    end
+  end
+
 end

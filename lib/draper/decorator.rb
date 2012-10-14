@@ -1,4 +1,3 @@
-require 'active_support/core_ext/class/attribute'
 require 'active_support/core_ext/array/extract_options'
 
 module Draper
@@ -6,7 +5,6 @@ module Draper
     include ActiveModelSupport
     include Draper::ViewHelpers
 
-    class_attribute :model_class
     attr_accessor :model, :options
 
     # Initialize a new decorator instance by passing in
@@ -24,39 +22,23 @@ module Draper
     # @param [Hash] options (optional)
     def initialize(input, options = {})
       input.to_a if input.respond_to?(:to_a) # forces evaluation of a lazy query from AR
-      self.class.model_class = input.class if model_class.nil?
       self.model = input
       self.options = options
       handle_multiple_decoration if input.is_a?(Draper::Decorator)
     end
 
-    # Proxies to the class specified by `decorates` to automatically
-    # lookup an object in the database and decorate it.
+    # Adds ActiveRecord finder methods to the decorator class. The
+    # methods return decorated models, so that you can use
+    # `ProductDecorator.find(id)` instead of
+    # `ProductDecorator.decorate(Product.find(id))`.
     #
-    # @param [Symbol or String] id id to lookup
-    # @param [Hash] options additional options to the find method of the model
-    # @return [Object] instance of this decorator class
-    def self.find(id, options = {})
-      self.new(model_class.find(id), options)
-    end
-
-    # Typically called within a decorator definition, this method
-    # specifies the name of the wrapped object class.
+    # If the `:for` option is not supplied, the model class will be
+    # inferred from the decorator class.
     #
-    # For instance, a `ProductDecorator` class might call `decorates :product`
-    #
-    # But they don't have to match in name, so a `EmployeeDecorator`
-    # class could call `decorates :person` to wrap instances of `Person`
-    #
-    # This is primarilly set so the `.find` method knows which class
-    # to query.
-    #
-    # @param [Symbol] class_name snakecase name of the decorated class, like `:product`
-    def self.decorates(class_name, options = {})
-      self.model_class = options[:class] || options[:class_name] || class_name.to_s.camelize
-      self.model_class = model_class.constantize if model_class.respond_to?(:constantize)
-      model_class.send :include, Draper::Decoratable
-      define_method(class_name) { @model }
+    # @option options [Class, Symbol] :for The model class to find
+    def self.add_finders(options = {})
+      extend Draper::Finders
+      self.finder_class = options[:for] || name.chomp("Decorator")
     end
 
     # Typically called within a decorator definition, this method causes
@@ -156,22 +138,6 @@ module Draper
       end
     end
 
-    # Fetch all instances of the decorated class and decorate them.
-    #
-    # @param [Hash] options (optional)
-    # @return [Draper::CollectionDecorator]
-    def self.all(options = {})
-      Draper::CollectionDecorator.new(model_class.all, self, options)
-    end
-
-    def self.first(options = {})
-      decorate(model_class.first, options)
-    end
-
-    def self.last(options = {})
-      decorate(model_class.last, options)
-    end
-
     # Get the chain of decorators applied to the object.
     #
     # @return [Array] list of decorator classes
@@ -236,18 +202,6 @@ module Draper
     rescue NoMethodError => no_method_error
       super if no_method_error.name == method
       raise no_method_error
-    end
-
-    def self.method_missing(method, *args, &block)
-      if method.to_s.match(/^find_((all_|last_)?by_|or_(initialize|create)_by_).*/)
-        self.decorate(model_class.send(method, *args, &block), :context => args.dup.extract_options!)
-      else
-        model_class.send(method, *args, &block)
-      end
-    end
-
-    def self.respond_to?(method, include_private = false)
-      super || model_class.respond_to?(method)
     end
 
     def context
