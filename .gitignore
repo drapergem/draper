@@ -11,3 +11,4 @@ vendor/bundle
 *.swp
 *.swo
 *.DS_Store
+spec/dummy/log/*
