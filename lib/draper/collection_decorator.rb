@@ -2,6 +2,7 @@ require 'active_support/core_ext/object/blank'
 module Draper
   class CollectionDecorator
     include Enumerable
+    include ViewHelpers
 
     delegate :as_json, :collect, :map, :each, :[], :all?, :include?, :first, :last, :shift, :in_groups_of, :to => :decorated_collection
 
@@ -72,11 +73,6 @@ module Draper
       @wrapped_collection
     end
     alias_method :to_source, :source
-
-    def helpers
-      Draper::ViewContext.current
-    end
-    alias_method :h, :helpers
 
     private
     def self.discern_class_from_my_class default_class
