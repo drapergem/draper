@@ -4,6 +4,7 @@ require 'active_support/core_ext/array/extract_options'
 module Draper
   class Decorator
     include ActiveModelSupport
+    include Draper::ViewHelpers
 
     class_attribute :model_class
     attr_accessor :model, :options
@@ -160,34 +161,6 @@ module Draper
 
     def self.last(options = {})
       decorate(model_class.last, options)
-    end
-
-    # Access the helpers proxy to call built-in and user-defined
-    # Rails helpers. Aliased to `h` for convenience.
-    #
-    # @return [HelperProxy] the helpers proxy
-    def helpers
-      self.class.helpers
-    end
-    alias :h :helpers
-
-    # Localize is something that's used quite often. Even though
-    # it's available through helpers, that's annoying. Aliased
-    # to `l` for convenience.
-    def localize(*args)
-      helpers.localize(*args)
-    end
-    alias :l :localize
-
-    # Access the helpers proxy to call built-in and user-defined
-    # Rails helpers from a class context.
-    #
-    # @return [HelperProxy] the helpers proxy
-    class << self
-      def helpers
-        @helpers ||= HelperProxy.new
-      end
-      alias :h :helpers
     end
 
     # Fetch the original wrapped model.
