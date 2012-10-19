@@ -1,4 +1,4 @@
-class PostDecorator < Draper::Base
+class PostDecorator < Draper::Decorator
   decorates :post
 
   def posted_date

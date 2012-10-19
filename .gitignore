@@ -12,4 +12,3 @@ vendor/bundle
 *.swo
 *.DS_Store
 spec/dummy/log/*
-spec/dummy/db/*.sqlite3
