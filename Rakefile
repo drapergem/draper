@@ -1,6 +1,7 @@
 require 'bundler/gem_tasks'
 require 'rake'
 require 'rspec/core/rake_task'
+require 'cucumber/rake/task'
 
 RCOV = RUBY_VERSION.to_f == 1.8
 
@@ -41,7 +42,19 @@ namespace :spec do
 
 end
 
+namespace :cucumber do
+  Cucumber::Rake::Task.new(:ci) do |t|
+    t.cucumber_opts = %w{--format progress}
+  end
+end
+
+desc "Run Cucumber features"
+task "cucumber" => "cucumber:ci"
+
 desc "RSpec tests"
 task "spec" => "spec:normal"
 
-task "default" => "spec"
+desc "Run all tests for CI"
+task "ci" => ["spec:normal", "cucumber:ci"]
+
+task "default" => "ci"
