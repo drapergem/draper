@@ -198,6 +198,24 @@ describe Draper::Decorator do
       end
     end
 
+    context "when the association returns an empty collection" do
+      before(:each) do
+        subject.class_eval{ decorates_association :poro_similar_products }
+        source.stub(:poro_similar_products ){ [] }
+      end
+
+      context "when find_association_reflection returns nil" do
+        before(:each) do
+          subject.stub(:find_association_reflection => nil)
+        end
+
+        it "causes the association's method to return the empty collection" do
+          subject.poro_similar_products.should eq([])
+          subject.poro_similar_products.should be_instance_of(Array)
+        end
+      end
+    end
+
     context "#find" do
       before(:each){ subject.class_eval{ decorates_association :similar_products } }
       context "with a block" do
