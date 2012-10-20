@@ -60,7 +60,7 @@ module Draper
       define_method(association_symbol) do
         orig_association = model.send(association_symbol)
 
-        return orig_association if orig_association.nil?
+        return orig_association if orig_association.nil? || orig_association == []
         return decorated_associations[association_symbol] if decorated_associations[association_symbol]
 
         orig_association = orig_association.send(options[:scope]) if options[:scope]
