@@ -13,7 +13,7 @@ module Draper
     # an instance of the source class. Pass in an optional
     # context inside the options hash is stored for later use.
     #
-    # @param [Object] instance to wrap
+    # @param [Object] input instance to wrap
     # @param [Hash] options (optional)
     def initialize(input, options = {})
       input.to_a if input.respond_to?(:to_a) # forces evaluation of a lazy query from AR
@@ -25,10 +25,11 @@ module Draper
     # Proxies to the class specified by `decorates` to automatically
     # lookup an object in the database and decorate it.
     #
-    # @param [Symbol or String] id to lookup
+    # @param [Symbol or String] id id to lookup
+    # @param [Hash] options additional options to the find method of the model
     # @return [Object] instance of this decorator class
-    def self.find(input, options = {})
-      self.new(model_class.find(input), options)
+    def self.find(id, options = {})
+      self.new(model_class.find(id), options)
     end
 
     # Typically called within a decorator definition, this method
@@ -43,17 +44,17 @@ module Draper
     # to query.
     #
     # @param [Symbol] class_name snakecase name of the decorated class, like `:product`
-    def self.decorates(input, options = {})
-      self.model_class = options[:class] || options[:class_name] || input.to_s.camelize
+    def self.decorates(class_name, options = {})
+      self.model_class = options[:class] || options[:class_name] || class_name.to_s.camelize
       self.model_class = model_class.constantize if model_class.respond_to?(:constantize)
       model_class.send :include, Draper::Decoratable
-      define_method(input){ @model }
+      define_method(class_name) { @model }
     end
 
     # Typically called within a decorator definition, this method causes
     # the assocation to be decorated when it is retrieved.
     #
-    # @param [Symbol] name of association to decorate, like `:products`
+    # @param [Symbol] association_symbol name of association to decorate, like `:products`
     # @option options [Hash] :with The decorator to decorate the association with
     #                        :scope The scope to apply to the association
     def self.decorates_association(association_symbol, options = {})
@@ -84,7 +85,7 @@ module Draper
     # A convenience method for decorating multiple associations. Calls
     # decorates_association on each of the given symbols.
     #
-    # @param [Symbols*] name of associations to decorate
+    # @param [Symbols*] association_symbols name of associations to decorate
     def self.decorates_associations(*association_symbols)
       options = association_symbols.extract_options!
       association_symbols.each{ |sym| decorates_association(sym, options) }
@@ -96,7 +97,7 @@ module Draper
     # Do not use both `.allows` and `.denies` together, either write
     # a whitelist with `.allows` or a blacklist with `.denies`
     #
-    # @param [Symbols*] methods to deny like `:find, :find_by_name`
+    # @param [Symbols*] methods methods to deny like `:find, :find_by_name`
     def self.denies(*methods)
       security.denies(*methods)
     end
@@ -116,7 +117,7 @@ module Draper
     # Do not use both `.allows` and `.denies` together, either write
     # a whitelist with `.allows` or a blacklist with `.denies`
     #
-    # @param [Symbols*] methods to allow like `:find, :find_by_name`
+    # @param [Symbols*] methods methods to allow like `:find, :find_by_name`
     def self.allows(*methods)
       security.allows(*methods)
     end
@@ -130,7 +131,7 @@ module Draper
     # also accept a collection and return a collection of
     # individually decorated objects.
     #
-    # @param [Object] instance(s) to wrap
+    # @param [Object] input instance(s) to wrap
     # @param [Hash] options (optional)
     # @option options [Boolean] :infer If true, each model will be
     #   wrapped by its inferred decorator.
