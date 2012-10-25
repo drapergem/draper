@@ -29,7 +29,7 @@ module Draper
       if input.instance_of?(self.class)
         @model = input.model
       elsif Utils.decorators_of(input).include?(self.class)
-        warn "Reapplying #{self.class} decorator to target that is already decorated with it."
+        warn "Reapplying #{self.class} decorator to target that is already decorated with it. Call stack:\n#{caller(1).join "\n"}"
       end
       self.options = options
     end

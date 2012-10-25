@@ -83,6 +83,7 @@ describe Draper::Decorator do
         ProductDecorator.new(deep_decorator)
       }.to change { warning_message }
       warning_message.should =~ /ProductDecorator/
+      warning_message.should include caller(1).first
     end
 
     it "handle plural-like words properly'" do
