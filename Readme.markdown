@@ -366,6 +366,18 @@ For automatic decoration, check out [decorates_before_rendering](https://github.
 4. Push to the branch (`git push origin my_awesome_branch`)
 5. Send pull request
 
+## Running tests
+
+If it's the first time you want to run the tests, start by creating the dummy database:
+
+```
+$ pushd spec/dummy
+$ rake db:migrate db:test:prepare
+$ popd
+```
+
+You can then run tests by executing `rake`.
+
 ## Contributors
 
 Draper was conceived by Jeff Casimir and heavily refined by Steve Klabnik and a great community of open source contributors.
