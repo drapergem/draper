@@ -11,13 +11,12 @@ module Draper
     # context into the options hash is stored for later use.
     #
     #
-    # @param [Object] instances to wrap
+    # @param [Object] collection instances to wrap
     # @param [Hash] options (optional)
     # @option options [Class] :class The decorator class to use
     #   for each item in the collection.
     # @option options all other options are passed to Decorator
     #   class for each item.
-
     def self.decorate(collection, options = {})
       new( collection, discern_class_from_my_class(options.delete(:class)), options)
     end
