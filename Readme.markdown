@@ -371,9 +371,7 @@ For automatic decoration, check out [decorates_before_rendering](https://github.
 If it's the first time you want to run the tests, start by creating the dummy database:
 
 ```
-$ pushd spec/dummy
-$ rake db:migrate db:test:prepare
-$ popd
+$ rake db:migrate
 ```
 
 You can then run tests by executing `rake`.
