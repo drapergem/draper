@@ -1,7 +1,9 @@
 module Draper
+  # @api private
   module Utils
     extend self
 
+    # Returns an array of all decorator classes applied to an instance.
     def decorators_of(decorated_instance)
       decorators = []
       instance = decorated_instance
