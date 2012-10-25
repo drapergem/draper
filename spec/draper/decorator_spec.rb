@@ -680,7 +680,7 @@ describe Draper::Decorator do
     end
   end
 
-  describe "method security", focus: true do
+  describe "method security" do
     subject(:decorator_class) { Draper::Decorator }
     let(:security) { stub }
     before { decorator_class.stub(:security).and_return(security) }
