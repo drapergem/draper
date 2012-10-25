@@ -64,9 +64,25 @@ describe Draper::Decorator do
       ProductDecorator.new(source).model_class.should == Product
     end
 
-    it "returns decorator if it's decorated model already" do
+    it "does not re-apply on instances of itself" do
       product_decorator = ProductDecorator.new(source)
       ProductDecorator.new(product_decorator).model.should be_instance_of Product
+    end
+
+    it "allows decorating other decorators" do
+      product_decorator = ProductDecorator.new(source)
+      SpecificProductDecorator.new(product_decorator).model.should be_eql product_decorator
+    end
+
+    it "warns if target is already decorated with the same decorator class" do
+      warning_message = nil
+      Object.any_instance.stub(:warn) { |message| warning_message = message }
+
+      deep_decorator = SpecificProductDecorator.new(ProductDecorator.new(Product.new))
+      expect {
+        ProductDecorator.new(deep_decorator)
+      }.to change { warning_message }
+      warning_message.should =~ /ProductDecorator/
     end
 
     it "handle plural-like words properly'" do
