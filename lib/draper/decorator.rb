@@ -25,13 +25,9 @@ module Draper
     def initialize(input, options = {})
       input.to_a if input.respond_to?(:to_a) # forces evaluation of a lazy query from AR
       self.class.model_class = input.class if model_class.nil?
-      @model = input
-      if input.instance_of?(self.class)
-        @model = input.model
-      elsif Utils.decorators_of(input).include?(self.class)
-        warn "Reapplying #{self.class} decorator to target that is already decorated with it. Call stack:\n#{caller(1).join "\n"}"
-      end
+      self.model = input
       self.options = options
+      handle_multiple_decoration if input.is_a?(Draper::Decorator)
     end
 
     # Proxies to the class specified by `decorates` to automatically
@@ -176,12 +172,29 @@ module Draper
       decorate(model_class.last, options)
     end
 
-    # Fetch the original wrapped model.
+    # Get the chain of decorators applied to the object.
     #
-    # @return [Object] original_model
-    def wrapped_object
-      @model
+    # @return [Array] list of decorator classes
+    def applied_decorators
+      chain = model.respond_to?(:applied_decorators) ? model.applied_decorators : []
+      chain << self.class
     end
+
+    # Checks if a given decorator has been applied.
+    #
+    # @param [Class] decorator_class
+    def decorated_with?(decorator_class)
+      applied_decorators.include?(decorator_class)
+    end
+
+    def decorated?
+      true
+    end
+
+    def decorator
+      self
+    end
+    alias :decorate :decorator
 
     # Delegates == to the decorated models
     #
@@ -245,10 +258,9 @@ module Draper
       options[:context] = input
     end
 
-    def source
-      model
-    end
-    alias_method :to_source, :model
+    alias :wrapped_object :model
+    alias :source :model
+    alias :to_source :model
 
   private
 
@@ -258,6 +270,14 @@ module Draper
 
     def allow?(method)
       self.class.security.allow?(method)
+    end
+
+    def handle_multiple_decoration
+      if model.instance_of?(self.class)
+        self.model = model.model
+      elsif model.decorated_with?(self.class)
+        warn "Reapplying #{self.class} decorator to target that is already decorated with it. Call stack:\n#{caller(1).join("\n")}"
+      end
     end
 
     def find_association_reflection(association)

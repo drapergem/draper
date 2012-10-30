@@ -17,6 +17,24 @@ describe Draper::Decoratable do
     end
   end
 
+  describe "#applied_decorators" do
+    it "returns an empty list" do
+      subject.applied_decorators.should be_empty
+    end
+  end
+
+  describe "#decorated_with?" do
+    it "returns false" do
+      subject.should_not be_decorated_with(ProductDecorator)
+    end
+  end
+
+  describe "#decorated?" do
+    it "returns false" do
+      subject.should_not be_decorated
+    end
+  end
+
   describe Draper::Decoratable::ClassMethods do
     shared_examples_for "a call to Draper::Decoratable::ClassMethods#decorate" do
       subject { klass.limit }

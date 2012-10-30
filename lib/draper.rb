@@ -1,7 +1,6 @@
 require 'action_view'
 
 require 'draper/version'
-require 'draper/utils'
 require 'draper/system'
 require 'draper/active_model_support'
 require 'draper/view_helpers'
