@@ -187,6 +187,10 @@ module Draper
       applied_decorators.include?(decorator_class)
     end
 
+    def decorated?
+      true
+    end
+
     # Delegates == to the decorated models
     #
     # @return [Boolean] true if other's model == self's model

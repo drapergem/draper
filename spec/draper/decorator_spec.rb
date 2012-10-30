@@ -284,6 +284,12 @@ describe Draper::Decorator do
     end
   end
 
+  describe "#decorated?" do
+    it "returns true" do
+      subject.should be_decorated
+    end
+  end
+
   context(".wrapped_object") do
     it "return the wrapped object" do
       subject.wrapped_object.should == source

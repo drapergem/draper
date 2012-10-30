@@ -20,6 +20,10 @@ module Draper::Decoratable
     false
   end
 
+  def decorated?
+    false
+  end
+
   module ClassMethods
     def decorate(options = {})
       decorator_proxy = decorator_class.decorate(self.scoped, options)

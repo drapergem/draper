@@ -29,6 +29,12 @@ describe Draper::Decoratable do
     end
   end
 
+  describe "#decorated?" do
+    it "returns false" do
+      subject.should_not be_decorated
+    end
+  end
+
   describe Draper::Decoratable::ClassMethods do
     shared_examples_for "a call to Draper::Decoratable::ClassMethods#decorate" do
       subject { klass.limit }
