@@ -176,13 +176,6 @@ module Draper
       decorate(model_class.last, options)
     end
 
-    # Fetch the original wrapped model.
-    #
-    # @return [Object] original_model
-    def wrapped_object
-      @model
-    end
-
     # Delegates == to the decorated models
     #
     # @return [Boolean] true if other's model == self's model
@@ -245,10 +238,9 @@ module Draper
       options[:context] = input
     end
 
-    def source
-      model
-    end
-    alias_method :to_source, :model
+    alias :wrapped_object :model
+    alias :source :model
+    alias :to_source :model
 
   private
 
