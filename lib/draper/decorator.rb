@@ -191,6 +191,11 @@ module Draper
       true
     end
 
+    def decorator
+      self
+    end
+    alias :decorate :decorator
+
     # Delegates == to the decorated models
     #
     # @return [Boolean] true if other's model == self's model
