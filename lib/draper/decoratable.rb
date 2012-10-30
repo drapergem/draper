@@ -12,6 +12,14 @@ module Draper::Decoratable
 
   alias :decorate :decorator
 
+  def applied_decorators
+    []
+  end
+
+  def decorated_with?(decorator_class)
+    false
+  end
+
   module ClassMethods
     def decorate(options = {})
       decorator_proxy = decorator_class.decorate(self.scoped, options)
