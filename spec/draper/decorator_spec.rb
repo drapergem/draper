@@ -268,6 +268,22 @@ describe Draper::Decorator do
     end
   end
 
+  describe "#applied_decorators" do
+    it "returns a list of decorators applied to a model" do
+      decorator = ProductDecorator.new(SpecificProductDecorator.new(Product.new))
+      decorator.applied_decorators.should == [SpecificProductDecorator, ProductDecorator]
+    end
+  end
+
+  describe "#decorated_with?" do
+    it "checks if a decorator has been applied to a model" do
+      decorator = ProductDecorator.new(SpecificProductDecorator.new(Product.new))
+      decorator.should be_decorated_with ProductDecorator
+      decorator.should be_decorated_with SpecificProductDecorator
+      decorator.should_not be_decorated_with WidgetDecorator
+    end
+  end
+
   context(".wrapped_object") do
     it "return the wrapped object" do
       subject.wrapped_object.should == source
