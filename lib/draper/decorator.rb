@@ -13,12 +13,24 @@ module Draper
     # an instance of the source class. Pass in an optional
     # context inside the options hash is stored for later use.
     #
+    # A decorator cannot be applied to other instances of the
+    # same decorator and will instead result in a decorator
+    # with the same target as the original.
+    # You can, however, apply several decorators in a chain but
+    # you will get a warning if the same decorator appears at
+    # multiple places in the chain.
+    #
     # @param [Object] input instance to wrap
     # @param [Hash] options (optional)
     def initialize(input, options = {})
       input.to_a if input.respond_to?(:to_a) # forces evaluation of a lazy query from AR
       self.class.model_class = input.class if model_class.nil?
-      @model = input.kind_of?(Draper::Decorator) ? input.model : input
+      @model = input
+      if input.instance_of?(self.class)
+        @model = input.model
+      elsif Utils.decorators_of(input).include?(self.class)
+        warn "Reapplying #{self.class} decorator to target that is already decorated with it. Call stack:\n#{caller(1).join "\n"}"
+      end
       self.options = options
     end
 
