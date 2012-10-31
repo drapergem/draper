@@ -130,7 +130,7 @@ module Draper
         input.options = options unless options.empty?
         return input
       elsif input.respond_to?(:each) && !input.is_a?(Struct) && (!defined?(Sequel) || !input.is_a?(Sequel::Model))
-        Draper::CollectionDecorator.new(input, self, options)
+        Draper::CollectionDecorator.new(input, options.merge(with: self))
       elsif options[:infer]
         input.decorator(options)
       else

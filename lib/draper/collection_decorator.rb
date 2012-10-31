@@ -9,28 +9,18 @@ module Draper
 
     delegate :as_json, :collect, :map, :each, :[], :all?, :include?, :first, :last, :shift, :in_groups_of, :to => :decorated_collection
 
-    # Initialize a new collection decorator instance by passing in
-    # an instance of a collection. Pass in an optional
-    # context into the options hash is stored for later use.
-    #
-    #
-    # @param [Object] collection instances to wrap
-    # @param [Hash] options (optional)
-    # @option options [Class] :class The decorator class to use
-    #   for each item in the collection.
-    # @option options all other options are passed to Decorator
-    #   class for each item.
-    def self.decorate(collection, options = {})
-      new(collection, options.delete(:class), options)
-    end
-    class << self
-      alias_method :decorates, :decorate
+    # @param source collection to decorate
+    # @param options [Hash] passed to each item's decorator (except
+    #   for the keys listed below)
+    # @option options [Class] :with the class used to decorate items
+    def initialize(source, options = {})
+      @source = source
+      @decorator_class = options.delete(:with) || self.class.inferred_decorator_class
+      @options = options
     end
 
-    def initialize(collection, klass, options = {})
-      @source = collection
-      @decorator_class = klass || self.class.inferred_decorator_class
-      @options = options
+    class << self
+      alias_method :decorate, :new
     end
 
     def decorated_collection

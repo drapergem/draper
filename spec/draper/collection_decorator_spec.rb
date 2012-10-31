@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Draper::CollectionDecorator do
   before { ApplicationController.new.view_context }
-  subject { Draper::CollectionDecorator.new(source, ProductDecorator) }
+  subject { Draper::CollectionDecorator.new(source, with: ProductDecorator) }
   let(:source){ [Product.new, Product.new] }
   let(:non_active_model_source){ NonActiveModelProduct.new }
 
@@ -76,21 +76,21 @@ describe Draper::CollectionDecorator do
     end
   end
 
-  describe ".decorates" do
+  describe ".decorate" do
     it "decorates an empty array with the class" do
-      EnumerableProxy.decorates([], class: ProductDecorator).should be
+      EnumerableProxy.decorate([], with: ProductDecorator).should be
     end
 
     it "discerns collection items decorator by the name of the decorator" do
-      ProductsDecorator.decorates([]).should be
+      ProductsDecorator.decorate([]).should be
     end
 
     it "methods in decorated empty array should work" do
-      ProductsDecorator.decorates([]).some_method.should == "some method works"
+      ProductsDecorator.decorate([]).some_method.should == "some method works"
     end
 
     it "raises when decorates an empty array without the klass" do
-      lambda{EnumerableProxy.decorates([])}.should raise_error
+      expect{EnumerableProxy.decorate([])}.to raise_error
     end
   end
 
