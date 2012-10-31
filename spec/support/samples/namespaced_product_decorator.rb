@@ -2,6 +2,6 @@ require './spec/support/samples/namespaced_product'
 
 module Namespace
   class ProductDecorator < Draper::Decorator
-    add_finders
+    has_finders
   end
 end

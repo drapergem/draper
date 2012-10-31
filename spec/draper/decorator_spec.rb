@@ -550,7 +550,7 @@ describe Draper::Decorator do
     subject.is_a?(subject.class).should be_true
   end
 
-  describe ".add_finders" do
+  describe ".has_finders" do
     it "extends the Finders module" do
       ProductDecorator.should be_a_kind_of Draper::Finders
     end
@@ -569,21 +569,21 @@ describe Draper::Decorator do
 
     context "with for: symbol" do
       it "sets the finder class" do
-        FinderDecorator.add_finders for: :product
+        FinderDecorator.has_finders for: :product
         FinderDecorator.finder_class.should be Product
       end
     end
 
     context "with for: string" do
       it "sets the finder class" do
-        FinderDecorator.add_finders for: "some_thing"
+        FinderDecorator.has_finders for: "some_thing"
         FinderDecorator.finder_class.should be SomeThing
       end
     end
 
     context "with for: class" do
       it "sets the finder_class" do
-        FinderDecorator.add_finders for: Namespace::Product
+        FinderDecorator.has_finders for: Namespace::Product
         FinderDecorator.finder_class.should be Namespace::Product
       end
     end

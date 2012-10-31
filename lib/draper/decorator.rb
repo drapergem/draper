@@ -36,7 +36,7 @@ module Draper
     # inferred from the decorator class.
     #
     # @option options [Class, Symbol] :for The model class to find
-    def self.add_finders(options = {})
+    def self.has_finders(options = {})
       extend Draper::Finders
       self.finder_class = options[:for] || name.chomp("Decorator")
     end
