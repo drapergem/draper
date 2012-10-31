@@ -11,7 +11,7 @@ module Draper
       def helpers
         @helpers ||= Draper::HelperProxy.new
       end
-      alias :h :helpers
+      alias_method :h, :helpers
 
     end
 
@@ -22,7 +22,7 @@ module Draper
     def helpers
       self.class.helpers
     end
-    alias :h :helpers
+    alias_method :h, :helpers
 
     # Localize is something that's used quite often. Even though
     # it's available through helpers, that's annoying. Aliased
@@ -30,7 +30,7 @@ module Draper
     def localize(*args)
       helpers.localize(*args)
     end
-    alias :l :localize
+    alias_method :l, :localize
 
   end
 end

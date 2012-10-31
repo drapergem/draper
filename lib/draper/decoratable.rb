@@ -5,12 +5,11 @@ module Draper::Decoratable
     @decorator ||= decorator_class.decorate(self, options.merge(:infer => false))
     block_given? ? yield(@decorator) : @decorator
   end
+  alias_method :decorate, :decorator
 
   def decorator_class
     "#{self.class.name}Decorator".constantize
   end
-
-  alias :decorate :decorator
 
   def applied_decorators
     []

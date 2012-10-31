@@ -160,7 +160,7 @@ module Draper
     def decorator
       self
     end
-    alias :decorate :decorator
+    alias_method :decorate, :decorator
 
     # Delegates == to the decorated models
     #
@@ -172,7 +172,7 @@ module Draper
     def kind_of?(klass)
       super || model.kind_of?(klass)
     end
-    alias :is_a? :kind_of?
+    alias_method :is_a?, :kind_of?
 
     def respond_to?(method, include_private = false)
       super || (allow?(method) && model.respond_to?(method, include_private))
@@ -212,9 +212,9 @@ module Draper
       options[:context] = input
     end
 
-    alias :wrapped_object :model
-    alias :source :model
-    alias :to_source :model
+    alias_method :wrapped_object, :model
+    alias_method :source, :model
+    alias_method :to_source, :model
 
   private
 
