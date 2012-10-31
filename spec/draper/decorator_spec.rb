@@ -373,7 +373,7 @@ describe Draper::Decorator do
   describe "method selection" do
     it "echos the methods of the wrapped class" do
       source.methods.each do |method|
-        subject.should respond_to(method.to_sym)
+        subject.respond_to?(method.to_sym, true).should be_true
       end
     end
 
