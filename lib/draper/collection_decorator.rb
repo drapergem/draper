@@ -48,7 +48,7 @@ module Draper
       end
     end
 
-    def method_missing (method, *args, &block)
+    def method_missing(method, *args, &block)
       source.send(method, *args, &block)
     end
 
@@ -57,7 +57,7 @@ module Draper
     end
 
     def kind_of?(klass)
-      source.kind_of?(klass) || super
+      super || source.kind_of?(klass)
     end
     alias_method :is_a?, :kind_of?
 
@@ -70,7 +70,7 @@ module Draper
     end
 
     def context=(input)
-      self.map { |member| member.context = input }
+      map {|item| item.context = input }
     end
 
     protected
