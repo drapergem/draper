@@ -1,5 +1,5 @@
 class PostsController < ApplicationController
   def show
-    @post = PostDecorator.find(params[:id])
+    @post = Post.find(params[:id]).decorate
   end
 end

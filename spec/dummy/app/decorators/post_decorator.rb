@@ -1,6 +1,4 @@
 class PostDecorator < Draper::Decorator
-  decorates :post
-
   def posted_date
     if created_at.to_date == Date.today
       "Today"
