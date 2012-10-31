@@ -31,8 +31,8 @@ describe Draper::CollectionDecorator do
     context "without a block" do
       it "decorates Model.find" do
         source.should_not_receive(:find)
-        Product.should_receive(:find).with(1)
-        subject.find(1)
+        Product.should_receive(:find).with(1).and_return(:product)
+        subject.find(1).should == ProductDecorator.new(:product)
       end
     end
   end

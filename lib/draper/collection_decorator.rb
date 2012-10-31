@@ -1,4 +1,3 @@
-require 'active_support/core_ext/object/blank'
 module Draper
   class CollectionDecorator
     include Enumerable
@@ -28,13 +27,11 @@ module Draper
     end
     alias_method :to_ary, :decorated_collection
 
-    def find(ifnone_or_id = nil, &blk)
+    def find(*args, &block)
       if block_given?
-        decorated_collection.find(ifnone_or_id, &blk)
+        decorated_collection.find(*args, &block)
       else
-        obj = decorated_collection.first
-        return nil if obj.blank?
-        obj.class.find(ifnone_or_id)
+        decorator_class.find(*args)
       end
     end
 
