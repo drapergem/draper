@@ -4,7 +4,7 @@ module Draper
     include Enumerable
     include ViewHelpers
 
-    attr_accessor :source
+    attr_accessor :source, :options, :decorator_class
     alias_method :to_source, :source
 
     delegate :as_json, :collect, :map, :each, :[], :all?, :include?, :first, :last, :shift, :in_groups_of, :to => :decorated_collection
@@ -21,18 +21,20 @@ module Draper
     # @option options all other options are passed to Decorator
     #   class for each item.
     def self.decorate(collection, options = {})
-      new( collection, discern_class_from_my_class(options.delete(:class)), options)
+      new(collection, options.delete(:class), options)
     end
     class << self
       alias_method :decorates, :decorate
     end
 
     def initialize(collection, klass, options = {})
-      @source, @klass, @options = collection, klass, options
+      @source = collection
+      @decorator_class = klass || self.class.inferred_decorator_class
+      @options = options
     end
 
     def decorated_collection
-      @decorated_collection ||= source.collect { |member| @klass.decorate(member, @options) }
+      @decorated_collection ||= source.collect {|item| decorator_class.decorate(item, options) }
     end
     alias_method :to_ary, :decorated_collection
 
@@ -64,21 +66,20 @@ module Draper
     end
 
     def to_s
-      "#<CollectionDecorator of #{@klass} for #{source.inspect}>"
+      "#<CollectionDecorator of #{decorator_class} for #{source.inspect}>"
     end
 
     def context=(input)
       self.map { |member| member.context = input }
     end
 
-    private
+    protected
 
-    def self.discern_class_from_my_class default_class
-      return default_class if default_class
-      name = self.to_s.gsub("Decorator", "")
-      "#{name.singularize}Decorator".constantize
+    def self.inferred_decorator_class
+      singular_name = name.chomp("Decorator").singularize
+      "#{singular_name}Decorator".constantize
     rescue NameError
-      raise NameError("You must supply a class (as the klass option) for the members of your collection or the class must be inferable from the name of this class ('#{new.class}')")
+      raise NameError, "Could not infer a decorator for #{name}. Please specify the decorator class when creating instances of this class."
     end
   end
 end
