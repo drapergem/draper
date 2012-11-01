@@ -25,13 +25,27 @@ describe Draper::Decoratable do
 
   describe "#decorated_with?" do
     it "returns false" do
-      subject.should_not be_decorated_with(ProductDecorator)
+      subject.should_not be_decorated_with ProductDecorator
     end
   end
 
   describe "#decorated?" do
     it "returns false" do
       subject.should_not be_decorated
+    end
+  end
+
+  describe ".decorator_class" do
+    context "when the decorator can be inferred from the model" do
+      it "returns the inferred decorator class" do
+        Product.decorator_class.should be ProductDecorator
+      end
+    end
+
+    context "when the decorator can't be inferred from the model" do
+      it "throws an UninferrableDecoratorError" do
+        expect{UninferrableDecoratorModel.decorator_class}.to raise_error Draper::UninferrableDecoratorError
+      end
     end
   end
 

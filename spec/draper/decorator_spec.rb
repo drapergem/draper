@@ -352,21 +352,23 @@ describe Draper::Decorator do
     end
   end
 
-  describe "#model" do
+  describe "#source" do
     it "returns the wrapped object" do
-      subject.model.should be source
-    end
-
-    it "is aliased to #wrapped_object" do
-      subject.wrapped_object.should be source
-    end
-
-    it "is aliased to #source" do
       subject.source.should be source
     end
 
     it "is aliased to #to_source" do
       subject.to_source.should be source
+    end
+
+    it "is aliased to #model" do
+      subject.model.should be source
+    end
+  end
+
+  describe "#to_model" do
+    it "returns the decorator" do
+      subject.to_model.should be subject
     end
   end
 
@@ -415,12 +417,6 @@ describe Draper::Decorator do
       it "never proxy errors if it is defined on the decorator itself" do
         DecoratorWithSpecialMethods.new(source).errors.should be_an_instance_of Array
       end
-    end
-  end
-
-  context "the decorated model" do
-    it "receives the Decoratable mixin" do
-      source.should be_a_kind_of Draper::Decoratable
     end
   end
 
@@ -540,12 +536,12 @@ describe Draper::Decorator do
     end
   end
 
-  it "pretends to be the model class" do
+  it "pretends to be the source class" do
     subject.kind_of?(source.class).should be_true
     subject.is_a?(source.class).should be_true
   end
 
-  it "still is its own class" do
+  it "is still its own class" do
     subject.kind_of?(subject.class).should be_true
     subject.is_a?(subject.class).should be_true
   end

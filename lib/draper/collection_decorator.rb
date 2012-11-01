@@ -1,85 +1,78 @@
-require 'active_support/core_ext/object/blank'
 module Draper
   class CollectionDecorator
     include Enumerable
     include ViewHelpers
 
-    delegate :as_json, :collect, :map, :each, :[], :all?, :include?, :first, :last, :shift, :in_groups_of, :to => :decorated_collection
+    attr_accessor :source, :options, :decorator_class
+    alias_method :to_source, :source
 
-    # Initialize a new collection decorator instance by passing in
-    # an instance of a collection. Pass in an optional
-    # context into the options hash is stored for later use.
-    #
-    #
-    # @param [Object] collection instances to wrap
-    # @param [Hash] options (optional)
-    # @option options [Class] :class The decorator class to use
-    #   for each item in the collection.
-    # @option options all other options are passed to Decorator
-    #   class for each item.
-    def self.decorate(collection, options = {})
-      new( collection, discern_class_from_my_class(options.delete(:class)), options)
+    delegate :as_json, *(Array.instance_methods - Object.instance_methods), to: :decorated_collection
+
+    # @param source collection to decorate
+    # @param options [Hash] passed to each item's decorator (except
+    #   for the keys listed below)
+    # @option options [Class] :with the class used to decorate items
+    def initialize(source, options = {})
+      @source = source
+      @decorator_class = options.delete(:with) || self.class.inferred_decorator_class
+      @options = options
     end
+
     class << self
-      alias_method :decorates, :decorate
-    end
-
-    def initialize(collection, klass, options = {})
-      @wrapped_collection, @klass, @options = collection, klass, options
+      alias_method :decorate, :new
     end
 
     def decorated_collection
-      @decorated_collection ||= @wrapped_collection.collect { |member| @klass.decorate(member, @options) }
+      @decorated_collection ||= source.collect {|item| decorator_class.decorate(item, options) }
     end
-    alias_method :to_ary, :decorated_collection
 
-    def find(ifnone_or_id = nil, &blk)
+    def find(*args, &block)
       if block_given?
-        decorated_collection.find(ifnone_or_id, &blk)
+        decorated_collection.find(*args, &block)
       else
-        obj = decorated_collection.first
-        return nil if obj.blank?
-        obj.class.find(ifnone_or_id)
+        decorator_class.find(*args)
       end
     end
 
-    def method_missing (method, *args, &block)
-      @wrapped_collection.send(method, *args, &block)
+    def method_missing(method, *args, &block)
+      source.send(method, *args, &block)
     end
 
     def respond_to?(method, include_private = false)
-      super || @wrapped_collection.respond_to?(method, include_private)
+      super || source.respond_to?(method, include_private)
     end
 
     def kind_of?(klass)
-      @wrapped_collection.kind_of?(klass) || super
+      super || source.kind_of?(klass)
     end
-    alias :is_a? :kind_of?
+    alias_method :is_a?, :kind_of?
 
     def ==(other)
-      @wrapped_collection == (other.respond_to?(:source) ? other.source : other)
+      source == (other.respond_to?(:source) ? other.source : other)
     end
 
     def to_s
-      "#<CollectionDecorator of #{@klass} for #{@wrapped_collection.inspect}>"
+      "#<CollectionDecorator of #{decorator_class} for #{source.inspect}>"
     end
 
     def context=(input)
-      self.map { |member| member.context = input }
+      map {|item| item.context = input }
     end
 
-    def source
-      @wrapped_collection
-    end
-    alias_method :to_source, :source
+    protected
 
-    private
-    def self.discern_class_from_my_class default_class
-      return default_class if default_class
-      name = self.to_s.gsub("Decorator", "")
-      "#{name.singularize}Decorator".constantize
+    def self.inferred_decorator_class
+      decorator_name = "#{name.chomp("Decorator").singularize}Decorator"
+      decorator_uninferrable if decorator_name == name
+
+      decorator_name.constantize
+
     rescue NameError
-      raise NameError("You must supply a class (as the klass option) for the members of your collection or the class must be inferable from the name of this class ('#{new.class}')")
+      decorator_uninferrable
+    end
+
+    def self.decorator_uninferrable
+      raise Draper::UninferrableDecoratorError.new(self)
     end
   end
 end
