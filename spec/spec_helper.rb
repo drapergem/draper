@@ -7,13 +7,8 @@ Bundler.require
 
 require './spec/support/samples/active_record'
 require './spec/support/samples/decorator'
-require './spec/support/samples/decorator_with_allows'
-require './spec/support/samples/decorator_with_multiple_allows'
 require './spec/support/samples/decorator_with_application_helper'
-require './spec/support/samples/decorator_with_denies'
-require './spec/support/samples/decorator_with_denies_all'
 require './spec/support/samples/decorator_with_special_methods'
-require './spec/support/samples/enumerable_proxy'
 require './spec/support/samples/finder_decorator'
 require './spec/support/samples/namespaced_product'
 require './spec/support/samples/namespaced_product_decorator'
