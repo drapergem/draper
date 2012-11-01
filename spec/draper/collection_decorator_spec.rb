@@ -7,16 +7,58 @@ describe Draper::CollectionDecorator do
   let(:non_active_model_source){ NonActiveModelProduct.new }
 
   it "decorates a collection's items" do
-    subject.each {|item| item.should be_decorated_with ProductDecorator }
+    subject.each do |item|
+      item.should be_decorated_with ProductDecorator
+    end
   end
 
   it "sets the decorated items' source models" do
     subject.map{|item| item.source}.should == source
   end
 
+  describe "#initialize" do
+    context "when the :with option is given" do
+      context "and the decorator can't be inferred from the class" do
+        subject { Draper::CollectionDecorator.new(source, with: ProductDecorator) }
+
+        it "uses the :with option" do
+          subject.decorator_class.should be ProductDecorator
+        end
+      end
+
+      context "and the decorator is inferrable from the class" do
+        subject { ProductsDecorator.new(source, with: SpecificProductDecorator) }
+
+        it "uses the :with option" do
+          subject.decorator_class.should be SpecificProductDecorator
+        end
+      end
+    end
+
+    context "when the :with option is not given" do
+      context "and the decorator can't be inferred from the class" do
+        it "raises an UninferrableDecoratorError" do
+          expect{Draper::CollectionDecorator.new(source)}.to raise_error Draper::UninferrableDecoratorError
+        end
+      end
+
+      context "and the decorator is inferrable from the class" do
+        subject { ProductsDecorator.new(source) }
+
+        it "infers the decorator" do
+          subject.decorator_class.should be ProductDecorator
+        end
+      end
+    end
+  end
+
   describe "#source" do
     it "returns the source collection" do
       subject.source.should be source
+    end
+
+    it "is aliased to #to_source" do
+      subject.to_source.should be source
     end
   end
 
@@ -76,115 +118,96 @@ describe Draper::CollectionDecorator do
     end
   end
 
-  describe ".decorate" do
-    it "decorates an empty array with the class" do
-      EnumerableProxy.decorate([], with: ProductDecorator).should be
-    end
-
-    it "discerns collection items decorator by the name of the decorator" do
-      ProductsDecorator.decorate([]).should be
-    end
-
-    it "methods in decorated empty array should work" do
-      ProductsDecorator.decorate([]).some_method.should == "some method works"
-    end
-
-    it "raises when decorates an empty array without the klass" do
-      expect{EnumerableProxy.decorate([])}.to raise_error Draper::UninferrableDecoratorError
+  describe "#to_ary" do
+    # required for `render @collection` in Rails
+    it "delegates to the decorated collection" do
+      subject.decorated_collection.should_receive(:to_ary).and_return(:an_array)
+      subject.to_ary.should == :an_array
     end
   end
 
-  describe "collection decoration" do
-
-    # Implementation of #decorate that returns an array
-    # of decorated objects is insufficient to deal with
-    # situations where the original collection has been
-    # expanded with the use of modules (as often the case
-    # with paginator gems) or is just more complex then
-    # an array.
-    module Paginator; def page_number; "magic_value"; end; end
-    Array.send(:include, Paginator)
-    let(:paged_array) { [Product.new, Product.new] }
-    let(:empty_collection) { [] }
-    subject { ProductDecorator.decorate(paged_array) }
-
-    it "proxy all calls to decorated collection" do
-      paged_array.page_number.should == "magic_value"
-      subject.page_number.should == "magic_value"
+  describe "#respond_to?" do
+    it "returns true for its own methods" do
+      subject.should respond_to :decorated_collection
     end
 
-    it "support Rails partial lookup for a collection" do
-      # to support Rails render @collection the returned collection
-      # (or its proxy) should implement #to_ary.
-      subject.respond_to?(:to_ary).should be true
-      subject.to_ary.first.should == ProductDecorator.decorate(paged_array.first)
+    it "returns true for the wrapped collection's methods" do
+      source.stub(:respond_to?).with(:whatever, true).and_return(true)
+      subject.respond_to?(:whatever, true).should be_true
     end
+  end
 
-    it "delegate respond_to? to the wrapped collection" do
-      decorator = ProductDecorator.decorate(paged_array)
-      paged_array.should_receive(:respond_to?).with(:whatever, true)
-      decorator.respond_to?(:whatever, true)
-    end
-
-    it "return blank for a decorated empty collection" do
-      # This tests that respond_to? is defined for the CollectionDecorator
-      # since activesupport calls respond_to?(:empty) in #blank
-      decorator = ProductDecorator.decorate(empty_collection)
-      decorator.should be_blank
-    end
-
-    it "return whether the member is in the array for a decorated wrapped collection" do
-      # This tests that include? is defined for the CollectionDecorator
-      member = paged_array.first
-      subject.respond_to?(:include?)
-      subject.include?(member).should == true
-      subject.include?(subject.first).should == true
-      subject.include?(Product.new).should == false
-    end
-
-    it "equal each other when decorating the same collection" do
-      subject_one = ProductDecorator.decorate(paged_array)
-      subject_two = ProductDecorator.decorate(paged_array)
-      subject_one.should == subject_two
-    end
-
-    it "not equal each other when decorating different collections" do
-      subject_one = ProductDecorator.decorate(paged_array)
-      new_paged_array = paged_array + [Product.new]
-      subject_two = ProductDecorator.decorate(new_paged_array)
-      subject_one.should_not == subject_two
-    end
-
-    it "allow decorated access by index" do
-      subject = ProductDecorator.decorate(paged_array)
-      subject[0].should be_instance_of ProductDecorator
-    end
-
-    context "pretends to be of kind of wrapped collection class" do
-      subject { ProductDecorator.decorate(paged_array) }
-
-      it "#kind_of? CollectionDecorator" do
-        subject.should be_kind_of Draper::CollectionDecorator
-      end
-
-      it "#is_a? CollectionDecorator" do
-        subject.is_a?(Draper::CollectionDecorator).should be_true
-      end
-
-      it "#kind_of? Array" do
-        subject.should be_kind_of Array
-      end
-
-      it "#is_a? Array" do
-        subject.is_a?(Array).should be_true
+  context "Array methods" do
+    describe "#include?" do
+      it "delegates to the decorated collection" do
+        subject.decorated_collection.should_receive(:include?).with(:something).and_return(true)
+        subject.should include :something
       end
     end
 
-    context(".source / .to_source") do
-      it "return the wrapped object" do
-        subject.to_source == source
-        subject.source == source
+    describe "#[]" do
+      it "delegates to the decorated collection" do
+        subject.decorated_collection.should_receive(:[]).with(42).and_return(:something)
+        subject[42].should == :something
       end
+    end
+  end
+
+  describe "#==" do
+    context "when comparing to a collection decorator with the same source" do
+      it "returns true" do
+        a = Draper::CollectionDecorator.new(source, with: ProductDecorator)
+        b = ProductsDecorator.new(source)
+        a.should == b
+      end
+    end
+
+    context "when comparing to a collection decorator with a different source" do
+      it "returns false" do
+        a = Draper::CollectionDecorator.new(source, with: ProductDecorator)
+        b = ProductsDecorator.new([Product.new])
+        a.should_not == b
+      end
+    end
+
+    context "when comparing to a collection of the same items" do
+      it "returns true" do
+        a = Draper::CollectionDecorator.new(source, with: ProductDecorator)
+        b = source.dup
+        a.should == b
+      end
+    end
+
+    context "when comparing to a collection of different items" do
+      it "returns true" do
+        a = Draper::CollectionDecorator.new(source, with: ProductDecorator)
+        b = [Product.new]
+        a.should_not == b
+      end
+    end
+  end
+
+  it "pretends to be the source class" do
+    subject.kind_of?(source.class).should be_true
+    subject.is_a?(source.class).should be_true
+  end
+
+  it "is still its own class" do
+    subject.kind_of?(subject.class).should be_true
+    subject.is_a?(subject.class).should be_true
+  end
+
+  describe "#method_missing" do
+    before do
+      class << source
+        def page_number
+          42
+        end
+      end
+    end
+
+    it "proxies unknown methods to the source collection" do
+      subject.page_number.should == 42
     end
   end
 

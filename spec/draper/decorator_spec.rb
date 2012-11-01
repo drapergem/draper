@@ -536,12 +536,12 @@ describe Draper::Decorator do
     end
   end
 
-  it "pretends to be the model class" do
+  it "pretends to be the source class" do
     subject.kind_of?(source.class).should be_true
     subject.is_a?(source.class).should be_true
   end
 
-  it "still is its own class" do
+  it "is still its own class" do
     subject.kind_of?(subject.class).should be_true
     subject.is_a?(subject.class).should be_true
   end

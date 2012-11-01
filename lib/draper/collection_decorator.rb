@@ -62,9 +62,16 @@ module Draper
     protected
 
     def self.inferred_decorator_class
-      singular_name = name.chomp("Decorator").singularize
-      "#{singular_name}Decorator".constantize
+      decorator_name = "#{name.chomp("Decorator").singularize}Decorator"
+      decorator_uninferrable if decorator_name == name
+
+      decorator_name.constantize
+
     rescue NameError
+      decorator_uninferrable
+    end
+
+    def self.decorator_uninferrable
       raise Draper::UninferrableDecoratorError.new(self)
     end
   end
