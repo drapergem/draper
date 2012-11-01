@@ -65,7 +65,7 @@ module Draper
       singular_name = name.chomp("Decorator").singularize
       "#{singular_name}Decorator".constantize
     rescue NameError
-      raise NameError, "Could not infer a decorator for #{name}. Please specify the decorator class when creating instances of this class."
+      raise Draper::UninferrableDecoratorError.new(self)
     end
   end
 end

@@ -25,6 +25,7 @@ require './spec/support/samples/sequel_product'
 require './spec/support/samples/specific_product_decorator'
 require './spec/support/samples/some_thing'
 require './spec/support/samples/some_thing_decorator'
+require './spec/support/samples/uninferrable_decorator_model'
 require './spec/support/samples/widget'
 require './spec/support/samples/widget_decorator'
 

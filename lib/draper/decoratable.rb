@@ -25,12 +25,14 @@ module Draper::Decoratable
 
   module ClassMethods
     def decorate(options = {})
-      decorator_proxy = decorator_class.decorate(self.scoped, options)
-      block_given? ? yield(decorator_proxy) : decorator_proxy
+      collection_decorator = decorator_class.decorate(self.scoped, options)
+      block_given? ? yield(collection_decorator) : collection_decorator
     end
 
     def decorator_class
       "#{model_name}Decorator".constantize
+    rescue NameError
+      raise Draper::UninferrableDecoratorError.new(self)
     end
   end
 end

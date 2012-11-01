@@ -90,7 +90,7 @@ describe Draper::CollectionDecorator do
     end
 
     it "raises when decorates an empty array without the klass" do
-      expect{EnumerableProxy.decorate([])}.to raise_error
+      expect{EnumerableProxy.decorate([])}.to raise_error Draper::UninferrableDecoratorError
     end
   end
 
