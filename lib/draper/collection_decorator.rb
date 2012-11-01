@@ -6,7 +6,7 @@ module Draper
     attr_accessor :source, :options, :decorator_class
     alias_method :to_source, :source
 
-    delegate :as_json, :collect, :map, :each, :[], :all?, :include?, :first, :last, :shift, :in_groups_of, :to => :decorated_collection
+    delegate :as_json, *(Array.instance_methods - Object.instance_methods), to: :decorated_collection
 
     # @param source collection to decorate
     # @param options [Hash] passed to each item's decorator (except
@@ -25,7 +25,6 @@ module Draper
     def decorated_collection
       @decorated_collection ||= source.collect {|item| decorator_class.decorate(item, options) }
     end
-    alias_method :to_ary, :decorated_collection
 
     def find(*args, &block)
       if block_given?
