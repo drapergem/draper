@@ -2,7 +2,6 @@ require 'action_view'
 
 require 'draper/version'
 require 'draper/system'
-require 'draper/active_model_support'
 require 'draper/view_helpers'
 require 'draper/finders'
 require 'draper/decorator'

@@ -2,7 +2,6 @@ require 'active_support/core_ext/array/extract_options'
 
 module Draper
   class Decorator
-    include ActiveModelSupport
     include Draper::ViewHelpers
 
     attr_accessor :source, :options
@@ -215,6 +214,15 @@ module Draper
       options[:context] = input
     end
 
+    # For ActiveModel compatibilty
+    def to_model
+      self
+    end
+
+    # For ActiveModel compatibility
+    def to_param
+      source.to_param
+    end
 
   private
 

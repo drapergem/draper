@@ -357,12 +357,18 @@ describe Draper::Decorator do
       subject.source.should be source
     end
 
+    it "is aliased to #to_source" do
+      subject.to_source.should be source
+    end
+
     it "is aliased to #model" do
       subject.model.should be source
     end
+  end
 
-    it "is aliased to #to_source" do
-      subject.to_source.should be source
+  describe "#to_model" do
+    it "returns the decorator" do
+      subject.to_model.should be subject
     end
   end
 
