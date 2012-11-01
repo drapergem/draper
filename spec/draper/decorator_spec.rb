@@ -420,12 +420,6 @@ describe Draper::Decorator do
     end
   end
 
-  context "the decorated model" do
-    it "receives the Decoratable mixin" do
-      source.should be_a_kind_of Draper::Decoratable
-    end
-  end
-
   it "wrap source methods so they still accept blocks" do
     subject.block{"marker"}.should == "marker"
   end
