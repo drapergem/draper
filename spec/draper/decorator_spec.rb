@@ -352,17 +352,13 @@ describe Draper::Decorator do
     end
   end
 
-  describe "#model" do
+  describe "#source" do
     it "returns the wrapped object" do
-      subject.model.should be source
-    end
-
-    it "is aliased to #wrapped_object" do
-      subject.wrapped_object.should be source
-    end
-
-    it "is aliased to #source" do
       subject.source.should be source
+    end
+
+    it "is aliased to #model" do
+      subject.model.should be source
     end
 
     it "is aliased to #to_source" do
