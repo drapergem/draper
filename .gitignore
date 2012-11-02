@@ -6,6 +6,7 @@ pkg/*
 coverage.data
 coverage/*
 .yardoc
+doc/*
 tmp
 vendor/bundle
 *.swp

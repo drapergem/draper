@@ -2,10 +2,12 @@ require 'active_support/core_ext/array/extract_options'
 
 module Draper
   class Decorator
-    include ActiveModelSupport
     include Draper::ViewHelpers
 
-    attr_accessor :model, :options
+    attr_accessor :source, :options
+
+    alias_method :model, :source
+    alias_method :to_source, :source
 
     # Initialize a new decorator instance by passing in
     # an instance of the source class. Pass in an optional
@@ -18,13 +20,13 @@ module Draper
     # you will get a warning if the same decorator appears at
     # multiple places in the chain.
     #
-    # @param [Object] input instance to wrap
+    # @param [Object] source object to decorate
     # @param [Hash] options (optional)
-    def initialize(input, options = {})
-      input.to_a if input.respond_to?(:to_a) # forces evaluation of a lazy query from AR
-      self.model = input
-      self.options = options
-      handle_multiple_decoration if input.is_a?(Draper::Decorator)
+    def initialize(source, options = {})
+      source.to_a if source.respond_to?(:to_a) # forces evaluation of a lazy query from AR
+      @source = source
+      @options = options
+      handle_multiple_decoration if source.is_a?(Draper::Decorator)
     end
 
     # Adds ActiveRecord finder methods to the decorator class. The
@@ -49,7 +51,7 @@ module Draper
     #                        :scope The scope to apply to the association
     def self.decorates_association(association_symbol, options = {})
       define_method(association_symbol) do
-        orig_association = model.send(association_symbol)
+        orig_association = source.send(association_symbol)
 
         return orig_association if orig_association.nil? || orig_association == []
         return decorated_associations[association_symbol] if decorated_associations[association_symbol]
@@ -130,7 +132,7 @@ module Draper
         input.options = options unless options.empty?
         return input
       elsif input.respond_to?(:each) && !input.is_a?(Struct) && (!defined?(Sequel) || !input.is_a?(Sequel::Model))
-        Draper::CollectionDecorator.new(input, self, options)
+        Draper::CollectionDecorator.new(input, options.merge(with: self))
       elsif options[:infer]
         input.decorator(options)
       else
@@ -142,7 +144,7 @@ module Draper
     #
     # @return [Array] list of decorator classes
     def applied_decorators
-      chain = model.respond_to?(:applied_decorators) ? model.applied_decorators : []
+      chain = source.respond_to?(:applied_decorators) ? source.applied_decorators : []
       chain << self.class
     end
 
@@ -160,22 +162,22 @@ module Draper
     def decorator
       self
     end
-    alias :decorate :decorator
+    alias_method :decorate, :decorator
 
     # Delegates == to the decorated models
     #
     # @return [Boolean] true if other's model == self's model
     def ==(other)
-      @model == (other.respond_to?(:model) ? other.model : other)
+      source == (other.respond_to?(:source) ? other.source : other)
     end
 
     def kind_of?(klass)
-      super || model.kind_of?(klass)
+      super || source.kind_of?(klass)
     end
-    alias :is_a? :kind_of?
+    alias_method :is_a?, :kind_of?
 
     def respond_to?(method, include_private = false)
-      super || (allow?(method) && model.respond_to?(method, include_private))
+      super || (allow?(method) && source.respond_to?(method, include_private))
     end
 
     # We always want to delegate present, in case we decorate a nil object.
@@ -183,15 +185,15 @@ module Draper
     # I don't like the idea of decorating a nil object, but we'll deal with
     # that later.
     def present?
-      model.present?
+      source.present?
     end
 
     def method_missing(method, *args, &block)
       super unless allow?(method)
 
-      if model.respond_to?(method)
+      if source.respond_to?(method)
         self.class.send :define_method, method do |*args, &blokk|
-          model.send method, *args, &blokk
+          source.send method, *args, &blokk
         end
 
         send method, *args, &block
@@ -212,9 +214,15 @@ module Draper
       options[:context] = input
     end
 
-    alias :wrapped_object :model
-    alias :source :model
-    alias :to_source :model
+    # For ActiveModel compatibilty
+    def to_model
+      self
+    end
+
+    # For ActiveModel compatibility
+    def to_param
+      source.to_param
+    end
 
   private
 
@@ -227,16 +235,16 @@ module Draper
     end
 
     def handle_multiple_decoration
-      if model.instance_of?(self.class)
-        self.model = model.model
-      elsif model.decorated_with?(self.class)
+      if source.instance_of?(self.class)
+        self.source = source.source
+      elsif source.decorated_with?(self.class)
         warn "Reapplying #{self.class} decorator to target that is already decorated with it. Call stack:\n#{caller(1).join("\n")}"
       end
     end
 
     def find_association_reflection(association)
-      if model.class.respond_to?(:reflect_on_association)
-        model.class.reflect_on_association(association)
+      if source.class.respond_to?(:reflect_on_association)
+        source.class.reflect_on_association(association)
       end
     end
 
