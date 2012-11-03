@@ -1,6 +1,6 @@
 class PostDecorator < Draper::Decorator
   def posted_date
-    if created_at.to_date == Date.today
+    if created_at.to_date == DateTime.now.utc.to_date
       "Today"
     else
       "Not Today"
