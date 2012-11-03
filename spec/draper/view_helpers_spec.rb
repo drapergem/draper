@@ -1,12 +1,13 @@
 require 'spec_helper'
 
 describe Draper::ViewHelpers do
+  subject(:view_helpers_class) { Class.new { include Draper::ViewHelpers } }
+
+  let(:view_helpers) { view_helpers_class.new }
   let(:helper_proxy) { Draper::HelperProxy.new }
   let(:view_context) { Object.new }
-  before { view_helpers.helpers.stub(:view_context).and_return(view_context) }
 
-  subject { Class.new { include Draper::ViewHelpers } }
-  let(:view_helpers) { subject.new }
+  before { view_helpers.helpers.stub(:view_context).and_return(view_context) }
 
   describe "#helpers" do
     it "returns a HelperProxy" do
@@ -14,7 +15,7 @@ describe Draper::ViewHelpers do
     end
 
     it "is aliased to #h" do
-      view_helpers.h.should be subject.helpers
+      view_helpers.h.should be view_helpers_class.helpers
     end
   end
 
@@ -30,12 +31,11 @@ describe Draper::ViewHelpers do
 
   describe ".helpers" do
     it "returns a HelperProxy" do
-      subject.helpers.should be_a Draper::HelperProxy
+      view_helpers_class.helpers.should be_a Draper::HelperProxy
     end
 
     it "is aliased to #h" do
-      subject.h.should be subject.helpers
+      view_helpers_class.h.should be view_helpers_class.helpers
     end
   end
-
 end
