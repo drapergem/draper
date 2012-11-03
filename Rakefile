@@ -16,6 +16,8 @@ namespace :db do
   end
 end
 
+task :cucumber => :"db:migrate"
+
 desc "Run all tests for CI"
 task "ci" => ["spec", "cucumber"]
 
