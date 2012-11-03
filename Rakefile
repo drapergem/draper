@@ -9,14 +9,12 @@ RSpec::Core::RakeTask.new
 require 'cucumber/rake/task'
 Cucumber::Rake::Task.new
 
-namespace :db do
-  desc 'Prepare sqlite database'
-  task :migrate do
-    system 'cd spec/dummy && rake db:migrate RAILS_ENV=test && rake db:migrate RAILS_ENV=development'
-  end
+file "spec/dummy/db/test.sqlite3" do
+  system "cd spec/dummy && 
+          RAILS_ENV=test rake db:migrate"
 end
 
-task :cucumber => :"db:migrate"
+task :cucumber => :"spec/dummy/db/test.sqlite3"
 
 desc "Run all tests for CI"
 task "ci" => ["spec", "cucumber"]
