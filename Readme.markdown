@@ -142,7 +142,7 @@ Then run `bundle` from the project directory.
 To decorate a model named `Article`:
 
 ```
-rails generate decorator article
+rails generate decorator Article
 ```
 
 ### Writing Methods
