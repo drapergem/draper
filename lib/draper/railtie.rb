@@ -3,6 +3,7 @@ require 'rails/railtie'
 module ActiveModel
   class Railtie < Rails::Railtie
     generators do |app|
+      app ||= Rails.application # Rails 3.0.x does not yield `app` 
       Rails::Generators.configure!(app.config.generators)
       require "generators/resource_override"
     end
