@@ -30,7 +30,7 @@ describe Draper::Decorator do
     end
   end
 
-  context ".decorate" do
+  describe ".decorate" do
     context "without any context" do
       subject { Draper::Decorator.decorate(source) }
 
@@ -127,8 +127,8 @@ describe Draper::Decorator do
       let(:source) { [Product.new, Widget.new] }
 
       it "returns a collection of wrapped objects all with the same decorator" do
-        subject.first.class.should be Draper::Decorator
-        subject.last.class.should be Draper::Decorator
+        subject.first.should be_an_instance_of Draper::Decorator
+        subject.last.should be_an_instance_of Draper::Decorator
       end
     end
 
@@ -138,28 +138,18 @@ describe Draper::Decorator do
       let(:source) { Product.new }
 
       it "returns a decorator of the type explicity used in the call" do
-        subject.class.should be Draper::Decorator
+        subject.should be_an_instance_of Draper::Decorator
       end
     end
 
     context "returns a collection containing only the explicit decorator used in the call" do
-      subject { Draper::Decorator.decorate(source, infer: true).to_ary }
+      subject { Draper::Decorator.decorate(source, with: :infer) }
 
       let(:source) { [Product.new, Widget.new] }
 
       it "returns a mixed collection of wrapped objects" do
-        subject.first.class.should be ProductDecorator
-        subject.last.class.should be WidgetDecorator
-      end
-    end
-
-    context "when given a single object" do
-      subject { Draper::Decorator.decorate(source, infer: true) }
-
-      let(:source) { Product.new }
-
-      it "can also infer its decorator" do
-        subject.class.should be ProductDecorator
+        subject.first.should be_an_instance_of ProductDecorator
+        subject.last.should be_an_instance_of WidgetDecorator
       end
     end
   end

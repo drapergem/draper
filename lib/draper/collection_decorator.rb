@@ -11,7 +11,8 @@ module Draper
     # @param source collection to decorate
     # @param options [Hash] passed to each item's decorator (except
     #   for the keys listed below)
-    # @option options [Class] :with the class used to decorate items
+    # @option options [Class,Symbol] :with the class used to decorate
+    #   items, or `:infer` to call each item's `decorate` method instead
     def initialize(source, options = {})
       @source = source
       @decorator_class = options.delete(:with) || self.class.inferred_decorator_class
@@ -23,7 +24,7 @@ module Draper
     end
 
     def decorated_collection
-      @decorated_collection ||= source.collect {|item| decorator_class.decorate(item, options) }
+      @decorated_collection ||= source.collect {|item| decorate_item(item) }
     end
 
     def find(*args, &block)
@@ -60,6 +61,14 @@ module Draper
     end
 
     protected
+
+    def decorate_item(item)
+      if decorator_class == :infer
+        item.decorate(options)
+      else
+        decorator_class.decorate(item, options)
+      end
+    end
 
     def self.inferred_decorator_class
       decorator_name = "#{name.chomp("Decorator").singularize}Decorator"

@@ -2,7 +2,7 @@ module Draper::Decoratable
   extend ActiveSupport::Concern
 
   def decorator(options = {})
-    @decorator ||= decorator_class.decorate(self, options.merge(:infer => false))
+    @decorator ||= decorator_class.decorate(self)
     block_given? ? yield(@decorator) : @decorator
   end
   alias_method :decorate, :decorator

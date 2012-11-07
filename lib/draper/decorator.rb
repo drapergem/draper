@@ -124,17 +124,13 @@ module Draper
     # individually decorated objects.
     #
     # @param [Object] input instance(s) to wrap
-    # @param [Hash] options (optional)
-    # @option options [Boolean] :infer If true, each model will be
-    #   wrapped by its inferred decorator.
+    # @param [Hash] options options to be passed to the decorator
     def self.decorate(input, options = {})
       if input.instance_of?(self)
         input.options = options unless options.empty?
         return input
       elsif input.respond_to?(:each) && !input.is_a?(Struct) && (!defined?(Sequel) || !input.is_a?(Sequel::Model))
-        Draper::CollectionDecorator.new(input, options.merge(with: self))
-      elsif options[:infer]
-        input.decorator(options)
+        Draper::CollectionDecorator.new(input, options.reverse_merge(with: self))
       else
         new(input, options)
       end
