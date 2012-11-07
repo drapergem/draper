@@ -515,17 +515,6 @@ describe Draper::Decorator do
     end
   end
 
-  context '#all' do
-    it "return a decorated collection" do
-      ProductDecorator.all.first.should be_instance_of ProductDecorator
-    end
-
-    it "accept a context" do
-      collection = ProductDecorator.all(context: :admin)
-      collection.first.context.should == :admin
-    end
-  end
-
   it "pretends to be the source class" do
     subject.kind_of?(source.class).should be_true
     subject.is_a?(source.class).should be_true
