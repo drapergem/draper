@@ -7,14 +7,30 @@ describe Draper::Decorator do
   let(:non_active_model_source){ NonActiveModelProduct.new }
 
   describe "#initialize" do
-    it "does not re-apply on instances of itself" do
-      product_decorator = ProductDecorator.new(source)
-      ProductDecorator.new(product_decorator).model.should be_instance_of Product
+    context "when decorating an instance of itself" do
+      it "does not redecorate" do
+        decorator = ProductDecorator.new(source)
+        ProductDecorator.new(decorator).source.should be source
+      end
+
+      context "when options are supplied" do
+        it "overwrites existing options" do
+          decorator = ProductDecorator.new(source, role: :admin)
+          ProductDecorator.new(decorator, role: :user).options.should == {role: :user}
+        end
+      end
+
+      context "when no options are supplied" do
+        it "preserves existing options" do
+          decorator = ProductDecorator.new(source, role: :admin)
+          ProductDecorator.new(decorator).options.should == {role: :admin}
+        end
+      end
     end
 
-    it "allows decorating other decorators" do
-      product_decorator = ProductDecorator.new(source)
-      SpecificProductDecorator.new(product_decorator).model.should be product_decorator
+    it "decorates other decorators" do
+      decorator = ProductDecorator.new(source)
+      SpecificProductDecorator.new(decorator).source.should be decorator
     end
 
     it "warns if target is already decorated with the same decorator class" do
@@ -70,25 +86,9 @@ describe Draper::Decorator do
       context "when given a single source object" do
         let(:source) { Product.new }
 
-        it { should be_instance_of(Draper::Decorator) }
-
-        context "when the input is already decorated" do
-          it "does not perform double-decoration" do
-            decorated = ProductDecorator.decorate(source)
-            ProductDecorator.decorate(decorated).object_id.should == decorated.object_id
-          end
-
-          it "overwrites options with provided options" do
-            first_run = ProductDecorator.decorate(source, context: {role: :user})
-            second_run = ProductDecorator.decorate(first_run, context: {role: :admin})
-            second_run.context[:role].should == :admin
-          end
-
-          it "leaves existing options if none are supplied" do
-            first_run = ProductDecorator.decorate(source, context: {role: :user})
-            second_run = ProductDecorator.decorate(first_run)
-            second_run.context[:role].should == :user
-          end
+        it "aliases .new" do
+          ProductDecorator.should_receive(:new).with(source, {some: "options"}).and_return(:a_new_decorator)
+          ProductDecorator.decorate(source, some: "options").should be :a_new_decorator
         end
       end
     end

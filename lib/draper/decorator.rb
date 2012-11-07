@@ -126,10 +126,7 @@ module Draper
     # @param [Object] input instance(s) to wrap
     # @param [Hash] options options to be passed to the decorator
     def self.decorate(input, options = {})
-      if input.instance_of?(self)
-        input.options = options unless options.empty?
-        return input
-      elsif input.respond_to?(:each) && !input.is_a?(Struct) && (!defined?(Sequel) || !input.is_a?(Sequel::Model))
+      if input.respond_to?(:each) && !input.is_a?(Struct) && (!defined?(Sequel) || !input.is_a?(Sequel::Model))
         Draper::CollectionDecorator.new(input, options.reverse_merge(with: self))
       else
         new(input, options)
@@ -232,6 +229,7 @@ module Draper
 
     def handle_multiple_decoration
       if source.instance_of?(self.class)
+        self.options = source.options if options.empty?
         self.source = source.source
       elsif source.decorated_with?(self.class)
         warn "Reapplying #{self.class} decorator to target that is already decorated with it. Call stack:\n#{caller(1).join("\n")}"
