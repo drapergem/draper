@@ -199,14 +199,6 @@ module Draper
       raise no_method_error
     end
 
-    def context
-      options.fetch(:context, {})
-    end
-
-    def context=(input)
-      options[:context] = input
-    end
-
     # For ActiveModel compatibilty
     def to_model
       self

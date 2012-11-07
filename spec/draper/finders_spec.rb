@@ -15,9 +15,9 @@ describe Draper::Finders do
       decorator.source.should be found
     end
 
-    it "accepts a context" do
-      decorator = ProductDecorator.find(1, context: :admin)
-      decorator.context.should == :admin
+    it "passes options to the decorator" do
+      decorator = ProductDecorator.find(1, some: "options")
+      decorator.options.should == {some: "options"}
     end
   end
 
@@ -60,15 +60,10 @@ describe Draper::Finders do
       ProductDecorator.find_or_create_by_name_and_size("apples", "large")
     end
 
-    it "accepts options" do
-      Product.should_receive(:find_by_name_and_size).with("apples", "large", {role: :admin})
-      ProductDecorator.find_by_name_and_size("apples", "large", role: :admin)
-    end
-
-    it "sets the context to the options" do
-      Product.should_receive(:find_by_name_and_size).with("apples", "large", {role: :admin})
-      decorator = ProductDecorator.find_by_name_and_size("apples", "large", role: :admin)
-      decorator.context.should == {role: :admin}
+    it "passes options to the decorator" do
+      Product.should_receive(:find_by_name_and_size).with("apples", "large", {some: "options"})
+      decorator = ProductDecorator.find_by_name_and_size("apples", "large", some: "options")
+      decorator.options.should == {some: "options"}
     end
   end
 
@@ -79,9 +74,9 @@ describe Draper::Finders do
       collection.first.should be_a ProductDecorator
     end
 
-    it "accepts a context" do
-      collection = ProductDecorator.all(context: :admin)
-      collection.first.context.should == :admin
+    it "passes options to the collection decorator" do
+      collection = ProductDecorator.all(some: "options")
+      collection.options.should == {some: "options"}
     end
   end
 
@@ -99,9 +94,9 @@ describe Draper::Finders do
       decorator.source.should be first
     end
 
-    it "accepts a context" do
-      decorator = ProductDecorator.first(context: :admin)
-      decorator.context.should == :admin
+    it "passes options to the decorator" do
+      decorator = ProductDecorator.first(some: "options")
+      decorator.options.should == {some: "options"}
     end
   end
 
@@ -119,9 +114,9 @@ describe Draper::Finders do
       decorator.source.should be last
     end
 
-    it "accepts a context" do
-      decorator = ProductDecorator.last(context: :admin)
-      decorator.context.should == :admin
+    it "passes options to the decorator" do
+      decorator = ProductDecorator.last(some: "options")
+      decorator.options.should == {some: "options"}
     end
   end
 

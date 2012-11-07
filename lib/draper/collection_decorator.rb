@@ -56,8 +56,9 @@ module Draper
       "#<CollectionDecorator of #{decorator_class} for #{source.inspect}>"
     end
 
-    def context=(input)
-      map {|item| item.context = input }
+    def options=(options)
+      each {|item| item.options = options }
+      @options = options
     end
 
     protected

@@ -2,11 +2,20 @@ require 'spec_helper'
 
 describe Draper::Decorator do
   before { ApplicationController.new.view_context }
-  subject{ Decorator.new(source) }
+  subject { Decorator.new(source) }
   let(:source){ Product.new }
   let(:non_active_model_source){ NonActiveModelProduct.new }
 
   describe "#initialize" do
+    it "sets the source" do
+      subject.source.should be source
+    end
+
+    it "stores options" do
+      decorator = Decorator.new(source, some: "options")
+      decorator.options.should == {some: "options"}
+    end
+
     context "when decorating an instance of itself" do
       it "does not redecorate" do
         decorator = ProductDecorator.new(source)
@@ -47,109 +56,85 @@ describe Draper::Decorator do
   end
 
   describe ".decorate" do
-    context "without any context" do
-      subject { Draper::Decorator.decorate(source) }
+    subject { ProductDecorator.decorate(source) }
 
-      context "when given a collection of source objects" do
-        let(:source) { [Product.new, Product.new] }
+    context "when given a single source object" do
+      let(:source) { Widget.new }
 
-        its(:size) { should == source.size }
+      it "returns a decorator" do
+        subject.should be_a ProductDecorator
+        subject.source.should be source
+      end
+    end
 
-        it "returns a collection of wrapped objects" do
-          subject.each{ |decorated| decorated.should be_instance_of(Draper::Decorator) }
-        end
+    context "when given a collection of source objects" do
+      let(:source) { [Product.new, Widget.new] }
 
-        it 'should accepted and store a context for a collection' do
-          subject.context = :admin
-          subject.each { |decorated| decorated.context.should == :admin }
-        end
+      it "returns a collection decorator" do
+        subject.should be_a Draper::CollectionDecorator
+        subject.source.should be source
       end
 
-      context "when given a struct" do
-        # Struct objects implement #each
-        let(:source) { Struct.new(:title).new("Godzilla") }
-
-        it "returns a wrapped object" do
-          subject.should be_instance_of(Draper::Decorator)
-        end
+      it "uses itself as the item decorator by default" do
+        subject.each {|item| item.should be_a ProductDecorator}
       end
 
-      context "when given a collection of sequel models" do
-        # Sequel models implement #each
-        let(:source) { [SequelProduct.new, SequelProduct.new] }
+      context "when given :with => :infer" do
+        subject { ProductDecorator.decorate(source, with: :infer) }
 
-        it "returns a collection of wrapped objects" do
-          subject.each{ |decorated| decorated.should be_instance_of(Draper::Decorator) }
-        end
-      end
-
-      context "when given a single source object" do
-        let(:source) { Product.new }
-
-        it "aliases .new" do
-          ProductDecorator.should_receive(:new).with(source, {some: "options"}).and_return(:a_new_decorator)
-          ProductDecorator.decorate(source, some: "options").should be :a_new_decorator
+        it "infers the item decorators" do
+          subject.first.should be_a ProductDecorator
+          subject.last.should be_a WidgetDecorator
         end
       end
     end
 
-    context "with a context" do
-      let(:context) { {some: 'data'} }
+    context "when given a struct" do
+      # Struct objects implement #each
+      let(:source) { Struct.new(:title).new("Godzilla") }
 
-      subject { Draper::Decorator.decorate(source, context: context) }
-
-      context "when given a collection of source objects" do
-        let(:source) { [Product.new, Product.new] }
-
-        it "returns a collection of wrapped objects with the context" do
-          subject.each {|decorated| decorated.context.should == context }
-        end
+      it "returns a decorator" do
+        subject.should be_a ProductDecorator
       end
+    end
 
-      context "when given a single source object" do
-        let(:source) { Product.new }
+    context "when given a Sequel model" do
+      # Sequel models implement #each
+      let(:source) { SequelProduct.new }
 
-        its(:context) { should == context }
+      it "returns a decorator" do
+        subject.should be_a ProductDecorator
+      end
+    end
+
+    context "when given a collection of Sequel models" do
+      # Sequel models implement #each
+      let(:source) { [SequelProduct.new, SequelProduct.new] }
+
+      it "returns a collection decorator" do
+        subject.should be_a Draper::CollectionDecorator
       end
     end
 
     context "with options" do
-      let(:options) { {more: "settings"} }
+      let(:options) { {some: "options"} }
 
       subject { Draper::Decorator.decorate(source, options ) }
 
-      its(:options) { should == options }
-    end
+      context "when given a single source object" do
+        let(:source) { Product.new }
 
-    context "does not infer collections by default" do
-      subject { Draper::Decorator.decorate(source).to_ary }
-
-      let(:source) { [Product.new, Widget.new] }
-
-      it "returns a collection of wrapped objects all with the same decorator" do
-        subject.first.should be_an_instance_of Draper::Decorator
-        subject.last.should be_an_instance_of Draper::Decorator
+        it "passes the options to the decorator" do
+          subject.options.should == options
+        end
       end
-    end
 
-    context "does not infer single items by default" do
-      subject { Draper::Decorator.decorate(source) }
+      context "when given a collection of source objects" do
+        let(:source) { [Product.new, Product.new] }
 
-      let(:source) { Product.new }
-
-      it "returns a decorator of the type explicity used in the call" do
-        subject.should be_an_instance_of Draper::Decorator
-      end
-    end
-
-    context "returns a collection containing only the explicit decorator used in the call" do
-      subject { Draper::Decorator.decorate(source, with: :infer) }
-
-      let(:source) { [Product.new, Widget.new] }
-
-      it "returns a mixed collection of wrapped objects" do
-        subject.first.should be_an_instance_of ProductDecorator
-        subject.last.should be_an_instance_of WidgetDecorator
+        it "passes the options to the collection decorator" do
+          subject.options.should == options
+        end
       end
     end
   end
