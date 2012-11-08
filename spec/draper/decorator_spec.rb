@@ -2,19 +2,44 @@ require 'spec_helper'
 
 describe Draper::Decorator do
   before { ApplicationController.new.view_context }
-  subject{ Decorator.new(source) }
+  subject { Decorator.new(source) }
   let(:source){ Product.new }
   let(:non_active_model_source){ NonActiveModelProduct.new }
 
   describe "#initialize" do
-    it "does not re-apply on instances of itself" do
-      product_decorator = ProductDecorator.new(source)
-      ProductDecorator.new(product_decorator).model.should be_instance_of Product
+    it "sets the source" do
+      subject.source.should be source
     end
 
-    it "allows decorating other decorators" do
-      product_decorator = ProductDecorator.new(source)
-      SpecificProductDecorator.new(product_decorator).model.should be product_decorator
+    it "stores options" do
+      decorator = Decorator.new(source, some: "options")
+      decorator.options.should == {some: "options"}
+    end
+
+    context "when decorating an instance of itself" do
+      it "does not redecorate" do
+        decorator = ProductDecorator.new(source)
+        ProductDecorator.new(decorator).source.should be source
+      end
+
+      context "when options are supplied" do
+        it "overwrites existing options" do
+          decorator = ProductDecorator.new(source, role: :admin)
+          ProductDecorator.new(decorator, role: :user).options.should == {role: :user}
+        end
+      end
+
+      context "when no options are supplied" do
+        it "preserves existing options" do
+          decorator = ProductDecorator.new(source, role: :admin)
+          ProductDecorator.new(decorator).options.should == {role: :admin}
+        end
+      end
+    end
+
+    it "decorates other decorators" do
+      decorator = ProductDecorator.new(source)
+      SpecificProductDecorator.new(decorator).source.should be decorator
     end
 
     it "warns if target is already decorated with the same decorator class" do
@@ -30,136 +55,33 @@ describe Draper::Decorator do
     end
   end
 
-  context ".decorate" do
-    context "without any context" do
-      subject { Draper::Decorator.decorate(source) }
+  describe ".decorate_collection" do
+    subject { ProductDecorator.decorate_collection(source) }
+    let(:source) { [Product.new, Widget.new] }
 
-      context "when given a collection of source objects" do
-        let(:source) { [Product.new, Product.new] }
-
-        its(:size) { should == source.size }
-
-        it "returns a collection of wrapped objects" do
-          subject.each{ |decorated| decorated.should be_instance_of(Draper::Decorator) }
-        end
-
-        it 'should accepted and store a context for a collection' do
-          subject.context = :admin
-          subject.each { |decorated| decorated.context.should == :admin }
-        end
-      end
-
-      context "when given a struct" do
-        # Struct objects implement #each
-        let(:source) { Struct.new(:title).new("Godzilla") }
-
-        it "returns a wrapped object" do
-          subject.should be_instance_of(Draper::Decorator)
-        end
-      end
-
-      context "when given a collection of sequel models" do
-        # Sequel models implement #each
-        let(:source) { [SequelProduct.new, SequelProduct.new] }
-
-        it "returns a collection of wrapped objects" do
-          subject.each{ |decorated| decorated.should be_instance_of(Draper::Decorator) }
-        end
-      end
-
-      context "when given a single source object" do
-        let(:source) { Product.new }
-
-        it { should be_instance_of(Draper::Decorator) }
-
-        context "when the input is already decorated" do
-          it "does not perform double-decoration" do
-            decorated = ProductDecorator.decorate(source)
-            ProductDecorator.decorate(decorated).object_id.should == decorated.object_id
-          end
-
-          it "overwrites options with provided options" do
-            first_run = ProductDecorator.decorate(source, context: {role: :user})
-            second_run = ProductDecorator.decorate(first_run, context: {role: :admin})
-            second_run.context[:role].should == :admin
-          end
-
-          it "leaves existing options if none are supplied" do
-            first_run = ProductDecorator.decorate(source, context: {role: :user})
-            second_run = ProductDecorator.decorate(first_run)
-            second_run.context[:role].should == :user
-          end
-        end
-      end
+    it "returns a collection decorator" do
+      subject.should be_a Draper::CollectionDecorator
+      subject.source.should be source
     end
 
-    context "with a context" do
-      let(:context) { {some: 'data'} }
+    it "uses itself as the item decorator by default" do
+      subject.each {|item| item.should be_a ProductDecorator}
+    end
 
-      subject { Draper::Decorator.decorate(source, context: context) }
+    context "when given :with => :infer" do
+      subject { ProductDecorator.decorate_collection(source, with: :infer) }
 
-      context "when given a collection of source objects" do
-        let(:source) { [Product.new, Product.new] }
-
-        it "returns a collection of wrapped objects with the context" do
-          subject.each {|decorated| decorated.context.should == context }
-        end
-      end
-
-      context "when given a single source object" do
-        let(:source) { Product.new }
-
-        its(:context) { should == context }
+      it "infers the item decorators" do
+        subject.first.should be_a ProductDecorator
+        subject.last.should be_a WidgetDecorator
       end
     end
 
     context "with options" do
-      let(:options) { {more: "settings"} }
+      subject { ProductDecorator.decorate_collection(source, with: :infer, some: "options") }
 
-      subject { Draper::Decorator.decorate(source, options ) }
-
-      its(:options) { should == options }
-    end
-
-    context "does not infer collections by default" do
-      subject { Draper::Decorator.decorate(source).to_ary }
-
-      let(:source) { [Product.new, Widget.new] }
-
-      it "returns a collection of wrapped objects all with the same decorator" do
-        subject.first.class.should be Draper::Decorator
-        subject.last.class.should be Draper::Decorator
-      end
-    end
-
-    context "does not infer single items by default" do
-      subject { Draper::Decorator.decorate(source) }
-
-      let(:source) { Product.new }
-
-      it "returns a decorator of the type explicity used in the call" do
-        subject.class.should be Draper::Decorator
-      end
-    end
-
-    context "returns a collection containing only the explicit decorator used in the call" do
-      subject { Draper::Decorator.decorate(source, infer: true).to_ary }
-
-      let(:source) { [Product.new, Widget.new] }
-
-      it "returns a mixed collection of wrapped objects" do
-        subject.first.class.should be ProductDecorator
-        subject.last.class.should be WidgetDecorator
-      end
-    end
-
-    context "when given a single object" do
-      subject { Draper::Decorator.decorate(source, infer: true) }
-
-      let(:source) { Product.new }
-
-      it "can also infer its decorator" do
-        subject.class.should be ProductDecorator
+      it "passes the options to the collection decorator" do
+        subject.options.should == {some: "options"}
       end
     end
   end
@@ -342,16 +264,6 @@ describe Draper::Decorator do
     end
   end
 
-  describe "#decorator" do
-    it "returns the decorator itself" do
-      subject.decorator.should be subject
-    end
-
-    it "is aliased to #decorate" do
-      subject.decorate.should be subject
-    end
-  end
-
   describe "#source" do
     it "returns the wrapped object" do
       subject.source.should be source
@@ -522,17 +434,6 @@ describe Draper::Decorator do
           fail("No exception raised")
         end
       end
-    end
-  end
-
-  context '#all' do
-    it "return a decorated collection" do
-      ProductDecorator.all.first.should be_instance_of ProductDecorator
-    end
-
-    it "accept a context" do
-      collection = ProductDecorator.all(context: :admin)
-      collection.first.context.should == :admin
     end
   end
 

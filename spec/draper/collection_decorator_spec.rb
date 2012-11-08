@@ -16,6 +16,32 @@ describe Draper::CollectionDecorator do
     subject.map{|item| item.source}.should == source
   end
 
+  context "with options" do
+    subject { Draper::CollectionDecorator.new(source, with: ProductDecorator, some: "options") }
+
+    its(:options) { should == {some: "options"} }
+
+    it "passes options to the individual decorators" do
+      subject.each do |item|
+        item.options.should == {some: "options"}
+      end
+    end
+
+    describe "#options=" do
+      it "updates the options on the collection decorator" do
+        subject.options = {other: "options"}
+        subject.options.should == {other: "options"}
+      end
+
+      it "updates the options on the individual decorators" do
+        subject.options = {other: "options"}
+        subject.each do |item|
+          item.options.should == {other: "options"}
+        end
+      end
+    end
+  end
+
   describe "#initialize" do
     context "when the :with option is given" do
       context "and the decorator can't be inferred from the class" do

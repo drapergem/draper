@@ -29,6 +29,10 @@ module Draper
       handle_multiple_decoration if source.is_a?(Draper::Decorator)
     end
 
+    class << self
+      alias_method :decorate, :new
+    end
+
     # Adds ActiveRecord finder methods to the decorator class. The
     # methods return decorated models, so that you can use
     # `ProductDecorator.find(id)` instead of
@@ -60,17 +64,25 @@ module Draper
 
         return options[:with].decorate(orig_association) if options[:with]
 
+        collection = orig_association.respond_to?(:first)
+
         klass = if options[:polymorphic]
                   orig_association.class
                 elsif association_reflection = find_association_reflection(association_symbol)
                   association_reflection.klass
-                elsif orig_association.respond_to?(:first)
+                elsif collection
                   orig_association.first.class
                 else
                   orig_association.class
                 end
 
-        decorated_associations[association_symbol] = "#{klass}Decorator".constantize.decorate(orig_association, options)
+        decorator_class = "#{klass}Decorator".constantize
+
+        if collection
+          decorated_associations[association_symbol] = decorator_class.decorate_collection(orig_association, options)
+        else
+          decorated_associations[association_symbol] = decorator_class.decorate(orig_association, options)
+        end
       end
     end
 
@@ -114,30 +126,15 @@ module Draper
       security.allows(*methods)
     end
 
-    # Initialize a new decorator instance by passing in
-    # an instance of the source class. Pass in an optional
-    # context into the options hash is stored for later use.
+    # Creates a new CollectionDecorator for the given collection.
     #
-    # When passing in a single object, using `.decorate` is
-    # identical to calling `.new`. However, `.decorate` can
-    # also accept a collection and return a collection of
-    # individually decorated objects.
-    #
-    # @param [Object] input instance(s) to wrap
-    # @param [Hash] options (optional)
-    # @option options [Boolean] :infer If true, each model will be
-    #   wrapped by its inferred decorator.
-    def self.decorate(input, options = {})
-      if input.instance_of?(self)
-        input.options = options unless options.empty?
-        return input
-      elsif input.respond_to?(:each) && !input.is_a?(Struct) && (!defined?(Sequel) || !input.is_a?(Sequel::Model))
-        Draper::CollectionDecorator.new(input, options.merge(with: self))
-      elsif options[:infer]
-        input.decorator(options)
-      else
-        new(input, options)
-      end
+    # @param [Object] source collection to decorate
+    # @param [Hash] options passed to each item's decorator (except
+    #   for the keys listed below)
+    # @option options [Class,Symbol] :with (self) the class used to decorate
+    #   items, or `:infer` to call each item's `decorate` method instead
+    def self.decorate_collection(source, options = {})
+      Draper::CollectionDecorator.new(source, options.reverse_merge(with: self))
     end
 
     # Get the chain of decorators applied to the object.
@@ -158,11 +155,6 @@ module Draper
     def decorated?
       true
     end
-
-    def decorator
-      self
-    end
-    alias_method :decorate, :decorator
 
     # Delegates == to the decorated models
     #
@@ -206,14 +198,6 @@ module Draper
       raise no_method_error
     end
 
-    def context
-      options.fetch(:context, {})
-    end
-
-    def context=(input)
-      options[:context] = input
-    end
-
     # For ActiveModel compatibilty
     def to_model
       self
@@ -236,6 +220,7 @@ module Draper
 
     def handle_multiple_decoration
       if source.instance_of?(self.class)
+        self.options = source.options if options.empty?
         self.source = source.source
       elsif source.decorated_with?(self.class)
         warn "Reapplying #{self.class} decorator to target that is already decorated with it. Call stack:\n#{caller(1).join("\n")}"

@@ -11,7 +11,7 @@ module Draper
     end
 
     def all(options = {})
-      decorate(finder_class.all, options)
+      decorate_collection(finder_class.all, options)
     end
 
     def first(options = {})
@@ -23,10 +23,16 @@ module Draper
     end
 
     def method_missing(method, *args, &block)
-      if method.to_s.match(/^find_((all_|last_)?by_|or_(initialize|create)_by_).*/)
-        decorate(finder_class.send(method, *args, &block), context: args.dup.extract_options!)
+      result = finder_class.send(method, *args, &block)
+      options = args.extract_options!
+
+      case method.to_s
+      when /^find_((last_)?by_|or_(initialize|create)_by_)/
+        decorate(result, options)
+      when /^find_all_by_/
+        decorate_collection(result, options)
       else
-        finder_class.send(method, *args, &block)
+        result
       end
     end
 

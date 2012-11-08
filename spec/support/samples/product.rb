@@ -22,7 +22,7 @@ class Product < ActiveRecord::Base
   end
 
   def self.model_name
-    "Product"
+    name
   end
 
   def self.find(id)

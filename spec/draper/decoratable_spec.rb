@@ -3,17 +3,19 @@ require 'spec_helper'
 describe Draper::Decoratable do
   subject { Product.new }
 
-  describe '#decorator' do
-    its(:decorator) { should be_kind_of(ProductDecorator) }
-    its(:decorator) { should be(subject.decorator) }
+  describe "#decorate" do
+    it "returns a decorator for self" do
+     subject.decorate.should be_a ProductDecorator
+     subject.decorate.source.should be subject
+   end
 
-    it 'have abillity to pass block' do
-      a = Product.new.decorator { |d| d.awesome_title }
-      a.should eql "Awesome Title"
+    it "accepts options" do
+      decorator = subject.decorate(some: "options")
+      decorator.options.should == {some: "options"}
     end
 
-    it 'is aliased to .decorate' do
-      subject.decorator.model.should == subject.decorate.model
+    it "is not memoized" do
+      subject.decorate.should_not be subject.decorate
     end
   end
 
@@ -35,46 +37,59 @@ describe Draper::Decoratable do
     end
   end
 
-  describe ".decorator_class" do
-    context "when the decorator can be inferred from the model" do
-      it "returns the inferred decorator class" do
-        Product.decorator_class.should be ProductDecorator
-      end
-    end
-
-    context "when the decorator can't be inferred from the model" do
-      it "throws an UninferrableDecoratorError" do
-        expect{UninferrableDecoratorModel.decorator_class}.to raise_error Draper::UninferrableDecoratorError
-      end
+  describe "#decorator_class" do
+    it "delegates to .decorator_class" do
+      Product.stub(:decorator_class).and_return(WidgetDecorator)
+      product = Product.new
+      product.decorator_class.should be WidgetDecorator
     end
   end
 
-  describe Draper::Decoratable::ClassMethods do
-    shared_examples_for "a call to Draper::Decoratable::ClassMethods#decorate" do
-      subject { klass.limit }
+  describe ".decorate" do
+    it "returns a collection decorator" do
+      Product.stub(:scoped).and_return([Product.new])
+      Product.stub(:decorator_class).and_return(WidgetDecorator)
+      decorator = Product.decorate
 
-      its(:decorate) { should be_kind_of(Draper::CollectionDecorator) }
+      decorator.should be_a Draper::CollectionDecorator
+      decorator.decorator_class.should be WidgetDecorator
+      decorator.source.should be Product.scoped
+    end
 
-      it "decorate the collection" do
-        subject.decorate.size.should == 1
-        subject.decorate.to_ary[0].model.should be_a(klass)
-      end
+    it "accepts options" do
+      decorator = Product.decorate(some: "options")
+      decorator.options.should == {some: "options"}
+    end
 
-      it "return a new instance each time it is called" do
-        subject.decorate.should_not == subject.decorate
+    it "is not memoized" do
+      Product.decorate.should_not be Product.decorate
+    end
+  end
+
+  describe ".decorator_class" do
+    context "for non-ActiveModel classes" do
+      it "infers the decorator from the class" do
+        NonActiveModelProduct.decorator_class.should be NonActiveModelProductDecorator
       end
     end
 
-    describe '#decorate - decorate collections of AR objects' do
-      let(:klass) { Product }
-
-      it_should_behave_like "a call to Draper::Decoratable::ClassMethods#decorate"
+    context "for ActiveModel classes" do
+      it "infers the decorator from the model name" do
+        Product.stub(:model_name).and_return("Widget")
+        Product.decorator_class.should be WidgetDecorator
+      end
     end
 
-    describe '#decorate - decorate collections of namespaced AR objects' do
-      let(:klass) { Namespace::Product }
+    context "for namespaced ActiveModel classes" do
+      it "infers the decorator from the model name" do
+        Namespace::Product.decorator_class.should be Namespace::ProductDecorator
+      end
+    end
 
-      it_should_behave_like "a call to Draper::Decoratable::ClassMethods#decorate"
+    context "when the decorator can't be inferred" do
+      it "throws an UninferrableDecoratorError" do
+        expect{UninferrableDecoratorModel.decorator_class}.to raise_error Draper::UninferrableDecoratorError
+      end
     end
   end
 end

@@ -1,14 +1,12 @@
 module Draper::Decoratable
   extend ActiveSupport::Concern
 
-  def decorator(options = {})
-    @decorator ||= decorator_class.decorate(self, options.merge(:infer => false))
-    block_given? ? yield(@decorator) : @decorator
+  def decorate(options = {})
+    decorator_class.decorate(self, options)
   end
-  alias_method :decorate, :decorator
 
   def decorator_class
-    "#{self.class.name}Decorator".constantize
+    self.class.decorator_class
   end
 
   def applied_decorators
@@ -25,12 +23,12 @@ module Draper::Decoratable
 
   module ClassMethods
     def decorate(options = {})
-      collection_decorator = decorator_class.decorate(self.scoped, options)
-      block_given? ? yield(collection_decorator) : collection_decorator
+      decorator_class.decorate_collection(self.scoped, options)
     end
 
     def decorator_class
-      "#{model_name}Decorator".constantize
+      prefix = respond_to?(:model_name) ? model_name : name
+      "#{prefix}Decorator".constantize
     rescue NameError
       raise Draper::UninferrableDecoratorError.new(self)
     end
