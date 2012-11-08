@@ -47,20 +47,8 @@ module Draper
         options[:with] = :infer
         Draper::CollectionDecorator
       else
-        "#{association_class}Decorator".constantize
+        undecorated.decorator_class
       end
-    end
-
-    def association_class
-      if !options[:polymorphic] && association_reflection
-        association_reflection.klass
-      else
-        undecorated.class
-      end
-    end
-
-    def association_reflection
-      @reflection ||= source.class.reflect_on_association(association) if source.class.respond_to?(:reflect_on_association)
     end
 
   end
