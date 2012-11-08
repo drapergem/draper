@@ -8,7 +8,7 @@ module Draper::Decoratable
   alias_method :decorate, :decorator
 
   def decorator_class
-    "#{self.class.name}Decorator".constantize
+    self.class.decorator_class
   end
 
   def applied_decorators
@@ -30,7 +30,8 @@ module Draper::Decoratable
     end
 
     def decorator_class
-      "#{model_name}Decorator".constantize
+      prefix = respond_to?(:model_name) ? model_name : name
+      "#{prefix}Decorator".constantize
     rescue NameError
       raise Draper::UninferrableDecoratorError.new(self)
     end

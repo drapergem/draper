@@ -35,14 +35,29 @@ describe Draper::Decoratable do
     end
   end
 
+  describe "#decorator_class" do
+    it "delegates to .decorator_class" do
+      Product.stub(:decorator_class).and_return(WidgetDecorator)
+      product = Product.new
+      product.decorator_class.should be WidgetDecorator
+    end
+  end
+
   describe ".decorator_class" do
-    context "when the decorator can be inferred from the model" do
-      it "returns the inferred decorator class" do
-        Product.decorator_class.should be ProductDecorator
+    context "for non-ActiveModel classes" do
+      it "infers the decorator from the class" do
+        NonActiveModelProduct.decorator_class.should be NonActiveModelProductDecorator
       end
     end
 
-    context "when the decorator can't be inferred from the model" do
+    context "for ActiveModel classes" do
+      it "infers the decorator from the model name" do
+        Product.stub(:model_name).and_return("Widget")
+        Product.decorator_class.should be WidgetDecorator
+      end
+    end
+
+    context "when the decorator can't be inferred" do
       it "throws an UninferrableDecoratorError" do
         expect{UninferrableDecoratorModel.decorator_class}.to raise_error Draper::UninferrableDecoratorError
       end
