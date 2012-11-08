@@ -1,11 +1,9 @@
 module Draper::Decoratable
   extend ActiveSupport::Concern
 
-  def decorator(options = {})
-    @decorator ||= decorator_class.decorate(self)
-    block_given? ? yield(@decorator) : @decorator
+  def decorate(options = {})
+    decorator_class.decorate(self, options)
   end
-  alias_method :decorate, :decorator
 
   def decorator_class
     self.class.decorator_class
@@ -25,8 +23,7 @@ module Draper::Decoratable
 
   module ClassMethods
     def decorate(options = {})
-      collection_decorator = decorator_class.decorate_collection(self.scoped, options)
-      block_given? ? yield(collection_decorator) : collection_decorator
+      decorator_class.decorate_collection(self.scoped, options)
     end
 
     def decorator_class
