@@ -126,100 +126,26 @@ describe Draper::Decorator do
   end
 
   describe ".decorates_association" do
-    context "for ActiveModel collection associations" do
-      before { subject.class.decorates_association :similar_products }
+    before { subject.class.decorates_association :similar_products, with: ProductDecorator }
 
-      context "when the association is not empty" do
-        it "decorates the collection" do
-          subject.similar_products.should be_a Draper::CollectionDecorator
-          subject.similar_products.each {|item| item.should be_decorated_with ProductDecorator }
-        end
+    describe "overridden association method" do
+      let(:decorated_association) { ->{} }
+
+      it "creates a DecoratedAssociation" do
+        Draper::DecoratedAssociation.should_receive(:new).with(source, :similar_products, {with: ProductDecorator}).and_return(decorated_association)
+        subject.similar_products
       end
 
-      context "when the association is empty" do
-        it "doesn't decorate the collection" do
-          source.stub(:similar_products).and_return([])
-          subject.similar_products.should_not be_a Draper::CollectionDecorator
-          subject.similar_products.should be_empty
-        end
-      end
-    end
-
-    context "for Plain Old Ruby Object collection associations" do
-      before { subject.class.decorates_association :poro_similar_products }
-
-      context "when the association is not empty" do
-        it "decorates the collection" do
-          subject.poro_similar_products.should be_a Draper::CollectionDecorator
-          subject.poro_similar_products.each {|item| item.should be_decorated_with ProductDecorator }
-        end
+      it "memoizes the DecoratedAssociation" do
+        Draper::DecoratedAssociation.should_receive(:new).once.and_return(decorated_association)
+        subject.similar_products
+        subject.similar_products
       end
 
-      context "when the association is empty" do
-        it "doesn't decorate the collection" do
-          source.stub(:poro_similar_products).and_return([])
-          subject.poro_similar_products.should_not be_a Draper::CollectionDecorator
-          subject.poro_similar_products.should be_empty
-        end
-      end
-    end
-
-    context "for an ActiveModel singular association" do
-      before { subject.class.decorates_association :previous_version }
-
-      context "when the association is present" do
-        it "decorates the association" do
-          subject.previous_version.should be_decorated_with ProductDecorator
-        end
-      end
-
-      context "when the association is absent" do
-        it "doesn't decorate the association" do
-          source.stub(:previous_version).and_return(nil)
-          subject.previous_version.should be_nil
-        end
-      end
-    end
-
-    context "for an ActiveModel singular association" do
-      before { subject.class.decorates_association :poro_previous_version }
-
-      context "when the association is present" do
-        it "decorates the association" do
-          subject.poro_previous_version.should be_decorated_with ProductDecorator
-        end
-      end
-
-      context "when the association is absent" do
-        it "doesn't decorate the association" do
-          source.stub(:poro_previous_version).and_return(nil)
-          subject.poro_previous_version.should be_nil
-        end
-      end
-    end
-
-    context "when a decorator is specified" do
-      before { subject.class.decorates_association :previous_version, with: SpecificProductDecorator }
-
-      it "decorates with the specified decorator" do
-        subject.previous_version.should be_decorated_with SpecificProductDecorator
-      end
-    end
-
-    context "with a scope" do
-      before { subject.class.decorates_association :thing, scope: :foo }
-
-      it "applies the scope before decoration" do
-        SomeThing.any_instance.should_receive(:foo).and_return(:bar)
-        subject.thing.model.should == :bar
-      end
-    end
-
-    context "for a polymorphic association" do
-      before { subject.class.decorates_association :thing, polymorphic: true }
-
-      it "makes the association return the right decorator" do
-        subject.thing.should be_decorated_with SomeThingDecorator
+      it "calls the DecoratedAssociation" do
+        Draper::DecoratedAssociation.stub(:new).and_return(decorated_association)
+        decorated_association.should_receive(:call).and_return(:decorated)
+        subject.similar_products.should be :decorated
       end
     end
   end
