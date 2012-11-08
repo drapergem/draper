@@ -50,49 +50,25 @@ module Draper
     # Typically called within a decorator definition, this method causes
     # the assocation to be decorated when it is retrieved.
     #
-    # @param [Symbol] association_symbol name of association to decorate, like `:products`
-    # @option options [Hash] :with The decorator to decorate the association with
-    #                        :scope The scope to apply to the association
-    def self.decorates_association(association_symbol, options = {})
-      define_method(association_symbol) do
-        orig_association = source.send(association_symbol)
-
-        return orig_association if orig_association.nil? || orig_association == []
-        return decorated_associations[association_symbol] if decorated_associations[association_symbol]
-
-        orig_association = orig_association.send(options[:scope]) if options[:scope]
-
-        return options[:with].decorate(orig_association) if options[:with]
-
-        collection = orig_association.respond_to?(:first)
-
-        klass = if options[:polymorphic]
-                  orig_association.class
-                elsif association_reflection = find_association_reflection(association_symbol)
-                  association_reflection.klass
-                elsif collection
-                  orig_association.first.class
-                else
-                  orig_association.class
-                end
-
-        decorator_class = "#{klass}Decorator".constantize
-
-        if collection
-          decorated_associations[association_symbol] = decorator_class.decorate_collection(orig_association, options)
-        else
-          decorated_associations[association_symbol] = decorator_class.decorate(orig_association, options)
-        end
+    # @param [Symbol] association name of association to decorate, like `:products`
+    # @option options [Class] :with the decorator to apply to the association
+    # @option options [Symbol] :scope a scope to apply when fetching the association
+    def self.decorates_association(association, options = {})
+      define_method(association) do
+        decorated_associations[association] ||= Draper::DecoratedAssociation.new(source, association, options)
+        decorated_associations[association].call
       end
     end
 
     # A convenience method for decorating multiple associations. Calls
     # decorates_association on each of the given symbols.
     #
-    # @param [Symbols*] association_symbols name of associations to decorate
-    def self.decorates_associations(*association_symbols)
-      options = association_symbols.extract_options!
-      association_symbols.each{ |sym| decorates_association(sym, options) }
+    # @param [Symbols*] associations name of associations to decorate
+    def self.decorates_associations(*associations)
+      options = associations.extract_options!
+      associations.each do |association|
+        decorates_association(association, options)
+      end
     end
 
     # Specifies a black list of methods which may *not* be proxied to
@@ -224,12 +200,6 @@ module Draper
         self.source = source.source
       elsif source.decorated_with?(self.class)
         warn "Reapplying #{self.class} decorator to target that is already decorated with it. Call stack:\n#{caller(1).join("\n")}"
-      end
-    end
-
-    def find_association_reflection(association)
-      if source.class.respond_to?(:reflect_on_association)
-        source.class.reflect_on_association(association)
       end
     end
 
