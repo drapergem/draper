@@ -126,16 +126,5 @@ describe Draper::DecoratedAssociation do
         subject.source.should be scoped
       end
     end
-
-    context "for a polymorphic association" do
-      let(:association) { :thing }
-      let(:options) { {polymorphic: true} }
-
-      it "makes the association return the right decorator" do
-        subject.should be_decorated_with SomeThingDecorator
-      end
-    end
   end
-
-
 end
