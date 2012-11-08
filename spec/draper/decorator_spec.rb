@@ -264,16 +264,6 @@ describe Draper::Decorator do
     end
   end
 
-  describe "#decorator" do
-    it "returns the decorator itself" do
-      subject.decorator.should be subject
-    end
-
-    it "is aliased to #decorate" do
-      subject.decorate.should be subject
-    end
-  end
-
   describe "#source" do
     it "returns the wrapped object" do
       subject.source.should be source
