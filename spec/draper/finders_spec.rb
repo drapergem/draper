@@ -40,11 +40,6 @@ describe Draper::Finders do
       ProductDecorator.find_by_name_and_size("apples", "large")
     end
 
-    it "proxies find_all_by_(x) finders" do
-      Product.should_receive(:find_all_by_name_and_size).with("apples", "large")
-      ProductDecorator.find_all_by_name_and_size("apples", "large")
-    end
-
     it "proxies find_last_by_(x) finders" do
       Product.should_receive(:find_last_by_name_and_size).with("apples", "large")
       ProductDecorator.find_last_by_name_and_size("apples", "large")
@@ -64,6 +59,21 @@ describe Draper::Finders do
       Product.should_receive(:find_by_name_and_size).with("apples", "large", {some: "options"})
       decorator = ProductDecorator.find_by_name_and_size("apples", "large", some: "options")
       decorator.options.should == {some: "options"}
+    end
+  end
+
+  describe ".find_all_by_" do
+    it "proxies to the model class" do
+      Product.should_receive(:find_all_by_name_and_size).with("apples", "large")
+      ProductDecorator.find_all_by_name_and_size("apples", "large")
+    end
+
+    it "decorates the result" do
+      found = [Product.new, Product.new]
+      Product.stub(:find_all_by_name).and_return(found)
+      decorator = ProductDecorator.find_all_by_name("apples")
+      decorator.should be_a Draper::CollectionDecorator
+      decorator.source.should be found
     end
   end
 

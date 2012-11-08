@@ -55,86 +55,33 @@ describe Draper::Decorator do
     end
   end
 
-  describe ".decorate" do
-    subject { ProductDecorator.decorate(source) }
+  describe ".decorate_collection" do
+    subject { ProductDecorator.decorate_collection(source) }
+    let(:source) { [Product.new, Widget.new] }
 
-    context "when given a single source object" do
-      let(:source) { Widget.new }
-
-      it "returns a decorator" do
-        subject.should be_a ProductDecorator
-        subject.source.should be source
-      end
+    it "returns a collection decorator" do
+      subject.should be_a Draper::CollectionDecorator
+      subject.source.should be source
     end
 
-    context "when given a collection of source objects" do
-      let(:source) { [Product.new, Widget.new] }
-
-      it "returns a collection decorator" do
-        subject.should be_a Draper::CollectionDecorator
-        subject.source.should be source
-      end
-
-      it "uses itself as the item decorator by default" do
-        subject.each {|item| item.should be_a ProductDecorator}
-      end
-
-      context "when given :with => :infer" do
-        subject { ProductDecorator.decorate(source, with: :infer) }
-
-        it "infers the item decorators" do
-          subject.first.should be_a ProductDecorator
-          subject.last.should be_a WidgetDecorator
-        end
-      end
+    it "uses itself as the item decorator by default" do
+      subject.each {|item| item.should be_a ProductDecorator}
     end
 
-    context "when given a struct" do
-      # Struct objects implement #each
-      let(:source) { Struct.new(:title).new("Godzilla") }
+    context "when given :with => :infer" do
+      subject { ProductDecorator.decorate_collection(source, with: :infer) }
 
-      it "returns a decorator" do
-        subject.should be_a ProductDecorator
-      end
-    end
-
-    context "when given a Sequel model" do
-      # Sequel models implement #each
-      let(:source) { SequelProduct.new }
-
-      it "returns a decorator" do
-        subject.should be_a ProductDecorator
-      end
-    end
-
-    context "when given a collection of Sequel models" do
-      # Sequel models implement #each
-      let(:source) { [SequelProduct.new, SequelProduct.new] }
-
-      it "returns a collection decorator" do
-        subject.should be_a Draper::CollectionDecorator
+      it "infers the item decorators" do
+        subject.first.should be_a ProductDecorator
+        subject.last.should be_a WidgetDecorator
       end
     end
 
     context "with options" do
-      let(:options) { {some: "options"} }
+      subject { ProductDecorator.decorate_collection(source, with: :infer, some: "options") }
 
-      subject { Draper::Decorator.decorate(source, options ) }
-
-      context "when given a single source object" do
-        let(:source) { Product.new }
-
-        it "passes the options to the decorator" do
-          subject.options.should == options
-        end
-      end
-
-      context "when given a collection of source objects" do
-        let(:source) { [Product.new, Product.new] }
-
-        it "passes the options to the collection decorator" do
-          subject.options.should == options
-        end
+      it "passes the options to the collection decorator" do
+        subject.options.should == {some: "options"}
       end
     end
   end

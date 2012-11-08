@@ -25,7 +25,7 @@ module Draper::Decoratable
 
   module ClassMethods
     def decorate(options = {})
-      collection_decorator = decorator_class.decorate(self.scoped, options)
+      collection_decorator = decorator_class.decorate_collection(self.scoped, options)
       block_given? ? yield(collection_decorator) : collection_decorator
     end
 
