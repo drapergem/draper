@@ -2,9 +2,9 @@ require 'spec_helper'
 
 describe Draper::Decorator do
   before { ApplicationController.new.view_context }
-  subject { Decorator.new(source) }
-  let(:source){ Product.new }
-  let(:non_active_model_source){ NonActiveModelProduct.new }
+  subject { decorator_class.new(source) }
+  let(:decorator_class) { Draper::Decorator }
+  let(:source) { Product.new }
 
   describe "#initialize" do
     it "sets the source" do
@@ -12,7 +12,7 @@ describe Draper::Decorator do
     end
 
     it "stores options" do
-      decorator = Decorator.new(source, some: "options")
+      decorator = decorator_class.new(source, some: "options")
       decorator.options.should == {some: "options"}
     end
 
@@ -106,7 +106,7 @@ describe Draper::Decorator do
   describe "#localize" do
     before { subject.helpers.should_receive(:localize).with(:an_object, {some: "options"}) }
 
-    it "delegates to helpers" do
+    it "delegates to #helpers" do
       subject.localize(:an_object, some: "options")
     end
 
@@ -117,16 +117,17 @@ describe Draper::Decorator do
 
   describe ".helpers" do
     it "returns a HelperProxy" do
-      Decorator.helpers.should be_a Draper::HelperProxy
+      subject.class.helpers.should be_a Draper::HelperProxy
     end
 
     it "is aliased to .h" do
-      Decorator.h.should be Decorator.helpers
+      subject.class.h.should be subject.class.helpers
     end
   end
 
   describe ".decorates_association" do
-    before { subject.class.decorates_association :similar_products, with: ProductDecorator }
+    let(:decorator_class) { Class.new(ProductDecorator) }
+    before { decorator_class.decorates_association :similar_products, with: ProductDecorator }
 
     describe "overridden association method" do
       let(:decorated_association) { ->{} }
@@ -151,7 +152,7 @@ describe Draper::Decorator do
   end
 
   describe ".decorates_associations" do
-    subject { Decorator }
+    subject { decorator_class }
 
     it "decorates each of the associations" do
       subject.should_receive(:decorates_association).with(:similar_products, {})
@@ -225,7 +226,7 @@ describe Draper::Decorator do
   end
 
   describe "#respond_to?" do
-    subject { Class.new(ProductDecorator).new(source) }
+    let(:decorator_class) { Class.new(ProductDecorator) }
 
     it "returns true for its own methods" do
       subject.should respond_to :awesome_title
@@ -270,7 +271,7 @@ describe Draper::Decorator do
   end
 
   describe "method proxying" do
-    subject { Class.new(ProductDecorator).new(source) }
+    let(:decorator_class) { Class.new(ProductDecorator) }
 
     it "does not proxy methods that are defined on the decorator" do
       subject.overridable.should be :overridden
@@ -348,26 +349,26 @@ describe Draper::Decorator do
   end
 
   context "in a Rails application" do
-    let(:decorator){ DecoratorWithApplicationHelper.decorate(Object.new) }
+    let(:decorator_class) { DecoratorWithApplicationHelper }
 
     it "has access to ApplicationHelper helpers" do
-      decorator.uses_hello_world.should == "Hello, World!"
+      subject.uses_hello_world.should == "Hello, World!"
     end
 
     it "is able to use the content_tag helper" do
-      decorator.sample_content.to_s.should == "<span>Hello, World!</span>"
+      subject.sample_content.to_s.should == "<span>Hello, World!</span>"
     end
 
     it "is able to use the link_to helper" do
-      decorator.sample_link.should == "<a href=\"/World\">Hello</a>"
+      subject.sample_link.should == "<a href=\"/World\">Hello</a>"
     end
 
     it "is able to use the truncate helper" do
-      decorator.sample_truncate.should == "Once..."
+      subject.sample_truncate.should == "Once..."
     end
 
     it "is able to access html_escape, a private method" do
-      decorator.sample_html_escaped_text.should == '&lt;script&gt;danger&lt;/script&gt;'
+      subject.sample_html_escaped_text.should == '&lt;script&gt;danger&lt;/script&gt;'
     end
   end
 
@@ -398,24 +399,28 @@ describe Draper::Decorator do
       end
     end
 
-    context "with for: symbol" do
-      it "sets the finder class" do
-        FinderDecorator.has_finders for: :product
-        FinderDecorator.finder_class.should be Product
-      end
-    end
+    context "with :for option" do
+      subject { Class.new(Draper::Decorator) }
 
-    context "with for: string" do
-      it "sets the finder class" do
-        FinderDecorator.has_finders for: "some_thing"
-        FinderDecorator.finder_class.should be SomeThing
+      context "with a symbol" do
+        it "sets the finder class" do
+          subject.has_finders for: :product
+          subject.finder_class.should be Product
+        end
       end
-    end
 
-    context "with for: class" do
-      it "sets the finder_class" do
-        FinderDecorator.has_finders for: Namespace::Product
-        FinderDecorator.finder_class.should be Namespace::Product
+      context "with a string" do
+        it "sets the finder class" do
+          subject.has_finders for: "some_thing"
+          subject.finder_class.should be SomeThing
+        end
+      end
+
+      context "with a class" do
+        it "sets the finder_class" do
+          subject.has_finders for: Namespace::Product
+          subject.finder_class.should be Namespace::Product
+        end
       end
     end
   end
