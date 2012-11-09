@@ -136,11 +136,11 @@ describe Draper::CollectionDecorator do
 
   describe ".helpers" do
     it "returns a HelperProxy" do
-      Decorator.helpers.should be_a Draper::HelperProxy
+      subject.class.helpers.should be_a Draper::HelperProxy
     end
 
     it "is aliased to .h" do
-      Decorator.h.should be Decorator.helpers
+      subject.class.h.should be subject.class.helpers
     end
   end
 

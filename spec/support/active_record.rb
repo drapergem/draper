@@ -15,3 +15,8 @@ module ActiveRecord
 
   end
 end
+
+module ActiveRecord
+  class Relation
+  end
+end
