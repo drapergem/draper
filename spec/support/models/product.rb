@@ -77,4 +77,12 @@ class Product < ActiveRecord::Base
     Product.new
   end
 
+  def overridable
+    :overridable
+  end
+
+  private
+
+  def private_title
+  end
 end

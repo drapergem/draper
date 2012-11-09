@@ -1,5 +1,3 @@
-require './spec/support/samples/product'
-
 module Namespace
   class Product < ActiveRecord::Base
     include Draper::Decoratable

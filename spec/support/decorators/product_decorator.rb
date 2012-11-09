@@ -5,6 +5,15 @@ class ProductDecorator < Draper::Decorator
     "Awesome Title"
   end
 
+  def overridable
+    :overridden
+  end
+
   def self.my_class_method
+  end
+
+  private
+
+  def awesome_private_title
   end
 end

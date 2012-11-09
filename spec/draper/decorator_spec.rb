@@ -2,9 +2,9 @@ require 'spec_helper'
 
 describe Draper::Decorator do
   before { ApplicationController.new.view_context }
-  subject { Decorator.new(source) }
-  let(:source){ Product.new }
-  let(:non_active_model_source){ NonActiveModelProduct.new }
+  subject { decorator_class.new(source) }
+  let(:decorator_class) { Draper::Decorator }
+  let(:source) { Product.new }
 
   describe "#initialize" do
     it "sets the source" do
@@ -12,7 +12,7 @@ describe Draper::Decorator do
     end
 
     it "stores options" do
-      decorator = Decorator.new(source, some: "options")
+      decorator = decorator_class.new(source, some: "options")
       decorator.options.should == {some: "options"}
     end
 
@@ -106,7 +106,7 @@ describe Draper::Decorator do
   describe "#localize" do
     before { subject.helpers.should_receive(:localize).with(:an_object, {some: "options"}) }
 
-    it "delegates to helpers" do
+    it "delegates to #helpers" do
       subject.localize(:an_object, some: "options")
     end
 
@@ -117,16 +117,17 @@ describe Draper::Decorator do
 
   describe ".helpers" do
     it "returns a HelperProxy" do
-      Decorator.helpers.should be_a Draper::HelperProxy
+      subject.class.helpers.should be_a Draper::HelperProxy
     end
 
     it "is aliased to .h" do
-      Decorator.h.should be Decorator.helpers
+      subject.class.h.should be subject.class.helpers
     end
   end
 
   describe ".decorates_association" do
-    before { subject.class.decorates_association :similar_products, with: ProductDecorator }
+    let(:decorator_class) { Class.new(ProductDecorator) }
+    before { decorator_class.decorates_association :similar_products, with: ProductDecorator }
 
     describe "overridden association method" do
       let(:decorated_association) { ->{} }
@@ -151,7 +152,7 @@ describe Draper::Decorator do
   end
 
   describe ".decorates_associations" do
-    subject { Decorator }
+    subject { decorator_class }
 
     it "decorates each of the associations" do
       subject.should_receive(:decorates_association).with(:similar_products, {})
@@ -210,56 +211,11 @@ describe Draper::Decorator do
     end
   end
 
-  describe "method selection" do
-    it "echos the methods of the wrapped class" do
-      source.methods.each do |method|
-        subject.respond_to?(method.to_sym, true).should be_true
-      end
+  describe "#to_param" do
+    it "proxies to the source" do
+      source.stub(:to_param).and_return(42)
+      subject.to_param.should == 42
     end
-
-    it "not override a defined method with a source method" do
-      DecoratorWithApplicationHelper.new(source).length.should == "overridden"
-    end
-
-    it "not copy the .class, .inspect, or other existing methods" do
-      source.class.should_not == subject.class
-      source.inspect.should_not == subject.inspect
-      source.to_s.should_not == subject.to_s
-    end
-
-    context "when an ActiveModel descendant" do
-      it "always proxy to_param if it is not defined on the decorator itself" do
-        source.stub(:to_param).and_return(1)
-        Draper::Decorator.new(source).to_param.should == 1
-      end
-
-      it "always proxy id if it is not defined on the decorator itself" do
-        source.stub(:id).and_return(123456789)
-        Draper::Decorator.new(source).id.should == 123456789
-      end
-
-      it "always proxy errors if it is not defined on the decorator itself" do
-        Draper::Decorator.new(source).errors.should be_an_instance_of ActiveModel::Errors
-      end
-
-      it "never proxy to_param if it is defined on the decorator itself" do
-        source.stub(:to_param).and_return(1)
-        DecoratorWithSpecialMethods.new(source).to_param.should == "foo"
-      end
-
-      it "never proxy id if it is defined on the decorator itself" do
-        source.stub(:id).and_return(123456789)
-        DecoratorWithSpecialMethods.new(source).id.should == 1337
-      end
-
-      it "never proxy errors if it is defined on the decorator itself" do
-        DecoratorWithSpecialMethods.new(source).errors.should be_an_instance_of Array
-      end
-    end
-  end
-
-  it "wrap source methods so they still accept blocks" do
-    subject.block{"marker"}.should == "marker"
   end
 
   describe "#==" do
@@ -270,13 +226,104 @@ describe Draper::Decorator do
   end
 
   describe "#respond_to?" do
-    # respond_to? is called by some proxies (id, to_param, errors).
-    # This is, why I stub it this way.
-    it "delegates to the decorated model" do
-      other = Draper::Decorator.new(source)
-      source.stub(:respond_to?).and_return(false)
-      source.should_receive(:respond_to?).with(:whatever, true).once.and_return("mocked")
-      subject.respond_to?(:whatever, true).should == "mocked"
+    let(:decorator_class) { Class.new(ProductDecorator) }
+
+    it "returns true for its own methods" do
+      subject.should respond_to :awesome_title
+    end
+
+    it "returns true for the source's methods" do
+      subject.should respond_to :title
+    end
+
+    context "with include_private" do
+      it "returns true for its own private methods" do
+        subject.respond_to?(:awesome_private_title, true).should be_true
+      end
+
+      it "returns true for the source's private methods" do
+        subject.respond_to?(:private_title, true).should be_true
+      end
+    end
+
+    context "with method security" do
+      it "respects allows" do
+        subject.class.allows :hello_world
+
+        subject.should respond_to :hello_world
+        subject.should_not respond_to :goodnight_moon
+      end
+
+      it "respects denies" do
+        subject.class.denies :goodnight_moon
+
+        subject.should respond_to :hello_world
+        subject.should_not respond_to :goodnight_moon
+      end
+
+      it "respects denies_all" do
+        subject.class.denies_all
+
+        subject.should_not respond_to :hello_world
+        subject.should_not respond_to :goodnight_moon
+      end
+    end
+  end
+
+  describe "method proxying" do
+    let(:decorator_class) { Class.new(ProductDecorator) }
+
+    it "does not proxy methods that are defined on the decorator" do
+      subject.overridable.should be :overridden
+    end
+
+    it "does not proxy methods inherited from Object" do
+      subject.inspect.should_not be source.inspect
+    end
+
+    it "proxies missing methods that exist on the source" do
+      source.stub(:hello_world).and_return(:proxied)
+      subject.hello_world.should be :proxied
+    end
+
+    it "adds proxied methods to the decorator when they are used" do
+      subject.methods.should_not include :hello_world
+      subject.hello_world
+      subject.methods.should include :hello_world
+    end
+
+    it "passes blocks to proxied methods" do
+      subject.block{"marker"}.should == "marker"
+    end
+
+    it "does not confuse Kernel#Array" do
+      Array(subject).should be_a Array
+    end
+
+    context "with method security" do
+      it "respects allows" do
+        source.stub(:hello_world, :goodnight_moon).and_return(:proxied)
+        subject.class.allows :hello_world
+
+        subject.hello_world.should be :proxied
+        expect{subject.goodnight_moon}.to raise_error NameError
+      end
+
+      it "respects denies" do
+        source.stub(:hello_world, :goodnight_moon).and_return(:proxied)
+        subject.class.denies :goodnight_moon
+
+        subject.hello_world.should be :proxied
+        expect{subject.goodnight_moon}.to raise_error NameError
+      end
+
+      it "respects denies_all" do
+        source.stub(:hello_world, :goodnight_moon).and_return(:proxied)
+        subject.class.denies_all
+
+        expect{subject.hello_world}.to raise_error NameError
+        expect{subject.goodnight_moon}.to raise_error NameError
+      end
     end
   end
 
@@ -302,64 +349,26 @@ describe Draper::Decorator do
   end
 
   context "in a Rails application" do
-    let(:decorator){ DecoratorWithApplicationHelper.decorate(Object.new) }
+    let(:decorator_class) { DecoratorWithApplicationHelper }
 
     it "has access to ApplicationHelper helpers" do
-      decorator.uses_hello_world.should == "Hello, World!"
+      subject.uses_hello_world.should == "Hello, World!"
     end
 
     it "is able to use the content_tag helper" do
-      decorator.sample_content.to_s.should == "<span>Hello, World!</span>"
+      subject.sample_content.to_s.should == "<span>Hello, World!</span>"
     end
 
     it "is able to use the link_to helper" do
-      decorator.sample_link.should == "<a href=\"/World\">Hello</a>"
+      subject.sample_link.should == "<a href=\"/World\">Hello</a>"
     end
 
-    it "is able to use the pluralize helper" do
-      decorator.sample_truncate.should == "Once..."
+    it "is able to use the truncate helper" do
+      subject.sample_truncate.should == "Once..."
     end
 
     it "is able to access html_escape, a private method" do
-      decorator.sample_html_escaped_text.should == '&lt;script&gt;danger&lt;/script&gt;'
-    end
-  end
-
-  describe "#method_missing" do
-    context "with an isolated decorator class" do
-      let(:decorator_class) { Class.new(Decorator) }
-      subject{ decorator_class.new(source) }
-
-      context "when #hello_world is called again" do
-        it "proxies method directly after first hit" do
-          subject.methods.should_not include(:hello_world)
-          subject.hello_world
-          subject.methods.should include(:hello_world)
-        end
-      end
-
-      context "when #hello_world is called for the first time" do
-        it "hits method missing" do
-          subject.should_receive(:method_missing)
-          subject.hello_world
-        end
-      end
-    end
-
-    context "when the delegated method calls a non-existant method" do
-      it "should not try to delegate to non-existant methods to not confuse Kernel#Array" do
-        Array(subject).should be_kind_of(Array)
-      end
-
-      it "raises the correct NoMethodError" do
-        begin
-          subject.some_action
-        rescue NoMethodError => e
-          e.name.should_not == :some_action
-        else
-          fail("No exception raised")
-        end
-      end
+      subject.sample_html_escaped_text.should == '&lt;script&gt;danger&lt;/script&gt;'
     end
   end
 
@@ -390,24 +399,28 @@ describe Draper::Decorator do
       end
     end
 
-    context "with for: symbol" do
-      it "sets the finder class" do
-        FinderDecorator.has_finders for: :product
-        FinderDecorator.finder_class.should be Product
-      end
-    end
+    context "with :for option" do
+      subject { Class.new(Draper::Decorator) }
 
-    context "with for: string" do
-      it "sets the finder class" do
-        FinderDecorator.has_finders for: "some_thing"
-        FinderDecorator.finder_class.should be SomeThing
+      context "with a symbol" do
+        it "sets the finder class" do
+          subject.has_finders for: :product
+          subject.finder_class.should be Product
+        end
       end
-    end
 
-    context "with for: class" do
-      it "sets the finder_class" do
-        FinderDecorator.has_finders for: Namespace::Product
-        FinderDecorator.finder_class.should be Namespace::Product
+      context "with a string" do
+        it "sets the finder class" do
+          subject.has_finders for: "some_thing"
+          subject.finder_class.should be SomeThing
+        end
+      end
+
+      context "with a class" do
+        it "sets the finder_class" do
+          subject.has_finders for: Namespace::Product
+          subject.finder_class.should be Namespace::Product
+        end
       end
     end
   end
