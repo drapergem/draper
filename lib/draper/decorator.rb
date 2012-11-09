@@ -157,21 +157,12 @@ module Draper
     end
 
     def method_missing(method, *args, &block)
-      super unless allow?(method)
-
-      if source.respond_to?(method)
-        self.class.send :define_method, method do |*args, &blokk|
-          source.send method, *args, &blokk
-        end
-
-        send method, *args, &block
+      if allow?(method) && source.respond_to?(method)
+        self.class.define_proxy(method)
+        send(method, *args, &block)
       else
         super
       end
-
-    rescue NoMethodError => no_method_error
-      super if no_method_error.name == method
-      raise no_method_error
     end
 
     # For ActiveModel compatibilty
@@ -184,7 +175,13 @@ module Draper
       source.to_param
     end
 
-  private
+    private
+
+    def self.define_proxy(method)
+      define_method(method) do |*args, &block|
+        source.send(method, *args, &block)
+      end
+    end
 
     def self.security
       @security ||= Security.new
