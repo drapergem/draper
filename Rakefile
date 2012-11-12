@@ -10,7 +10,7 @@ end
 task "default" => "ci"
 
 desc "Run all tests for CI"
-task "ci" => "spec:integration" #"spec"
+task "ci" => "spec"
 
 desc "Run all specs"
 task "spec" => "spec:all"
