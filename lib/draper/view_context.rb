@@ -26,11 +26,6 @@ module Draper
 
     def self.build_view_context
       current_controller.view_context.tap do |context|
-        context.instance_eval do
-          def url_options
-            ActionMailer::Base.default_url_options
-          end
-        end unless context.request
         if defined?(ActionController::TestRequest)
           context.controller.request ||= ActionController::TestRequest.new
           context.request            ||= context.controller.request

@@ -1,0 +1,23 @@
+require 'spec_helper'
+
+describe PostDecorator do
+  subject { PostDecorator.new(source) }
+  let(:source) { Post.create }
+
+  it "can use path helpers with its model" do
+    subject.path_with_model.should == "/en/posts/#{source.id}"
+  end
+
+  it "can use path helpers with its id" do
+    subject.path_with_id.should == "/en/posts/#{source.id}"
+  end
+
+  it "can use url helpers with its model" do
+    subject.url_with_model.should == "http://www.example.com/en/posts/#{source.id}"
+  end
+
+  it "can use url helpers with its id" do
+    subject.url_with_id.should == "http://www.example.com/en/posts/#{source.id}"
+  end
+
+end
