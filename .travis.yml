@@ -7,3 +7,7 @@ rvm:
 matrix:
   allow_failures:
     - rvm: ruby-head
+before_script:
+  - sudo ci/install_phantomjs
+  - "export PATH=phantomjs/bin:$PATH"
+  - phantomjs --version

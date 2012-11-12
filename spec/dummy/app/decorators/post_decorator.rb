@@ -7,19 +7,19 @@ class PostDecorator < Draper::Decorator
     end
   end
 
-  def path_helper_with_model
-    {:post_path => h.post_path(self.model)}
+  def path_with_model
+    h.post_path(source)
   end
 
-  def path_helper_with_model_id
-    {:post_path => h.post_path(:id => self.model.id)}
+  def path_with_id
+    h.post_path(id: id)
   end
 
-  def url_helper_with_model
-    {:post_url => h.post_url(self.model)}
+  def url_with_model
+    h.post_url(source)
   end
 
-  def url_helper_with_model_id
-    {:post_url => h.post_url(:id => self.model.id)}
+  def url_with_id
+    h.post_url(id: id)
   end
 end
