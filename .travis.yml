@@ -6,9 +6,8 @@ rvm:
   - ruby-head
 matrix:
   allow_failures:
-    - rvm:
-      - rbx-19mode
-      - ruby-head
+    - rvm: rbx-19mode
+    - rvm: ruby-head
 before_script:
   - sudo ci/install_phantomjs
   - "export PATH=phantomjs/bin:$PATH"
