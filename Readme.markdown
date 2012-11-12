@@ -1,6 +1,6 @@
 # Draper: View Models for Rails
 
-[![TravisCI Build Status](https://secure.travis-ci.org/drapergem/draper.png)](http://travis-ci.org/drapergem/draper)
+[![TravisCI Build Status](https://secure.travis-ci.org/drapergem/draper.png?branch=master)](http://travis-ci.org/drapergem/draper)
 [![Code Climate](https://codeclimate.com/badge.png)](https://codeclimate.com/github/drapergem/draper)
 
 ## Quick Start

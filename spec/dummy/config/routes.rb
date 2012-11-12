@@ -1,3 +1,5 @@
 Dummy::Application.routes.draw do
-  resources :posts, :only => [:show]
+  scope "(:locale)", locale: /en|zh/ do
+    resources :posts, only: [:show]
+  end
 end

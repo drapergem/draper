@@ -12,7 +12,9 @@ module Draper
     end
 
     def self.setup_action_mailer(component)
-      include Draper::ViewContext
+      component.class_eval do
+        include Draper::ViewContext
+      end
     end
   end
 end
