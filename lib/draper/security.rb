@@ -6,9 +6,9 @@ module Draper
     end
 
     def denies(*methods)
-      raise ArgumentError, "Specify at least one method (as a symbol) to exclude when using denies" if methods.empty?
+      raise ArgumentError, "Specify at least one method to blacklist when using denies" if methods.empty?
       self.strategy = :denies
-      @denied += methods
+      @denied += methods.map(&:to_sym)
     end
 
     def denies_all
@@ -16,9 +16,9 @@ module Draper
     end
 
     def allows(*methods)
-      raise ArgumentError, "Specify at least one method (as a symbol) to allow when using allows" if methods.empty?
+      raise ArgumentError, "Specify at least one method to whitelist when using allows" if methods.empty?
       self.strategy = :allows
-      @allowed += methods
+      @allowed += methods.map(&:to_sym)
     end
 
     def allow?(method)
