@@ -1,6 +1,6 @@
 module ActionController
   class Base
-    Draper::System.setup_action_controller(self)
+    Draper.setup_action_controller(self)
   end
 end
 
