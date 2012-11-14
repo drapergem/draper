@@ -24,19 +24,19 @@ module Draper
 
     initializer "draper.extend_action_controller_base" do |app|
       ActiveSupport.on_load(:action_controller) do
-        Draper::System.setup_action_controller(self)
+        Draper.setup_action_controller(self)
       end
     end
 
     initializer "draper.extend_action_mailer_base" do |app|
       ActiveSupport.on_load(:action_mailer) do
-        Draper::System.setup_action_mailer(self)
+        Draper.setup_action_mailer(self)
       end
     end
 
     initializer "draper.extend_active_record_base" do |app|
       ActiveSupport.on_load(:active_record) do
-        self.send(:include, Draper::Decoratable)
+        Draper.setup_active_record(self)
       end
     end
 
