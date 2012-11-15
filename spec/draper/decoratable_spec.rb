@@ -45,6 +45,75 @@ describe Draper::Decoratable do
     end
   end
 
+  describe "#===" do
+    context "with itself" do
+      it "returns true" do
+        (subject === subject).should be_true
+      end
+    end
+
+    context "with another instance" do
+      it "returns false" do
+        (subject === Product.new).should be_false
+      end
+    end
+
+    context "with a decorated version of itself" do
+      it "returns true" do
+        decorator = double(source: subject)
+        (subject === decorator).should be_true
+      end
+    end
+
+    context "with a decorated other instance" do
+      it "returns false" do
+        decorator = double(source: Product.new)
+        (subject === decorator).should be_false
+      end
+    end
+  end
+
+  describe ".====" do
+    context "with an instance" do
+      it "returns true" do
+        (Product === Product.new).should be_true
+      end
+    end
+
+    context "with a derived instance" do
+      it "returns true" do
+        (Product === Widget.new).should be_true
+      end
+    end
+
+    context "with an unrelated instance" do
+      it "returns false" do
+        (Product === Object.new).should be_false
+      end
+    end
+
+    context "with a decorated instance" do
+      it "returns true" do
+        decorator = double(source: Product.new)
+        (Product === decorator).should be_true
+      end
+    end
+
+    context "with a decorated derived instance" do
+      it "returns true" do
+        decorator = double(source: Widget.new)
+        (Product === decorator).should be_true
+      end
+    end
+
+    context "with a decorated unrelated instance" do
+      it "returns false" do
+        decorator = double(source: Object.new)
+        (Product === decorator).should be_false
+      end
+    end
+  end
+
   describe ".decorate" do
     it "returns a collection decorator" do
       Product.stub(:scoped).and_return([Product.new])
