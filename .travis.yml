@@ -6,5 +6,4 @@ rvm:
   - ruby-head
 matrix:
   allow_failures:
-    - rvm: rbx-19mode
     - rvm: ruby-head
