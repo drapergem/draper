@@ -1,22 +1,23 @@
 require 'spec_helper'
 require 'support/dummy_app'
+require 'support/matchers/have_text'
 
 shared_examples_for "a decorator in a view" do
   it "works" do
     # it runs in the correct environment
-    page.should have_css "#environment", text: environment
+    page.should have_text(environment).in("#environment")
 
     # it can use path helpers with a model
-    page.should have_css "#path_with_model", text: "/en/posts/1"
+    page.should have_text("/en/posts/1").in("#path_with_model")
 
     # it can use path helpers with an id
-    page.should have_css "#path_with_id", text: "/en/posts/1"
+    page.should have_text("/en/posts/1").in("#path_with_id")
 
     # it can use url helpers with a model
-    page.should have_css "#url_with_model", text: "http://www.example.com/en/posts/1"
+    page.should have_text("http://www.example.com/en/posts/1").in("#url_with_model")
 
     # it can use url helpers with an id
-    page.should have_css "#url_with_id", text: "http://www.example.com/en/posts/1"
+    page.should have_text("http://www.example.com/en/posts/1").in("#url_with_id")
   end
 end
 
