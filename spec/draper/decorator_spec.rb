@@ -219,9 +219,66 @@ describe Draper::Decorator do
   end
 
   describe "#==" do
-    it "compares the decorated models" do
-      other = Draper::Decorator.new(source)
-      subject.should == other
+    context "with itself" do
+      it "returns true" do
+        (subject == subject).should be_true
+      end
+    end
+
+    context "with another decorator having the same source" do
+      it "returns true" do
+        (subject == ProductDecorator.new(source)).should be_true
+      end
+    end
+
+    context "with another decorator having a different source" do
+      it "returns false" do
+        (subject == ProductDecorator.new(Object.new)).should be_false
+      end
+    end
+
+    context "with the source object" do
+      it "returns true" do
+        (subject == source).should be_true
+      end
+    end
+
+    context "with another object" do
+      it "returns false" do
+        (subject == Object.new).should be_false
+      end
+    end
+  end
+
+  describe "#===" do
+    context "with itself" do
+      it "returns true" do
+        (subject === subject).should be_true
+      end
+    end
+
+    context "with another decorator having the same source" do
+      it "returns true" do
+        (subject === ProductDecorator.new(source)).should be_true
+      end
+    end
+
+    context "with another decorator having a different source" do
+      it "returns false" do
+        (subject === ProductDecorator.new(Object.new)).should be_false
+      end
+    end
+
+    context "with the source object" do
+      it "returns true" do
+        (subject === source).should be_true
+      end
+    end
+
+    context "with another object" do
+      it "returns false" do
+        (subject === Object.new).should be_false
+      end
     end
   end
 

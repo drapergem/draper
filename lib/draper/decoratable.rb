@@ -21,6 +21,10 @@ module Draper::Decoratable
     false
   end
 
+  def ===(other)
+    super || (other.respond_to?(:source) && super(other.source))
+  end
+
   module ClassMethods
     def decorate(options = {})
       decorator_class.decorate_collection(self.scoped, options)
@@ -31,6 +35,10 @@ module Draper::Decoratable
       "#{prefix}Decorator".constantize
     rescue NameError
       raise Draper::UninferrableDecoratorError.new(self)
+    end
+
+    def ===(other)
+      super || (other.respond_to?(:source) && super(other.source))
     end
   end
 end
