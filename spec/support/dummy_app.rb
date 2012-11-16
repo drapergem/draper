@@ -1,23 +1,24 @@
-require 'capybara'
-require 'capybara/dsl'
-require 'capybara/poltergeist'
-require 'singleton'
 require 'socket'
+require 'net/http'
 
 # Adapted from code by Jon Leighton
 # https://github.com/jonleighton/focused_controller/blob/ec7ccf1/test/acceptance/app_test.rb
 
-Capybara.run_server = false
-Capybara.default_driver = :poltergeist
-
 class DummyApp
 
   def initialize(environment)
+    raise ArgumentError, "Environment must be development or production" unless ["development", "production"].include?(environment.to_s)
     @environment = environment
   end
 
+  attr_reader :environment
+
   def url
     "http://#{localhost}:#{port}"
+  end
+
+  def get(path)
+    Net::HTTP.get(URI(url + path))
   end
 
   def within_app(&block)
@@ -66,7 +67,7 @@ class DummyApp
   def port
     @port ||= begin
       server = TCPServer.new(localhost, 0)
-      port   = server.addr[1]
+      server.addr[1]
     ensure
       server.close if server
     end
