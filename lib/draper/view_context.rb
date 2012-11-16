@@ -1,5 +1,11 @@
 module Draper
   module ViewContext
+    def view_context
+      super.tap do |context|
+        Draper::ViewContext.current = context
+      end
+    end
+
     def self.current_controller
       Thread.current[:current_controller] || ApplicationController.new
     end
@@ -15,14 +21,6 @@ module Draper
     def self.current=(context)
       Thread.current[:current_view_context] = context
     end
-
-    def view_context
-      super.tap do |context|
-        Draper::ViewContext.current = context
-      end
-    end
-
-    private
 
     def self.build_view_context
       current_controller.view_context.tap do |context|
