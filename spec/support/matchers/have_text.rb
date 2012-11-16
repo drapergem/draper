@@ -1,3 +1,5 @@
+require 'capybara'
+
 module HaveTextMatcher
   def have_text(text)
     HaveText.new(text)
@@ -14,7 +16,7 @@ module HaveTextMatcher
     end
 
     def matches?(subject)
-      @subject = subject
+      @subject = Capybara.string(subject)
 
       @subject.has_css?(@css || "*", text: @text)
     end
@@ -30,7 +32,11 @@ module HaveTextMatcher
     private
 
     def within
-      "#{inside} within\n#{@subject.html}"
+      if @css && @subject.has_css?(@css)
+        "within\n#{@subject.find(@css).native}"
+      else
+        "#{inside} within\n#{@subject.native}"
+      end
     end
 
     def inside

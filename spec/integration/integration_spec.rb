@@ -22,26 +22,20 @@ shared_examples_for "a decorator in a view" do
 end
 
 describe "integration" do
-  include Capybara::DSL
-
-  rails_env = ENV["RAILS_ENV"].to_s
-  raise ArgumentError, "RAILS_ENV must be development or production" unless ["development", "production"].include?(rails_env)
-
-  app = DummyApp.new(rails_env)
+  app = DummyApp.new(ENV["RAILS_ENV"])
 
   app.start_server do
-    describe "in #{rails_env}" do
-      let(:environment) { rails_env }
-      before { Capybara.app_host = app.url }
+    describe "in #{app.environment}" do
+      let(:environment) { app.environment }
 
       context "in a view" do
-        before { visit("/posts/1") }
+        let(:page) { app.get("/posts/1") }
 
         it_behaves_like "a decorator in a view"
       end
 
       context "in a mailer" do
-        before { visit("/posts/1/mail") }
+        let(:page) { app.get("/posts/1/mail") }
 
         it_behaves_like "a decorator in a view"
       end
