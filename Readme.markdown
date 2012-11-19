@@ -24,7 +24,7 @@
 If you need common methods in your decorators, create an `app/decorators/application_decorator.rb`:
 
 ``` ruby
-class ApplicationDecorator < Draper::Decorator
+class ApplicationDecorator < Draper::Base
   # your methods go here
 end
 ```
@@ -46,7 +46,7 @@ Why hate normal helpers? In Ruby/Rails we approach everything from an Object-Ori
 A decorator wraps an object with presentation-related accessor methods. For instance, if you had an `Article` object, then the decorator could override `.published_at` to use formatted output like this:
 
 ```ruby
-class ArticleDecorator < Draper::Decorator
+class ArticleDecorator < Draper::Base
   decorates :article
 
   def published_at
@@ -150,7 +150,7 @@ rails generate decorator article
 Open the decorator model (ex: `app/decorators/article_decorator.rb`) and add normal instance methods. To access the wrapped source object, use a method named after the `decorates` argument:
 
 ```ruby
-class ArticleDecorator < Draper::Decorator
+class ArticleDecorator < Draper::Base
   decorates :article
 
   def author_name
@@ -164,7 +164,7 @@ end
 You probably want to make use of Rails helpers and those defined in your application. Use the `helpers` or `h` method proxy:
 
 ```ruby
-class ArticleDecorator < Draper::Decorator
+class ArticleDecorator < Draper::Base
   decorates :article
 
   def published_at
@@ -180,7 +180,7 @@ end
 Hate seeing that `h.` proxy all over? Willing to mix a bazillion methods into your decorator? Then try lazy helpers:
 
 ```ruby
-class ArticleDecorator < Draper::Decorator
+class ArticleDecorator < Draper::Base
   decorates :article
   include Draper::LazyHelpers
 
@@ -299,7 +299,7 @@ Then within your views you can utilize both the normal data methods and your new
 Ta-da! Object-oriented data formatting for your view layer. Below is the complete decorator with extra comments removed:
 
 ```ruby
-class ArticleDecorator < Draper::Decorator
+class ArticleDecorator < Draper::Base
   decorates :article
 
   def published_at
@@ -315,12 +315,12 @@ end
 Add a `decorates_association :association_name` to gain access to a decorated version of your target association.
 
 ```ruby
-class ArticleDecorator < Draper::Decorator
+class ArticleDecorator < Draper::Base
   decorates :article
   decorates_association :author # belongs_to :author association
 end
 
-class AuthorDecorator < Draper::Decorator
+class AuthorDecorator < Draper::Base
   decorates :author
 
   def fancy_name
