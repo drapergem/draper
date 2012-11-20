@@ -11,6 +11,12 @@ describe Draper::Decorator do
       subject.source.should be source
     end
 
+    if defined?(ActiveModel::Serialization)
+      it "includes ActiveModel::Serialization if present" do
+        subject.should respond_to(:serializable_hash)
+      end
+    end
+
     it "stores options" do
       decorator = decorator_class.new(source, some: "options")
       decorator.options.should == {some: "options"}
