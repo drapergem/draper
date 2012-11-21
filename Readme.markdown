@@ -47,8 +47,6 @@ A decorator wraps an object with presentation-related accessor methods. For inst
 
 ```ruby
 class ArticleDecorator < Draper::Decorator
-  decorates :article
-
   def published_at
     date = h.content_tag(:span, article.published_at.strftime("%A, %B %e").squeeze(" "), :class => 'date')
     time = h.content_tag(:span, article.published_at.strftime("%l:%M%p"), :class => 'time').delete(" ")
@@ -69,8 +67,6 @@ When you use a decorator you have the power of a Ruby object but it's a part of 
 
 ```ruby
 class ArticleDecorator < ApplicationDecorator
-  decorates :article
-
   ADMIN_VISIBLE_ATTRIBUTES = [:title, :body, :author, :status]
   PUBLIC_VISIBLE_ATTRIBUTES = [:title, :body]
 
@@ -91,7 +87,6 @@ The `denies` method takes a blacklist approach. For instance:
 
 ```ruby
 class ArticleDecorator < ApplicationDecorator
-  decorates :article
   denies :title
 end
 ```
@@ -111,7 +106,6 @@ A better approach is to define a whitelist using `allows`:
 
 ```ruby
 class ArticleDecorator < ApplicationDecorator
-  decorates :article
   allows :title, :description
 end
 ```
@@ -147,14 +141,12 @@ rails generate decorator article
 
 ### Writing Methods
 
-Open the decorator model (ex: `app/decorators/article_decorator.rb`) and add normal instance methods. To access the wrapped source object, use a method named after the `decorates` argument:
+Open the decorator model (ex: `app/decorators/article_decorator.rb`) and add normal instance methods. To access the wrapped source object, use the `model` method:
 
 ```ruby
 class ArticleDecorator < Draper::Decorator
-  decorates :article
-
   def author_name
-    article.author.first_name + " " + article.author.last_name
+    model.author.first_name + " " + model.author.last_name
   end
 end
 ```
@@ -165,8 +157,6 @@ You probably want to make use of Rails helpers and those defined in your applica
 
 ```ruby
 class ArticleDecorator < Draper::Decorator
-  decorates :article
-
   def published_at
     date = h.content_tag(:span, article.published_at.strftime("%A, %B %e").squeeze(" "), :class => 'date')
     time = h.content_tag(:span, article.published_at.strftime("%l:%M%p"), :class => 'time').delete(" ")
@@ -181,7 +171,6 @@ Hate seeing that `h.` proxy all over? Willing to mix a bazillion methods into yo
 
 ```ruby
 class ArticleDecorator < Draper::Decorator
-  decorates :article
   include Draper::LazyHelpers
 
   def published_at
@@ -209,7 +198,8 @@ ArticleDecorator.decorate(Article.first) # Returns one instance of ArticleDecora
 ArticleDecorator.decorate(Article.all)   # Returns an enumeration proxy of ArticleDecorator instances
 ```
 
-* Call `.find` to automatically do a lookup on the `decorates` class:
+* Call `.find` to automatically do a lookup on the corresponding model class.
+In this example, Article:
 
 ```ruby
 ArticleDecorator.find(1)
@@ -300,8 +290,6 @@ Ta-da! Object-oriented data formatting for your view layer. Below is the complet
 
 ```ruby
 class ArticleDecorator < Draper::Decorator
-  decorates :article
-
   def published_at
     date = h.content_tag(:span, article.published_at.strftime("%A, %B %e").squeeze(" "), :class => 'date')
     time = h.content_tag(:span, article.published_at.strftime("%l:%M%p"), :class => 'time').delete(" ")
@@ -316,13 +304,10 @@ Add a `decorates_association :association_name` to gain access to a decorated ve
 
 ```ruby
 class ArticleDecorator < Draper::Decorator
-  decorates :article
   decorates_association :author # belongs_to :author association
 end
 
 class AuthorDecorator < Draper::Decorator
-  decorates :author
-
   def fancy_name
     "#{model.title}. #{model.first_name} #{model.middle_name[0]}. #{model.last_name}"
   end
@@ -347,7 +332,6 @@ end
 
 # app/decorators/user_decorator.rb
 class UserDecorator < ApplicationDecorator
-  decorates :user
 end
 ```
 
