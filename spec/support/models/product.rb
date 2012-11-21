@@ -1,5 +1,6 @@
 class Product < ActiveRecord::Base
   include Draper::Decoratable
+  include ActiveModel::Serialization
 
   def self.find_by_name(name)
     @@dummy ||= Product.new

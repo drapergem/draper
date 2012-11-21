@@ -27,7 +27,7 @@ module Draper
       source.to_a if source.respond_to?(:to_a) # forces evaluation of a lazy query from AR
       @source = source
       @options = options
-      handle_multiple_decoration if source.is_a?(Draper::Decorator)      
+      handle_multiple_decoration if source.is_a?(Draper::Decorator)
     end
 
     class << self

@@ -11,12 +11,6 @@ describe Draper::Decorator do
       subject.source.should be source
     end
 
-    if defined?(ActiveModel::Serialization)
-      it "includes ActiveModel::Serialization if present" do
-        subject.should respond_to(:serializable_hash)
-      end
-    end
-
     it "stores options" do
       decorator = decorator_class.new(source, some: "options")
       decorator.options.should == {some: "options"}
@@ -485,6 +479,14 @@ describe Draper::Decorator do
           subject.finder_class.should be Namespace::Product
         end
       end
+    end
+  end
+
+  describe "#serializable_hash" do
+    let(:decorator_class) { ProductDecorator }
+
+    it "serializes overridden attributes" do
+      subject.serializable_hash[:overridable].should be :overridden
     end
   end
 

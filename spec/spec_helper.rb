@@ -8,6 +8,7 @@ require 'action_controller/test_case'
 
 Bundler.require
 
+require './spec/support/active_model'
 require './spec/support/active_record'
 require './spec/support/action_controller'
 
