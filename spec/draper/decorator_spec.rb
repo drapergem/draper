@@ -357,6 +357,10 @@ describe Draper::Decorator do
       Array(subject).should be_a Array
     end
 
+    it "proxies delegated methods" do
+      subject.delegated_method.should == "Yay, delegation"
+    end
+
     context "with method security" do
       it "respects allows" do
         source.stub(:hello_world, :goodnight_moon).and_return(:proxied)

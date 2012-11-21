@@ -1,6 +1,8 @@
 class Product < ActiveRecord::Base
   include Draper::Decoratable
 
+  delegate :delegated_method, to: :thing
+
   def self.find_by_name(name)
     @@dummy ||= Product.new
   end
