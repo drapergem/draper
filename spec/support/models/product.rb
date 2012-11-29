@@ -1,5 +1,6 @@
 class Product < ActiveRecord::Base
   include Draper::Decoratable
+  include ActiveModel::Serialization
 
   delegate :delegated_method, to: :thing
 
