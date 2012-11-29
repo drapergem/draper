@@ -486,4 +486,12 @@ describe Draper::Decorator do
     end
   end
 
+  describe "#serializable_hash" do
+    let(:decorator_class) { ProductDecorator }
+
+    it "serializes overridden attributes" do
+      subject.serializable_hash[:overridable].should be :overridden
+    end
+  end
+
 end

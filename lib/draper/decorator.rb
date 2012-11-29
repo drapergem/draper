@@ -3,6 +3,7 @@ require 'active_support/core_ext/array/extract_options'
 module Draper
   class Decorator
     include Draper::ViewHelpers
+    include ActiveModel::Serialization if defined?(ActiveModel::Serialization)
 
     attr_accessor :source, :options
 
