@@ -100,6 +100,14 @@ Then, to test it:
 NoMethodError: undefined method `title' for #<ArticleDecorator:0x000001020d7728>
 ```
 
+You may also blacklist all methods by using `denies_all`:
+
+```ruby
+class ArticleDecorate < ApplicationDecorator
+  denies_all
+end
+```
+
 #### Using `allows`
 
 A better approach is to define a whitelist using `allows`:
