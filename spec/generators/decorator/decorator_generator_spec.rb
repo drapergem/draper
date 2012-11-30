@@ -16,7 +16,6 @@ describe Rails::Generators::DecoratorGenerator do
       subject { file('app/decorators/your_model_decorator.rb') }
       it { should exist }
       it { should contain "class YourModelDecorator < Draper::Decorator" }
-      it { should contain "decorates :your_model" }
     end
   end
 

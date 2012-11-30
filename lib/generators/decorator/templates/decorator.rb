@@ -1,6 +1,5 @@
 <% module_namespacing do -%>
 class <%= class_name %>Decorator < <%= parent_class_name %>
-  decorates :<%= singular_name %>
 
   # Accessing Helpers
   #   You can access any helper via a proxy

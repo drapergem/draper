@@ -1,6 +1,5 @@
 require "./performance/models"
 class ProductDecorator < Draper::Decorator
-  decorates :product
 
   def awesome_title
     "Awesome Title"
@@ -22,7 +21,6 @@ class ProductDecorator < Draper::Decorator
 end
 
 class FastProductDecorator < Draper::Decorator
-  decorates :product
 
   def awesome_title
     "Awesome Title"
