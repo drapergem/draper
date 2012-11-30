@@ -12,11 +12,9 @@
   1. `h` to proxy to Rails/application helpers like `h.current_user`
   2. the name of your decorated model to access the wrapped object like `article.created_at`
 5. Wrap models in your controller with the decorator using:
-  1. `.find` automatic lookup & wrap
-    ex: `ArticleDecorator.find(1)`
-  2. `.decorate` method with a single object or collection,
+  1. `.decorate` method with a single object or collection,
     ex: `ArticleDecorator.decorate(Article.all)`
-  3. `.new` method with single object
+  2. `.new` method with single object
     ex: `ArticleDecorator.new(Article.first)`
 6. Call decorator methods from your view templates
   ex: `<%= @article_decorator.created_at %>`
@@ -94,7 +92,7 @@ end
 Then, to test it:
 
 ```irb
- > ad = ArticleDecorator.find(1)
+ > ad = ArticleDecorator.new(Article.find(1))
  => #<ArticleDecorator:0x000001020d7728 @model=#<Article id: 1, title: "Hello, World">>
  > ad.title
 NoMethodError: undefined method `title' for #<ArticleDecorator:0x000001020d7728>
@@ -119,7 +117,7 @@ end
 ```
 
 ```irb
-> ad = ArticleDecorator.find(1)
+> ad = ArticleDecorator.new(Article.find(1))
 => #<ArticleDecorator:0x000001020d7728 @model=#<Article id: 1, title: "Hello, World">>
 > ad.title
 => "Hello, World"
@@ -206,13 +204,6 @@ ArticleDecorator.decorate(Article.first) # Returns one instance of ArticleDecora
 ArticleDecorator.decorate(Article.all)   # Returns an enumeration proxy of ArticleDecorator instances
 ```
 
-* Call `.find` to automatically do a lookup on the corresponding model class.
-In this example, Article:
-
-```ruby
-ArticleDecorator.find(1)
-```
-
 ### In Your Views
 
 Use the new methods in your views like any other model method (ex: `@article.published_at`):
@@ -283,7 +274,7 @@ Then you need to perform the wrapping in your controller. Here's the simplest me
 ```ruby
 class ArticlesController < ApplicationController
   def show
-    @article = ArticleDecorator.find params[:id]
+    @article = ArticleDecorator.new(Article.find(params[:id]))
   end
 end
 ```
