@@ -207,7 +207,7 @@ describe Draper::Decorator do
 
   describe "#to_model" do
     it "returns the decorator" do
-      subject.to_model.should be subject
+      subject.to_model.should be source
     end
   end
 
