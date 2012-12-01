@@ -194,7 +194,7 @@ module Draper
 
     # For ActiveModel compatibilty
     def to_model
-      source
+      self
     end
 
     # For ActiveModel compatibility
