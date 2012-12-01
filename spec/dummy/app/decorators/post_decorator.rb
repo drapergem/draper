@@ -22,4 +22,8 @@ class PostDecorator < Draper::Decorator
   def url_with_id
     h.post_url(id: id)
   end
+
+  def link
+    h.link_to id.to_s, self
+  end
 end
