@@ -45,7 +45,33 @@ module Draper
     # @option options [Class, Symbol] :for The model class to find
     def self.has_finders(options = {})
       extend Draper::Finders
-      self.finder_class = options[:for] || name.chomp("Decorator")
+      if klass = options.delete(:for)
+        decorates klass
+      end
+    end
+
+    class << self
+      # Specify the class that this class decorates.
+      #
+      # @param [String, Symbol, Class] Class or name of class to decorate.
+      def decorates(klass)
+        @source_class = klass.kind_of?(Class) ? klass : klass.to_s.classify.constantize
+      end
+
+      # Provides access to the class that this decorator decorates
+      #
+      # @return [Class]: The class wrapped by the decorator
+      def source_class
+        @source_class ||= name.chomp("Decorator").constantize
+      end
+
+      def method_missing(method, *args, &block)
+        source_class.send(method, *args, &block)
+      end
+
+      def respond_to?(method, include_private = false)
+        super || source_class.respond_to?(method)
+      end
     end
 
     # Typically called within a decorator definition, this method causes

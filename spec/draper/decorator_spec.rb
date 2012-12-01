@@ -450,12 +450,12 @@ describe Draper::Decorator do
 
     context "with no options" do
       it "infers the finder class" do
-        ProductDecorator.finder_class.should be Product
+        ProductDecorator.source_class.should be Product
       end
 
       context "for a namespaced model" do
         it "infers the finder class" do
-          Namespace::ProductDecorator.finder_class.should be Namespace::Product
+          Namespace::ProductDecorator.source_class.should be Namespace::Product
         end
       end
     end
@@ -466,21 +466,21 @@ describe Draper::Decorator do
       context "with a symbol" do
         it "sets the finder class" do
           subject.has_finders for: :product
-          subject.finder_class.should be Product
+          subject.source_class.should be Product
         end
       end
 
       context "with a string" do
         it "sets the finder class" do
           subject.has_finders for: "some_thing"
-          subject.finder_class.should be SomeThing
+          subject.source_class.should be SomeThing
         end
       end
 
       context "with a class" do
-        it "sets the finder_class" do
+        it "sets the source_class" do
           subject.has_finders for: Namespace::Product
-          subject.finder_class.should be Namespace::Product
+          subject.source_class.should be Namespace::Product
         end
       end
     end
@@ -494,4 +494,18 @@ describe Draper::Decorator do
     end
   end
 
+  context "class methods" do
+    it "passes through to the underlying wrapped class" do
+      ProductDecorator.sample_class_method.should == Product.sample_class_method
+    end
+
+    context "when told to decorate a different class " do
+      subject { decorator_class }
+      before { decorator_class.decorates :product }
+
+      it "should manually set the class to pass methods to" do
+        subject.sample_class_method.should == Product.sample_class_method
+      end
+    end
+  end
 end
