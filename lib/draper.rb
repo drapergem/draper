@@ -48,4 +48,10 @@ module Draper
       super("Could not infer a decorator for #{klass}.")
     end
   end
+
+  class UninferrableSourceError < NameError
+    def initialize(klass)
+      super("Could not infer a source for #{klass}.")
+    end
+  end
 end

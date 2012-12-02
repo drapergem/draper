@@ -34,27 +34,25 @@ module Draper
       alias_method :decorate, :new
     end
 
-    UNKNOWN_SOURCE_ERROR_MESSAGE = "Cannot find source_class for %s. Use `decorates` to specify the source_class."
-
     # Specify the class that this class decorates.
     #
     # @param [String, Symbol, Class] Class or name of class to decorate.
     def self.decorates(klass)
-      @source_class = klass.kind_of?(Class) ? klass : klass.to_s.classify.constantize
+      @source_class = klass.to_s.classify.constantize
     end
 
-    # Provides access to the class that this decorator decorates
-    #
-    # @return [Class]: The class wrapped by the decorator
+    # @return [Class] The source class corresponding to this
+    #   decorator class
     def self.source_class
-      @source_class ||= begin
-        raise NameError.new(UNKNOWN_SOURCE_ERROR_MESSAGE % "<unnamed decorator>") if name.nil? or name.chomp("Decorator").blank?
-        begin
-          name.chomp("Decorator").constantize
-        rescue NameError
-          raise NameError.new(UNKNOWN_SOURCE_ERROR_MESSAGE % "`#{name.chomp("Decorator")}`")
-        end
-      end
+      @source_class ||= inferred_source_class
+    end
+
+    # Checks whether this decorator class has a corresponding
+    # source class
+    def self.source_class?
+      source_class
+    rescue Draper::UninferrableSourceError
+      false
     end
 
     # Automatically decorates ActiveRecord finder methods, so that
@@ -184,7 +182,7 @@ module Draper
     end
 
     def method_missing(method, *args, &block)
-      if allow?(method) && source.respond_to?(method)
+      if delegatable_method?(method)
         self.class.define_proxy(method)
         send(method, *args, &block)
       else
@@ -193,31 +191,40 @@ module Draper
     end
 
     def respond_to?(method, include_private = false)
-      super || (allow?(method) && source.respond_to?(method, include_private))
+      super || delegatable_method?(method)
     end
 
     def self.method_missing(method, *args, &block)
-      # We see if we have a valid source here rather than in the #send since we don't want to accidentally capture
-      # NameError raised by a method called on a valid #source_class
-      begin
-        source_class
-      rescue NameError
-        return super
+      if delegatable_method?(method)
+        source_class.send(method, *args, &block)
+      else
+        super
       end
-
-      # If we pass the source_class invocation, then we can send the method on to the decorated class.
-      source_class.send(method, *args, &block)
     end
 
     def self.respond_to?(method, include_private = false)
-      super || begin
-        source_class.respond_to?(method)
-      rescue NameError
-        false
-      end
+      super || delegatable_method?(method)
     end
 
     private
+
+    def delegatable_method?(method)
+      allow?(method) && source.respond_to?(method)
+    end
+
+    def self.delegatable_method?(method)
+      source_class? && source_class.respond_to?(method)
+    end
+
+    def self.inferred_source_class
+      raise Draper::UninferrableSourceError.new(self) if name.nil? || name.chomp("Decorator").empty?
+
+      begin
+        name.chomp("Decorator").constantize
+      rescue NameError
+        raise Draper::UninferrableSourceError.new(self)
+      end
+    end
 
     def self.define_proxy(method)
       define_method(method) do |*args, &block|
