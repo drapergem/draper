@@ -18,13 +18,7 @@ module Draper
     end
 
     def method_missing(method, *args, &block)
-      begin
-        source_class
-      rescue NameError
-        return super
-      end
-
-      result = source_class.send(method, *args, &block)
+      result = super
       options = args.extract_options!
 
       case method.to_s

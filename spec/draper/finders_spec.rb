@@ -142,15 +142,4 @@ describe Draper::Finders do
       ProductDecorator.where(name: "apples").should be found
     end
   end
-
-  describe ".respond_to?" do
-    it "responds to the model's class methods" do
-      ProductDecorator.should respond_to :sample_class_method
-    end
-
-    it "responds to its own methods" do
-      ProductDecorator.should respond_to :my_class_method
-    end
-  end
-
 end
