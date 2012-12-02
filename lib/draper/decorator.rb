@@ -34,18 +34,36 @@ module Draper
       alias_method :decorate, :new
     end
 
-    # Adds ActiveRecord finder methods to the decorator class. The
-    # methods return decorated models, so that you can use
-    # `ProductDecorator.find(id)` instead of
+    # Specify the class that this class decorates.
+    #
+    # @param [String, Symbol, Class] Class or name of class to decorate.
+    def self.decorates(klass)
+      @source_class = klass.to_s.classify.constantize
+    end
+
+    # @return [Class] The source class corresponding to this
+    #   decorator class
+    def self.source_class
+      @source_class ||= inferred_source_class
+    end
+
+    # Checks whether this decorator class has a corresponding
+    # source class
+    def self.source_class?
+      source_class
+    rescue Draper::UninferrableSourceError
+      false
+    end
+
+    # Automatically decorates ActiveRecord finder methods, so that
+    # you can use `ProductDecorator.find(id)` instead of
     # `ProductDecorator.decorate(Product.find(id))`.
     #
-    # If the `:for` option is not supplied, the model class will be
-    # inferred from the decorator class.
+    # The model class to be found is defined by `decorates` or
+    # inferred from the decorator class name.
     #
-    # @option options [Class, Symbol] :for The model class to find
-    def self.has_finders(options = {})
+    def self.decorates_finders
       extend Draper::Finders
-      self.finder_class = options[:for] || name.chomp("Decorator")
     end
 
     # Typically called within a decorator definition, this method causes
@@ -145,25 +163,12 @@ module Draper
     end
     alias_method :is_a?, :kind_of?
 
-    def respond_to?(method, include_private = false)
-      super || (allow?(method) && source.respond_to?(method, include_private))
-    end
-
     # We always want to delegate present, in case we decorate a nil object.
     #
     # I don't like the idea of decorating a nil object, but we'll deal with
     # that later.
     def present?
       source.present?
-    end
-
-    def method_missing(method, *args, &block)
-      if allow?(method) && source.respond_to?(method)
-        self.class.define_proxy(method)
-        send(method, *args, &block)
-      else
-        super
-      end
     end
 
     # For ActiveModel compatibilty
@@ -176,7 +181,54 @@ module Draper
       source.to_param
     end
 
+    def method_missing(method, *args, &block)
+      if delegatable_method?(method)
+        self.class.define_proxy(method)
+        send(method, *args, &block)
+      else
+        super
+      end
+    end
+
+    def respond_to?(method, include_private = false)
+      super || delegatable_method?(method)
+    end
+
+    def self.method_missing(method, *args, &block)
+      if delegatable_method?(method)
+        source_class.send(method, *args, &block)
+      else
+        super
+      end
+    end
+
+    def self.respond_to?(method, include_private = false)
+      super || delegatable_method?(method)
+    end
+
     private
+
+    def delegatable_method?(method)
+      allow?(method) && source.respond_to?(method)
+    end
+
+    def self.delegatable_method?(method)
+      source_class? && source_class.respond_to?(method)
+    end
+
+    def self.inferred_source_class
+      uninferrable_source if name.nil? || name.demodulize !~ /.+Decorator$/
+
+      begin
+        name.chomp("Decorator").constantize
+      rescue NameError
+        uninferrable_source
+      end
+    end
+
+    def self.uninferrable_source
+      raise Draper::UninferrableSourceError.new(self)
+    end
 
     def self.define_proxy(method)
       define_method(method) do |*args, &block|

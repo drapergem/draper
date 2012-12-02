@@ -20,4 +20,7 @@ describe PostDecorator do
     subject.url_with_id.should == "http://www.example.com/en/posts/#{source.id}"
   end
 
+  it "can be passed implicitly to url_for" do
+    subject.link.should == "<a href=\"/en/posts/#{source.id}\">#{source.id}</a>"
+  end
 end
