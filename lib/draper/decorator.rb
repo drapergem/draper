@@ -34,48 +34,25 @@ module Draper
       alias_method :decorate, :new
     end
 
-    class << self
-      UNKNOWN_SOURCE_ERROR_MESSAGE = "Cannot find source_class for %s. Use `decorates` to specify the source_class."
+    UNKNOWN_SOURCE_ERROR_MESSAGE = "Cannot find source_class for %s. Use `decorates` to specify the source_class."
 
-      # Specify the class that this class decorates.
-      #
-      # @param [String, Symbol, Class] Class or name of class to decorate.
-      def decorates(klass)
-        @source_class = klass.kind_of?(Class) ? klass : klass.to_s.classify.constantize
-      end
+    # Specify the class that this class decorates.
+    #
+    # @param [String, Symbol, Class] Class or name of class to decorate.
+    def self.decorates(klass)
+      @source_class = klass.kind_of?(Class) ? klass : klass.to_s.classify.constantize
+    end
 
-      # Provides access to the class that this decorator decorates
-      #
-      # @return [Class]: The class wrapped by the decorator
-      def source_class
-        @source_class ||= begin
-          raise NameError.new(UNKNOWN_SOURCE_ERROR_MESSAGE % "<unnamed decorator>") if name.nil? or name.chomp("Decorator").blank?
-          begin
-            name.chomp("Decorator").constantize
-          rescue NameError
-            raise NameError.new(UNKNOWN_SOURCE_ERROR_MESSAGE % "`#{name.chomp("Decorator")}`")
-          end
-        end
-      end
-
-      def method_missing(method, *args, &block)
-        # We see if we have a valid source here rather than in the #send since we don't want to accidentally capture
-        # NameError raised by a method called on a valid #source_class
+    # Provides access to the class that this decorator decorates
+    #
+    # @return [Class]: The class wrapped by the decorator
+    def self.source_class
+      @source_class ||= begin
+        raise NameError.new(UNKNOWN_SOURCE_ERROR_MESSAGE % "<unnamed decorator>") if name.nil? or name.chomp("Decorator").blank?
         begin
-          source_class
+          name.chomp("Decorator").constantize
         rescue NameError
-          return super
-        end
-
-        # If we pass the source_class invocation, then we can send the method on to the decorated class.
-        source_class.send(method, *args, &block)
-      end
-
-      def respond_to?(method, include_private = false)
-        super || begin
-          source_class.respond_to?(method)
-        rescue NameError
-          false
+          raise NameError.new(UNKNOWN_SOURCE_ERROR_MESSAGE % "`#{name.chomp("Decorator")}`")
         end
       end
     end
@@ -188,16 +165,22 @@ module Draper
     end
     alias_method :is_a?, :kind_of?
 
-    def respond_to?(method, include_private = false)
-      super || (allow?(method) && source.respond_to?(method, include_private))
-    end
-
     # We always want to delegate present, in case we decorate a nil object.
     #
     # I don't like the idea of decorating a nil object, but we'll deal with
     # that later.
     def present?
       source.present?
+    end
+
+    # For ActiveModel compatibilty
+    def to_model
+      self
+    end
+
+    # For ActiveModel compatibility
+    def to_param
+      source.to_param
     end
 
     def method_missing(method, *args, &block)
@@ -209,14 +192,29 @@ module Draper
       end
     end
 
-    # For ActiveModel compatibilty
-    def to_model
-      self
+    def respond_to?(method, include_private = false)
+      super || (allow?(method) && source.respond_to?(method, include_private))
     end
 
-    # For ActiveModel compatibility
-    def to_param
-      source.to_param
+    def self.method_missing(method, *args, &block)
+      # We see if we have a valid source here rather than in the #send since we don't want to accidentally capture
+      # NameError raised by a method called on a valid #source_class
+      begin
+        source_class
+      rescue NameError
+        return super
+      end
+
+      # If we pass the source_class invocation, then we can send the method on to the decorated class.
+      source_class.send(method, *args, &block)
+    end
+
+    def self.respond_to?(method, include_private = false)
+      super || begin
+        source_class.respond_to?(method)
+      rescue NameError
+        false
+      end
     end
 
     private
