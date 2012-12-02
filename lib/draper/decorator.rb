@@ -217,13 +217,17 @@ module Draper
     end
 
     def self.inferred_source_class
-      raise Draper::UninferrableSourceError.new(self) if name.nil? || name.chomp("Decorator").empty?
+      uninferrable_source if name.nil? || name.demodulize !~ /.+Decorator$/
 
       begin
         name.chomp("Decorator").constantize
       rescue NameError
-        raise Draper::UninferrableSourceError.new(self)
+        uninferrable_source
       end
+    end
+
+    def self.uninferrable_source
+      raise Draper::UninferrableSourceError.new(self)
     end
 
     def self.define_proxy(method)

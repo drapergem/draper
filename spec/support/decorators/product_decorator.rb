@@ -9,6 +9,10 @@ class ProductDecorator < Draper::Decorator
     :overridden
   end
 
+  def self.overridable
+    :overridden
+  end
+
   def self.my_class_method
   end
 
