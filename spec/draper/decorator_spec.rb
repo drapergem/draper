@@ -125,6 +125,97 @@ describe Draper::Decorator do
     end
   end
 
+  describe ".decorates" do
+    subject { Class.new(Draper::Decorator) }
+
+    context "with a symbol" do
+      it "sets .source_class" do
+        subject.decorates :product
+        subject.source_class.should be Product
+      end
+    end
+
+    context "with a string" do
+      it "sets .source_class" do
+        subject.decorates "product"
+        subject.source_class.should be Product
+      end
+    end
+
+    context "with a class" do
+      it "sets .source_class" do
+        subject.decorates Product
+        subject.source_class.should be Product
+      end
+    end
+  end
+
+  describe ".source_class" do
+    context "when not set by .decorates" do
+      context "for an anonymous decorator" do
+        subject { Class.new(Draper::Decorator) }
+
+        it "raises an UninferrableSourceError" do
+          expect{subject.source_class}.to raise_error Draper::UninferrableSourceError
+        end
+      end
+
+      context "for a decorator without a corresponding source" do
+        subject { SpecificProductDecorator }
+
+        it "raises an UninferrableSourceError" do
+          expect{subject.source_class}.to raise_error Draper::UninferrableSourceError
+        end
+      end
+
+      context "for a decorator called Decorator" do
+        subject { Draper::Decorator }
+
+        it "raises an UninferrableSourceError" do
+          expect{subject.source_class}.to raise_error Draper::UninferrableSourceError
+        end
+      end
+
+      context "for a decorator with a name not ending in Decorator" do
+        subject { DecoratorWithApplicationHelper }
+
+        it "raises an UninferrableSourceError" do
+          expect{subject.source_class}.to raise_error Draper::UninferrableSourceError
+        end
+      end
+
+      context "for an inferrable source" do
+        subject { ProductDecorator }
+
+        it "infers the source" do
+          subject.source_class.should be Product
+        end
+      end
+
+      context "for a namespaced inferrable source" do
+        subject { Namespace::ProductDecorator }
+
+        it "infers the namespaced source" do
+          subject.source_class.should be Namespace::Product
+        end
+      end
+    end
+  end
+
+  describe ".source_class?" do
+    subject { Class.new(Draper::Decorator) }
+
+    it "returns truthy when .source_class is set" do
+      subject.stub(:source_class).and_return(Product)
+      subject.source_class?.should be_true
+    end
+
+    it "returns false when .source_class is not inferrable" do
+      subject.stub(:source_class).and_raise(Draper::UninferrableSourceError.new(subject))
+      subject.source_class?.should be_false
+    end
+  end
+
   describe ".decorates_association" do
     let(:decorator_class) { Class.new(ProductDecorator) }
     before { decorator_class.decorates_association :similar_products, with: ProductDecorator }
@@ -298,8 +389,8 @@ describe Draper::Decorator do
         subject.respond_to?(:awesome_private_title, true).should be_true
       end
 
-      it "returns true for the source's private methods" do
-        subject.respond_to?(:private_title, true).should be_true
+      it "returns false for the source's private methods" do
+        subject.respond_to?(:private_title, true).should be_false
       end
     end
 
@@ -327,63 +418,110 @@ describe Draper::Decorator do
     end
   end
 
-  describe "method proxying" do
-    let(:decorator_class) { Class.new(ProductDecorator) }
+  describe ".respond_to?" do
+    subject { Class.new(ProductDecorator) }
 
-    it "does not proxy methods that are defined on the decorator" do
-      subject.overridable.should be :overridden
-    end
-
-    it "does not proxy methods inherited from Object" do
-      subject.inspect.should_not be source.inspect
-    end
-
-    it "proxies missing methods that exist on the source" do
-      source.stub(:hello_world).and_return(:proxied)
-      subject.hello_world.should be :proxied
-    end
-
-    it "adds proxied methods to the decorator when they are used" do
-      subject.methods.should_not include :hello_world
-      subject.hello_world
-      subject.methods.should include :hello_world
-    end
-
-    it "passes blocks to proxied methods" do
-      subject.block{"marker"}.should == "marker"
-    end
-
-    it "does not confuse Kernel#Array" do
-      Array(subject).should be_a Array
-    end
-
-    it "proxies delegated methods" do
-      subject.delegated_method.should == "Yay, delegation"
-    end
-
-    context "with method security" do
-      it "respects allows" do
-        source.stub(:hello_world, :goodnight_moon).and_return(:proxied)
-        subject.class.allows :hello_world
-
-        subject.hello_world.should be :proxied
-        expect{subject.goodnight_moon}.to raise_error NameError
+    context "without a source class" do
+      it "returns true for its own class methods" do
+        subject.should respond_to :my_class_method
       end
 
-      it "respects denies" do
-        source.stub(:hello_world, :goodnight_moon).and_return(:proxied)
-        subject.class.denies :goodnight_moon
+      it "returns false for other class methods" do
+        subject.should_not respond_to :sample_class_method
+      end
+    end
 
-        subject.hello_world.should be :proxied
-        expect{subject.goodnight_moon}.to raise_error NameError
+    context "with a source_class" do
+      before { subject.decorates :product }
+
+      it "returns true for its own class methods" do
+        subject.should respond_to :my_class_method
       end
 
-      it "respects denies_all" do
-        source.stub(:hello_world, :goodnight_moon).and_return(:proxied)
-        subject.class.denies_all
+      it "returns true for the source's class methods" do
+        subject.should respond_to :sample_class_method
+      end
+    end
+  end
 
-        expect{subject.hello_world}.to raise_error NameError
-        expect{subject.goodnight_moon}.to raise_error NameError
+  describe "proxying" do
+    context "instance methods" do
+      let(:decorator_class) { Class.new(ProductDecorator) }
+
+      it "does not proxy methods that are defined on the decorator" do
+        subject.overridable.should be :overridden
+      end
+
+      it "does not proxy methods inherited from Object" do
+        subject.inspect.should_not be source.inspect
+      end
+
+      it "proxies missing methods that exist on the source" do
+        source.stub(:hello_world).and_return(:proxied)
+        subject.hello_world.should be :proxied
+      end
+
+      it "adds proxied methods to the decorator when they are used" do
+        subject.methods.should_not include :hello_world
+        subject.hello_world
+        subject.methods.should include :hello_world
+      end
+
+      it "passes blocks to proxied methods" do
+        subject.block{"marker"}.should == "marker"
+      end
+
+      it "does not confuse Kernel#Array" do
+        Array(subject).should be_a Array
+      end
+
+      it "proxies delegated methods" do
+        subject.delegated_method.should == "Yay, delegation"
+      end
+
+      it "does not proxy private methods" do
+        expect{subject.private_title}.to raise_error NoMethodError
+      end
+
+      context "with method security" do
+        it "respects allows" do
+          source.stub(:hello_world, :goodnight_moon).and_return(:proxied)
+          subject.class.allows :hello_world
+
+          subject.hello_world.should be :proxied
+          expect{subject.goodnight_moon}.to raise_error NameError
+        end
+
+        it "respects denies" do
+          source.stub(:hello_world, :goodnight_moon).and_return(:proxied)
+          subject.class.denies :goodnight_moon
+
+          subject.hello_world.should be :proxied
+          expect{subject.goodnight_moon}.to raise_error NameError
+        end
+
+        it "respects denies_all" do
+          source.stub(:hello_world, :goodnight_moon).and_return(:proxied)
+          subject.class.denies_all
+
+          expect{subject.hello_world}.to raise_error NameError
+          expect{subject.goodnight_moon}.to raise_error NameError
+        end
+      end
+    end
+
+    context "class methods" do
+      subject { Class.new(ProductDecorator) }
+      let(:source_class) { Product }
+      before { subject.decorates source_class }
+
+      it "does not proxy methods that are defined on the decorator" do
+        subject.overridable.should be :overridden
+      end
+
+      it "proxies missing methods that exist on the source" do
+        source_class.stub(:hello_world).and_return(:proxied)
+        subject.hello_world.should be :proxied
       end
     end
   end
@@ -421,7 +559,7 @@ describe Draper::Decorator do
     end
 
     it "is able to use the link_to helper" do
-      subject.sample_link.should == "<a href=\"/World\">Hello</a>"
+      subject.sample_link.should == %{<a href="/World">Hello</a>}
     end
 
     it "is able to use the truncate helper" do
@@ -443,46 +581,9 @@ describe Draper::Decorator do
     subject.is_a?(subject.class).should be_true
   end
 
-  describe ".has_finders" do
+  describe ".decorates_finders" do
     it "extends the Finders module" do
       ProductDecorator.should be_a_kind_of Draper::Finders
-    end
-
-    context "with no options" do
-      it "infers the finder class" do
-        ProductDecorator.finder_class.should be Product
-      end
-
-      context "for a namespaced model" do
-        it "infers the finder class" do
-          Namespace::ProductDecorator.finder_class.should be Namespace::Product
-        end
-      end
-    end
-
-    context "with :for option" do
-      subject { Class.new(Draper::Decorator) }
-
-      context "with a symbol" do
-        it "sets the finder class" do
-          subject.has_finders for: :product
-          subject.finder_class.should be Product
-        end
-      end
-
-      context "with a string" do
-        it "sets the finder class" do
-          subject.has_finders for: "some_thing"
-          subject.finder_class.should be SomeThing
-        end
-      end
-
-      context "with a class" do
-        it "sets the finder_class" do
-          subject.has_finders for: Namespace::Product
-          subject.finder_class.should be Namespace::Product
-        end
-      end
     end
   end
 
@@ -491,6 +592,30 @@ describe Draper::Decorator do
 
     it "serializes overridden attributes" do
       subject.serializable_hash[:overridable].should be :overridden
+    end
+  end
+
+  describe ".method_missing" do
+    context "when called on an anonymous decorator" do
+      subject { ->{ Class.new(Draper::Decorator).fizzbuzz } }
+      it { should raise_error NoMethodError }
+    end
+
+    context "when called on an uninferrable decorator" do
+      subject { ->{ SpecificProductDecorator.fizzbuzz } }
+      it { should raise_error NoMethodError }
+    end
+
+    context "when called on an inferrable decorator" do
+      context "for a method known to the inferred class" do
+        subject { ->{ ProductDecorator.model_name } }
+        it { should_not raise_error }
+      end
+
+      context "for a method unknown to the inferred class" do
+        subject { ->{ ProductDecorator.fizzbuzz } }
+        it { should raise_error NoMethodError }
+      end
     end
   end
 

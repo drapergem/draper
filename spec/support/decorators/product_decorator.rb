@@ -1,11 +1,15 @@
 class ProductDecorator < Draper::Decorator
-  has_finders
+  decorates_finders
 
   def awesome_title
     "Awesome Title"
   end
 
   def overridable
+    :overridden
+  end
+
+  def self.overridable
     :overridden
   end
 
