@@ -450,12 +450,12 @@ describe Draper::Decorator do
 
     context "with no options" do
       it "infers the finder class" do
-        ProductDecorator.finder_class.should be Product
+        ProductDecorator.source_class.should be Product
       end
 
       context "for a namespaced model" do
         it "infers the finder class" do
-          Namespace::ProductDecorator.finder_class.should be Namespace::Product
+          Namespace::ProductDecorator.source_class.should be Namespace::Product
         end
       end
     end
@@ -466,21 +466,21 @@ describe Draper::Decorator do
       context "with a symbol" do
         it "sets the finder class" do
           subject.has_finders for: :product
-          subject.finder_class.should be Product
+          subject.source_class.should be Product
         end
       end
 
       context "with a string" do
         it "sets the finder class" do
           subject.has_finders for: "some_thing"
-          subject.finder_class.should be SomeThing
+          subject.source_class.should be SomeThing
         end
       end
 
       context "with a class" do
-        it "sets the finder_class" do
+        it "sets the source_class" do
           subject.has_finders for: Namespace::Product
-          subject.finder_class.should be Namespace::Product
+          subject.source_class.should be Namespace::Product
         end
       end
     end
@@ -494,4 +494,71 @@ describe Draper::Decorator do
     end
   end
 
+  context "class methods" do
+    it "passes through to the underlying wrapped class" do
+      ProductDecorator.sample_class_method.should == Product.sample_class_method
+    end
+
+    context "when told to decorate a different class " do
+      subject { decorator_class }
+      before { decorator_class.decorates :product }
+
+      it "should manually set the class to pass methods to" do
+        subject.sample_class_method.should == Product.sample_class_method
+      end
+    end
+
+    describe "#respond_to?" do
+      context "when using a decorator that cannot infer an underlying model" do
+        subject { Class.new(Draper::Decorator) }
+        it "should not throw an exception during respond_to? due to an inability to find the inferred decorated class" do
+          expect { subject.respond_to?(:fizzbuzz) }.to_not raise_error(NameError)
+        end
+
+        it "should return false for methods that it can't find" do
+          subject.respond_to?(:fizzbuzz).should == false
+        end
+
+        it "should return true for methods that it can find" do
+          subject.respond_to?(:denies_all).should == true
+        end
+      end
+    end
+
+    describe "#source_class" do
+      context "when called on an anonymous decorator" do
+        subject { -> { Class.new(Draper::Decorator).source_class } }
+        it { should raise_error(NameError, /Use `decorates` to specify the source_class/) }
+      end
+
+      context "when called on a decorator that can't infer the class name" do
+        subject { -> { SpecificProductDecorator.source_class } }
+        it { should raise_error(NameError, /Use `decorates` to specify the source_class/) }
+      end
+    end
+
+    describe "#method_missing" do
+      context "when called on an anonymous decorator" do
+        subject { lambda { Class.new(Draper::Decorator).fizzbuzz } }
+        it { should raise_error(NoMethodError) }
+      end
+
+      context "when called on an uninferrable decorator" do
+        subject { lambda { SpecificProductDecorator.fizzbuzz } }
+        it { should raise_error(NoMethodError) }
+      end
+
+      context "when called on an inferrable decorator" do
+        context "for a method known to the inferred class" do
+          subject { lambda { ProductDecorator.model_name } }
+          it { should_not raise_error(NoMethodError) }
+        end
+
+        context "for a method unknown to the inferred class" do
+          subject { lambda { ProductDecorator.fizzbuzz } }
+          it { should raise_error(NoMethodError) }
+        end
+      end
+    end
+  end
 end
