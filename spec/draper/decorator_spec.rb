@@ -443,46 +443,9 @@ describe Draper::Decorator do
     subject.is_a?(subject.class).should be_true
   end
 
-  describe ".has_finders" do
+  describe ".decorates_finders" do
     it "extends the Finders module" do
       ProductDecorator.should be_a_kind_of Draper::Finders
-    end
-
-    context "with no options" do
-      it "infers the finder class" do
-        ProductDecorator.source_class.should be Product
-      end
-
-      context "for a namespaced model" do
-        it "infers the finder class" do
-          Namespace::ProductDecorator.source_class.should be Namespace::Product
-        end
-      end
-    end
-
-    context "with :for option" do
-      subject { Class.new(Draper::Decorator) }
-
-      context "with a symbol" do
-        it "sets the finder class" do
-          subject.has_finders for: :product
-          subject.source_class.should be Product
-        end
-      end
-
-      context "with a string" do
-        it "sets the finder class" do
-          subject.has_finders for: "some_thing"
-          subject.source_class.should be SomeThing
-        end
-      end
-
-      context "with a class" do
-        it "sets the source_class" do
-          subject.has_finders for: Namespace::Product
-          subject.source_class.should be Namespace::Product
-        end
-      end
     end
   end
 

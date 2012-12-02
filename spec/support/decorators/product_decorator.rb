@@ -1,5 +1,5 @@
 class ProductDecorator < Draper::Decorator
-  has_finders
+  decorates_finders
 
   def awesome_title
     "Awesome Title"

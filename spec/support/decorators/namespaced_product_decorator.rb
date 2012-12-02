@@ -1,5 +1,5 @@
 module Namespace
   class ProductDecorator < Draper::Decorator
-    has_finders
+    decorates_finders
   end
 end

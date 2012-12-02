@@ -34,22 +34,6 @@ module Draper
       alias_method :decorate, :new
     end
 
-    # Adds ActiveRecord finder methods to the decorator class. The
-    # methods return decorated models, so that you can use
-    # `ProductDecorator.find(id)` instead of
-    # `ProductDecorator.decorate(Product.find(id))`.
-    #
-    # If the `:for` option is not supplied, the model class will be
-    # inferred from the decorator class.
-    #
-    # @option options [Class, Symbol] :for The model class to find
-    def self.has_finders(options = {})
-      extend Draper::Finders
-      if klass = options.delete(:for)
-        decorates klass
-      end
-    end
-
     class << self
       UNKNOWN_SOURCE_ERROR_MESSAGE = "Cannot find source_class for %s. Use `decorates` to specify the source_class."
 
@@ -94,6 +78,17 @@ module Draper
           false
         end
       end
+    end
+
+    # Automatically decorates ActiveRecord finder methods, so that
+    # you can use `ProductDecorator.find(id)` instead of
+    # `ProductDecorator.decorate(Product.find(id))`.
+    #
+    # The model class to be found is defined by `decorates` or
+    # inferred from the decorator class name.
+    #
+    def self.decorates_finders
+      extend Draper::Finders
     end
 
     # Typically called within a decorator definition, this method causes
