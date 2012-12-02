@@ -298,8 +298,8 @@ describe Draper::Decorator do
         subject.respond_to?(:awesome_private_title, true).should be_true
       end
 
-      it "returns true for the source's private methods" do
-        subject.respond_to?(:private_title, true).should be_true
+      it "returns false for the source's private methods" do
+        subject.respond_to?(:private_title, true).should be_false
       end
     end
 
@@ -359,6 +359,10 @@ describe Draper::Decorator do
 
     it "proxies delegated methods" do
       subject.delegated_method.should == "Yay, delegation"
+    end
+
+    it "does not proxy private methods" do
+      expect{subject.private_title}.to raise_error NoMethodError
     end
 
     context "with method security" do
