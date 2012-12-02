@@ -507,5 +507,58 @@ describe Draper::Decorator do
         subject.sample_class_method.should == Product.sample_class_method
       end
     end
+
+    describe "#respond_to?" do
+      context "when using a decorator that cannot infer an underlying model" do
+        subject { Class.new(Draper::Decorator) }
+        it "should not throw an exception during respond_to? due to an inability to find the inferred decorated class" do
+          expect { subject.respond_to?(:fizzbuzz) }.to_not raise_error(NameError)
+        end
+
+        it "should return false for methods that it can't find" do
+          subject.respond_to?(:fizzbuzz).should == false
+        end
+
+        it "should return true for methods that it can find" do
+          subject.respond_to?(:denies_all).should == true
+        end
+      end
+    end
+
+    describe "#source_class" do
+      context "when called on an anonymous decorator" do
+        subject { -> { Class.new(Draper::Decorator).source_class } }
+        it { should raise_error(NameError, /Use `decorates` to specify the source_class/) }
+      end
+
+      context "when called on a decorator that can't infer the class name" do
+        subject { -> { SpecificProductDecorator.source_class } }
+        it { should raise_error(NameError, /Use `decorates` to specify the source_class/) }
+      end
+    end
+
+    describe "#method_missing" do
+      context "when called on an anonymous decorator" do
+        subject { lambda { Class.new(Draper::Decorator).fizzbuzz } }
+        it { should raise_error(NoMethodError) }
+      end
+
+      context "when called on an uninferrable decorator" do
+        subject { lambda { SpecificProductDecorator.fizzbuzz } }
+        it { should raise_error(NoMethodError) }
+      end
+
+      context "when called on an inferrable decorator" do
+        context "for a method known to the inferred class" do
+          subject { lambda { ProductDecorator.model_name } }
+          it { should_not raise_error(NoMethodError) }
+        end
+
+        context "for a method unknown to the inferred class" do
+          subject { lambda { ProductDecorator.fizzbuzz } }
+          it { should raise_error(NoMethodError) }
+        end
+      end
+    end
   end
 end

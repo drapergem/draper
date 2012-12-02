@@ -51,6 +51,8 @@ module Draper
     end
 
     class << self
+      UNKNOWN_SOURCE_ERROR_MESSAGE = "Cannot find source_class for %s. Use `decorates` to specify the source_class."
+
       # Specify the class that this class decorates.
       #
       # @param [String, Symbol, Class] Class or name of class to decorate.
@@ -62,15 +64,35 @@ module Draper
       #
       # @return [Class]: The class wrapped by the decorator
       def source_class
-        @source_class ||= name.chomp("Decorator").constantize
+        @source_class ||= begin
+          raise NameError.new(UNKNOWN_SOURCE_ERROR_MESSAGE % "<unnamed decorator>") if name.nil? or name.chomp("Decorator").blank?
+          begin
+            name.chomp("Decorator").constantize
+          rescue NameError
+            raise NameError.new(UNKNOWN_SOURCE_ERROR_MESSAGE % "`#{name.chomp("Decorator")}`")
+          end
+        end
       end
 
       def method_missing(method, *args, &block)
+        # We see if we have a valid source here rather than in the #send since we don't want to accidentally capture
+        # NameError raised by a method called on a valid #source_class
+        begin
+          source_class
+        rescue NameError
+          return super
+        end
+
+        # If we pass the source_class invocation, then we can send the method on to the decorated class.
         source_class.send(method, *args, &block)
       end
 
       def respond_to?(method, include_private = false)
-        super || source_class.respond_to?(method)
+        super || begin
+          source_class.respond_to?(method)
+        rescue NameError
+          false
+        end
       end
     end
 
