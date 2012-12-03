@@ -1,5 +1,40 @@
 # Draper Changelog
 
+## 1.0.0.beta2
+
+* `has_finders` is now `decorates_finders`. [https://github.com/haines/draper/commit/33f18aa062e0d3848443dbd81047f20d5665579f](https://github.com/haines/draper/commit/33f18aa062e0d3848443dbd81047f20d5665579f)
+
+* If a finder method is used, and the source class is not set and cannot be inferred, an `UninferrableSourceError` is raised. [https://github.com/haines/draper/commit/8ef5bf2f02f7033e3cd4f1f5de7397b02c984fe3](https://github.com/haines/draper/commit/8ef5bf2f02f7033e3cd4f1f5de7397b02c984fe3)
+
+* Class methods are now properly delegated again. [https://github.com/haines/draper/commit/731995a5feac4cd06cf9328d2892c0eca9992db6](https://github.com/haines/draper/commit/731995a5feac4cd06cf9328d2892c0eca9992db6)
+
+* We no longer `respond_to?` private methods on the source. [https://github.com/haines/draper/commit/18ebac81533a6413aa20a3c26f23e91d0b12b031](https://github.com/haines/draper/commit/18ebac81533a6413aa20a3c26f23e91d0b12b031)
+
+* Rails versioning relaxed to support Rails 4 [https://github.com/drapergem/draper/commit/8bfd393b5baa7aa1488076a5e2cb88648efaa815](https://github.com/drapergem/draper/commit/8bfd393b5baa7aa1488076a5e2cb88648efaa815)
+
+## 1.0.0.beta1
+
+* Renaming `Draper::Base` to `Draper::Decorator`. This is the most significant
+  change you'll need to upgrade your application. [https://github.com/drapergem/draper/commit/025742cb3b295d259cf0ecf3669c24817d6f2df1](https://github.com/drapergem/draper/commit/025742cb3b295d259cf0ecf3669c24817d6f2df1)
+* Added an internal Rails application for integration tests. This won't affect
+  your application, but we're now running a set of Cucumber tests inside of a
+  Rails app in both development and production mode to help ensure that we
+  don't make changes that break Draper. [https://github.com/drapergem/draper/commit/90a4859085cab158658d23d77cd3108b6037e36f](https://github.com/drapergem/draper/commit/90a4859085cab158658d23d77cd3108b6037e36f)
+* Add `#decorated?` method. This gives us a free RSpec matcher,
+  `is_decorated?`. [https://github.com/drapergem/draper/commit/834a6fd1f24b5646c333a04a99fe9846a58965d6](https://github.com/drapergem/draper/commit/834a6fd1f24b5646c333a04a99fe9846a58965d6)
+* `#decorates` is no longer needed inside your models, and should be removed.
+  Decorators automatically infer the class they decorate. [https://github.com/drapergem/draper/commit/e1214d97b62f2cab45227cc650029734160dcdfe](https://github.com/drapergem/draper/commit/e1214d97b62f2cab45227cc650029734160dcdfe)
+* Decorators do not automatically come with 'finders' by default. If you'd like
+  to use `SomeDecorator.find(1)`, for example, simply add `#has_finders` to
+  the decorator to include them. [https://github.com/drapergem/draper/commit/42b6f78fda4f51845dab4d35da68880f1989d178](https://github.com/drapergem/draper/commit/42b6f78fda4f51845dab4d35da68880f1989d178)
+* To refer to the object being decorated, `#source` is now the preferred
+  method. [https://github.com/drapergem/draper/commit/1e84fcb4a0eab0d12f5feda6886ce1caa239cb16](https://github.com/drapergem/draper/commit/1e84fcb4a0eab0d12f5feda6886ce1caa239cb16)
+* `ActiveModel::Serialization` is included in Decorators if you've requred
+  `ActiveModel::Serializers`, so that decorators can be serialized. [https://github.com/drapergem/draper/commit/c4b352799067506849abcbf14963ea36abda301c](https://github.com/drapergem/draper/commit/c4b352799067506849abcbf14963ea36abda301c)
+* Properly support Test::Unit [https://github.com/drapergem/draper/commit/087e134ed0885ec11325ffabe8ab2bebef77a33a](https://github.com/drapergem/draper/commit/087e134ed0885ec11325ffabe8ab2bebef77a33a)
+
+And many small bug fixes and refactorings.
+
 ## 0.18.0
 
 * [Adds the ability to decorate an enumerable proxy](https://github.com/drapergem/draper/commit/67c7125192740a7586a3a635acd735ae01b97837)
