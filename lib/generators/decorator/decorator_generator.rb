@@ -23,6 +23,14 @@ module Rails
           "Draper::Decorator"
         end
       end
-   end
+
+      	
+      # Rails 3.0.X compatibility, stolen from https://github.com/jnunemaker/mongomapper/pull/385/files#L1R32
+      unless methods.include?(:module_namespacing)
+        def module_namespacing(&block)
+          yield if block
+        end
+      end
+    end
   end
 end
