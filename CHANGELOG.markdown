@@ -1,5 +1,10 @@
 # Draper Changelog
 
+## 1.0.0.beta3
+
+* Relaxed Rails version requirement to 3.0. Support for < 3.2 should be
+  considered experimental. Please file bug reports.
+
 ## 1.0.0.beta2
 
 * `has_finders` is now `decorates_finders`. [https://github.com/haines/draper/commit/33f18aa062e0d3848443dbd81047f20d5665579f](https://github.com/haines/draper/commit/33f18aa062e0d3848443dbd81047f20d5665579f)
