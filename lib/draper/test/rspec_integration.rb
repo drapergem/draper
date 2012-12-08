@@ -12,11 +12,19 @@ RSpec.configure do |config|
   }
 
 end
+module Draper
+  module RSpec
+    class Railtie < Rails::Railtie
+      config.after_initialize do |app|
+        if defined?(Capybara)
+          require 'capybara/rspec/matchers'
 
-if defined?(Capybara)
-  require 'capybara/rspec/matchers'
-
-  RSpec.configure do |config|
-    config.include Capybara::RSpecMatchers, :type => :decorator
+          ::RSpec.configure do |config|
+            config.include Capybara::RSpecMatchers, :type => :decorator
+          end
+        end
+      end
+    end
   end
 end
+
