@@ -201,7 +201,7 @@ ArticleDecorator.new(Article.find(params[:id]))
 
 ```ruby
 ArticleDecorator.decorate(Article.first) # Returns one instance of ArticleDecorator
-ArticleDecorator.decorate(Article.all)   # Returns an enumeration proxy of ArticleDecorator instances
+ArticleDecorator.decorate_collection(Article.all)   # Returns CollectionDecorator of ArticleDecorator
 ```
 
 ### In Your Views
