@@ -12,10 +12,12 @@
   1. `h` to proxy to Rails/application helpers like `h.current_user`
   2. the name of your decorated model to access the wrapped object like `article.created_at`
 5. Wrap models in your controller with the decorator using:
-  1. `.decorate` method with a single object or collection,
-    ex: `ArticleDecorator.decorate(Article.all)`
+  1. `.decorate` method with a single object,
+    ex: `ArticleDecorator.decorate(Article.first)`
   2. `.new` method with single object
     ex: `ArticleDecorator.new(Article.first)`
+  3. `.decorate_collection` method with a collection,
+    ex: `ArticleDecorator.decorate_collection(Article.all)`
 6. Call decorator methods from your view templates
   ex: `<%= @article_decorator.created_at %>`
 
