@@ -30,9 +30,11 @@ module Draper
       end
     end
 
-    initializer "draper.setup_active_record" do |app|
-      ActiveSupport.on_load :active_record do
-        Draper.setup_active_record self
+    initializer "draper.setup_orm" do |app|
+      [:active_record, :mongoid].each do |orm|
+        ActiveSupport.on_load orm do
+          Draper.setup_orm self
+        end
       end
     end
 
