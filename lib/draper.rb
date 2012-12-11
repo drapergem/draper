@@ -37,7 +37,7 @@ module Draper
     end
   end
 
-  def self.setup_active_record(base)
+  def self.setup_orm(base)
     base.class_eval do
       include Draper::Decoratable
     end
