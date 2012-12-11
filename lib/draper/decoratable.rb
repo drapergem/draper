@@ -21,7 +21,7 @@ module Draper::Decoratable
     false
   end
 
-  def ===(other)
+  def ==(other)
     super || (other.respond_to?(:source) && super(other.source))
   end
 
