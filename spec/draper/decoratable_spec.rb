@@ -45,6 +45,34 @@ describe Draper::Decoratable do
     end
   end
 
+  describe "#==" do
+    context "with itself" do
+      it "returns true" do
+        (subject == subject).should be_true
+      end
+    end
+
+    context "with another instance" do
+      it "returns false" do
+        (subject == Product.new).should be_false
+      end
+    end
+
+    context "with a decorated version of itself" do
+      it "returns true" do
+        decorator = double(source: subject)
+        (subject == decorator).should be_true
+      end
+    end
+
+    context "with a decorated other instance" do
+      it "returns false" do
+        decorator = double(source: Product.new)
+        (subject == decorator).should be_false
+      end
+    end
+  end
+
   describe "#===" do
     context "with itself" do
       it "returns true" do
