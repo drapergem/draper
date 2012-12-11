@@ -10,7 +10,7 @@ module Draper
     end
 
     def call
-      return undecorated if undecorated.nil? || undecorated == []
+      return undecorated if undecorated.nil?
       decorate
     end
 

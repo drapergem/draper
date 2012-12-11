@@ -22,10 +22,11 @@ describe Draper::DecoratedAssociation do
       end
 
       context "when the association is empty" do
-        it "doesn't decorate the collection" do
+        it "returns an empty collection decorator" do
           source.stub(:similar_products).and_return([])
-          subject.should_not be_a Draper::CollectionDecorator
+          subject.should be_a Draper::CollectionDecorator
           subject.should be_empty
+          subject.first.should be_nil
         end
       end
     end
@@ -44,10 +45,11 @@ describe Draper::DecoratedAssociation do
       end
 
       context "when the association is empty" do
-        it "doesn't decorate the collection" do
+        it "returns an empty collection decorator" do
           source.stub(:poro_similar_products).and_return([])
-          subject.should_not be_a Draper::CollectionDecorator
+          subject.should be_a Draper::CollectionDecorator
           subject.should be_empty
+          subject.first.should be_nil
         end
       end
     end
