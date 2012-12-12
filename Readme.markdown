@@ -319,6 +319,15 @@ Now when you call the association it will use a decorator.
 <%= @article.author.fancy_name %>
 ```
 
+Remember that `decorates_association` does not handle polymorphic associations automatically. You need to pass a `:polymorphic => true`
+explicitly.
+
+```ruby
+class ArticleDecorator < Draper::Decorator
+  decorates_association :owner, :polymorphic => true
+end
+```
+
 ### A note on Rails configuration
 
 Draper loads your application's decorators when Rails start. This may lead to an issue with configuring I18n, whereby the settings you provide in `./config/application.rb` are ignored. This happens when you use the `I18n` constant at the class-level in one of the models that have a decorator, as in the following example:
