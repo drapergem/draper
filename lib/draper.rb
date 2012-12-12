@@ -14,11 +14,6 @@ require 'draper/view_context'
 require 'draper/collection_decorator'
 require 'draper/railtie' if defined?(Rails)
 
-# Test Support
-require 'draper/test/rspec_integration'     if defined?(RSpec) and RSpec.respond_to?(:configure)
-require 'draper/test/minitest_integration'  if defined?(MiniTest::Rails)
-require 'draper/test/test_unit_integration'
-
 module Draper
   def self.setup_action_controller(base)
     base.class_eval do

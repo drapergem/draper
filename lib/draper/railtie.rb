@@ -16,6 +16,11 @@ module Draper
 
     config.after_initialize do |app|
       app.config.paths.add 'app/decorators', eager_load: true
+
+      # Test Support
+      require 'draper/test/rspec_integration' if defined?(RSpec) and RSpec.respond_to?(:configure)
+      require 'draper/test/minitest_integration'  if defined?(MiniTest::Rails)
+      require 'draper/test/test_unit_integration'
     end
 
     initializer "draper.setup_action_controller" do |app|
