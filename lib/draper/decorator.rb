@@ -1,5 +1,4 @@
 require 'active_support/core_ext/array/extract_options'
-require 'draper'
 
 module Draper
   class Decorator
@@ -30,7 +29,7 @@ module Draper
     def initialize(source, options = {})
       source.to_a if source.respond_to?(:to_a) # forces evaluation of a lazy query from AR
       @source = source
-      Draper.validate_options(options, :context)
+      options.assert_valid_keys(:context)
       @options = options
       handle_multiple_decoration if source.is_a?(Draper::Decorator)
     end
@@ -83,7 +82,7 @@ module Draper
     #   passed the base decorator's `context` Hash and should return the desired
     #   context Hash for the decorated items.
     def self.decorates_association(association, options = {})
-      Draper.validate_options(options, :with, :scope, :context)
+      options.assert_valid_keys(:with, :scope, :context)
       define_method(association) do
         decorated_associations[association] ||= Draper::DecoratedAssociation.new(self, association, options)
         decorated_associations[association].call
@@ -142,7 +141,7 @@ module Draper
     #   items, or `:infer` to call each item's `decorate` method instead
     # @option options [Hash] :context context available to decorated items
     def self.decorate_collection(source, options = {})
-      Draper.validate_options(options, :with, :context)
+      options.assert_valid_keys(:with, :context)
       Draper::CollectionDecorator.new(source, options.reverse_merge(with: self))
     end
 

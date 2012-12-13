@@ -16,7 +16,7 @@ describe Draper::DecoratedAssociation do
       end
 
       it "raises error on invalid options" do
-        expect { Draper::DecoratedAssociation.new(base, association, valid_options.merge(foo: 'bar')) }.to raise_error(ArgumentError, 'Invalid option keys: :foo')
+        expect { Draper::DecoratedAssociation.new(base, association, valid_options.merge(foo: 'bar')) }.to raise_error(ArgumentError, 'Unknown key: foo')
       end
     end
   end

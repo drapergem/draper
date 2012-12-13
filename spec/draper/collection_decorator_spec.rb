@@ -103,7 +103,7 @@ describe Draper::CollectionDecorator do
       end
 
       it "raises error on invalid options" do
-        expect { Draper::CollectionDecorator.new(source, valid_options.merge(foo: 'bar')) }.to raise_error(ArgumentError, 'Invalid option keys: :foo')
+        expect { Draper::CollectionDecorator.new(source, valid_options.merge(foo: 'bar')) }.to raise_error(ArgumentError, 'Unknown key: foo')
       end
     end
 
