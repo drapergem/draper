@@ -43,13 +43,6 @@ module Draper
     end
   end
 
-  def self.validate_options(options, *valid_keys)
-    options_errors = options.keys - valid_keys
-    unless options_errors.empty?
-      raise ArgumentError, "Invalid option keys: #{options_errors.map {|k| k.inspect}.join(', ')}", caller
-    end
-  end
-
   class UninferrableDecoratorError < NameError
     def initialize(klass)
       super("Could not infer a decorator for #{klass}.")

@@ -1,5 +1,3 @@
-require 'draper'
-
 module Draper
   class DecoratedAssociation
 
@@ -8,7 +6,7 @@ module Draper
     def initialize(base, association, options)
       @base = base
       @association = association
-      Draper.validate_options(options, :with, :scope, :context)
+      options.assert_valid_keys(:with, :scope, :context)
       @options = options
     end
 

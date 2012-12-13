@@ -1,5 +1,3 @@
-require 'draper'
-
 module Draper
   class CollectionDecorator
     include Enumerable
@@ -19,7 +17,7 @@ module Draper
     def initialize(source, options = {})
       @source = source
       @decorator_class = options.delete(:with) || self.class.inferred_decorator_class
-      Draper.validate_options(options, :with, :context)
+      options.assert_valid_keys(:with, :context)
       @options = options
     end
 
