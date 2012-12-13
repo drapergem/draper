@@ -1,17 +1,24 @@
+require 'draper'
+
 module Draper
   class DecoratedAssociation
 
-    attr_reader :source, :association, :options
+    attr_reader :base, :association, :options
 
-    def initialize(source, association, options)
-      @source = source
+    def initialize(base, association, options)
+      @base = base
       @association = association
+      Draper.validate_options(options, :with, :scope, :context)
       @options = options
     end
 
     def call
       return undecorated if undecorated.nil?
       decorate
+    end
+
+    def source
+      base.source
     end
 
     private
@@ -25,7 +32,7 @@ module Draper
     end
 
     def decorate
-      @decorated ||= decorator_class.send(decorate_method, undecorated, options)
+      @decorated ||= decorator_class.send(decorate_method, undecorated, decorator_options)
     end
 
     def decorate_method
@@ -51,5 +58,15 @@ module Draper
       end
     end
 
+    def decorator_options
+      decorator_class # Ensures options[:with] = :infer for unspecified collections
+
+      dec_options = collection? ? options.slice(:with, :context) : options.slice(:context)
+      dec_options[:context] = base.context unless dec_options.key?(:context)
+      if dec_options[:context].respond_to?(:call)
+        dec_options[:context] = dec_options[:context].call(base.context) 
+      end
+      dec_options
+    end
   end
 end

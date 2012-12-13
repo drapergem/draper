@@ -9,9 +9,9 @@ describe Draper::Decoratable do
      subject.decorate.source.should be subject
    end
 
-    it "accepts options" do
-      decorator = subject.decorate(some: "options")
-      decorator.options.should == {some: "options"}
+    it "accepts context" do
+      decorator = subject.decorate(context: {some: 'context'})
+      decorator.context.should == {some: 'context'}
     end
 
     it "is not memoized" do
@@ -153,9 +153,9 @@ describe Draper::Decoratable do
       decorator.source.should be Product.scoped
     end
 
-    it "accepts options" do
-      decorator = Product.decorate(some: "options")
-      decorator.options.should == {some: "options"}
+    it "accepts context" do
+      decorator = Product.decorate(context: {some: 'context'})
+      decorator.context.should == {some: 'context'}
     end
 
     it "is not memoized" do

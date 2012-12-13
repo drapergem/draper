@@ -1,4 +1,5 @@
 require 'active_support/core_ext/array/extract_options'
+require 'draper'
 
 module Draper
   class Decorator
@@ -6,13 +7,15 @@ module Draper
     include ActiveModel::Serialization if defined?(ActiveModel::Serialization)
 
     attr_accessor :source, :options
+    protected :options, :options=
 
     alias_method :model, :source
     alias_method :to_source, :source
 
     # Initialize a new decorator instance by passing in
     # an instance of the source class. Pass in an optional
-    # context inside the options hash is stored for later use.
+    # :context inside the options hash which is available
+    # for later use.
     #
     # A decorator cannot be applied to other instances of the
     # same decorator and will instead result in a decorator
@@ -23,9 +26,11 @@ module Draper
     #
     # @param [Object] source object to decorate
     # @param [Hash] options (optional)
+    # @option options [Hash] :context context available to the decorator
     def initialize(source, options = {})
       source.to_a if source.respond_to?(:to_a) # forces evaluation of a lazy query from AR
       @source = source
+      Draper.validate_options(options, :context)
       @options = options
       handle_multiple_decoration if source.is_a?(Draper::Decorator)
     end
@@ -72,9 +77,15 @@ module Draper
     # @param [Symbol] association name of association to decorate, like `:products`
     # @option options [Class] :with the decorator to apply to the association
     # @option options [Symbol] :scope a scope to apply when fetching the association
+    # @option options [Hash, #call] :context context available to decorated
+    #   objects in collection.  Passing a `lambda` or similar will result in that
+    #   block being called when the association is evaluated.  The block will be
+    #   passed the base decorator's `context` Hash and should return the desired
+    #   context Hash for the decorated items.
     def self.decorates_association(association, options = {})
+      Draper.validate_options(options, :with, :scope, :context)
       define_method(association) do
-        decorated_associations[association] ||= Draper::DecoratedAssociation.new(source, association, options)
+        decorated_associations[association] ||= Draper::DecoratedAssociation.new(self, association, options)
         decorated_associations[association].call
       end
     end
@@ -82,7 +93,8 @@ module Draper
     # A convenience method for decorating multiple associations. Calls
     # decorates_association on each of the given symbols.
     #
-    # @param [Symbols*] associations name of associations to decorate
+    # @param [Symbols*] associations names of associations to decorate
+    # @param [Hash] options passed to `decorate_association`
     def self.decorates_associations(*associations)
       options = associations.extract_options!
       associations.each do |association|
@@ -128,7 +140,9 @@ module Draper
     #   for the keys listed below)
     # @option options [Class,Symbol] :with (self) the class used to decorate
     #   items, or `:infer` to call each item's `decorate` method instead
+    # @option options [Hash] :context context available to decorated items
     def self.decorate_collection(source, options = {})
+      Draper.validate_options(options, :with, :context)
       Draper::CollectionDecorator.new(source, options.reverse_merge(with: self))
     end
 
@@ -169,6 +183,16 @@ module Draper
     # that later.
     def present?
       source.present?
+    end
+
+    # Accessor for `:context` option
+    def context
+      options.fetch(:context, {})
+    end
+
+    # Setter for `:context` option
+    def context=(input)
+      options[:context] = input
     end
 
     # For ActiveModel compatibilty
