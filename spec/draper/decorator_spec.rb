@@ -23,11 +23,6 @@ describe Draper::Decorator do
       subject.source.should be source
     end
 
-    it "stores options internally" do
-      decorator = decorator_class.new(source, context: {some: 'context'})
-      decorator.send(:options).should == {context: {some: 'context'}}
-    end
-
     it "stores context" do
       decorator = decorator_class.new(source, context: {some: 'context'})
       decorator.context.should == {some: 'context'}
@@ -40,16 +35,16 @@ describe Draper::Decorator do
       end
 
       context "when options are supplied" do
-        it "overwrites existing options" do
+        it "overwrites existing context" do
           decorator = ProductDecorator.new(source, context: {role: :admin})
-          ProductDecorator.new(decorator, context: {role: :user}).send(:options).should == {context: {role: :user}}
+          ProductDecorator.new(decorator, context: {role: :user}).context.should == {role: :user}
         end
       end
 
       context "when no options are supplied" do
-        it "preserves existing options" do
+        it "preserves existing context" do
           decorator = ProductDecorator.new(source, context: {role: :admin})
-          ProductDecorator.new(decorator).send(:options).should == {context: {role: :admin}}
+          ProductDecorator.new(decorator).context.should == {role: :admin}
         end
       end
     end
@@ -72,28 +67,8 @@ describe Draper::Decorator do
     end
   end
 
-  describe "#options" do
-    it "blocks options externally" do
-      decorator = decorator_class.new(source, context: {some: 'context'})
-      expect { decorator.options }.to raise_error(NoMethodError)
-    end
-  end
-
-  describe "#options=" do
-    it "permits modification of options internally" do
-      decorator = decorator_class.new(source, context: {some: 'context'})
-      decorator.send(:options=, {context: {some: 'other_context'}})
-      decorator.send(:options).should == {context: {some: 'other_context'}}
-    end
-
-    it "blocks options= externally" do
-      decorator = decorator_class.new(source, context: {some: 'context'})
-      expect { decorator.options = {context: {some: 'other_context'}} }.to raise_error(NoMethodError)
-    end
-  end
-
   describe "#context=" do
-    it "permits modification of context" do
+    it "modifies the context" do
       decorator = decorator_class.new(source, context: {some: 'context'})
       decorator.context = {some: 'other_context'}
       decorator.context.should == {some: 'other_context'}

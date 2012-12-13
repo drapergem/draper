@@ -5,8 +5,7 @@ module Draper
     include Draper::ViewHelpers
     include ActiveModel::Serialization if defined?(ActiveModel::Serialization)
 
-    attr_accessor :source, :options
-    protected :options, :options=
+    attr_accessor :source, :context
 
     alias_method :model, :source
     alias_method :to_source, :source
@@ -27,11 +26,11 @@ module Draper
     # @param [Hash] options (optional)
     # @option options [Hash] :context context available to the decorator
     def initialize(source, options = {})
+      options.assert_valid_keys(:context)
       source.to_a if source.respond_to?(:to_a) # forces evaluation of a lazy query from AR
       @source = source
-      options.assert_valid_keys(:context)
-      @options = options
-      handle_multiple_decoration if source.is_a?(Draper::Decorator)
+      @context = options.fetch(:context, {})
+      handle_multiple_decoration(options) if source.is_a?(Draper::Decorator)
     end
 
     class << self
@@ -184,16 +183,6 @@ module Draper
       source.present?
     end
 
-    # Accessor for `:context` option
-    def context
-      options.fetch(:context, {})
-    end
-
-    # Setter for `:context` option
-    def context=(input)
-      options[:context] = input
-    end
-
     # For ActiveModel compatibilty
     def to_model
       self
@@ -267,9 +256,9 @@ module Draper
       self.class.security.allow?(method)
     end
 
-    def handle_multiple_decoration
+    def handle_multiple_decoration(options)
       if source.instance_of?(self.class)
-        self.options = source.options if options.empty?
+        self.context = source.context unless options.has_key?(:context)
         self.source = source.source
       elsif source.decorated_with?(self.class)
         warn "Reapplying #{self.class} decorator to target that is already decorated with it. Call stack:\n#{caller(1).join("\n")}"

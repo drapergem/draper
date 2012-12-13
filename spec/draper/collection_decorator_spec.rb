@@ -36,23 +36,14 @@ describe Draper::CollectionDecorator do
     end
 
     describe "#context=" do
-      context "with loaded? unimplemented" do
-        it "updates the context on the collection decorator" do
-          subject.context = {other: 'context'}
-          subject.context.should == {other: 'context'}
-        end
+      it "updates the collection decorator's context" do
+        subject.context = {other: 'context'}
+        subject.context.should == {other: 'context'}
+      end
 
-        it "updates the context on the individual decorators" do
-          subject.context = {other: 'context'}
-          subject.each do |item|
-            item.context.should == {other: 'context'}
-          end
-        end
-
-        it "updates the context on the individual decorators following modification" do
-          subject.each do |item|
-            item.context = {alt: 'context'}
-          end
+      context "when the collection is already decorated" do
+        it "updates the items' context" do
+          subject.decorated_collection
           subject.context = {other: 'context'}
           subject.each do |item|
             item.context.should == {other: 'context'}
@@ -60,31 +51,13 @@ describe Draper::CollectionDecorator do
         end
       end
 
-      # We have to stub out loaded? because the test environment uses an Array,
-      # not an ActiveRecord::Associations::CollectionProxy
-      context "with loaded? true" do
-        before(:each) { subject.stub(:loaded?).and_return(true) }
-
-        it "updates the context on the individual decorators following modification" do
-          subject.each do |item|
-            item.context = {alt: 'context'}
-          end
-          subject.context = {other: 'context'}
-          subject.each do |item|
-            item.context.should == {other: 'context'}
-          end
-        end
-      end
-
-      context "with loaded? false" do
-        before(:each) { subject.stub(:loaded?).and_return(false) }
-
-        it "does not trigger enumeration prematurely" do
-          subject.should_not_receive(:each)
+      context "when the collection has not yet been decorated" do
+        it "does not trigger decoration" do
+          subject.should_not_receive(:decorated_collection)
           subject.context = {other: 'context'}
         end
 
-        it "the individual decorators still get context upon enumeration" do
+        it "sets context after decoration is triggered" do
           subject.context = {other: 'context'}
           subject.each do |item|
             item.context.should == {other: 'context'}
@@ -149,29 +122,6 @@ describe Draper::CollectionDecorator do
 
     it "is aliased to #to_source" do
       subject.to_source.should be source
-    end
-  end
-
-  describe "#options" do
-    subject { Draper::CollectionDecorator.new(source, with: ProductDecorator, context: {some: 'context'}) }
-
-    it "stores options internally" do
-      subject.send(:options).should == {context: {some: 'context'}}
-    end
-
-    it "blocks options externally" do
-      expect { subject.options }.to raise_error(NoMethodError)
-    end
-  end
-
-  describe "#options=" do
-    it "permits modification of options internally" do
-      subject.send(:options=, {context: {some: 'other_context'}})
-      subject.send(:options).should == {context: {some: 'other_context'}}
-    end
-
-    it "blocks options= externally" do
-      expect { subject.options = {context: {some: 'other_context'}} }.to raise_error(NoMethodError)
     end
   end
 
