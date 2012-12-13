@@ -14,6 +14,8 @@ require 'draper/view_context'
 require 'draper/collection_decorator'
 require 'draper/railtie' if defined?(Rails)
 
+require 'active_support/core_ext/hash/keys'
+
 module Draper
   def self.setup_action_controller(base)
     base.class_eval do
