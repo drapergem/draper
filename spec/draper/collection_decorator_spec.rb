@@ -274,4 +274,86 @@ describe Draper::CollectionDecorator do
     end
   end
 
+  describe "#decorated_collection" do
+    describe "verify caching behavior" do
+      let(:validate_decorated_collection) do
+        lambda { source.should == subject.decorated_collection.map(&:source) }
+      end
+
+      it "should work with an unmodified collection" do
+        validate_decorated_collection.call
+      end
+
+      it "should not redecorate on an unmodified collection" do
+        subject.decorated_collection
+        subject.should_not_receive(:decorate_item)
+        subject.decorated_collection
+      end
+
+      it "should work with a reversed collection" do
+        subject.decorated_collection
+        source.reverse!
+        validate_decorated_collection.call
+      end
+
+      it "should not redecorate on a reversed collection" do
+        subject.decorated_collection
+        source.reverse!
+        subject.should_not_receive(:decorate_item)
+        subject.decorated_collection
+      end
+
+      it "should work with a truncated collection" do
+        subject.decorated_collection
+        source.pop
+        validate_decorated_collection.call
+      end
+
+      it "should not redecorate on a truncated collection" do
+        subject.decorated_collection
+        source.pop
+        subject.should_not_receive(:decorate_item)
+        subject.decorated_collection
+      end
+
+      it "should work with a shifted collection" do
+        subject.decorated_collection
+        source.shift
+        validate_decorated_collection.call
+      end
+
+      it "should not redecorate on a shifted collection" do
+        subject.decorated_collection
+        source.shift
+        subject.should_not_receive(:decorate_item)
+        subject.decorated_collection
+      end
+
+      it "should work with an appended collection" do
+        subject.decorated_collection
+        source << Product.new
+        validate_decorated_collection.call
+      end
+
+      it "should only redecorate once on an appended collection" do
+        subject.decorated_collection
+        source << Product.new
+        subject.should_receive(:decorate_item).once.with(source[-1]).and_call_original
+        subject.decorated_collection
+      end
+
+      it "should work with entirely new collection contents" do
+        subject.decorated_collection
+        source.replace([Product.new, Product.new])
+        validate_decorated_collection.call
+      end
+
+      it "should redecorate for each item with entirely new collection contents" do
+        subject.decorated_collection
+        source.replace([Product.new, Product.new])
+        subject.should_receive(:decorate_item).twice.and_call_original
+        subject.decorated_collection
+      end
+    end
+  end
 end

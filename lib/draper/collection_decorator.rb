@@ -25,7 +25,19 @@ module Draper
     end
 
     def decorated_collection
-      @decorated_collection ||= source.collect {|item| decorate_item(item) }
+      # The use of .replace to avoid replacing the Array is to facilitate testing
+      @decorated_collection ||= []
+      unless source == @decorated_collection.map(&:source)
+        if @decorated_collection.empty?
+          @decorated_collection.replace(source.map {|item| decorate_item(item) })
+        else
+          current = Hash[ @decorated_collection.map {|d| [d.source, d] } ]
+          @decorated_collection.replace(
+            source.map {|item| current.fetch(item) { decorate_item(item) } }
+          )
+        end
+      end
+      @decorated_collection
     end
 
     def find(*args, &block)
