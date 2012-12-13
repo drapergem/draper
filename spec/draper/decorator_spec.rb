@@ -7,13 +7,25 @@ describe Draper::Decorator do
   let(:source) { Product.new }
 
   describe "#initialize" do
+    describe "options validation" do
+      let(:valid_options) { {context: {}} }
+
+      it "does not raise error on valid options" do
+        expect { decorator_class.new(source, valid_options) }.to_not raise_error
+      end
+
+      it "raises error on invalid options" do
+        expect { decorator_class.new(source, valid_options.merge(foo: 'bar')) }.to raise_error(ArgumentError, 'Unknown key: foo')
+      end
+    end
+
     it "sets the source" do
       subject.source.should be source
     end
 
-    it "stores options" do
-      decorator = decorator_class.new(source, some: "options")
-      decorator.options.should == {some: "options"}
+    it "stores context" do
+      decorator = decorator_class.new(source, context: {some: 'context'})
+      decorator.context.should == {some: 'context'}
     end
 
     context "when decorating an instance of itself" do
@@ -23,16 +35,16 @@ describe Draper::Decorator do
       end
 
       context "when options are supplied" do
-        it "overwrites existing options" do
-          decorator = ProductDecorator.new(source, role: :admin)
-          ProductDecorator.new(decorator, role: :user).options.should == {role: :user}
+        it "overwrites existing context" do
+          decorator = ProductDecorator.new(source, context: {role: :admin})
+          ProductDecorator.new(decorator, context: {role: :user}).context.should == {role: :user}
         end
       end
 
       context "when no options are supplied" do
-        it "preserves existing options" do
-          decorator = ProductDecorator.new(source, role: :admin)
-          ProductDecorator.new(decorator).options.should == {role: :admin}
+        it "preserves existing context" do
+          decorator = ProductDecorator.new(source, context: {role: :admin})
+          ProductDecorator.new(decorator).context.should == {role: :admin}
         end
       end
     end
@@ -55,9 +67,30 @@ describe Draper::Decorator do
     end
   end
 
+  describe "#context=" do
+    it "modifies the context" do
+      decorator = decorator_class.new(source, context: {some: 'context'})
+      decorator.context = {some: 'other_context'}
+      decorator.context.should == {some: 'other_context'}
+    end
+  end
+
   describe ".decorate_collection" do
     subject { ProductDecorator.decorate_collection(source) }
     let(:source) { [Product.new, Widget.new] }
+
+    describe "options validation" do
+      let(:valid_options) { {with: :infer, context: {}} }
+      before(:each) { Draper::CollectionDecorator.stub(:new) }
+
+      it "does not raise error on valid options" do
+        expect { ProductDecorator.decorate_collection(source, valid_options) }.to_not raise_error
+      end
+
+      it "raises error on invalid options" do
+        expect { ProductDecorator.decorate_collection(source, valid_options.merge(foo: 'bar')) }.to raise_error(ArgumentError, 'Unknown key: foo')
+      end
+    end
 
     it "returns a collection decorator" do
       subject.should be_a Draper::CollectionDecorator
@@ -77,11 +110,11 @@ describe Draper::Decorator do
       end
     end
 
-    context "with options" do
-      subject { ProductDecorator.decorate_collection(source, with: :infer, some: "options") }
+    context "with context" do
+      subject { ProductDecorator.decorate_collection(source, with: :infer, context: {some: 'context'}) }
 
-      it "passes the options to the collection decorator" do
-        subject.options.should == {some: "options"}
+      it "passes the context to the collection decorator" do
+        subject.context.should == {some: 'context'}
       end
     end
   end
@@ -104,14 +137,14 @@ describe Draper::Decorator do
   end
 
   describe "#localize" do
-    before { subject.helpers.should_receive(:localize).with(:an_object, {some: "options"}) }
+    before { subject.helpers.should_receive(:localize).with(:an_object, {some: 'parameter'}) }
 
     it "delegates to #helpers" do
-      subject.localize(:an_object, some: "options")
+      subject.localize(:an_object, some: 'parameter')
     end
 
     it "is aliased to #l" do
-      subject.l(:an_object, some: "options")
+      subject.l(:an_object, some: 'parameter')
     end
   end
 
@@ -223,8 +256,26 @@ describe Draper::Decorator do
     describe "overridden association method" do
       let(:decorated_association) { ->{} }
 
+      describe "options validation" do
+        let(:valid_options) { {with: ProductDecorator, scope: :foo, context: {}} }
+        before(:each) { Draper::DecoratedAssociation.stub(:new).and_return(decorated_association) }
+
+        it "does not raise error on valid options" do
+          expect { decorator_class.decorates_association :similar_products, valid_options }.to_not raise_error
+        end
+
+        it "raises error on invalid options" do
+          expect { decorator_class.decorates_association :similar_products, valid_options.merge(foo: 'bar') }.to raise_error(ArgumentError, 'Unknown key: foo')
+        end
+      end
+
       it "creates a DecoratedAssociation" do
-        Draper::DecoratedAssociation.should_receive(:new).with(source, :similar_products, {with: ProductDecorator}).and_return(decorated_association)
+        Draper::DecoratedAssociation.should_receive(:new).with(subject, :similar_products, {with: ProductDecorator}).and_return(decorated_association)
+        subject.similar_products
+      end
+
+      it "receives the Decorator" do
+        Draper::DecoratedAssociation.should_receive(:new).with(kind_of(decorator_class), :similar_products, {with: ProductDecorator}).and_return(decorated_association)
         subject.similar_products
       end
 

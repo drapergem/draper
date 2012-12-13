@@ -15,9 +15,9 @@ describe Draper::Finders do
       decorator.source.should be found
     end
 
-    it "passes options to the decorator" do
-      decorator = ProductDecorator.find(1, some: "options")
-      decorator.options.should == {some: "options"}
+    it "passes context to the decorator" do
+      decorator = ProductDecorator.find(1, context: {some: 'context'})
+      decorator.context.should == {some: 'context'}
     end
   end
 
@@ -55,10 +55,10 @@ describe Draper::Finders do
       ProductDecorator.find_or_create_by_name_and_size("apples", "large")
     end
 
-    it "passes options to the decorator" do
-      Product.should_receive(:find_by_name_and_size).with("apples", "large", {some: "options"})
-      decorator = ProductDecorator.find_by_name_and_size("apples", "large", some: "options")
-      decorator.options.should == {some: "options"}
+    it "passes context to the decorator" do
+      Product.should_receive(:find_by_name_and_size).with("apples", "large", context: {some: 'context'})
+      decorator = ProductDecorator.find_by_name_and_size("apples", "large", context: {some: 'context'})
+      decorator.context.should == {some: 'context'}
     end
   end
 
@@ -84,9 +84,9 @@ describe Draper::Finders do
       collection.first.should be_a ProductDecorator
     end
 
-    it "passes options to the collection decorator" do
-      collection = ProductDecorator.all(some: "options")
-      collection.options.should == {some: "options"}
+    it "passes context to the collection decorator" do
+      collection = ProductDecorator.all(context: {some: 'context'})
+      collection.context.should == {some: 'context'}
     end
   end
 
@@ -104,9 +104,9 @@ describe Draper::Finders do
       decorator.source.should be first
     end
 
-    it "passes options to the decorator" do
-      decorator = ProductDecorator.first(some: "options")
-      decorator.options.should == {some: "options"}
+    it "passes context to the decorator" do
+      decorator = ProductDecorator.first(context: {some: 'context'})
+      decorator.context.should == {some: 'context'}
     end
   end
 
@@ -124,9 +124,9 @@ describe Draper::Finders do
       decorator.source.should be last
     end
 
-    it "passes options to the decorator" do
-      decorator = ProductDecorator.last(some: "options")
-      decorator.options.should == {some: "options"}
+    it "passes context to the decorator" do
+      decorator = ProductDecorator.last(context: {some: 'context'})
+      decorator.context.should == {some: 'context'}
     end
   end
 

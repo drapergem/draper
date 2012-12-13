@@ -3,20 +3,21 @@ module Draper
     include Enumerable
     include ViewHelpers
 
-    attr_accessor :source, :options, :decorator_class
+    attr_accessor :source, :context, :decorator_class
     alias_method :to_source, :source
 
     delegate :as_json, *(Array.instance_methods - Object.instance_methods), to: :decorated_collection
 
     # @param source collection to decorate
-    # @param options [Hash] passed to each item's decorator (except
-    #   for the keys listed below)
-    # @option options [Class,Symbol] :with the class used to decorate
+    # @param [Hash] options (optional)
+    # @option options [Class, Symbol] :with the class used to decorate
     #   items, or `:infer` to call each item's `decorate` method instead
+    # @option options [Hash] :context context available to each item's decorator
     def initialize(source, options = {})
+      options.assert_valid_keys(:with, :context)
       @source = source
-      @decorator_class = options.delete(:with) || self.class.inferred_decorator_class
-      @options = options
+      @decorator_class = options.fetch(:with) { self.class.inferred_decorator_class }
+      @context = options.fetch(:context, {})
     end
 
     class << self
@@ -56,18 +57,18 @@ module Draper
       "#<CollectionDecorator of #{decorator_class} for #{source.inspect}>"
     end
 
-    def options=(options)
-      each {|item| item.options = options }
-      @options = options
+    def context=(value)
+      @context = value
+      each {|item| item.context = value } if @decorated_collection
     end
 
     protected
 
     def decorate_item(item)
       if decorator_class == :infer
-        item.decorate(options)
+        item.decorate(context: context)
       else
-        decorator_class.decorate(item, options)
+        decorator_class.decorate(item, context: context)
       end
     end
 

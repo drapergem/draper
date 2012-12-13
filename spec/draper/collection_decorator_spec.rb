@@ -16,33 +16,70 @@ describe Draper::CollectionDecorator do
     subject.map{|item| item.source}.should == source
   end
 
-  context "with options" do
-    subject { Draper::CollectionDecorator.new(source, with: ProductDecorator, some: "options") }
+  context "with context" do
+    subject { Draper::CollectionDecorator.new(source, with: ProductDecorator, context: {some: 'context'}) }
 
-    its(:options) { should == {some: "options"} }
+    its(:context) { should == {some: 'context'} }
 
-    it "passes options to the individual decorators" do
+    it "passes context to the individual decorators" do
       subject.each do |item|
-        item.options.should == {some: "options"}
+        item.context.should == {some: 'context'}
       end
     end
 
-    describe "#options=" do
-      it "updates the options on the collection decorator" do
-        subject.options = {other: "options"}
-        subject.options.should == {other: "options"}
+    it "does not tie the individual decorators' contexts together" do
+      subject.each do |item|
+        item.context.should == {some: 'context'}
+        item.context = {alt: 'context'}
+        item.context.should == {alt: 'context'}
+      end
+    end
+
+    describe "#context=" do
+      it "updates the collection decorator's context" do
+        subject.context = {other: 'context'}
+        subject.context.should == {other: 'context'}
       end
 
-      it "updates the options on the individual decorators" do
-        subject.options = {other: "options"}
-        subject.each do |item|
-          item.options.should == {other: "options"}
+      context "when the collection is already decorated" do
+        it "updates the items' context" do
+          subject.decorated_collection
+          subject.context = {other: 'context'}
+          subject.each do |item|
+            item.context.should == {other: 'context'}
+          end
+        end
+      end
+
+      context "when the collection has not yet been decorated" do
+        it "does not trigger decoration" do
+          subject.should_not_receive(:decorated_collection)
+          subject.context = {other: 'context'}
+        end
+
+        it "sets context after decoration is triggered" do
+          subject.context = {other: 'context'}
+          subject.each do |item|
+            item.context.should == {other: 'context'}
+          end
         end
       end
     end
   end
 
   describe "#initialize" do
+    describe "options validation" do
+      let(:valid_options) { {with: ProductDecorator, context: {}} }
+
+      it "does not raise error on valid options" do
+        expect { Draper::CollectionDecorator.new(source, valid_options) }.to_not raise_error
+      end
+
+      it "raises error on invalid options" do
+        expect { Draper::CollectionDecorator.new(source, valid_options.merge(foo: 'bar')) }.to raise_error(ArgumentError, 'Unknown key: foo')
+      end
+    end
+
     context "when the :with option is given" do
       context "and the decorator can't be inferred from the class" do
         subject { Draper::CollectionDecorator.new(source, with: ProductDecorator) }
@@ -123,14 +160,14 @@ describe Draper::CollectionDecorator do
   end
 
   describe "#localize" do
-    before { subject.helpers.should_receive(:localize).with(:an_object, {some: "options"}) }
+    before { subject.helpers.should_receive(:localize).with(:an_object, {some: 'parameter'}) }
 
     it "delegates to helpers" do
-      subject.localize(:an_object, some: "options")
+      subject.localize(:an_object, some: 'parameter')
     end
 
     it "is aliased to #l" do
-      subject.l(:an_object, some: "options")
+      subject.l(:an_object, some: 'parameter')
     end
   end
 
