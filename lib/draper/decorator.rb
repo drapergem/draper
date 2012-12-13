@@ -41,7 +41,7 @@ module Draper
     #
     # @param [String, Symbol, Class] Class or name of class to decorate.
     def self.decorates(klass)
-      @source_class = klass.to_s.classify.constantize
+      @source_class = klass.to_s.camelize.constantize
     end
 
     # @return [Class] The source class corresponding to this
