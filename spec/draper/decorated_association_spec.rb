@@ -203,6 +203,29 @@ describe Draper::DecoratedAssociation do
     end
   end
 
+  describe "#decorator_class" do
+    context "association is collection" do
+      let(:association) { :similar_products }
+
+      context ":with is missing" do
+        it "should set :with to :infer" do
+          decorated_association.options[:with].should be_nil
+          decorated_association.send(:decorator_class)
+          decorated_association.options[:with].should == :infer
+        end
+
+        it "should return Draper::CollectionDecorator" do
+          decorated_association.send(:decorator_class).should == Draper::CollectionDecorator
+        end
+
+        it "should return Draper::CollectionDecorator when called a second time" do
+          decorated_association.send(:decorator_class)
+          decorated_association.send(:decorator_class).should == Draper::CollectionDecorator
+        end
+      end
+    end
+  end
+
   describe "#decorator_options" do
     subject { decorated_association.send(:decorator_options) }
 

@@ -46,11 +46,12 @@ module Draper
     end
 
     def decorator_class
+      return Draper::CollectionDecorator if options[:with] == :infer
       return options[:with] if options[:with]
 
       if collection?
         options[:with] = :infer
-        Draper::CollectionDecorator
+        decorator_class
       else
         undecorated.decorator_class
       end
