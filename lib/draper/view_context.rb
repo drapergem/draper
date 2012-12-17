@@ -1,3 +1,5 @@
+require 'request_store'
+
 module Draper
   module ViewContext
     def view_context
@@ -7,19 +9,19 @@ module Draper
     end
 
     def self.current_controller
-      Thread.current[:current_controller] || ApplicationController.new
+      RequestStore.store[:current_controller] || ApplicationController.new
     end
 
     def self.current_controller=(controller)
-      Thread.current[:current_controller] = controller
+      RequestStore.store[:current_controller] = controller
     end
 
     def self.current
-      Thread.current[:current_view_context] ||= build_view_context
+      RequestStore.store[:current_view_context] ||= build_view_context
     end
 
     def self.current=(context)
-      Thread.current[:current_view_context] = context
+      RequestStore.store[:current_view_context] = context
     end
 
     def self.build_view_context
