@@ -1,5 +1,23 @@
 # Draper Changelog
 
+## 1.0.0.beta4
+
+* Fixed a race condition with capybara integration. [https://github.com/drapergem/draper/commit/e79464931e7b98c85ed5d78ed9ca38d51f43006e](https://github.com/drapergem/draper/commit/e79464931e7b98c85ed5d78ed9ca38d51f43006e)
+
+* `[]` can be decorated again. [https://github.com/drapergem/draper/commit/597fbdf0c80583f5ea6df9f7350fefeaa0cca989](https://github.com/drapergem/draper/commit/597fbdf0c80583f5ea6df9f7350fefeaa0cca989)
+
+* `model == decorator` as well as `decorator == model`. [https://github.com/drapergem/draper/commit/46f8a6823c50c13e5c9ab3c07723f335c4e291bc](https://github.com/drapergem/draper/commit/46f8a6823c50c13e5c9ab3c07723f335c4e291bc)
+
+* Preliminary Mongoid integration. [https://github.com/drapergem/draper/commit/892d1954202c61fd082a07213c8d4a23560687bc](https://github.com/drapergem/draper/commit/892d1954202c61fd082a07213c8d4a23560687bc)
+
+* Add a helper method `sign_in` for devise in decorator specs. [https://github.com/drapergem/draper/commit/66a30093ed4207d02d8fa60bda4df2da091d85a3](https://github.com/drapergem/draper/commit/66a30093ed4207d02d8fa60bda4df2da091d85a3)
+
+* Brought back `context`. [https://github.com/drapergem/draper/commit/9609156b997b3a469386eef3a5f043b24d8a2fba](https://github.com/drapergem/draper/commit/9609156b997b3a469386eef3a5f043b24d8a2fba)
+
+* Fixed issue where classes were incorrectly being looked up. [https://github.com/drapergem/draper/commit/ee2a015514ff87dfd2158926457e988c2fc3fd79](https://github.com/drapergem/draper/commit/ee2a015514ff87dfd2158926457e988c2fc3fd79)
+
+* Integrate RequestStore for per-request storage. [https://github.com/drapergem/draper/commit/fde1cde9adfb856750c1f616d8b62d221ef97fc6](https://github.com/drapergem/draper/commit/fde1cde9adfb856750c1f616d8b62d221ef97fc6)
+
 ## 1.0.0.beta3
 
 * Relaxed Rails version requirement to 3.0. Support for < 3.2 should be
