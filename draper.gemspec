@@ -18,7 +18,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'activesupport', '>= 3.0'
   s.add_dependency 'actionpack', '>= 3.0'
-  s.add_dependency 'request_store', '~> 1.0.0'
+  s.add_dependency 'request_store', '= 1.0.1'
 
   s.add_development_dependency 'ammeter'
   s.add_development_dependency 'rake', '~> 0.9.2'
