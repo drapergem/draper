@@ -3,8 +3,10 @@ module Draper
     include Enumerable
     include ViewHelpers
 
-    attr_accessor :source, :context
+    attr_reader :source
     alias_method :to_source, :source
+
+    attr_accessor :context
 
     array_methods = Array.instance_methods - Object.instance_methods
     delegate :as_json, *array_methods, to: :decorated_collection

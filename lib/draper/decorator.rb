@@ -5,10 +5,11 @@ module Draper
     include Draper::ViewHelpers
     include ActiveModel::Serialization if defined?(ActiveModel::Serialization)
 
-    attr_accessor :source, :context
-
+    attr_reader :source
     alias_method :model, :source
     alias_method :to_source, :source
+
+    attr_accessor :context
 
     # Initialize a new decorator instance by passing in
     # an instance of the source class. Pass in an optional
@@ -257,8 +258,8 @@ module Draper
 
     def handle_multiple_decoration(options)
       if source.instance_of?(self.class)
-        self.context = source.context unless options.has_key?(:context)
-        self.source = source.source
+        @context = source.context unless options.has_key?(:context)
+        @source = source.source
       elsif source.decorated_with?(self.class)
         warn "Reapplying #{self.class} decorator to target that is already decorated with it. Call stack:\n#{caller(1).join("\n")}"
       end
