@@ -3,20 +3,19 @@ module Draper
     include Enumerable
     include ViewHelpers
 
-    attr_accessor :source, :context, :decorator_class
+    attr_accessor :source, :context
     alias_method :to_source, :source
 
-    delegate :as_json, *(Array.instance_methods - Object.instance_methods), to: :decorated_collection
+    array_methods = Array.instance_methods - Object.instance_methods
+    delegate :as_json, *array_methods, to: :decorated_collection
 
     # @param source collection to decorate
-    # @param [Hash] options (optional)
-    # @option options [Class, Symbol] :with the class used to decorate
-    #   items, or `:infer` to call each item's `decorate` method instead
+    # @option options [Class] :with the class used to decorate items
     # @option options [Hash] :context context available to each item's decorator
     def initialize(source, options = {})
       options.assert_valid_keys(:with, :context)
       @source = source
-      @decorator_class = options.fetch(:with) { self.class.inferred_decorator_class }
+      @decorator_class = options[:with]
       @context = options.fetch(:context, {})
     end
 
@@ -62,14 +61,14 @@ module Draper
       each {|item| item.context = value } if @decorated_collection
     end
 
+    def decorator_class
+      @decorator_class ||= self.class.inferred_decorator_class
+    end
+
     protected
 
     def decorate_item(item)
-      if decorator_class == :infer
-        item.decorate(context: context)
-      else
-        decorator_class.decorate(item, context: context)
-      end
+      item_decorator.call(item, context: context)
     end
 
     def self.inferred_decorator_class
@@ -84,6 +83,16 @@ module Draper
 
     def self.decorator_uninferrable
       raise Draper::UninferrableDecoratorError.new(self)
+    end
+
+    private
+
+    def item_decorator
+      @item_decorator ||= begin
+        decorator_class.method(:decorate)
+      rescue Draper::UninferrableDecoratorError
+        ->(item, options) { item.decorate(options) }
+      end
     end
   end
 end

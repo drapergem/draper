@@ -23,7 +23,6 @@ module Draper
     # multiple places in the chain.
     #
     # @param [Object] source object to decorate
-    # @param [Hash] options (optional)
     # @option options [Hash] :context context available to the decorator
     def initialize(source, options = {})
       options.assert_valid_keys(:context)
@@ -136,8 +135,8 @@ module Draper
     # @param [Object] source collection to decorate
     # @param [Hash] options passed to each item's decorator (except
     #   for the keys listed below)
-    # @option options [Class,Symbol] :with (self) the class used to decorate
-    #   items, or `:infer` to call each item's `decorate` method instead
+    # @option options [Class] :with (self) the class used to decorate
+    #   items
     # @option options [Hash] :context context available to decorated items
     def self.decorate_collection(source, options = {})
       options.assert_valid_keys(:with, :context)
