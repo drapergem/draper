@@ -44,7 +44,7 @@
   Rails app in both development and production mode to help ensure that we
   don't make changes that break Draper. [https://github.com/drapergem/draper/commit/90a4859085cab158658d23d77cd3108b6037e36f](https://github.com/drapergem/draper/commit/90a4859085cab158658d23d77cd3108b6037e36f)
 * Add `#decorated?` method. This gives us a free RSpec matcher,
-  `is_decorated?`. [https://github.com/drapergem/draper/commit/834a6fd1f24b5646c333a04a99fe9846a58965d6](https://github.com/drapergem/draper/commit/834a6fd1f24b5646c333a04a99fe9846a58965d6)
+  `be_decorated`. [https://github.com/drapergem/draper/commit/834a6fd1f24b5646c333a04a99fe9846a58965d6](https://github.com/drapergem/draper/commit/834a6fd1f24b5646c333a04a99fe9846a58965d6)
 * `#decorates` is no longer needed inside your models, and should be removed.
   Decorators automatically infer the class they decorate. [https://github.com/drapergem/draper/commit/e1214d97b62f2cab45227cc650029734160dcdfe](https://github.com/drapergem/draper/commit/e1214d97b62f2cab45227cc650029734160dcdfe)
 * Decorators do not automatically come with 'finders' by default. If you'd like
