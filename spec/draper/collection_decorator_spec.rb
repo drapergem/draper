@@ -79,40 +79,6 @@ describe Draper::CollectionDecorator do
         expect { Draper::CollectionDecorator.new(source, valid_options.merge(foo: 'bar')) }.to raise_error(ArgumentError, 'Unknown key: foo')
       end
     end
-
-    context "when the :with option is given" do
-      context "and the decorator can't be inferred from the class" do
-        subject { Draper::CollectionDecorator.new(source, with: ProductDecorator) }
-
-        it "uses the :with option" do
-          subject.decorator_class.should be ProductDecorator
-        end
-      end
-
-      context "and the decorator is inferrable from the class" do
-        subject { ProductsDecorator.new(source, with: SpecificProductDecorator) }
-
-        it "uses the :with option" do
-          subject.decorator_class.should be SpecificProductDecorator
-        end
-      end
-    end
-
-    context "when the :with option is not given" do
-      context "and the decorator can't be inferred from the class" do
-        it "raises an UninferrableDecoratorError" do
-          expect{Draper::CollectionDecorator.new(source)}.to raise_error Draper::UninferrableDecoratorError
-        end
-      end
-
-      context "and the decorator is inferrable from the class" do
-        subject { ProductsDecorator.new(source) }
-
-        it "infers the decorator" do
-          subject.decorator_class.should be ProductDecorator
-        end
-      end
-    end
   end
 
   describe "#source" do
@@ -122,6 +88,52 @@ describe Draper::CollectionDecorator do
 
     it "is aliased to #to_source" do
       subject.to_source.should be source
+    end
+  end
+
+  describe "item decoration" do
+    subject { subject_class.new(source, options) }
+    let(:decorator_classes) { subject.decorated_collection.map(&:class) }
+    let(:source) { [Product.new, Widget.new] }
+
+    context "when the :with option was given" do
+      let(:options) { {with: SpecificProductDecorator} }
+
+      context "and the decorator can't be inferred from the class" do
+        let(:subject_class) { Draper::CollectionDecorator }
+
+        it "uses the :with option" do
+          decorator_classes.should == [SpecificProductDecorator, SpecificProductDecorator]
+        end
+      end
+
+      context "and the decorator is inferrable from the class" do
+        let(:subject_class) { ProductsDecorator }
+
+        it "uses the :with option" do
+          decorator_classes.should == [SpecificProductDecorator, SpecificProductDecorator]
+        end
+      end
+    end
+
+    context "when the :with option was not given" do
+      let(:options) { {} }
+
+      context "and the decorator can't be inferred from the class" do
+        let(:subject_class) { Draper::CollectionDecorator }
+
+        it "infers the decorator from each item" do
+          decorator_classes.should == [ProductDecorator, WidgetDecorator]
+        end
+      end
+
+      context "and the decorator is inferrable from the class" do
+        let(:subject_class) { ProductsDecorator}
+
+        it "infers the decorator" do
+          decorator_classes.should == [ProductDecorator, ProductDecorator]
+        end
+      end
     end
   end
 
