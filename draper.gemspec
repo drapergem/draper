@@ -22,7 +22,8 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency 'ammeter'
   s.add_development_dependency 'rake', '~> 0.9.2'
-  s.add_development_dependency 'rspec', '~> 2.10'
+  s.add_development_dependency 'rspec', '~> 2.12'
+  s.add_development_dependency 'rspec-mocks', '>= 2.12.1'
   s.add_development_dependency 'yard'
   s.add_development_dependency 'minitest-rails', '~> 0.2'
   s.add_development_dependency 'minitest', '~> 3.0' if RUBY_PLATFORM == "java"
