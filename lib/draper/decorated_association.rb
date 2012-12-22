@@ -1,70 +1,70 @@
 module Draper
   class DecoratedAssociation
 
-    attr_reader :base, :association, :options
-
-    def initialize(base, association, options)
-      @base = base
-      @association = association
+    def initialize(owner, association, options)
       options.assert_valid_keys(:with, :scope, :context)
-      @options = options
+
+      @owner = owner
+      @association = association
+
+      @decorator_class = options[:with]
+      @scope = options[:scope]
+      @context = options.fetch(:context, owner.context)
     end
 
     def call
       return undecorated if undecorated.nil?
-      decorate
+      decorated
     end
 
-    def source
-      base.source
+    def context
+      return @context.call(owner.context) if @context.respond_to?(:call)
+      @context
     end
 
     private
 
+    attr_reader :owner, :association, :decorator_class, :scope
+
+    def source
+      owner.source
+    end
+
     def undecorated
       @undecorated ||= begin
         associated = source.send(association)
-        associated = associated.send(options[:scope]) if options[:scope]
+        associated = associated.send(scope) if scope
         associated
       end
     end
 
-    def decorate
-      @decorated ||= decorator_class.send(decorate_method, undecorated, decorator_options)
-    end
-
-    def decorate_method
-      if collection? && decorator_class.respond_to?(:decorate_collection)
-        :decorate_collection
-      else
-        :decorate
-      end
+    def decorated
+      @decorated ||= decorator.call(undecorated, context: context)
     end
 
     def collection?
       undecorated.respond_to?(:first)
     end
 
-    def decorator_class
-      return options[:with] if options[:with]
+    def decorator
+      return collection_decorator if collection?
 
-      if collection?
-        options[:with] = :infer
-        Draper::CollectionDecorator
+      if decorator_class
+        decorator_class.method(:decorate)
       else
-        undecorated.decorator_class
+        ->(item, options) { item.decorate(options) }
       end
     end
 
-    def decorator_options
-      decorator_class # Ensures options[:with] = :infer for unspecified collections
+    def collection_decorator
+      klass = decorator_class || Draper::CollectionDecorator
 
-      dec_options = collection? ? options.slice(:with, :context) : options.slice(:context)
-      dec_options[:context] = base.context unless dec_options.key?(:context)
-      if dec_options[:context].respond_to?(:call)
-        dec_options[:context] = dec_options[:context].call(base.context) 
+      if klass.respond_to?(:decorate_collection)
+        klass.method(:decorate_collection)
+      else
+        klass.method(:decorate)
       end
-      dec_options
     end
+
   end
 end

@@ -101,15 +101,6 @@ describe Draper::Decorator do
       subject.each {|item| item.should be_a ProductDecorator}
     end
 
-    context "when given :with => :infer" do
-      subject { ProductDecorator.decorate_collection(source, with: :infer) }
-
-      it "infers the item decorators" do
-        subject.first.should be_a ProductDecorator
-        subject.last.should be_a WidgetDecorator
-      end
-    end
-
     context "with context" do
       subject { ProductDecorator.decorate_collection(source, with: :infer, context: {some: 'context'}) }
 
