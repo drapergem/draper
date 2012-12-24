@@ -16,6 +16,27 @@ describe Draper::CollectionDecorator do
     subject.map{|item| item.source}.should == source
   end
 
+  describe "#source" do
+    it "duplicates the source collection" do
+      subject.source.should == source
+      subject.source.should_not be source
+    end
+
+    it "is frozen" do
+      subject.source.should be_frozen
+    end
+
+    it "is aliased to #to_source" do
+      subject.to_source.should == source
+    end
+  end
+
+  describe "#decorated_collection" do
+    it "is frozen" do
+      subject.decorated_collection.should be_frozen
+    end
+  end
+
   context "with context" do
     subject { Draper::CollectionDecorator.new(source, with: ProductDecorator, context: {some: 'context'}) }
 
@@ -81,16 +102,6 @@ describe Draper::CollectionDecorator do
     end
   end
 
-  describe "#source" do
-    it "returns the source collection" do
-      subject.source.should be source
-    end
-
-    it "is aliased to #to_source" do
-      subject.to_source.should be source
-    end
-  end
-
   describe "item decoration" do
     subject { subject_class.new(source, options) }
     let(:decorator_classes) { subject.decorated_collection.map(&:class) }
@@ -140,6 +151,7 @@ describe Draper::CollectionDecorator do
   describe "#find" do
     context "with a block" do
       it "decorates Enumerable#find" do
+        subject.stub decorated_collection: []
         subject.decorated_collection.should_receive(:find)
         subject.find {|p| p.title == "title" }
       end
@@ -196,7 +208,7 @@ describe Draper::CollectionDecorator do
   describe "#to_ary" do
     # required for `render @collection` in Rails
     it "delegates to the decorated collection" do
-      subject.decorated_collection.should_receive(:to_ary).and_return(:an_array)
+      subject.stub decorated_collection: double(to_ary: :an_array)
       subject.to_ary.should == :an_array
     end
   end
@@ -212,20 +224,10 @@ describe Draper::CollectionDecorator do
     end
   end
 
-  context "Array methods" do
-    describe "#include?" do
-      it "delegates to the decorated collection" do
-        subject.decorated_collection.should_receive(:include?).with(:something).and_return(true)
-        subject.should include :something
-      end
-    end
-
-    describe "#[]" do
-      it "delegates to the decorated collection" do
-        subject.decorated_collection.should_receive(:[]).with(42).and_return(:something)
-        subject[42].should == :something
-      end
-    end
+  it "delegates array methods to the decorated collection" do
+    subject.stub decorated_collection: []
+    subject.decorated_collection.should_receive(:[]).with(42).and_return(:the_answer)
+    subject[42].should == :the_answer
   end
 
   describe "#==" do

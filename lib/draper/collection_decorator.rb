@@ -16,7 +16,7 @@ module Draper
     # @option options [Hash] :context context available to each item's decorator
     def initialize(source, options = {})
       options.assert_valid_keys(:with, :context)
-      @source = source
+      @source = source.dup.freeze
       @decorator_class = options[:with]
       @context = options.fetch(:context, {})
     end
@@ -26,7 +26,7 @@ module Draper
     end
 
     def decorated_collection
-      @decorated_collection ||= source.collect {|item| decorate_item(item) }
+      @decorated_collection ||= source.map{|item| decorate_item(item)}.freeze
     end
 
     def find(*args, &block)

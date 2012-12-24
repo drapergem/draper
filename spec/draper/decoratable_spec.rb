@@ -150,7 +150,7 @@ describe Draper::Decoratable do
 
       decorator.should be_a Draper::CollectionDecorator
       decorator.decorator_class.should be WidgetDecorator
-      decorator.source.should be Product.scoped
+      decorator.source.should == Product.scoped
     end
 
     it "accepts context" do
