@@ -37,19 +37,6 @@ module Draper
       end
     end
 
-    def method_missing(method, *args, &block)
-      source.send(method, *args, &block)
-    end
-
-    def respond_to?(method, include_private = false)
-      super || source.respond_to?(method, include_private)
-    end
-
-    def kind_of?(klass)
-      super || source.kind_of?(klass)
-    end
-    alias_method :is_a?, :kind_of?
-
     def ==(other)
       source == (other.respond_to?(:source) ? other.source : other)
     end

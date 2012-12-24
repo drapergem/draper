@@ -213,17 +213,6 @@ describe Draper::CollectionDecorator do
     end
   end
 
-  describe "#respond_to?" do
-    it "returns true for its own methods" do
-      subject.should respond_to :decorated_collection
-    end
-
-    it "returns true for the wrapped collection's methods" do
-      source.stub(:respond_to?).with(:whatever, true).and_return(true)
-      subject.respond_to?(:whatever, true).should be_true
-    end
-  end
-
   it "delegates array methods to the decorated collection" do
     subject.stub decorated_collection: []
     subject.decorated_collection.should_receive(:[]).with(42).and_return(:the_answer)
@@ -261,30 +250,6 @@ describe Draper::CollectionDecorator do
         b = [Product.new]
         a.should_not == b
       end
-    end
-  end
-
-  it "pretends to be the source class" do
-    subject.kind_of?(source.class).should be_true
-    subject.is_a?(source.class).should be_true
-  end
-
-  it "is still its own class" do
-    subject.kind_of?(subject.class).should be_true
-    subject.is_a?(subject.class).should be_true
-  end
-
-  describe "#method_missing" do
-    before do
-      class << source
-        def page_number
-          42
-        end
-      end
-    end
-
-    it "proxies unknown methods to the source collection" do
-      subject.page_number.should == 42
     end
   end
 
