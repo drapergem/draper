@@ -16,6 +16,27 @@ describe Draper::CollectionDecorator do
     subject.map{|item| item.source}.should == source
   end
 
+  describe "#source" do
+    it "duplicates the source collection" do
+      subject.source.should == source
+      subject.source.should_not be source
+    end
+
+    it "is frozen" do
+      subject.source.should be_frozen
+    end
+
+    it "is aliased to #to_source" do
+      subject.to_source.should == source
+    end
+  end
+
+  describe "#decorated_collection" do
+    it "is frozen" do
+      subject.decorated_collection.should be_frozen
+    end
+  end
+
   context "with context" do
     subject { Draper::CollectionDecorator.new(source, with: ProductDecorator, context: {some: 'context'}) }
 
@@ -81,16 +102,6 @@ describe Draper::CollectionDecorator do
     end
   end
 
-  describe "#source" do
-    it "returns the source collection" do
-      subject.source.should be source
-    end
-
-    it "is aliased to #to_source" do
-      subject.to_source.should be source
-    end
-  end
-
   describe "item decoration" do
     subject { subject_class.new(source, options) }
     let(:decorator_classes) { subject.decorated_collection.map(&:class) }
@@ -140,6 +151,7 @@ describe Draper::CollectionDecorator do
   describe "#find" do
     context "with a block" do
       it "decorates Enumerable#find" do
+        subject.stub decorated_collection: []
         subject.decorated_collection.should_receive(:find)
         subject.find {|p| p.title == "title" }
       end
@@ -196,36 +208,15 @@ describe Draper::CollectionDecorator do
   describe "#to_ary" do
     # required for `render @collection` in Rails
     it "delegates to the decorated collection" do
-      subject.decorated_collection.should_receive(:to_ary).and_return(:an_array)
+      subject.stub decorated_collection: double(to_ary: :an_array)
       subject.to_ary.should == :an_array
     end
   end
 
-  describe "#respond_to?" do
-    it "returns true for its own methods" do
-      subject.should respond_to :decorated_collection
-    end
-
-    it "returns true for the wrapped collection's methods" do
-      source.stub(:respond_to?).with(:whatever, true).and_return(true)
-      subject.respond_to?(:whatever, true).should be_true
-    end
-  end
-
-  context "Array methods" do
-    describe "#include?" do
-      it "delegates to the decorated collection" do
-        subject.decorated_collection.should_receive(:include?).with(:something).and_return(true)
-        subject.should include :something
-      end
-    end
-
-    describe "#[]" do
-      it "delegates to the decorated collection" do
-        subject.decorated_collection.should_receive(:[]).with(42).and_return(:something)
-        subject[42].should == :something
-      end
-    end
+  it "delegates array methods to the decorated collection" do
+    subject.stub decorated_collection: []
+    subject.decorated_collection.should_receive(:[]).with(42).and_return(:the_answer)
+    subject[42].should == :the_answer
   end
 
   describe "#==" do
@@ -259,30 +250,6 @@ describe Draper::CollectionDecorator do
         b = [Product.new]
         a.should_not == b
       end
-    end
-  end
-
-  it "pretends to be the source class" do
-    subject.kind_of?(source.class).should be_true
-    subject.is_a?(source.class).should be_true
-  end
-
-  it "is still its own class" do
-    subject.kind_of?(subject.class).should be_true
-    subject.is_a?(subject.class).should be_true
-  end
-
-  describe "#method_missing" do
-    before do
-      class << source
-        def page_number
-          42
-        end
-      end
-    end
-
-    it "proxies unknown methods to the source collection" do
-      subject.page_number.should == 42
     end
   end
 

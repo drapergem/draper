@@ -88,7 +88,7 @@ describe Draper::DecoratedAssociation do
       it "applies the scope before decoration" do
         scoped = [:scoped]
         associated.should_receive(:foo).and_return(scoped)
-        decorated_association.call.source.should be scoped
+        decorated_association.call.source.should == scoped
       end
     end
   end

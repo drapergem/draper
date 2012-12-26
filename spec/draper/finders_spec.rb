@@ -64,7 +64,7 @@ describe Draper::Finders do
 
   describe ".find_all_by_" do
     it "proxies to the model class" do
-      Product.should_receive(:find_all_by_name_and_size).with("apples", "large")
+      Product.should_receive(:find_all_by_name_and_size).with("apples", "large").and_return([])
       ProductDecorator.find_all_by_name_and_size("apples", "large")
     end
 
@@ -73,7 +73,7 @@ describe Draper::Finders do
       Product.stub(:find_all_by_name).and_return(found)
       decorator = ProductDecorator.find_all_by_name("apples")
       decorator.should be_a Draper::CollectionDecorator
-      decorator.source.should be found
+      decorator.source.should == found
     end
   end
 

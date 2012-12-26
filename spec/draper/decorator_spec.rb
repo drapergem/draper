@@ -94,7 +94,7 @@ describe Draper::Decorator do
 
     it "returns a collection decorator" do
       subject.should be_a Draper::CollectionDecorator
-      subject.source.should be source
+      subject.source.should == source
     end
 
     it "uses itself as the item decorator by default" do
