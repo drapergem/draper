@@ -286,4 +286,25 @@ describe Draper::CollectionDecorator do
     end
   end
 
+  describe "#to_s" do
+    subject { Draper::CollectionDecorator.new(source, options) }
+    let(:source) { ["a", "b", "c"] }
+
+    context "when :with option was given" do
+      let(:options) { {with: ProductDecorator} }
+
+      it "returns a string representation of the CollectionDecorator" do
+        subject.to_s.should == '#<CollectionDecorator of ProductDecorator for ["a", "b", "c"]>'
+      end
+    end
+
+    context "when :with option was not given" do
+      let(:options) { {} }
+
+      it "returns a string representation of the CollectionDecorator" do
+        subject.to_s.should == '#<CollectionDecorator of inferred decorators for ["a", "b", "c"]>'
+      end
+    end
+  end
+
 end

@@ -55,7 +55,13 @@ module Draper
     end
 
     def to_s
-      "#<CollectionDecorator of #{decorator_class} for #{source.inspect}>"
+      klass = begin
+        decorator_class
+      rescue Draper::UninferrableDecoratorError
+        "inferred decorators"
+      end
+
+      "#<CollectionDecorator of #{klass} for #{source.inspect}>"
     end
 
     def context=(value)
