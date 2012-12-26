@@ -2,6 +2,11 @@ source :rubygems
 
 gemspec
 
-gem "sqlite3", :platforms => :ruby
+platforms :ruby do
+  gem "sqlite3"
+end
 
-gem "activerecord-jdbcsqlite3-adapter",   :platforms => :jruby
+platforms :jruby do
+  gem "minitest", ">= 3.0"
+  gem "activerecord-jdbcsqlite3-adapter", "~> 1.2.2.1"
+end
