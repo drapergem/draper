@@ -16,7 +16,7 @@ module Draper
     # @option options [Hash] :context context available to each item's decorator
     def initialize(source, options = {})
       options.assert_valid_keys(:with, :context)
-      @source = source.dup.freeze
+      @source = source.to_a.dup.freeze
       @decorator_class = options[:with]
       @context = options.fetch(:context, {})
     end
