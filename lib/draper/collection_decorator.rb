@@ -16,7 +16,7 @@ module Draper
     # @option options [Hash] :context context available to each item's decorator
     def initialize(source, options = {})
       options.assert_valid_keys(:with, :context)
-      @source = source
+      @source = source.dup.freeze
       @decorator_class = options[:with]
       @context = options.fetch(:context, {})
     end
@@ -26,7 +26,7 @@ module Draper
     end
 
     def decorated_collection
-      @decorated_collection ||= source.collect {|item| decorate_item(item) }
+      @decorated_collection ||= source.map{|item| decorate_item(item)}.freeze
     end
 
     def find(*args, &block)
@@ -36,19 +36,6 @@ module Draper
         decorator_class.find(*args)
       end
     end
-
-    def method_missing(method, *args, &block)
-      source.send(method, *args, &block)
-    end
-
-    def respond_to?(method, include_private = false)
-      super || source.respond_to?(method, include_private)
-    end
-
-    def kind_of?(klass)
-      super || source.kind_of?(klass)
-    end
-    alias_method :is_a?, :kind_of?
 
     def ==(other)
       source == (other.respond_to?(:source) ? other.source : other)
