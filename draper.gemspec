@@ -8,8 +8,8 @@ Gem::Specification.new do |s|
   s.authors     = ["Jeff Casimir", "Steve Klabnik"]
   s.email       = ["jeff@casimircreative.com", "steve@steveklabnik.com"]
   s.homepage    = "http://github.com/drapergem/draper"
-  s.summary     = "Decorator pattern implementation for Rails."
-  s.description = "Draper implements a decorator or presenter pattern for Rails applications."
+  s.summary     = "View Models for Rails"
+  s.description = "Draper adds a nicely-separated object-oriented layer of presentation logic to your Rails apps."
   s.rubyforge_project = "draper"
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
