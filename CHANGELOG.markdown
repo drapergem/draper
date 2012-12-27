@@ -1,5 +1,13 @@
 # Draper Changelog
 
+## 1.0.0.beta5
+
+* Change CollectionDecorator to freeze its collection [https://github.com/drapergem/draper/commit/04d779615c43580409083a71661489e1bbf91ad4](https://github.com/drapergem/draper/commit/04d779615c43580409083a71661489e1bbf91ad4)
+
+* Bugfix on `CollectionDecorator#to_s` [https://github.com/drapergem/draper/commit/eefd7d09cac97d531b9235246378c3746d153f08](https://github.com/drapergem/draper/commit/eefd7d09cac97d531b9235246378c3746d153f08)
+
+* Upgrade `request_store` dependency to take advantage of a bugfix [https://github.com/drapergem/draper/commit/9f17212fd1fb656ef1314327d60fe45e0acf60a2](https://github.com/drapergem/draper/commit/9f17212fd1fb656ef1314327d60fe45e0acf60a2)
+
 ## 1.0.0.beta4
 
 * Fixed a race condition with capybara integration. [https://github.com/drapergem/draper/commit/e79464931e7b98c85ed5d78ed9ca38d51f43006e](https://github.com/drapergem/draper/commit/e79464931e7b98c85ed5d78ed9ca38d51f43006e)
