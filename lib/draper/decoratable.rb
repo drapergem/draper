@@ -22,7 +22,7 @@ module Draper::Decoratable
   end
 
   def ==(other)
-    super || (other.respond_to?(:source) && super(other.source))
+    super || (other.respond_to?(:source) && self == other.source)
   end
 
   module ClassMethods
