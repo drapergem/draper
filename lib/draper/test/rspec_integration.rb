@@ -6,8 +6,13 @@ module Draper
 
   module DeviseHelper
     def sign_in(user)
-      warden.stub :authenticate! => user
-      controller.stub :current_user => user
+      if defined?(RR)
+        stub(warden).authenticate! { user }
+        stub(controller).current_user { user }
+      else
+        warden.stub :authenticate! => user
+        controller.stub :current_user => user      
+      end
       user
     end
 
