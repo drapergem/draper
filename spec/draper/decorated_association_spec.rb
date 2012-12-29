@@ -86,7 +86,7 @@ describe Draper::DecoratedAssociation do
       let(:options) { {scope: :foo} }
 
       it "applies the scope before decoration" do
-        scoped = [:scoped]
+        scoped = [Product.new]
         associated.should_receive(:foo).and_return(scoped)
         decorated_association.call.should == scoped
       end

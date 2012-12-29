@@ -6,7 +6,7 @@ module Draper
     attr_accessor :context
 
     array_methods = Array.instance_methods - Object.instance_methods
-    delegate :as_json, *array_methods, to: :decorated_collection
+    delegate :==, :as_json, *array_methods, to: :decorated_collection
 
     # @param source collection to decorate
     # @option options [Class] :with the class used to decorate items
@@ -32,10 +32,6 @@ module Draper
       else
         decorator_class.find(*args)
       end
-    end
-
-    def ==(other)
-      source == (other.respond_to?(:source) ? other.source : other)
     end
 
     def to_s

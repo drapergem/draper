@@ -228,6 +228,16 @@ describe Draper::CollectionDecorator do
         a.should_not == b
       end
     end
+
+    context "when the decorated collection has been modified" do
+      it "is no longer equal to the source" do
+        a = Draper::CollectionDecorator.new(source, with: ProductDecorator)
+        b = source.dup
+
+        a << Product.new.decorate
+        a.should_not == b
+      end
+    end
   end
 
   describe "#to_s" do
