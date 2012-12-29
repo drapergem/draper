@@ -16,27 +16,6 @@ describe Draper::CollectionDecorator do
     subject.map{|item| item.source}.should == source
   end
 
-  describe "#source" do
-    it "duplicates the source collection" do
-      subject.source.should == source
-      subject.source.should_not be source
-    end
-
-    it "is frozen" do
-      subject.source.should be_frozen
-    end
-
-    it "is aliased to #to_source" do
-      subject.to_source.should == source
-    end
-  end
-
-  describe "#decorated_collection" do
-    it "is frozen" do
-      subject.decorated_collection.should be_frozen
-    end
-  end
-
   context "with context" do
     subject { Draper::CollectionDecorator.new(source, with: ProductDecorator, context: {some: 'context'}) }
 
@@ -151,7 +130,6 @@ describe Draper::CollectionDecorator do
   describe "#find" do
     context "with a block" do
       it "decorates Enumerable#find" do
-        subject.stub decorated_collection: []
         subject.decorated_collection.should_receive(:find)
         subject.find {|p| p.title == "title" }
       end
@@ -208,13 +186,12 @@ describe Draper::CollectionDecorator do
   describe "#to_ary" do
     # required for `render @collection` in Rails
     it "delegates to the decorated collection" do
-      subject.stub decorated_collection: double(to_ary: :an_array)
+      subject.decorated_collection.stub to_ary: :an_array
       subject.to_ary.should == :an_array
     end
   end
 
   it "delegates array methods to the decorated collection" do
-    subject.stub decorated_collection: []
     subject.decorated_collection.should_receive(:[]).with(42).and_return(:the_answer)
     subject[42].should == :the_answer
   end
@@ -248,6 +225,16 @@ describe Draper::CollectionDecorator do
       it "returns true" do
         a = Draper::CollectionDecorator.new(source, with: ProductDecorator)
         b = [Product.new]
+        a.should_not == b
+      end
+    end
+
+    context "when the decorated collection has been modified" do
+      it "is no longer equal to the source" do
+        a = Draper::CollectionDecorator.new(source, with: ProductDecorator)
+        b = source.dup
+
+        a << Product.new.decorate
         a.should_not == b
       end
     end

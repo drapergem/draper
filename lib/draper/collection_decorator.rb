@@ -3,20 +3,17 @@ module Draper
     include Enumerable
     include ViewHelpers
 
-    attr_reader :source
-    alias_method :to_source, :source
-
     attr_accessor :context
 
     array_methods = Array.instance_methods - Object.instance_methods
-    delegate :as_json, *array_methods, to: :decorated_collection
+    delegate :==, :as_json, *array_methods, to: :decorated_collection
 
     # @param source collection to decorate
     # @option options [Class] :with the class used to decorate items
     # @option options [Hash] :context context available to each item's decorator
     def initialize(source, options = {})
       options.assert_valid_keys(:with, :context)
-      @source = source.to_a.dup.freeze
+      @source = source
       @decorator_class = options[:with]
       @context = options.fetch(:context, {})
     end
@@ -26,7 +23,7 @@ module Draper
     end
 
     def decorated_collection
-      @decorated_collection ||= source.map{|item| decorate_item(item)}.freeze
+      @decorated_collection ||= source.map{|item| decorate_item(item)}
     end
 
     def find(*args, &block)
@@ -35,10 +32,6 @@ module Draper
       else
         decorator_class.find(*args)
       end
-    end
-
-    def ==(other)
-      source == (other.respond_to?(:source) ? other.source : other)
     end
 
     def to_s
@@ -61,6 +54,8 @@ module Draper
     end
 
     protected
+
+    attr_reader :source
 
     def decorate_item(item)
       item_decorator.call(item, context: context)
