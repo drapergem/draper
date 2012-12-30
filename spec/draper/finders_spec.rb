@@ -73,7 +73,7 @@ describe Draper::Finders do
       Product.stub(:find_all_by_name).and_return(found)
       decorator = ProductDecorator.find_all_by_name("apples")
       decorator.should be_a Draper::CollectionDecorator
-      decorator.source.should == found
+      decorator.should == found
     end
   end
 
