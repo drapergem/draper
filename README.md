@@ -158,6 +158,14 @@ end
 
 Draper guesses the decorator used for each item from the name of the collection decorator ("ArticlesDecorator" becomes "ArticleDecorator"). If that fails, it falls back to using each item's `decorate` method. Alternatively, you can specify a decorator by overriding the collection decorator's `decorator_class` method.
 
+Some pagination gems add methods to `ActiveRecord::Relation`. For example, [Kaminari](https://github.com/amatsuda/kaminari)'s `paginate` helper method requires the collection to implement `current_page`, `total_pages`, and `limit_value`. To expose these on a collection decorator, you can simply delegate to `source`:
+
+```ruby
+class PaginatingDecorator < Draper::CollectionDecorator
+  delegate :current_page, :total_pages, :limit_value, to: :source
+end
+```
+
 ### Handy shortcuts
 
 You can automatically decorate associated models:
