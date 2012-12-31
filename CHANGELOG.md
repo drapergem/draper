@@ -1,5 +1,15 @@
 # Draper Changelog
 
+## 1.0.0.beta6
+
+* Fix up README to include changes made. [https://github.com/drapergem/draper/commit/5e6e4d11b1e0c07c12b6b1e87053bc3f50ef2ab6](https://github.com/drapergem/draper/commit/5e6e4d11b1e0c07c12b6b1e87053bc3f50ef2ab6)
+
+* `CollectionDecorator` no longer freezes its collection: direct access is discouraged by making access private [https://github.com/drapergem/draper/commit/c6d60e6577ed396385f3f1151c3f188fe47e9a57](https://github.com/drapergem/draper/commit/c6d60e6577ed396385f3f1151c3f188fe47e9a57)
+
+* A fix for `Decoratable#==` [https://github.com/drapergem/draper/commit/e4fa239d84e8e9d6a490d785abb3953acc28fa65](https://github.com/drapergem/draper/commit/e4fa239d84e8e9d6a490d785abb3953acc28fa65)
+
+* Ensure we coerce to an array in the right place. [https://github.com/drapergem/draper/commit/9eb9fc909c372ea1c2392d05594fa75a5c08b095](https://github.com/drapergem/draper/commit/9eb9fc909c372ea1c2392d05594fa75a5c08b095)
+
 ## 1.0.0.beta5
 
 * Change CollectionDecorator to freeze its collection [https://github.com/drapergem/draper/commit/04d779615c43580409083a71661489e1bbf91ad4](https://github.com/drapergem/draper/commit/04d779615c43580409083a71661489e1bbf91ad4)
