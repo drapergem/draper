@@ -125,9 +125,9 @@ Ok, so you've written a sweet decorator, now you're going to want to put it in a
 This infers the decorator from the object being decorated. If you want more control - say you want to decorate a `Widget` with a more general `ProductDecorator` - then you can instantiate a decorator directly:
 
 ```ruby
-@article = ArticleDecorator.new(Article.first)
+@widget = ProductDecorator.new(Widget.first)
 # or, equivalently
-@article = ArticleDecorator.decorate(Article.first)
+@widget = ProductDecorator.decorate(Widget.first)
 ```
 
 ### Collections
@@ -156,7 +156,7 @@ end
 @articles = ArticlesDecorator.decorate(Article.all)
 ```
 
-Draper guesses the decorator used for each item from the name of the collection decorator ("ArticlesDecorator" becomes "ArticleDecorator"). If that fails, it falls back to using each item's `decorate` method. Alternatively, you can specify a decorator by overriding the collection decorator's `decorator_class` method.
+Draper guesses the decorator used for each item from the name of the collection decorator (`ArticlesDecorator` becomes `ArticleDecorator`). If that fails, it falls back to using each item's `decorate` method. Alternatively, you can specify a decorator by overriding the collection decorator's `decorator_class` method.
 
 Some pagination gems add methods to `ActiveRecord::Relation`. For example, [Kaminari](https://github.com/amatsuda/kaminari)'s `paginate` helper method requires the collection to implement `current_page`, `total_pages`, and `limit_value`. To expose these on a collection decorator, you can simply delegate to `source`:
 
