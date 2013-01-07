@@ -74,9 +74,18 @@ describe Draper::DecoratedAssociation do
       end
 
       context "when :with option was not given" do
-        it "uses a CollectionDecorator of inferred decorators" do
-          Draper::CollectionDecorator.should_receive(:decorate).with(associated, expected_options).and_return(:decorated_collection)
-          decorated_association.call.should be :decorated_collection
+        context "when the collection responds to decorate" do
+          it "calls decorate on the collection" do
+            associated.should_receive(:decorate).with(expected_options).and_return(:decorated_collection)
+            decorated_association.call.should be :decorated_collection
+          end
+        end
+
+        context "when the collection does not respond to decorate" do
+          it "uses a CollectionDecorator of inferred decorators" do
+            Draper::CollectionDecorator.should_receive(:decorate).with(associated, expected_options).and_return(:decorated_collection)
+            decorated_association.call.should be :decorated_collection
+          end
         end
       end
     end
