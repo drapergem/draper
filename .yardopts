@@ -1,1 +1,1 @@
-yardoc 'lib/draper/**/*.rb' -m markdown
+yardoc 'lib/draper/**/*.rb' -m markdown --no-private

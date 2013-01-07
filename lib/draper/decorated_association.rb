@@ -1,4 +1,5 @@
 module Draper
+  # @private
   class DecoratedAssociation
 
     def initialize(owner, association, options)

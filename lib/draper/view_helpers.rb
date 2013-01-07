@@ -1,4 +1,6 @@
 module Draper
+  # Provides the {#helpers} method used in {Decorator} and {CollectionDecorator}
+  # to call the Rails helpers.
   module ViewHelpers
     extend ActiveSupport::Concern
 
@@ -24,9 +26,8 @@ module Draper
     end
     alias_method :h, :helpers
 
-    # Localize is something that's used quite often. Even though
-    # it's available through helpers, that's annoying. Aliased
-    # to `l` for convenience.
+    # Alias for `helpers.localize`, since localize is something that's used
+    # quite often. Further aliased to `l` for convenience.
     def localize(*args)
       helpers.localize(*args)
     end
