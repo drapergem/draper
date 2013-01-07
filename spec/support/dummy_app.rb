@@ -49,7 +49,8 @@ class DummyApp
 
         yield
 
-        Process.kill('KILL', out.pid)
+        Process.kill("KILL", out.pid)
+        File.delete("tmp/pids/server.pid")
       end
     end
   end
@@ -57,11 +58,11 @@ class DummyApp
   private
 
   def root
-    File.expand_path('../../dummy', __FILE__)
+    File.expand_path("../../dummy", __FILE__)
   end
 
   def localhost
-    '127.0.0.1'
+    "127.0.0.1"
   end
 
   def port

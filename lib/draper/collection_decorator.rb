@@ -41,7 +41,7 @@ module Draper
         "inferred decorators"
       end
 
-      "#<CollectionDecorator of #{klass} for #{source.inspect}>"
+      "#<#{self.class.name} of #{klass} for #{source.inspect}>"
     end
 
     def context=(value)

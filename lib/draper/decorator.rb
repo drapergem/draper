@@ -141,7 +141,7 @@ module Draper
     # @option options [Hash] :context context available to decorated items
     def self.decorate_collection(source, options = {})
       options.assert_valid_keys(:with, :context)
-      Draper::CollectionDecorator.new(source, options.reverse_merge(with: self))
+      collection_decorator_class.new(source, options.reverse_merge(with: self))
     end
 
     # Get the chain of decorators applied to the object.
@@ -218,6 +218,14 @@ module Draper
       super || delegatable_method?(method)
     end
 
+    protected
+
+    def self.collection_decorator_class
+      collection_decorator_name.constantize
+    rescue NameError
+      Draper::CollectionDecorator
+    end
+
     private
 
     def delegatable_method?(method)
@@ -228,18 +236,21 @@ module Draper
       source_class? && source_class.respond_to?(method)
     end
 
-    def self.inferred_source_class
-      uninferrable_source if name.nil? || name.demodulize !~ /.+Decorator$/
-
-      begin
-        name.chomp("Decorator").constantize
-      rescue NameError
-        uninferrable_source
-      end
+    def self.source_name
+      raise NameError if name.nil? || name.demodulize !~ /.+Decorator$/
+      name.chomp("Decorator")
     end
 
-    def self.uninferrable_source
+    def self.inferred_source_class
+      source_name.constantize
+    rescue NameError
       raise Draper::UninferrableSourceError.new(self)
+    end
+
+    def self.collection_decorator_name
+      plural = source_name.pluralize
+      raise NameError if plural == source_name
+      "#{plural}Decorator"
     end
 
     def self.define_proxy(method)
