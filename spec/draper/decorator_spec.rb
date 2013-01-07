@@ -76,7 +76,6 @@ describe Draper::Decorator do
   end
 
   describe ".decorate_collection" do
-    subject { ProductDecorator.decorate_collection(source) }
     let(:source) { [Product.new, Widget.new] }
 
     describe "options validation" do
@@ -92,13 +91,30 @@ describe Draper::Decorator do
       end
     end
 
-    it "returns a collection decorator" do
-      subject.should be_a Draper::CollectionDecorator
-      subject.should == source
+    context "when a custom collection decorator does not exist" do
+      subject { WidgetDecorator.decorate_collection(source) }
+
+      it "returns a regular collection decorator" do
+        subject.should be_a Draper::CollectionDecorator
+        subject.should == source
+      end
+
+      it "uses itself as the item decorator by default" do
+        subject.each {|item| item.should be_a WidgetDecorator}
+      end
     end
 
-    it "uses itself as the item decorator by default" do
-      subject.each {|item| item.should be_a ProductDecorator}
+    context "when a custom collection decorator exists" do
+      subject { ProductDecorator.decorate_collection(source) }
+
+      it "returns the custom collection decorator" do
+        subject.should be_a ProductsDecorator
+        subject.should == source
+      end
+
+      it "uses itself as the item decorator by default" do
+        subject.each {|item| item.should be_a ProductDecorator}
+      end
     end
 
     context "with context" do

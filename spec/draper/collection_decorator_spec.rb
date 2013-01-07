@@ -248,7 +248,7 @@ describe Draper::CollectionDecorator do
       let(:options) { {with: ProductDecorator} }
 
       it "returns a string representation of the CollectionDecorator" do
-        subject.to_s.should == '#<CollectionDecorator of ProductDecorator for ["a", "b", "c"]>'
+        subject.to_s.should == '#<Draper::CollectionDecorator of ProductDecorator for ["a", "b", "c"]>'
       end
     end
 
@@ -256,7 +256,15 @@ describe Draper::CollectionDecorator do
       let(:options) { {} }
 
       it "returns a string representation of the CollectionDecorator" do
-        subject.to_s.should == '#<CollectionDecorator of inferred decorators for ["a", "b", "c"]>'
+        subject.to_s.should == '#<Draper::CollectionDecorator of inferred decorators for ["a", "b", "c"]>'
+      end
+    end
+
+    context "for a custom subclass" do
+      subject { ProductsDecorator.new(source) }
+
+      it "uses the custom class name" do
+        subject.to_s.should =~ /ProductsDecorator/
       end
     end
   end
