@@ -1,4 +1,7 @@
 module Draper
+  # Provides automatically-decorated finder methods for your decorators. You
+  # do not have to extend this module directly; it is extended by
+  # {Decorator.decorates_finders}.
   module Finders
 
     def find(id, options = {})
@@ -17,6 +20,7 @@ module Draper
       decorate(source_class.last, options)
     end
 
+    # Decorates dynamic finder methods (`find_all_by_` and friends).
     def method_missing(method, *args, &block)
       result = super
       options = args.extract_options!

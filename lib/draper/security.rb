@@ -1,4 +1,5 @@
 module Draper
+  # @private
   class Security
     def initialize
       @methods = []

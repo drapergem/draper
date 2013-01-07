@@ -5,26 +5,25 @@ module Draper
     include Draper::ViewHelpers
     include ActiveModel::Serialization if defined?(ActiveModel::Serialization)
 
+    # @return the object being decorated.
     attr_reader :source
     alias_method :model, :source
     alias_method :to_source, :source
 
+    # @return [Hash] extra data to be used in user-defined methods.
     attr_accessor :context
 
-    # Initialize a new decorator instance by passing in
-    # an instance of the source class. Pass in an optional
-    # :context inside the options hash which is available
-    # for later use.
+    # Wraps an object in a new instance of the decorator.
     #
-    # A decorator cannot be applied to other instances of the
-    # same decorator and will instead result in a decorator
-    # with the same target as the original.
-    # You can, however, apply several decorators in a chain but
-    # you will get a warning if the same decorator appears at
-    # multiple places in the chain.
+    # Decorators may be applied to other decorators. However, applying a
+    # decorator to an instance of itself will create a decorator with the same
+    # source as the original, rather than redecorating the other instance.
     #
-    # @param [Object] source object to decorate
-    # @option options [Hash] :context context available to the decorator
+    # @param [Object] source
+    #   object to decorate.
+    # @option options [Hash] :context ({})
+    #   extra data to be stored in the decorator and used in user-defined
+    #   methods.
     def initialize(source, options = {})
       options.assert_valid_keys(:context)
       source.to_a if source.respond_to?(:to_a) # forces evaluation of a lazy query from AR
@@ -37,49 +36,60 @@ module Draper
       alias_method :decorate, :new
     end
 
-    # Specify the class that this class decorates.
+    # Sets the source class corresponding to the decorator class.
     #
-    # @param [String, Symbol, Class] Class or name of class to decorate.
-    def self.decorates(klass)
-      @source_class = klass.to_s.camelize.constantize
+    # @note This is only necessary if you wish to proxy class methods to the
+    #   source (including when using {decorates_finders}), and the source class
+    #   cannot be inferred from the decorator class (e.g. `ProductDecorator`
+    #   maps to `Product`).
+    # @param [String, Symbol, Class] source_class
+    #   source class (or class name) that corresponds to this decorator.
+    # @return [void]
+    def self.decorates(source_class)
+      @source_class = source_class.to_s.camelize.constantize
     end
 
-    # @return [Class] The source class corresponding to this
-    #   decorator class
+    # Returns the source class corresponding to the decorator class, as set by
+    # {decorates}, or as inferred from the decorator class name (e.g.
+    # `ProductDecorator` maps to `Product`).
+    #
+    # @return [Class] the source class that corresponds to this decorator.
     def self.source_class
       @source_class ||= inferred_source_class
     end
 
-    # Checks whether this decorator class has a corresponding
-    # source class
+    # Checks whether this decorator class has a corresponding {source_class}.
     def self.source_class?
       source_class
     rescue Draper::UninferrableSourceError
       false
     end
 
-    # Automatically decorates ActiveRecord finder methods, so that
-    # you can use `ProductDecorator.find(id)` instead of
+    # Automatically decorates ActiveRecord finder methods, so that you can use
+    # `ProductDecorator.find(id)` instead of
     # `ProductDecorator.decorate(Product.find(id))`.
     #
-    # The model class to be found is defined by `decorates` or
-    # inferred from the decorator class name.
+    # Finder methods are applied to the {source_class}.
     #
+    # @return [void]
     def self.decorates_finders
       extend Draper::Finders
     end
 
-    # Typically called within a decorator definition, this method causes
-    # the assocation to be decorated when it is retrieved.
+    # Automatically decorate an association.
     #
-    # @param [Symbol] association name of association to decorate, like `:products`
-    # @option options [Class] :with the decorator to apply to the association
-    # @option options [Symbol] :scope a scope to apply when fetching the association
-    # @option options [Hash, #call] :context context available to decorated
-    #   objects in collection.  Passing a `lambda` or similar will result in that
-    #   block being called when the association is evaluated.  The block will be
-    #   passed the base decorator's `context` Hash and should return the desired
-    #   context Hash for the decorated items.
+    # @param [Symbol] association
+    #   name of the association to decorate (e.g. `:products`).
+    # @option options [Class] :with
+    #   the decorator to apply to the association.
+    # @option options [Symbol] :scope
+    #   a scope to apply when fetching the association.
+    # @option options [Hash, #call] :context
+    #   extra data to be stored in the associated decorator. If omitted, the
+    #   associated decorator's context will be the same as the parent
+    #   decorator's. If a Proc is given, it will be called with the parent's
+    #   context and should return a new context hash for the association.
+    # @return [void]
     def self.decorates_association(association, options = {})
       options.assert_valid_keys(:with, :scope, :context)
       define_method(association) do
@@ -88,11 +98,13 @@ module Draper
       end
     end
 
-    # A convenience method for decorating multiple associations. Calls
-    # decorates_association on each of the given symbols.
-    #
-    # @param [Symbols*] associations names of associations to decorate
-    # @param [Hash] options passed to `decorate_association`
+    # @overload decorates_associations(*associations, options = {})
+    #   Automatically decorate multiple associations.
+    #   @param [Symbols*] associations
+    #     names of the associations to decorate.
+    #   @param [Hash] options
+    #     see {decorates_association}.
+    #   @return [void]
     def self.decorates_associations(*associations)
       options = associations.extract_options!
       associations.each do |association|
@@ -100,99 +112,106 @@ module Draper
       end
     end
 
-    # Specifies a black list of methods which may *not* be proxied to
-    # the wrapped object.
+    # Specifies a blacklist of methods which are not to be automatically
+    # proxied to the source object.
     #
-    # Do not use both `.allows` and `.denies` together, either write
-    # a whitelist with `.allows` or a blacklist with `.denies`
-    #
-    # @param [Symbols*] methods methods to deny like `:find, :find_by_name`
+    # @note Use only one of {allows}, {denies}, and {denies_all}.
+    # @param [Symbols*] methods
+    #   list of methods not to be automatically proxied.
+    # @return [void]
     def self.denies(*methods)
       security.denies(*methods)
     end
 
-    # Specifies that all methods may *not* be proxied to the wrapped object.
+    # Prevents all methods from being automatically proxied to the source
+    # object.
     #
-    # Do not use `.allows` and `.denies` in combination with '.denies_all'
+    # @note (see denies)
+    # @return [void]
     def self.denies_all
       security.denies_all
     end
 
-    # Specifies a white list of methods which *may* be proxied to
-    # the wrapped object. When `allows` is used, only the listed
-    # methods and methods defined in the decorator itself will be
-    # available.
+    # Specifies a whitelist of methods which are to be automatically proxied to
+    # the source object.
     #
-    # Do not use both `.allows` and `.denies` together, either write
-    # a whitelist with `.allows` or a blacklist with `.denies`
-    #
-    # @param [Symbols*] methods methods to allow like `:find, :find_by_name`
+    # @note (see denies)
+    # @param [Symbols*] methods
+    #   list of methods to be automatically proxied.
+    # @return [void]
     def self.allows(*methods)
       security.allows(*methods)
     end
 
-    # Creates a new CollectionDecorator for the given collection.
+    # Decorates a collection of objects. The class of the collection decorator
+    # is inferred from the decorator class if possible (e.g. `ProductDecorator`
+    # maps to `ProductsDecorator`), but otherwise defaults to
+    # {Draper::CollectionDecorator}.
     #
-    # @param [Object] source collection to decorate
-    # @param [Hash] options passed to each item's decorator (except
-    #   for the keys listed below)
-    # @option options [Class] :with (self) the class used to decorate
-    #   items
-    # @option options [Hash] :context context available to decorated items
+    # @param [Object] source
+    #   collection to decorate.
+    # @option options [Class, nil] :with (self)
+    #   the decorator class used to decorate each item. When `nil`, it is
+    #   inferred from each item.
+    # @option options [Hash] :context
+    #   extra data to be stored in the collection decorator.
     def self.decorate_collection(source, options = {})
       options.assert_valid_keys(:with, :context)
       collection_decorator_class.new(source, options.reverse_merge(with: self))
     end
 
-    # Get the chain of decorators applied to the object.
-    #
-    # @return [Array] list of decorator classes
+    # @return [Array<Class>] the list of decorators that have been applied to
+    #   the object.
     def applied_decorators
       chain = source.respond_to?(:applied_decorators) ? source.applied_decorators : []
       chain << self.class
     end
 
-    # Checks if a given decorator has been applied.
+    # Checks if a given decorator has been applied to the object.
     #
     # @param [Class] decorator_class
     def decorated_with?(decorator_class)
       applied_decorators.include?(decorator_class)
     end
 
+    # Checks if this object is decorated.
+    #
+    # @return [true]
     def decorated?
       true
     end
 
-    # Delegates == to the decorated models
+    # Delegated to the source object.
     #
-    # @return [Boolean] true if other's model == self's model
+    # @return [Boolean]
     def ==(other)
       source == (other.respond_to?(:source) ? other.source : other)
     end
 
+    # @overload kind_of?(class)
+    #   Checks if `self.kind_of?(class)` or `source.kind_of?(class)`
     def kind_of?(klass)
       super || source.kind_of?(klass)
     end
     alias_method :is_a?, :kind_of?
 
-    # We always want to delegate present, in case we decorate a nil object.
-    #
-    # I don't like the idea of decorating a nil object, but we'll deal with
-    # that later.
+    # Delegated to the source object, in case it is `nil`.
     def present?
       source.present?
     end
 
-    # For ActiveModel compatibilty
+    # For ActiveModel compatibility.
+    # @return [self]
     def to_model
       self
     end
 
-    # For ActiveModel compatibility
+    # Delegated to the source object for ActiveModel compatibility.
     def to_param
       source.to_param
     end
 
+    # Proxies missing instance methods to the source object.
     def method_missing(method, *args, &block)
       if delegatable_method?(method)
         self.class.define_proxy(method)
@@ -202,10 +221,13 @@ module Draper
       end
     end
 
+    # Checks if the decorator responds to an instance method, or is able to
+    # proxy it to the source object.
     def respond_to?(method, include_private = false)
       super || delegatable_method?(method)
     end
 
+    # Proxies missing class methods to the {source_class}.
     def self.method_missing(method, *args, &block)
       if delegatable_method?(method)
         source_class.send(method, *args, &block)
@@ -214,12 +236,13 @@ module Draper
       end
     end
 
+    # Checks if the decorator responds to a class method, or is able to proxy
+    # it to the {source_class}.
     def self.respond_to?(method, include_private = false)
       super || delegatable_method?(method)
     end
 
-    protected
-
+    # @return [Class] the class created by {decorate_collection}.
     def self.collection_decorator_class
       collection_decorator_name.constantize
     rescue NameError
