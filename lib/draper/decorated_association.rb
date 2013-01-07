@@ -53,11 +53,13 @@ module Draper
       if decorator_class
         decorator_class.method(:decorate)
       else
-        ->(item, options) { item.decorate(options) }
+        inferred_decorator
       end
     end
 
     def collection_decorator
+      return inferred_decorator if decorator_class.nil? && undecorated.respond_to?(:decorate)
+
       klass = decorator_class || Draper::CollectionDecorator
 
       if klass.respond_to?(:decorate_collection)
@@ -65,6 +67,10 @@ module Draper
       else
         klass.method(:decorate)
       end
+    end
+
+    def inferred_decorator
+      ->(item, options) { item.decorate(options) }
     end
 
   end
