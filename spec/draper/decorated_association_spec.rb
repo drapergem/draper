@@ -31,10 +31,10 @@ describe Draper::DecoratedAssociation do
 
     context "for a singular association" do
       let(:associated) { Product.new }
+      let(:decorator) { SpecificProductDecorator }
 
       context "when :with option was given" do
         let(:options) { {with: decorator} }
-        let(:decorator) { SpecificProductDecorator }
 
         it "uses the specified decorator" do
           decorator.should_receive(:decorate).with(associated, expected_options).and_return(:decorated)
@@ -44,7 +44,8 @@ describe Draper::DecoratedAssociation do
 
       context "when :with option was not given" do
         it "infers the decorator" do
-          associated.should_receive(:decorate).with(expected_options).and_return(:decorated)
+          associated.stub(:decorator_class).and_return(decorator)
+          decorator.should_receive(:decorate).with(associated, expected_options).and_return(:decorated)
           decorated_association.call.should be :decorated
         end
       end
@@ -52,10 +53,10 @@ describe Draper::DecoratedAssociation do
 
     context "for a collection association" do
       let(:associated) { [Product.new, Widget.new] }
+      let(:collection_decorator) { ProductsDecorator }
 
       context "when :with option is a collection decorator" do
         let(:options) { {with: collection_decorator} }
-        let(:collection_decorator) { ProductsDecorator }
 
         it "uses the specified decorator" do
           collection_decorator.should_receive(:decorate).with(associated, expected_options).and_return(:decorated_collection)
@@ -74,14 +75,15 @@ describe Draper::DecoratedAssociation do
       end
 
       context "when :with option was not given" do
-        context "when the collection responds to decorate" do
-          it "calls decorate on the collection" do
-            associated.should_receive(:decorate).with(expected_options).and_return(:decorated_collection)
+        context "when the collection is decoratable" do
+          it "infers the decorator" do
+            associated.stub(:decorator_class).and_return(collection_decorator)
+            collection_decorator.should_receive(:decorate).with(associated, expected_options).and_return(:decorated_collection)
             decorated_association.call.should be :decorated_collection
           end
         end
 
-        context "when the collection does not respond to decorate" do
+        context "when the collection is not decoratable" do
           it "uses a CollectionDecorator of inferred decorators" do
             Draper::CollectionDecorator.should_receive(:decorate).with(associated, expected_options).and_return(:decorated_collection)
             decorated_association.call.should be :decorated_collection
