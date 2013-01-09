@@ -25,7 +25,7 @@ module Draper
 
     private
 
-    attr_reader :owner, :association, :decorator_class, :scope
+    attr_reader :owner, :association, :scope
 
     def source
       owner.source
@@ -49,17 +49,10 @@ module Draper
 
     def decorator
       return collection_decorator if collection?
-
-      if decorator_class
-        decorator_class.method(:decorate)
-      else
-        inferred_decorator
-      end
+      decorator_class.method(:decorate)
     end
 
     def collection_decorator
-      return inferred_decorator if decorator_class.nil? && undecorated.respond_to?(:decorate)
-
       klass = decorator_class || Draper::CollectionDecorator
 
       if klass.respond_to?(:decorate_collection)
@@ -69,8 +62,12 @@ module Draper
       end
     end
 
-    def inferred_decorator
-      ->(item, options) { item.decorate(options) }
+    def decorator_class
+      @decorator_class || inferred_decorator_class
+    end
+
+    def inferred_decorator_class
+      undecorated.decorator_class if undecorated.respond_to?(:decorator_class)
     end
 
   end
