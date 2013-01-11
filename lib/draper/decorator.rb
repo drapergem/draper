@@ -286,13 +286,21 @@ module Draper
       @security ||= Security.new(superclass_security)
     end
 
+    def self.security?
+      @security || (superclass.respond_to?(:security?) && superclass.security?)
+    end
+
     def self.superclass_security
       return nil unless superclass.respond_to?(:security)
       superclass.security
     end
 
     def allow?(method)
-      self.class.security.allow?(method)
+      self.class.allow?(method)
+    end
+
+    def self.allow?(method)
+      !security? || security.allow?(method)
     end
 
     def handle_multiple_decoration(options)
