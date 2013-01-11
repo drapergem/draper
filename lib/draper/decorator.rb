@@ -283,7 +283,12 @@ module Draper
     end
 
     def self.security
-      @security ||= Security.new
+      @security ||= Security.new(superclass_security)
+    end
+
+    def self.superclass_security
+      return nil unless superclass.respond_to?(:security)
+      superclass.security
     end
 
     def allow?(method)

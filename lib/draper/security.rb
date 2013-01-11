@@ -1,8 +1,11 @@
 module Draper
   # @private
   class Security
-    def initialize
+
+    def initialize(parent = nil)
+      @strategy = parent.strategy if parent
       @methods = []
+      @parent = parent
     end
 
     def denies(*methods)
@@ -32,9 +35,18 @@ module Draper
       end
     end
 
+    protected
+
+    attr_reader :strategy
+
+    def methods
+      return @methods unless parent
+      @methods + parent.methods
+    end
+
     private
 
-    attr_reader :methods, :strategy
+    attr_reader :parent
 
     def apply_strategy(new_strategy)
       raise ArgumentError, "Use only one of 'allows', 'denies', or 'denies_all'." if strategy && strategy != new_strategy

@@ -585,7 +585,7 @@ describe Draper::Decorator do
   end
 
   describe "method security" do
-    subject(:decorator_class) { Draper::Decorator }
+    let(:decorator_class) { Draper::Decorator }
     let(:security) { stub }
     before { decorator_class.stub(:security).and_return(security) }
 
@@ -602,6 +602,63 @@ describe Draper::Decorator do
     it "delegates .allows to Draper::Security" do
       security.should_receive(:allows).with(:foo, :bar)
       decorator_class.allows :foo, :bar
+    end
+  end
+
+  describe "security inheritance" do
+    let(:superclass_instance) { superclass.new(source) }
+    let(:subclass_instance) { subclass.new(source) }
+    let(:source) { stub(allowed: 1, denied: 2) }
+    let(:superclass) { Class.new(Draper::Decorator) }
+    let(:subclass) { Class.new(superclass) }
+
+    it "inherits allows from superclass to subclass" do
+      superclass.allows(:allowed)
+      subclass_instance.should_not respond_to :denied
+    end
+
+    it "inherits denies from superclass to subclass" do
+      superclass.denies(:denied)
+      subclass_instance.should_not respond_to :denied
+    end
+
+    it "inherits denies_all from superclass to subclass" do
+      superclass.denies_all
+      subclass_instance.should_not respond_to :denied
+    end
+
+    it "can add extra allows methods" do
+      superclass.allows(:allowed)
+      subclass.allows(:denied)
+      superclass_instance.should_not respond_to :denied
+      subclass_instance.should respond_to :denied
+    end
+
+    it "can add extra denies methods" do
+      superclass.denies(:denied)
+      subclass.denies(:allowed)
+      superclass_instance.should respond_to :allowed
+      subclass_instance.should_not respond_to :allowed
+    end
+
+    it "does not pass allows from subclass to superclass" do
+      subclass.allows(:allowed)
+      superclass_instance.should respond_to :denied
+    end
+
+    it "does not pass denies from subclass to superclass" do
+      subclass.denies(:denied)
+      superclass_instance.should respond_to :denied
+    end
+
+    it "does not pass denies_all from subclass to superclass" do
+      subclass.denies_all
+      superclass_instance.should respond_to :denied
+    end
+
+    it "inherits security strategy" do
+      superclass.allows :allowed
+      expect{subclass.denies :denied}.to raise_error ArgumentError
     end
   end
 
