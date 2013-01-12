@@ -1,6 +1,6 @@
 require 'rake/testtask'
 
-test_task = if Rails.version.start_with?("3.0")
+test_task = if Rails.version.to_f < 3.2
   require 'rails/test_unit/railtie'
   Rake::TestTask
 else
