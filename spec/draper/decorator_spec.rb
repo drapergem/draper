@@ -49,21 +49,29 @@ describe Draper::Decorator do
       end
     end
 
-    it "decorates other decorators" do
-      decorator = ProductDecorator.new(source)
-      SpecificProductDecorator.new(decorator).source.should be decorator
-    end
+    context "when decorating other decorators" do
+      it "redecorates" do
+        decorator = ProductDecorator.new(source)
+        SpecificProductDecorator.new(decorator).source.should be decorator
+      end
 
-    it "warns if target is already decorated with the same decorator class" do
-      warning_message = nil
-      Object.any_instance.stub(:warn) { |message| warning_message = message }
+      context "when the same decorator has been applied earlier in the chain" do
+        let(:decorator) { SpecificProductDecorator.new(ProductDecorator.new(Product.new)) }
 
-      deep_decorator = SpecificProductDecorator.new(ProductDecorator.new(Product.new))
-      expect {
-        ProductDecorator.new(deep_decorator)
-      }.to change { warning_message }
-      warning_message.should =~ /ProductDecorator/
-      warning_message.should include caller(1).first
+        it "warns" do
+          warning_message = nil
+          Object.any_instance.stub(:warn) {|message| warning_message = message }
+
+          expect{ProductDecorator.new(decorator)}.to change{warning_message}
+          warning_message.should =~ /ProductDecorator/
+          warning_message.should include caller(1).first
+        end
+
+        it "redecorates" do
+          Object.any_instance.stub(:warn)
+          ProductDecorator.new(decorator).source.should be decorator
+        end
+      end
     end
   end
 
@@ -694,6 +702,14 @@ describe Draper::Decorator do
   it "is still its own class" do
     subject.kind_of?(subject.class).should be_true
     subject.is_a?(subject.class).should be_true
+  end
+
+  it "pretends to be an instance of the source class" do
+    subject.instance_of?(source.class).should be_true
+  end
+
+  it "is still an instance of its own class" do
+    subject.instance_of?(subject.class).should be_true
   end
 
   describe ".decorates_finders" do
