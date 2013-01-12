@@ -4,6 +4,10 @@ rvm:
   - rbx-19mode
   - jruby-19mode
   - ruby-head
+env:
+  - "RAILS_VERSION=3.2"
+  - "RAILS_VERSION=3.1"
+  - "RAILS_VERSION=3.0"
 matrix:
   allow_failures:
     - rvm: ruby-head
