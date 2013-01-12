@@ -16,7 +16,7 @@ desc "Run all specs"
 task "spec" => "spec:all"
 
 namespace "spec" do
-  task "all" => ["draper", "generators", "minitest-rails", "integration"]
+  task "all" => ["draper", "generators", "integration"]
 
   def spec_task(name)
     desc "Run #{name} specs"
@@ -27,7 +27,6 @@ namespace "spec" do
 
   spec_task "draper"
   spec_task "generators"
-  spec_task "minitest-rails"
 
   desc "Run integration specs"
   task "integration" => ["db:setup", "integration:all"]
@@ -51,6 +50,8 @@ namespace "spec" do
     end
 
     task "test" do
+      puts "Running rake in dummy app"
+      ENV["RAILS_ENV"] = "test"
       run_in_dummy_app "rake"
     end
   end
@@ -60,7 +61,8 @@ namespace "db" do
   desc "Set up databases for integration testing"
   task "setup" do
     run_in_dummy_app "rm -f db/*.sqlite3"
-    run_in_dummy_app "RAILS_ENV=development rake db:schema:load db:seed db:test:prepare"
+    run_in_dummy_app "RAILS_ENV=development rake db:schema:load db:seed"
     run_in_dummy_app "RAILS_ENV=production rake db:schema:load db:seed"
+    run_in_dummy_app "RAILS_ENV=test rake db:schema:load"
   end
 end

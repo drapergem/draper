@@ -80,7 +80,7 @@ describe Rails::Generators::DecoratorGenerator do
     describe 'test/decorators/YourModel_decorator_test.rb' do
       subject { file('test/decorators/your_model_decorator_test.rb') }
       it { should exist }
-      it { should contain "class YourModelDecoratorTest < ActiveSupport::TestCase" }
+      it { should contain "class YourModelDecoratorTest < Draper::TestCase" }
     end
   end
 
@@ -90,7 +90,7 @@ describe Rails::Generators::DecoratorGenerator do
     describe 'test/decorators/your_model_decorator_test.rb' do
       subject { file('test/decorators/namespace/your_model_decorator_test.rb') }
       it { should exist }
-      it { should contain "class Namespace::YourModelDecoratorTest < ActiveSupport::TestCase" }
+      it { should contain "class Namespace::YourModelDecoratorTest < Draper::TestCase" }
     end
   end
 end
