@@ -19,11 +19,11 @@ describe PostMailer do
     end
 
     it "can use url helpers with a model" do
-      subject.should have_css "#url_with_model", text: "http://www.example.com/en/posts/#{post.id}"
+      subject.should have_css "#url_with_model", text: "http://www.example.com:12345/en/posts/#{post.id}"
     end
 
     it "can use url helpers with an id" do
-      subject.should have_css "#url_with_id", text: "http://www.example.com/en/posts/#{post.id}"
+      subject.should have_css "#url_with_id", text: "http://www.example.com:12345/en/posts/#{post.id}"
     end
   end
 end

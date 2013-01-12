@@ -27,7 +27,3 @@ require 'support/decorators/specific_product_decorator'
 require 'support/decorators/products_decorator'
 require 'support/decorators/some_thing_decorator'
 require 'support/decorators/decorator_with_application_helper'
-
-class << Rails
-  undef application # Avoid silly Rails bug: https://github.com/rails/rails/pull/6429
-end

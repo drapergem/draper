@@ -15,7 +15,7 @@ describe Draper::Decorator do
       end
 
       it "raises error on invalid options" do
-        expect { decorator_class.new(source, valid_options.merge(foo: 'bar')) }.to raise_error(ArgumentError, 'Unknown key: foo')
+        expect { decorator_class.new(source, valid_options.merge(foo: 'bar')) }.to raise_error(ArgumentError, /Unknown key/)
       end
     end
 
@@ -87,7 +87,7 @@ describe Draper::Decorator do
       end
 
       it "raises error on invalid options" do
-        expect { ProductDecorator.decorate_collection(source, valid_options.merge(foo: 'bar')) }.to raise_error(ArgumentError, 'Unknown key: foo')
+        expect { ProductDecorator.decorate_collection(source, valid_options.merge(foo: 'bar')) }.to raise_error(ArgumentError, /Unknown key/)
       end
     end
 
@@ -272,7 +272,7 @@ describe Draper::Decorator do
         end
 
         it "raises error on invalid options" do
-          expect { decorator_class.decorates_association :similar_products, valid_options.merge(foo: 'bar') }.to raise_error(ArgumentError, 'Unknown key: foo')
+          expect { decorator_class.decorates_association :similar_products, valid_options.merge(foo: 'bar') }.to raise_error(ArgumentError, /Unknown key/)
         end
       end
 
