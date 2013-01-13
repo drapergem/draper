@@ -22,11 +22,11 @@ app.start_server do
       end
 
       it "can use url helpers with a model" do
-        page.should have_text("http://www.example.com/en/posts/1").in("#url_with_model")
+        page.should have_text("http://www.example.com:12345/en/posts/1").in("#url_with_model")
       end
 
       it "can use url helpers with an id" do
-        page.should have_text("http://www.example.com/en/posts/1").in("#url_with_id")
+        page.should have_text("http://www.example.com:12345/en/posts/1").in("#url_with_id")
       end
     end
   end

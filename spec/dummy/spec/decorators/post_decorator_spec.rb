@@ -13,11 +13,11 @@ describe PostDecorator do
   end
 
   it "can use url helpers with its model" do
-    subject.url_with_model.should == "http://www.example.com/en/posts/#{source.id}"
+    subject.url_with_model.should == "http://www.example.com:12345/en/posts/#{source.id}"
   end
 
   it "can use url helpers with its id" do
-    subject.url_with_id.should == "http://www.example.com/en/posts/#{source.id}"
+    subject.url_with_id.should == "http://www.example.com:12345/en/posts/#{source.id}"
   end
 
   it "can be passed implicitly to url_for" do
