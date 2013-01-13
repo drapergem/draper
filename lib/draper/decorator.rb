@@ -29,7 +29,7 @@ module Draper
       source.to_a if source.respond_to?(:to_a) # forces evaluation of a lazy query from AR
       @source = source
       @context = options.fetch(:context, {})
-      handle_multiple_decoration(options) if source.is_a?(Draper::Decorator)
+      handle_multiple_decoration(options) if source.instance_of?(self.class)
     end
 
     class << self
@@ -188,12 +188,20 @@ module Draper
       source == (other.respond_to?(:source) ? other.source : other)
     end
 
-    # @overload kind_of?(class)
-    #   Checks if `self.kind_of?(class)` or `source.kind_of?(class)`
+    # Checks if `self.kind_of?(klass)` or `source.kind_of?(klass)`
+    #
+    # @param [Class] klass
     def kind_of?(klass)
       super || source.kind_of?(klass)
     end
     alias_method :is_a?, :kind_of?
+
+    # Checks if `self.instance_of?(klass)` or `source.instance_of?(klass)`
+    #
+    # @param [Class] klass
+    def instance_of?(klass)
+      super || source.instance_of?(klass)
+    end
 
     # Delegated to the source object, in case it is `nil`.
     def present?
@@ -304,10 +312,10 @@ module Draper
     end
 
     def handle_multiple_decoration(options)
-      if source.instance_of?(self.class)
+      if source.applied_decorators.last == self.class
         @context = source.context unless options.has_key?(:context)
         @source = source.source
-      elsif source.decorated_with?(self.class)
+      else
         warn "Reapplying #{self.class} decorator to target that is already decorated with it. Call stack:\n#{caller(1).join("\n")}"
       end
     end
