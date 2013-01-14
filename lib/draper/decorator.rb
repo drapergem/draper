@@ -3,6 +3,7 @@ require 'active_support/core_ext/array/extract_options'
 module Draper
   class Decorator
     include Draper::ViewHelpers
+    extend Draper::Delegation
     include ActiveModel::Serialization if defined?(ActiveModel::Serialization)
 
     # @return the object being decorated.
@@ -34,6 +35,14 @@ module Draper
 
     class << self
       alias_method :decorate, :new
+    end
+
+    # Automatically delegates instance methods to the source object. Class
+    # methods will be delegated to the {source_class}, if it is set.
+    #
+    # @return [void]
+    def self.delegate_all
+      include Draper::AutomaticDelegation
     end
 
     # Sets the source class corresponding to the decorator class.
@@ -112,37 +121,6 @@ module Draper
       end
     end
 
-    # Specifies a blacklist of methods which are not to be automatically
-    # proxied to the source object.
-    #
-    # @note Use only one of {allows}, {denies}, and {denies_all}.
-    # @param [Symbols*] methods
-    #   list of methods not to be automatically proxied.
-    # @return [void]
-    def self.denies(*methods)
-      security.denies(*methods)
-    end
-
-    # Prevents all methods from being automatically proxied to the source
-    # object.
-    #
-    # @note (see denies)
-    # @return [void]
-    def self.denies_all
-      security.denies_all
-    end
-
-    # Specifies a whitelist of methods which are to be automatically proxied to
-    # the source object.
-    #
-    # @note (see denies)
-    # @param [Symbols*] methods
-    #   list of methods to be automatically proxied.
-    # @return [void]
-    def self.allows(*methods)
-      security.allows(*methods)
-    end
-
     # Decorates a collection of objects. The class of the collection decorator
     # is inferred from the decorator class if possible (e.g. `ProductDecorator`
     # maps to `ProductsDecorator`), but otherwise defaults to
@@ -203,52 +181,20 @@ module Draper
       super || source.instance_of?(klass)
     end
 
-    # Delegated to the source object, in case it is `nil`.
-    def present?
-      source.present?
-    end
+    # In case source is nil
+    delegate :present?
 
-    # For ActiveModel compatibility.
-    # @return [self]
+    # ActiveModel compatibility
+    # @private
     def to_model
       self
     end
 
-    # Delegated to the source object for ActiveModel compatibility.
-    def to_param
-      source.to_param
-    end
+    # ActiveModel compatibility
+    delegate :to_param, :to_partial_path
 
-    # Proxies missing instance methods to the source object.
-    def method_missing(method, *args, &block)
-      if delegatable_method?(method)
-        self.class.define_proxy(method)
-        send(method, *args, &block)
-      else
-        super
-      end
-    end
-
-    # Checks if the decorator responds to an instance method, or is able to
-    # proxy it to the source object.
-    def respond_to?(method, include_private = false)
-      super || delegatable_method?(method)
-    end
-
-    # Proxies missing class methods to the {source_class}.
-    def self.method_missing(method, *args, &block)
-      if delegatable_method?(method)
-        source_class.send(method, *args, &block)
-      else
-        super
-      end
-    end
-
-    # Checks if the decorator responds to a class method, or is able to proxy
-    # it to the {source_class}.
-    def self.respond_to?(method, include_private = false)
-      super || delegatable_method?(method)
-    end
+    # ActiveModel compatibility
+    singleton_class.delegate :model_name, to: :source_class
 
     # @return [Class] the class created by {decorate_collection}.
     def self.collection_decorator_class
@@ -258,14 +204,6 @@ module Draper
     end
 
     private
-
-    def delegatable_method?(method)
-      allow?(method) && source.respond_to?(method)
-    end
-
-    def self.delegatable_method?(method)
-      source_class? && source_class.respond_to?(method)
-    end
 
     def self.source_name
       raise NameError if name.nil? || name.demodulize !~ /.+Decorator$/
@@ -282,33 +220,6 @@ module Draper
       plural = source_name.pluralize
       raise NameError if plural == source_name
       "#{plural}Decorator"
-    end
-
-    def self.define_proxy(method)
-      define_method(method) do |*args, &block|
-        source.send(method, *args, &block)
-      end
-    end
-
-    def self.security
-      @security ||= Security.new(superclass_security)
-    end
-
-    def self.security?
-      @security || (superclass.respond_to?(:security?) && superclass.security?)
-    end
-
-    def self.superclass_security
-      return nil unless superclass.respond_to?(:security)
-      superclass.security
-    end
-
-    def allow?(method)
-      self.class.allow?(method)
-    end
-
-    def self.allow?(method)
-      !security? || security.allow?(method)
     end
 
     def handle_multiple_decoration(options)

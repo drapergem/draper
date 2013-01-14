@@ -1,7 +1,8 @@
 module Draper
   class CollectionDecorator
     include Enumerable
-    include ViewHelpers
+    include Draper::ViewHelpers
+    extend Draper::Delegation
 
     # @return [Hash] extra data to be used in user-defined methods, and passed
     #   to each item's decorator.

@@ -129,17 +129,4 @@ describe Draper::Finders do
       decorator.context.should == {some: 'context'}
     end
   end
-
-  describe "scopes" do
-    it "proxies to the model class" do
-      Product.should_receive(:where).with({name: "apples"})
-      ProductDecorator.where(name: "apples")
-    end
-
-    it "doesn't decorate the result" do
-      found = [Product.new]
-      Product.stub(:where).and_return(found)
-      ProductDecorator.where(name: "apples").should be found
-    end
-  end
 end
