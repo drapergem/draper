@@ -3,7 +3,7 @@
 [![TravisCI Build Status](https://secure.travis-ci.org/drapergem/draper.png?branch=master)](http://travis-ci.org/drapergem/draper)
 [![Code Climate](https://codeclimate.com/badge.png)](https://codeclimate.com/github/drapergem/draper)
 
-Draper adds an object-oriented layer of presentation logic to your Rails application. 
+Draper adds an object-oriented layer of presentation logic to your Rails application.
 
 Without Draper, this functionality might have been tangled up in procedural helpers or adding bulk to your models. With Draper decorators, you can wrap your models with presentation-related logic to organise - and test - this layer of your app much more effectively.
 
@@ -18,7 +18,7 @@ def show
 end
 ```
 
-In the view, you can use the decorator in exactly the same way as you would have used the model. But whenever you start needing logic in the view or start thinking about a helper menthod, you can implement a method on the decorator instead. 
+In the view, you can use the decorator in exactly the same way as you would have used the model. But whenever you start needing logic in the view or start thinking about a helper menthod, you can implement a method on the decorator instead.
 
 Let's look at how you could convert an existing Rails helper to a decorator method. You have this existing helper:
 
@@ -33,7 +33,7 @@ def publication_status(article)
 end
 ```
 
-But it makes you a little uncomfortable. `publication_status` lives in a nebulous namespace spread across all controllers and view. Down the road, you might want to display the publication status of a `Book`. And, of course, your design calls for a slighly different formatting to the date for a `Book`. 
+But it makes you a little uncomfortable. `publication_status` lives in a nebulous namespace spread across all controllers and view. Down the road, you might want to display the publication status of a `Book`. And, of course, your design calls for a slighly different formatting to the date for a `Book`.
 
 Now your helper method can either switch based on the input class type (poor Ruby style), or you break it out into two methods, `book_publication_status` and `article_publication_status`. And keep adding methods for each publication type...to the global helper namespace. And remember all the names. Ick.
 
@@ -103,7 +103,7 @@ When you have Draper installed and generate a resource with...
 ```
 rails generate resource Article
 ```
-...you'll get a decorator for free! 
+...you'll get a decorator for free!
 
 But if the `Article` model already exists, you can run...
 
@@ -266,7 +266,7 @@ require 'draper/test/rspec_integration'
 
 ### Shared Decorator Methods
 
-You might have several decorators that share similar needs. Since decorators are just Ruby objects, you can use any normal Ruby technique for sharing functionality. 
+You might have several decorators that share similar needs. Since decorators are just Ruby objects, you can use any normal Ruby technique for sharing functionality.
 
 In Rails controllers, common functionality is organized by having all controllers inherit from `ApplicationController`. You can apply this same pattern to your decorators:
 
@@ -365,7 +365,7 @@ end
 
 ### Proxying Class Methods
 
-If you want to proxy class methods to the wrapped model class, including when using `decorates_finders`, Draper needs to know the model class. By default, it assumes that your decorators are named `SomeModelDecorator`, and then attempts to proxy unknown class methods to `SomeModel`. 
+If you want to proxy class methods to the wrapped model class, including when using `decorates_finders`, Draper needs to know the model class. By default, it assumes that your decorators are named `SomeModelDecorator`, and then attempts to proxy unknown class methods to `SomeModel`.
 
 If your model name can't be inferred from your decorator name in this way, you need to use the `decorates` method:
 
