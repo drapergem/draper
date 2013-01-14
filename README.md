@@ -199,7 +199,7 @@ so that you can do:
 
 ## Testing
 
-Draper supports RSpec and Minitest::Rails out of the box, and should work with Test::Unit as well.
+Draper supports RSpec, MiniTest::Rails, and Test::Unit, and will add the appropriate tests when you generate a decorator.
 
 ### RSpec
 
