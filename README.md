@@ -35,6 +35,8 @@ could be better written as:
 ```ruby
 # app/decorators/article_decorator.rb
 class ArticleDecorator < Draper::Decorator
+  delegate_all
+
   def publication_status
     if published?
       "Published at #{published_at}"
@@ -49,7 +51,7 @@ class ArticleDecorator < Draper::Decorator
 end
 ```
 
-Notice that the `published?` method can be called even though `ArticleDecorator` doesn't define it - the decorator delegates methods to the source model. However, we can override methods like `published_at` to add presentation-specific formatting, in which case we access the underlying model using the `source` method.
+Notice that the `published?` method can be called even though `ArticleDecorator` doesn't define it - thanks to `delegate_all`, the decorator delegates missing methods to the source model. However, we can override methods like `published_at` to add presentation-specific formatting, in which case we access the underlying model using the `source` method.
 
 You might have heard this sort of decorator called a "presenter", an "exhibit", a "view model", or even just a "view" (in that nomenclature, what Rails calls "views" are actually "templates"). Whatever you call it, it's a great way to replace procedural helpers like the one above with "real" object-oriented programming.
 
@@ -105,6 +107,8 @@ Decorators will delegate methods to the model where possible, which means in mos
 
 ```ruby
 class ArticleDecorator < Draper::Decorator
+  delegate_all
+
   def published_at
     source.published_at.strftime("%A, %B %e")
   end
@@ -158,13 +162,15 @@ end
 
 Draper guesses the decorator used for each item from the name of the collection decorator (`ArticlesDecorator` becomes `ArticleDecorator`). If that fails, it falls back to using each item's `decorate` method. Alternatively, you can specify a decorator by overriding the collection decorator's `decorator_class` method.
 
-Some pagination gems add methods to `ActiveRecord::Relation`. For example, [Kaminari](https://github.com/amatsuda/kaminari)'s `paginate` helper method requires the collection to implement `current_page`, `total_pages`, and `limit_value`. To expose these on a collection decorator, you can simply delegate to `source`:
+Some pagination gems add methods to `ActiveRecord::Relation`. For example, [Kaminari](https://github.com/amatsuda/kaminari)'s `paginate` helper method requires the collection to implement `current_page`, `total_pages`, and `limit_value`. To expose these on a collection decorator, you can simply delegate to the `source`:
 
 ```ruby
 class PaginatingDecorator < Draper::CollectionDecorator
-  delegate :current_page, :total_pages, :limit_value, to: :source
+  delegate :current_page, :total_pages, :limit_value
 end
 ```
+
+The `delegate` method used here is the same as that added by [Active Support](http://api.rubyonrails.org/classes/Module.html#method-i-delegate), except that the `:to` option is not required; it defaults to `:source` when omitted.
 
 ### Handy shortcuts
 
@@ -229,25 +235,16 @@ and inherit from it instead of directly from `Draper::Decorator`.
 
 ### Enforcing an interface between controllers and views
 
-If you want to strictly control which methods are called in your views, you can restrict the methods that the decorator delegates to the model. Use `denies` to blacklist methods:
+The `delegate_all` call at the top of your decorator means that all missing methods will delegated to the source. If you want to strictly control which methods are called in your views, you can choose to only delegate certain methods.
 
 ```ruby
 class ArticleDecorator < Draper::Decorator
-  # allow everything except `title` and `author` to be delegated
-  denies :title, :author
+  delegate :title, :author
 end
 ```
 
-or, better, use `allows` for a whitelist:
+As mentioned above for `CollectionDecorator`, the `delegate` method defaults to using `:source` if the `:to` option is omitted.
 
-```ruby
-class ArticleDecorator < Draper::Decorator
-  # only allow `title` and `author` to be delegated to the model
-  allows :title, :author
-end
-```
-
-You can prevent method delegation altogether using `denies_all`.
 
 ### Adding context
 

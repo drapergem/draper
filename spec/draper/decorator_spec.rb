@@ -439,101 +439,45 @@ describe Draper::Decorator do
     end
   end
 
-  describe "#respond_to?" do
+  describe ".delegate" do
+    subject { Class.new(Draper::Decorator) }
+
+    it "defaults the :to option to :source" do
+      Draper::Decorator.superclass.should_receive(:delegate).with(:foo, :bar, to: :source)
+      subject.delegate :foo, :bar
+    end
+
+    it "does not overwrite the :to option if supplied" do
+      Draper::Decorator.superclass.should_receive(:delegate).with(:foo, :bar, to: :baz)
+      subject.delegate :foo, :bar, to: :baz
+    end
+  end
+
+  describe ".delegate_all" do
     let(:decorator_class) { Class.new(ProductDecorator) }
+    before { decorator_class.delegate_all }
 
-    it "returns true for its own methods" do
-      subject.should respond_to :awesome_title
-    end
-
-    it "returns true for the source's methods" do
-      subject.should respond_to :title
-    end
-
-    context "with include_private" do
-      it "returns true for its own private methods" do
-        subject.respond_to?(:awesome_private_title, true).should be_true
-      end
-
-      it "returns false for the source's private methods" do
-        subject.respond_to?(:private_title, true).should be_false
-      end
-    end
-
-    context "with method security" do
-      it "respects allows" do
-        subject.class.allows :hello_world
-
-        subject.should respond_to :hello_world
-        subject.should_not respond_to :goodnight_moon
-      end
-
-      it "respects denies" do
-        subject.class.denies :goodnight_moon
-
-        subject.should respond_to :hello_world
-        subject.should_not respond_to :goodnight_moon
-      end
-
-      it "respects denies_all" do
-        subject.class.denies_all
-
-        subject.should_not respond_to :hello_world
-        subject.should_not respond_to :goodnight_moon
-      end
-    end
-  end
-
-  describe ".respond_to?" do
-    subject { Class.new(ProductDecorator) }
-
-    context "without a source class" do
-      it "returns true for its own class methods" do
-        subject.should respond_to :my_class_method
-      end
-
-      it "returns false for other class methods" do
-        subject.should_not respond_to :sample_class_method
-      end
-    end
-
-    context "with a source_class" do
-      before { subject.decorates :product }
-
-      it "returns true for its own class methods" do
-        subject.should respond_to :my_class_method
-      end
-
-      it "returns true for the source's class methods" do
-        subject.should respond_to :sample_class_method
-      end
-    end
-  end
-
-  describe "proxying" do
-    context "instance methods" do
-      let(:decorator_class) { Class.new(ProductDecorator) }
-
-      it "does not proxy methods that are defined on the decorator" do
+    describe "#method_missing" do
+      it "does not delegate methods that are defined on the decorator" do
         subject.overridable.should be :overridden
       end
 
-      it "does not proxy methods inherited from Object" do
+      it "does not delegate methods inherited from Object" do
         subject.inspect.should_not be source.inspect
       end
 
-      it "proxies missing methods that exist on the source" do
-        source.stub(:hello_world).and_return(:proxied)
-        subject.hello_world.should be :proxied
+      it "delegates missing methods that exist on the source" do
+        source.stub(:hello_world).and_return(:delegated)
+        subject.hello_world.should be :delegated
       end
 
-      it "adds proxied methods to the decorator when they are used" do
+      it "adds delegated methods to the decorator when they are used" do
         subject.methods.should_not include :hello_world
         subject.hello_world
         subject.methods.should include :hello_world
       end
 
-      it "passes blocks to proxied methods" do
+      it "passes blocks to delegated methods" do
         subject.block{"marker"}.should == "marker"
       end
 
@@ -541,132 +485,83 @@ describe Draper::Decorator do
         Array(subject).should be_a Array
       end
 
-      it "proxies delegated methods" do
+      it "delegates already-delegated methods" do
         subject.delegated_method.should == "Yay, delegation"
       end
 
-      it "does not proxy private methods" do
+      it "does not delegate private methods" do
         expect{subject.private_title}.to raise_error NoMethodError
       end
+    end
 
-      context "with method security" do
-        it "respects allows" do
-          source.stub(:hello_world, :goodnight_moon).and_return(:proxied)
-          subject.class.allows :hello_world
+    context ".method_missing" do
+      subject { decorator_class }
 
-          subject.hello_world.should be :proxied
-          expect{subject.goodnight_moon}.to raise_error NameError
+      context "without a source class" do
+        it "raises a NoMethodError on missing methods" do
+          expect{subject.hello_world}.to raise_error NoMethodError
+        end
+      end
+
+      context "with a source class" do
+        let(:source_class) { Product }
+        before { subject.decorates source_class }
+
+        it "does not delegate methods that are defined on the decorator" do
+          subject.overridable.should be :overridden
         end
 
-        it "respects denies" do
-          source.stub(:hello_world, :goodnight_moon).and_return(:proxied)
-          subject.class.denies :goodnight_moon
-
-          subject.hello_world.should be :proxied
-          expect{subject.goodnight_moon}.to raise_error NameError
-        end
-
-        it "respects denies_all" do
-          source.stub(:hello_world, :goodnight_moon).and_return(:proxied)
-          subject.class.denies_all
-
-          expect{subject.hello_world}.to raise_error NameError
-          expect{subject.goodnight_moon}.to raise_error NameError
+        it "delegates missing methods that exist on the source" do
+          source_class.stub(:hello_world).and_return(:delegated)
+          subject.hello_world.should be :delegated
         end
       end
     end
 
-    context "class methods" do
-      subject { Class.new(ProductDecorator) }
-      let(:source_class) { Product }
-      before { subject.decorates source_class }
-
-      it "does not proxy methods that are defined on the decorator" do
-        subject.overridable.should be :overridden
+    describe "#respond_to?" do
+      it "returns true for its own methods" do
+        subject.should respond_to :awesome_title
       end
 
-      it "proxies missing methods that exist on the source" do
-        source_class.stub(:hello_world).and_return(:proxied)
-        subject.hello_world.should be :proxied
+      it "returns true for the source's methods" do
+        subject.should respond_to :title
+      end
+
+      context "with include_private" do
+        it "returns true for its own private methods" do
+          subject.respond_to?(:awesome_private_title, true).should be_true
+        end
+
+        it "returns false for the source's private methods" do
+          subject.respond_to?(:private_title, true).should be_false
+        end
       end
     end
-  end
 
-  describe "method security" do
-    let(:decorator_class) { Draper::Decorator }
-    let(:security) { stub }
-    before { decorator_class.stub(:security).and_return(security) }
+    describe ".respond_to?" do
+      subject { decorator_class }
 
-    it "delegates .denies to Draper::Security" do
-      security.should_receive(:denies).with(:foo, :bar)
-      decorator_class.denies :foo, :bar
-    end
+      context "without a source class" do
+        it "returns true for its own class methods" do
+          subject.should respond_to :my_class_method
+        end
 
-    it "delegates .denies_all to Draper::Security" do
-      security.should_receive(:denies_all)
-      decorator_class.denies_all
-    end
+        it "returns false for other class methods" do
+          subject.should_not respond_to :sample_class_method
+        end
+      end
 
-    it "delegates .allows to Draper::Security" do
-      security.should_receive(:allows).with(:foo, :bar)
-      decorator_class.allows :foo, :bar
-    end
-  end
+      context "with a source_class" do
+        before { subject.decorates :product }
 
-  describe "security inheritance" do
-    let(:superclass_instance) { superclass.new(source) }
-    let(:subclass_instance) { subclass.new(source) }
-    let(:source) { stub(allowed: 1, denied: 2) }
-    let(:superclass) { Class.new(Draper::Decorator) }
-    let(:subclass) { Class.new(superclass) }
+        it "returns true for its own class methods" do
+          subject.should respond_to :my_class_method
+        end
 
-    it "inherits allows from superclass to subclass" do
-      superclass.allows(:allowed)
-      subclass_instance.should_not respond_to :denied
-    end
-
-    it "inherits denies from superclass to subclass" do
-      superclass.denies(:denied)
-      subclass_instance.should_not respond_to :denied
-    end
-
-    it "inherits denies_all from superclass to subclass" do
-      superclass.denies_all
-      subclass_instance.should_not respond_to :denied
-    end
-
-    it "can add extra allows methods" do
-      superclass.allows(:allowed)
-      subclass.allows(:denied)
-      superclass_instance.should_not respond_to :denied
-      subclass_instance.should respond_to :denied
-    end
-
-    it "can add extra denies methods" do
-      superclass.denies(:denied)
-      subclass.denies(:allowed)
-      superclass_instance.should respond_to :allowed
-      subclass_instance.should_not respond_to :allowed
-    end
-
-    it "does not pass allows from subclass to superclass" do
-      subclass.allows(:allowed)
-      superclass_instance.should respond_to :denied
-    end
-
-    it "does not pass denies from subclass to superclass" do
-      subclass.denies(:denied)
-      superclass_instance.should respond_to :denied
-    end
-
-    it "does not pass denies_all from subclass to superclass" do
-      subclass.denies_all
-      superclass_instance.should respond_to :denied
-    end
-
-    it "inherits security strategy" do
-      superclass.allows :allowed
-      expect{subclass.denies :denied}.to raise_error ArgumentError
+        it "returns true for the source's class methods" do
+          subject.should respond_to :sample_class_method
+        end
+      end
     end
   end
 
@@ -723,30 +618,6 @@ describe Draper::Decorator do
 
     it "serializes overridden attributes" do
       subject.serializable_hash[:overridable].should be :overridden
-    end
-  end
-
-  describe ".method_missing" do
-    context "when called on an anonymous decorator" do
-      subject { ->{ Class.new(Draper::Decorator).fizzbuzz } }
-      it { should raise_error NoMethodError }
-    end
-
-    context "when called on an uninferrable decorator" do
-      subject { ->{ SpecificProductDecorator.fizzbuzz } }
-      it { should raise_error NoMethodError }
-    end
-
-    context "when called on an inferrable decorator" do
-      context "for a method known to the inferred class" do
-        subject { ->{ ProductDecorator.model_name } }
-        it { should_not raise_error }
-      end
-
-      context "for a method unknown to the inferred class" do
-        subject { ->{ ProductDecorator.fizzbuzz } }
-        it { should raise_error NoMethodError }
-      end
     end
   end
 

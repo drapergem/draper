@@ -127,6 +127,20 @@ describe Draper::CollectionDecorator do
     end
   end
 
+  describe ".delegate" do
+    subject { Class.new(Draper::CollectionDecorator) }
+
+    it "defaults the :to option to :source" do
+      Draper::CollectionDecorator.superclass.should_receive(:delegate).with(:foo, :bar, to: :source)
+      subject.delegate :foo, :bar
+    end
+
+    it "does not overwrite the :to option if supplied" do
+      Draper::CollectionDecorator.superclass.should_receive(:delegate).with(:foo, :bar, to: :baz)
+      subject.delegate :foo, :bar, to: :baz
+    end
+  end
+
   describe "#find" do
     context "with a block" do
       it "decorates Enumerable#find" do

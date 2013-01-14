@@ -22,16 +22,15 @@ module Draper
 
     # Decorates dynamic finder methods (`find_all_by_` and friends).
     def method_missing(method, *args, &block)
-      result = super
+      return super unless method =~ /^find_(all_|last_|or_(initialize_|create_))?by_/
+
+      result = source_class.send(method, *args, &block)
       options = args.extract_options!
 
-      case method.to_s
-      when /^find_((last_)?by_|or_(initialize|create)_by_)/
-        decorate(result, options)
-      when /^find_all_by_/
+      if method =~ /^find_all/
         decorate_collection(result, options)
       else
-        result
+        decorate(result, options)
       end
     end
   end
