@@ -80,7 +80,7 @@ Decorators are the ideal place to:
 Add Draper to your Gemfile:
 
 ```ruby
-gem 'draper', '~> 1.0.0'
+gem 'draper', '~> 1.0'
 ```
 
 And run `bundle install` within your app's directory.
