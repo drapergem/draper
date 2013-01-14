@@ -1,6 +1,9 @@
 class PostDecorator < Draper::Decorator
+  # need to delegate id and new_record? for AR::Base#== (Rails 3.0 only)
+  delegate :id, :new_record?
+
   def posted_date
-    if created_at.to_date == DateTime.now.utc.to_date
+    if source.created_at.to_date == DateTime.now.utc.to_date
       "Today"
     else
       "Not Today"
