@@ -1,5 +1,25 @@
 # Draper Changelog
 
+## 1.0.0
+
+* Infer collection decorators. [https://github.com/drapergem/draper/commit/e8253df7dc6c90a542444c0f4ef289909fce4f90](https://github.com/drapergem/draper/commit/e8253df7dc6c90a542444c0f4ef289909fce4f90)
+
+* Prevent calls to `scoped` on decorated associations. [https://github.com/drapergem/draper/commit/5dcc6c31ecf408753158d15fed9fb23fbfdc3734](https://github.com/drapergem/draper/commit/5dcc6c31ecf408753158d15fed9fb23fbfdc3734)
+
+* Add `helper` method to tests. [https://github.com/drapergem/draper/commit/551961e72ee92355bc9c848bedfcc573856d12b0](https://github.com/drapergem/draper/commit/551961e72ee92355bc9c848bedfcc573856d12b0)
+
+* Inherit method security. [https://github.com/drapergem/draper/commit/1865ed3e3b2b34853689a60b59b8ce9145674d1d](https://github.com/drapergem/draper/commit/1865ed3e3b2b34853689a60b59b8ce9145674d1d)
+
+* Test against all versions of Rails 3. [https://github.com/drapergem/draper/commit/1865ed3e3b2b34853689a60b59b8ce9145674d1d](https://github.com/drapergem/draper/commit/1865ed3e3b2b34853689a60b59b8ce9145674d1d)
+
+* Pretend to be `instance_of?(source.class)` [https://github.com/drapergem/draper/commit/30d209f990847e84b221ac798e84b976f5775cc0](https://github.com/drapergem/draper/commit/30d209f990847e84b221ac798e84b976f5775cc0)
+
+* Remove security from `Decorator`. Do manual delegation with `:delegate`. [https://github.com/drapergem/draper/commit/c6f8aaa2b2bd4679738050aede2503aa8e9db130](https://github.com/drapergem/draper/commit/c6f8aaa2b2bd4679738050aede2503aa8e9db130)
+
+* Add generators for MiniTest. [https://github.com/drapergem/draper/commit/1fac02b65b15e32f06e8292cb858c97cb1c1da2c](https://github.com/drapergem/draper/commit/1fac02b65b15e32f06e8292cb858c97cb1c1da2c)
+
+* Test against edge rails. [https://github.com/drapergem/draper/commit/e9b71e3cf55a800b48c083ff257a7c1cbe1b601b](https://github.com/drapergem/draper/commit/e9b71e3cf55a800b48c083ff257a7c1cbe1b601b)
+
 ## 1.0.0.beta6
 
 * Fix up README to include changes made. [https://github.com/drapergem/draper/commit/5e6e4d11b1e0c07c12b6b1e87053bc3f50ef2ab6](https://github.com/drapergem/draper/commit/5e6e4d11b1e0c07c12b6b1e87053bc3f50ef2ab6)
