@@ -2,6 +2,9 @@
 
 ## 1.0.0
 
+Major changes from 0.18.0 to 1.0.0 are outlined [in the wiki](https://github.com/drapergem/draper/wiki/Upgrading-to-1.0).
+
+
 * Infer collection decorators. [https://github.com/drapergem/draper/commit/e8253df7dc6c90a542444c0f4ef289909fce4f90](https://github.com/drapergem/draper/commit/e8253df7dc6c90a542444c0f4ef289909fce4f90)
 
 * Prevent calls to `scoped` on decorated associations. [https://github.com/drapergem/draper/commit/5dcc6c31ecf408753158d15fed9fb23fbfdc3734](https://github.com/drapergem/draper/commit/5dcc6c31ecf408753158d15fed9fb23fbfdc3734)

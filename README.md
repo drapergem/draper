@@ -85,6 +85,8 @@ gem 'draper', '~> 1.0'
 
 And run `bundle install` within your app's directory.
 
+If you're upgrading from a 0.x release, the major changes are outlined [in the wiki](https://github.com/drapergem/draper/wiki/Upgrading-to-1.0).
+
 ## Writing Decorators
 
 Decorators inherit from `Draper::Decorator`, live in your `app/decorators` directory, and are named for the model that they decorate:
