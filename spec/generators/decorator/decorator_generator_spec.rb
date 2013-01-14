@@ -93,4 +93,45 @@ describe Rails::Generators::DecoratorGenerator do
       it { should contain "class Namespace::YourModelDecoratorTest < Draper::TestCase" }
     end
   end
+
+  context 'using minitest-rails' do
+    before { run_generator ["YourModel", "-t=mini_test"] }
+
+    describe 'test/decorators/your_model_decorator_test.rb' do
+      subject { file('test/decorators/your_model_decorator_test.rb') }
+      it { should exist }
+      it { should contain "class YourModelDecoratorTest < Draper::TestCase" }
+    end
+  end
+
+  context 'using minitest-rails with namespaced model' do
+    before { run_generator ["Namespace::YourModel", "-t=mini_test"] }
+
+    describe 'test/decorators/your_model_decorator_test.rb' do
+      subject { file('test/decorators/namespace/your_model_decorator_test.rb') }
+      it { should exist }
+      it { should contain "class Namespace::YourModelDecoratorTest < Draper::TestCase" }
+    end
+  end
+
+  context 'using minitest-rails with spec syntax' do
+    before { run_generator ["YourModel", "-t=mini_test", "--spec"] }
+
+    describe 'test/decorators/your_model_decorator_test.rb' do
+      subject { file('test/decorators/your_model_decorator_test.rb') }
+      it { should exist }
+      it { should contain "describe YourModelDecorator" }
+    end
+  end
+
+  context 'using minitest-rails with spec syntax with namespaced model' do
+    before { run_generator ["Namespace::YourModel", "-t=mini_test", "--spec"] }
+
+    describe 'test/decorators/your_model_decorator_test.rb' do
+      subject { file('test/decorators/namespace/your_model_decorator_test.rb') }
+      it { should exist }
+      it { should contain "describe Namespace::YourModelDecorator" }
+    end
+  end
+
 end
