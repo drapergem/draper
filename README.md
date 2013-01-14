@@ -135,7 +135,7 @@ include Draper::LazyHelpers
 
 ### Accessing the model
 
-When writing decorator methods you'll usually need to access the wrapped model. While you may choose to use delegation (_covered below_) for convenience, you can always use the `source` (or its alias `model`):
+When writing decorator methods you'll usually need to access the wrapped model. While you may choose to use delegation ([covered below](#delegating-methods)) for convenience, you can always use the `source` (or its alias `model`):
 
 ```ruby
 class ArticleDecorator < Draper::Decorator
