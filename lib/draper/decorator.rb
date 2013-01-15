@@ -28,7 +28,6 @@ module Draper
     #   methods.
     def initialize(source, options = {})
       options.assert_valid_keys(:context)
-      source.to_a if source.respond_to?(:to_a) # forces evaluation of a lazy query from AR
       @source = source
       @context = options.fetch(:context, {})
       handle_multiple_decoration(options) if source.instance_of?(self.class)
