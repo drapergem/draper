@@ -1,10 +1,11 @@
 require 'active_support/core_ext/array/extract_options'
+require 'active_model/serialization'
 
 module Draper
   class Decorator
     include Draper::ViewHelpers
     extend Draper::Delegation
-    include ActiveModel::Serialization if defined?(ActiveModel::Serialization)
+    include ActiveModel::Serialization
 
     # @return the object being decorated.
     attr_reader :source
