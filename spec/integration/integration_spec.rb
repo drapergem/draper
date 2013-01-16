@@ -13,6 +13,23 @@ app.start_server do
         page.should have_text(app.environment).in("#environment")
       end
 
+      it "can use built-in helpers" do
+        page.should have_text("Once upon a...").in("#truncated")
+      end
+
+      it "can use built-in private helpers" do
+        # Nokogiri unescapes text!
+        page.should have_text("<script>danger</script>").in("#html_escaped")
+      end
+
+      it "can use user-defined helpers from app/helpers" do
+        page.should have_text("Hello, world!").in("#hello_world")
+      end
+
+      it "can use user-defined helpers from the controller" do
+        page.should have_text("Goodnight, moon!").in("#goodnight_moon")
+      end
+
       it "can use path helpers with a model" do
         page.should have_text("/en/posts/1").in("#path_with_model")
       end

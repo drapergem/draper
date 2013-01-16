@@ -34,6 +34,22 @@ class PostDecorator < Draper::Decorator
     h.link_to id.to_s, self
   end
 
+  def truncated
+    h.truncate("Once upon a time in a world far far away", length: 17, separator: ' ')
+  end
+
+  def html_escaped
+    h.html_escape("<script>danger</script>")
+  end
+
+  def hello_world
+    h.hello_world
+  end
+
+  def goodnight_moon
+    h.goodnight_moon
+  end
+
   def updated_at
     :overridden
   end
