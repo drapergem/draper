@@ -23,4 +23,8 @@ describe PostDecorator do
   it "can be passed implicitly to url_for" do
     subject.link.should == "<a href=\"/en/posts/#{source.id}\">#{source.id}</a>"
   end
+
+  it "serializes overriden attributes" do
+    subject.serializable_hash["updated_at"].should be :overridden
+  end
 end

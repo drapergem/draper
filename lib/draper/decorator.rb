@@ -191,7 +191,7 @@ module Draper
     end
 
     # ActiveModel compatibility
-    delegate :to_param, :to_partial_path
+    delegate :attributes, :to_param, :to_partial_path
 
     # ActiveModel compatibility
     singleton_class.delegate :model_name, to: :source_class
