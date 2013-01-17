@@ -1,4 +1,8 @@
 require 'action_view'
+require 'active_model/serialization'
+require 'active_support/inflector'
+require 'active_support/core_ext/hash/keys'
+require 'active_support/core_ext/hash/reverse_merge'
 
 require 'draper/version'
 require 'draper/view_helpers'
@@ -14,8 +18,6 @@ require 'draper/helper_support'
 require 'draper/view_context'
 require 'draper/collection_decorator'
 require 'draper/railtie' if defined?(Rails)
-
-require 'active_support/core_ext/hash/keys'
 
 module Draper
   def self.setup_action_controller(base)

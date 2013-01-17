@@ -1,6 +1,3 @@
-require 'active_support/core_ext/array/extract_options'
-require 'active_model/serialization'
-
 module Draper
   class Decorator
     include Draper::ViewHelpers
@@ -191,7 +188,7 @@ module Draper
     end
 
     # ActiveModel compatibility
-    delegate :to_param, :to_partial_path
+    delegate :attributes, :to_param, :to_partial_path
 
     # ActiveModel compatibility
     singleton_class.delegate :model_name, to: :source_class

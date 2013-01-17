@@ -1,192 +1,190 @@
 require 'spec_helper'
 
-describe Draper::Decoratable do
-  subject { Product.new }
+module Draper
+  describe Decoratable do
 
-  describe "#decorate" do
-    it "returns a decorator for self" do
-     subject.decorate.should be_a ProductDecorator
-     subject.decorate.source.should be subject
-   end
+    describe "#decorate" do
+      it "returns a decorator for self" do
+        product = Product.new
+        decorator = product.decorate
 
-    it "accepts context" do
-      decorator = subject.decorate(context: {some: 'context'})
-      decorator.context.should == {some: 'context'}
-    end
+        expect(decorator).to be_a ProductDecorator
+        expect(decorator.source).to be product
+     end
 
-    it "is not memoized" do
-      subject.decorate.should_not be subject.decorate
-    end
-  end
+      it "accepts context" do
+        context = {some: "context"}
+        decorator = Product.new.decorate(context: context)
 
-  describe "#applied_decorators" do
-    it "returns an empty list" do
-      subject.applied_decorators.should be_empty
-    end
-  end
+        expect(decorator.context).to be context
+      end
 
-  describe "#decorated_with?" do
-    it "returns false" do
-      subject.should_not be_decorated_with ProductDecorator
-    end
-  end
+      it "uses the #decorator_class" do
+        product = Product.new
+        product.stub decorator_class: OtherDecorator
 
-  describe "#decorated?" do
-    it "returns false" do
-      subject.should_not be_decorated
-    end
-  end
-
-  describe "#decorator_class" do
-    it "delegates to .decorator_class" do
-      Product.stub(:decorator_class).and_return(WidgetDecorator)
-      product = Product.new
-      product.decorator_class.should be WidgetDecorator
-    end
-  end
-
-  describe "#==" do
-    context "with itself" do
-      it "returns true" do
-        (subject == subject).should be_true
+        expect(product.decorate).to be_an_instance_of OtherDecorator
       end
     end
 
-    context "with another instance" do
+    describe "#applied_decorators" do
+      it "returns an empty list" do
+        expect(Product.new.applied_decorators).to eq []
+      end
+    end
+
+    describe "#decorated_with?" do
       it "returns false" do
-        (subject == Product.new).should be_false
+        expect(Product.new).not_to be_decorated_with Decorator
       end
     end
 
-    context "with a decorated version of itself" do
-      it "returns true" do
-        decorator = double(source: subject)
-        (subject == decorator).should be_true
-      end
-    end
-
-    context "with a decorated other instance" do
+    describe "#decorated?" do
       it "returns false" do
+        expect(Product.new).not_to be_decorated
+      end
+    end
+
+    describe "#decorator_class" do
+      it "delegates to .decorator_class" do
+        product = Product.new
+
+        Product.should_receive(:decorator_class).and_return(:some_decorator)
+        expect(product.decorator_class).to be :some_decorator
+      end
+    end
+
+    describe "#==" do
+      it "is true for itself" do
+        product = Product.new
+
+        expect(product == product).to be_true
+      end
+
+      it "is false for another instance" do
+        product = Product.new
+
+        expect(product == Product.new).to be_false
+      end
+
+      it "is true for a decorated version of itself" do
+        product = Product.new
+        decorator = double(source: product)
+
+        expect(product == decorator).to be_true
+      end
+
+      it "is false for a decorated other instance" do
+        product = Product.new
         decorator = double(source: Product.new)
-        (subject == decorator).should be_false
-      end
-    end
-  end
 
-  describe "#===" do
-    context "with itself" do
-      it "returns true" do
-        (subject === subject).should be_true
+        expect(product == decorator).to be_false
       end
     end
 
-    context "with another instance" do
-      it "returns false" do
-        (subject === Product.new).should be_false
+    describe "#===" do
+      it "is true when #== is true" do
+        product = Product.new
+
+        product.should_receive(:==).and_return(true)
+        expect(product === :anything).to be_true
+      end
+
+      it "is false when #== is false" do
+        product = Product.new
+
+        product.should_receive(:==).and_return(false)
+        expect(product === :anything).to be_false
       end
     end
 
-    context "with a decorated version of itself" do
-      it "returns true" do
-        decorator = double(source: subject)
-        (subject === decorator).should be_true
+    describe ".====" do
+      it "is true for an instance" do
+        expect(Product === Product.new).to be_true
       end
-    end
 
-    context "with a decorated other instance" do
-      it "returns false" do
+      it "is true for a derived instance" do
+        expect(Product === Class.new(Product).new).to be_true
+      end
+
+      it "is false for an unrelated instance" do
+        expect(Product === Model.new).to be_false
+      end
+
+      it "is true for a decorated instance" do
         decorator = double(source: Product.new)
-        (subject === decorator).should be_false
-      end
-    end
-  end
 
-  describe ".====" do
-    context "with an instance" do
-      it "returns true" do
-        (Product === Product.new).should be_true
+        expect(Product === decorator).to be_true
       end
-    end
 
-    context "with a derived instance" do
-      it "returns true" do
-        (Product === Widget.new).should be_true
+      it "is true for a decorated derived instance" do
+        decorator = double(source: Class.new(Product).new)
+
+        expect(Product === decorator).to be_true
       end
-    end
 
-    context "with an unrelated instance" do
-      it "returns false" do
-        (Product === Object.new).should be_false
+      it "is false for a decorated unrelated instance" do
+        decorator = double(source: Model.new)
+
+        expect(Product === decorator).to be_false
       end
     end
 
-    context "with a decorated instance" do
-      it "returns true" do
-        decorator = double(source: Product.new)
-        (Product === decorator).should be_true
+    describe ".decorate" do
+      it "calls #decorate_collection on .decorator_class" do
+        scoped = [Product.new]
+        Product.stub scoped: scoped
+
+        Product.decorator_class.should_receive(:decorate_collection).with(scoped, {}).and_return(:decorated_collection)
+        expect(Product.decorate).to be :decorated_collection
+      end
+
+      it "accepts options" do
+        options = {context: {some: "context"}}
+        Product.stub scoped: []
+
+        Product.decorator_class.should_receive(:decorate_collection).with([], options)
+        Product.decorate(options)
       end
     end
 
-    context "with a decorated derived instance" do
-      it "returns true" do
-        decorator = double(source: Widget.new)
-        (Product === decorator).should be_true
+    describe ".decorator_class" do
+      context "for classes" do
+        it "infers the decorator from the class" do
+          expect(Product.decorator_class).to be ProductDecorator
+        end
+      end
+
+      context "for ActiveModel classes" do
+        it "infers the decorator from the model name" do
+          Product.stub(:model_name).and_return("Other")
+
+          expect(Product.decorator_class).to be OtherDecorator
+        end
+      end
+
+      context "in a namespace" do
+        context "for classes" do
+          it "infers the decorator from the class" do
+            expect(Namespaced::Product.decorator_class).to be Namespaced::ProductDecorator
+          end
+        end
+
+        context "for ActiveModel classes" do
+          it "infers the decorator from the model name" do
+            Namespaced::Product.stub(:model_name).and_return("Namespaced::Other")
+
+            expect(Namespaced::Product.decorator_class).to be Namespaced::OtherDecorator
+          end
+        end
+      end
+
+      context "when the decorator can't be inferred" do
+        it "throws an UninferrableDecoratorError" do
+          expect{Model.decorator_class}.to raise_error UninferrableDecoratorError
+        end
       end
     end
 
-    context "with a decorated unrelated instance" do
-      it "returns false" do
-        decorator = double(source: Object.new)
-        (Product === decorator).should be_false
-      end
-    end
-  end
-
-  describe ".decorate" do
-    it "returns a collection decorator" do
-      Product.stub(:scoped).and_return([Product.new])
-      Product.stub(:decorator_class).and_return(WidgetDecorator)
-      decorator = Product.decorate
-
-      decorator.should be_a Draper::CollectionDecorator
-      decorator.decorator_class.should be WidgetDecorator
-      decorator.should == Product.scoped
-    end
-
-    it "accepts context" do
-      decorator = Product.decorate(context: {some: 'context'})
-      decorator.context.should == {some: 'context'}
-    end
-
-    it "is not memoized" do
-      Product.decorate.should_not be Product.decorate
-    end
-  end
-
-  describe ".decorator_class" do
-    context "for non-ActiveModel classes" do
-      it "infers the decorator from the class" do
-        NonActiveModelProduct.decorator_class.should be NonActiveModelProductDecorator
-      end
-    end
-
-    context "for ActiveModel classes" do
-      it "infers the decorator from the model name" do
-        Product.stub(:model_name).and_return("Widget")
-        Product.decorator_class.should be WidgetDecorator
-      end
-    end
-
-    context "for namespaced ActiveModel classes" do
-      it "infers the decorator from the model name" do
-        Namespace::Product.decorator_class.should be Namespace::ProductDecorator
-      end
-    end
-
-    context "when the decorator can't be inferred" do
-      it "throws an UninferrableDecoratorError" do
-        expect{UninferrableDecoratorModel.decorator_class}.to raise_error Draper::UninferrableDecoratorError
-      end
-    end
   end
 end
