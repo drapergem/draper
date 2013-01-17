@@ -1,6 +1,3 @@
-require 'active_support/core_ext/array/extract_options'
-require 'active_model/serialization'
-
 module Draper
   class Decorator
     include Draper::ViewHelpers
