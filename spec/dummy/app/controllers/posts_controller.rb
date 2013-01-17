@@ -8,4 +8,11 @@ class PostsController < ApplicationController
     email = PostMailer.decorated_email(post).deliver
     render text: email.body
   end
+
+  private
+
+  def goodnight_moon
+    "Goodnight, moon!"
+  end
+  helper_method :goodnight_moon
 end

@@ -1,29 +1,30 @@
 require 'bundler/setup'
-require 'ammeter/init'
-require 'rails'
+require 'draper'
 
-require 'action_view'
-require 'action_controller'
-require 'action_controller/test_case'
+RSpec.configure do |config|
+  config.treat_symbols_as_metadata_keys_with_true_values = true
+  config.expect_with(:rspec) {|c| c.syntax = :expect}
+  config.order = :random
+end
 
-Bundler.require
+class Model; include Draper::Decoratable; end
 
-require 'support/active_model'
-require 'support/active_record'
-require 'support/action_controller'
+class Product < Model; end
+class ProductDecorator < Draper::Decorator; end
+class ProductsDecorator < Draper::CollectionDecorator; end
 
-require 'support/models/product'
-require 'support/models/namespaced_product'
-require 'support/models/non_active_model_product'
-require 'support/models/widget'
-require 'support/models/some_thing'
-require 'support/models/uninferrable_decorator_model'
+class ProductPresenter < Draper::Decorator; end
 
-require 'support/decorators/product_decorator'
-require 'support/decorators/namespaced_product_decorator'
-require 'support/decorators/non_active_model_product_decorator'
-require 'support/decorators/widget_decorator'
-require 'support/decorators/specific_product_decorator'
-require 'support/decorators/products_decorator'
-require 'support/decorators/some_thing_decorator'
-require 'support/decorators/decorator_with_application_helper'
+class OtherDecorator < Draper::Decorator; end
+
+module Namespaced
+  class Product < Model; end
+  class ProductDecorator < Draper::Decorator; end
+
+  class OtherDecorator < Draper::Decorator; end
+end
+
+# After each example, revert changes made to the class
+def protect_class(klass)
+  before { stub_const klass.name, Class.new(klass) }
+end

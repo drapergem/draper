@@ -1,2 +1,0 @@
-class SpecificProductDecorator < ProductDecorator
-end

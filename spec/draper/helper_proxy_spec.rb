@@ -1,12 +1,14 @@
 require 'spec_helper'
 
-describe Draper::HelperProxy do
-  subject(:helper_proxy) { Draper::HelperProxy.new }
-  let(:view_context) { Object.new }
-  before { helper_proxy.stub(:view_context).and_return(view_context) }
+module Draper
+  describe HelperProxy do
+    it "proxies methods to the view context" do
+      view_context = double
+      ViewContext.stub(current: view_context)
+      helper_proxy = HelperProxy.new
 
-  it "proxies methods to the view context" do
-    view_context.should_receive(:foo).with("bar")
-    helper_proxy.foo("bar")
+      view_context.should_receive(:foo).with("bar")
+      helper_proxy.foo("bar")
+    end
   end
 end
