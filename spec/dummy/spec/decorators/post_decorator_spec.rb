@@ -1,42 +1,42 @@
 require 'spec_helper'
 
 describe PostDecorator do
-  subject { PostDecorator.new(source) }
+  let(:decorator) { PostDecorator.new(source) }
   let(:source) { Post.create }
 
   it "can use built-in helpers" do
-    subject.truncated.should == "Once upon a..."
+    expect(decorator.truncated).to eq "Once upon a..."
   end
 
   it "can use built-in private helpers" do
-    subject.html_escaped.should == "&lt;script&gt;danger&lt;/script&gt;"
+    expect(decorator.html_escaped).to eq "&lt;script&gt;danger&lt;/script&gt;"
   end
 
   it "can use user-defined helpers from app/helpers" do
-    subject.hello_world.should == "Hello, world!"
+    expect(decorator.hello_world).to eq "Hello, world!"
   end
 
   it "can use path helpers with its model" do
-    subject.path_with_model.should == "/en/posts/#{source.id}"
+    expect(decorator.path_with_model).to eq "/en/posts/#{source.id}"
   end
 
   it "can use path helpers with its id" do
-    subject.path_with_id.should == "/en/posts/#{source.id}"
+    expect(decorator.path_with_id).to eq "/en/posts/#{source.id}"
   end
 
   it "can use url helpers with its model" do
-    subject.url_with_model.should == "http://www.example.com:12345/en/posts/#{source.id}"
+    expect(decorator.url_with_model).to eq "http://www.example.com:12345/en/posts/#{source.id}"
   end
 
   it "can use url helpers with its id" do
-    subject.url_with_id.should == "http://www.example.com:12345/en/posts/#{source.id}"
+    expect(decorator.url_with_id).to eq "http://www.example.com:12345/en/posts/#{source.id}"
   end
 
   it "can be passed implicitly to url_for" do
-    subject.link.should == "<a href=\"/en/posts/#{source.id}\">#{source.id}</a>"
+    expect(decorator.link).to eq "<a href=\"/en/posts/#{source.id}\">#{source.id}</a>"
   end
 
   it "serializes overriden attributes" do
-    subject.serializable_hash["updated_at"].should be :overridden
+    expect(decorator.serializable_hash["updated_at"]).to be :overridden
   end
 end

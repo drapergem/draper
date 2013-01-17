@@ -1,286 +1,259 @@
 require 'spec_helper'
+require 'support/shared_examples/view_helpers'
 
-describe Draper::CollectionDecorator do
-  before { ApplicationController.new.view_context }
-  subject { Draper::CollectionDecorator.new(source, with: ProductDecorator) }
-  let(:source){ [Product.new, Product.new] }
-  let(:non_active_model_source){ NonActiveModelProduct.new }
+module Draper
+  describe CollectionDecorator do
+    it_behaves_like "view helpers", CollectionDecorator.new([])
 
-  it "decorates a collection's items" do
-    subject.each do |item|
-      item.should be_decorated_with ProductDecorator
-    end
-  end
+    describe "#initialize" do
+      describe "options validation" do
 
-  it "sets the decorated items' source models" do
-    subject.map{|item| item.source}.should == source
-  end
+        it "does not raise error on valid options" do
+          valid_options = {with: Decorator, context: {}}
+          expect{CollectionDecorator.new([], valid_options)}.not_to raise_error
+        end
 
-  context "with context" do
-    subject { Draper::CollectionDecorator.new(source, with: ProductDecorator, context: {some: 'context'}) }
-
-    its(:context) { should == {some: 'context'} }
-
-    it "passes context to the individual decorators" do
-      subject.each do |item|
-        item.context.should == {some: 'context'}
+        it "raises error on invalid options" do
+          expect{CollectionDecorator.new([], foo: "bar")}.to raise_error ArgumentError, /Unknown key/
+        end
       end
     end
 
-    it "does not tie the individual decorators' contexts together" do
-      subject.each do |item|
-        item.context.should == {some: 'context'}
-        item.context = {alt: 'context'}
-        item.context.should == {alt: 'context'}
+    context "with context" do
+      it "stores the context itself" do
+        context = {some: "context"}
+        decorator = CollectionDecorator.new([], context: context)
+
+        expect(decorator.context).to be context
+      end
+
+      it "passes context to the individual decorators" do
+        context = {some: "context"}
+        decorator = CollectionDecorator.new([Product.new, Product.new], context: context)
+
+        decorator.each do |item|
+          expect(item.context).to be context
+        end
       end
     end
 
     describe "#context=" do
-      it "updates the collection decorator's context" do
-        subject.context = {other: 'context'}
-        subject.context.should == {other: 'context'}
+      it "updates the stored context" do
+        decorator = CollectionDecorator.new([], context: {some: "context"})
+        new_context = {other: "context"}
+
+        decorator.context = new_context
+        expect(decorator.context).to be new_context
       end
 
       context "when the collection is already decorated" do
         it "updates the items' context" do
-          subject.decorated_collection
-          subject.context = {other: 'context'}
-          subject.each do |item|
-            item.context.should == {other: 'context'}
+          decorator = CollectionDecorator.new([Product.new, Product.new], context: {some: "context"})
+          decorator.decorated_collection # trigger decoration
+          new_context = {other: "context"}
+
+          decorator.context = new_context
+          decorator.each do |item|
+            expect(item.context).to be new_context
           end
         end
       end
 
       context "when the collection has not yet been decorated" do
         it "does not trigger decoration" do
-          subject.should_not_receive(:decorated_collection)
-          subject.context = {other: 'context'}
+          decorator = CollectionDecorator.new([])
+
+          decorator.should_not_receive(:decorated_collection)
+          decorator.context = {other: "context"}
         end
 
         it "sets context after decoration is triggered" do
-          subject.context = {other: 'context'}
-          subject.each do |item|
-            item.context.should == {other: 'context'}
+          decorator = CollectionDecorator.new([Product.new, Product.new], context: {some: "context"})
+          new_context = {other: "context"}
+
+          decorator.context = new_context
+          decorator.each do |item|
+            expect(item.context).to be new_context
           end
         end
       end
     end
-  end
 
-  describe "#initialize" do
-    describe "options validation" do
-      let(:valid_options) { {with: ProductDecorator, context: {}} }
+    describe "item decoration" do
+      it "sets decorated items' source models" do
+        collection = [Product.new, Product.new]
+        decorator = CollectionDecorator.new(collection)
 
-      it "does not raise error on valid options" do
-        expect { Draper::CollectionDecorator.new(source, valid_options) }.to_not raise_error
-      end
-
-      it "raises error on invalid options" do
-        expect { Draper::CollectionDecorator.new(source, valid_options.merge(foo: 'bar')) }.to raise_error(ArgumentError, /Unknown key/)
-      end
-    end
-  end
-
-  describe "item decoration" do
-    subject { subject_class.new(source, options) }
-    let(:decorator_classes) { subject.decorated_collection.map(&:class) }
-    let(:source) { [Product.new, Widget.new] }
-
-    context "when the :with option was given" do
-      let(:options) { {with: SpecificProductDecorator} }
-
-      context "and the decorator can't be inferred from the class" do
-        let(:subject_class) { Draper::CollectionDecorator }
-
-        it "uses the :with option" do
-          decorator_classes.should == [SpecificProductDecorator, SpecificProductDecorator]
+        decorator.zip collection do |item, source|
+          expect(item.source).to be source
         end
       end
 
-      context "and the decorator is inferrable from the class" do
-        let(:subject_class) { ProductsDecorator }
+      context "when the item decorator is inferrable from the collection decorator" do
+        context "when the :with option was given" do
+          it "uses the :with option" do
+            decorator = ProductsDecorator.new([Product.new], with: OtherDecorator)
 
-        it "uses the :with option" do
-          decorator_classes.should == [SpecificProductDecorator, SpecificProductDecorator]
+            expect(*decorator).to be_decorated_with OtherDecorator
+          end
+        end
+
+        context "when the :with option was not given" do
+          it "infers the item decorator from the collection decorator" do
+            decorator = ProductsDecorator.new([Product.new])
+
+            expect(*decorator).to be_decorated_with ProductDecorator
+          end
+        end
+      end
+
+      context "when the item decorator is not inferrable from the collection decorator" do
+        context "when the :with option was given" do
+          it "uses the :with option" do
+            decorator = CollectionDecorator.new([Product.new], with: OtherDecorator)
+
+            expect(*decorator).to be_decorated_with OtherDecorator
+          end
+        end
+
+        context "when the :with option was not given" do
+          it "infers the item decorator from each item" do
+            decorator = CollectionDecorator.new([double(decorate: :inferred_decorator)])
+
+            expect(*decorator).to be :inferred_decorator
+          end
         end
       end
     end
 
-    context "when the :with option was not given" do
-      let(:options) { {} }
+    describe ".delegate" do
+      protect_class ProductsDecorator
 
-      context "and the decorator can't be inferred from the class" do
-        let(:subject_class) { Draper::CollectionDecorator }
+      it "defaults the :to option to :source" do
+        Object.should_receive(:delegate).with(:foo, :bar, to: :source)
+        ProductsDecorator.delegate :foo, :bar
+      end
 
-        it "infers the decorator from each item" do
-          decorator_classes.should == [ProductDecorator, WidgetDecorator]
+      it "does not overwrite the :to option if supplied" do
+        Object.should_receive(:delegate).with(:foo, :bar, to: :baz)
+        ProductsDecorator.delegate :foo, :bar, to: :baz
+      end
+    end
+
+    describe "#find" do
+      context "with a block" do
+        it "decorates Enumerable#find" do
+          decorator = CollectionDecorator.new([])
+
+          decorator.decorated_collection.should_receive(:find).and_return(:delegated)
+          expect(decorator.find{|p| p.title == "title"}).to be :delegated
         end
       end
 
-      context "and the decorator is inferrable from the class" do
-        let(:subject_class) { ProductsDecorator}
+      context "without a block" do
+        it "decorates Model.find" do
+          item_decorator = Class.new
+          decorator = CollectionDecorator.new([], with: item_decorator)
 
-        it "infers the decorator" do
-          decorator_classes.should == [ProductDecorator, ProductDecorator]
+          item_decorator.should_receive(:find).with(1).and_return(:delegated)
+          expect(decorator.find(1)).to be :delegated
         end
       end
     end
-  end
 
-  describe ".delegate" do
-    subject { Class.new(Draper::CollectionDecorator) }
+    describe "#to_ary" do
+      # required for `render @collection` in Rails
+      it "delegates to the decorated collection" do
+        decorator = CollectionDecorator.new([])
 
-    it "defaults the :to option to :source" do
-      Draper::CollectionDecorator.superclass.should_receive(:delegate).with(:foo, :bar, to: :source)
-      subject.delegate :foo, :bar
-    end
-
-    it "does not overwrite the :to option if supplied" do
-      Draper::CollectionDecorator.superclass.should_receive(:delegate).with(:foo, :bar, to: :baz)
-      subject.delegate :foo, :bar, to: :baz
-    end
-  end
-
-  describe "#find" do
-    context "with a block" do
-      it "decorates Enumerable#find" do
-        subject.decorated_collection.should_receive(:find)
-        subject.find {|p| p.title == "title" }
+        decorator.decorated_collection.should_receive(:to_ary).and_return(:delegated)
+        expect(decorator.to_ary).to be :delegated
       end
     end
 
-    context "without a block" do
-      it "decorates Model.find" do
-        source.should_not_receive(:find)
-        Product.should_receive(:find).with(1).and_return(:product)
-        subject.find(1).should == ProductDecorator.new(:product)
+    it "delegates array methods to the decorated collection" do
+      decorator = CollectionDecorator.new([])
+
+      decorator.decorated_collection.should_receive(:[]).with(42).and_return(:delegated)
+      expect(decorator[42]).to be :delegated
+    end
+
+    describe "#==" do
+      context "when comparing to a collection decorator with the same source" do
+        it "returns true" do
+          source = [Product.new, Product.new]
+          decorator = CollectionDecorator.new(source)
+          other = ProductsDecorator.new(source)
+
+          expect(decorator == other).to be_true
+        end
+      end
+
+      context "when comparing to a collection decorator with a different source" do
+        it "returns false" do
+          decorator = CollectionDecorator.new([Product.new, Product.new])
+          other = ProductsDecorator.new([Product.new, Product.new])
+
+          expect(decorator == other).to be_false
+        end
+      end
+
+      context "when comparing to a collection of the same items" do
+        it "returns true" do
+          source = [Product.new, Product.new]
+          decorator = CollectionDecorator.new(source)
+          other = source.dup
+
+          expect(decorator == other).to be_true
+        end
+      end
+
+      context "when comparing to a collection of different items" do
+        it "returns false" do
+          decorator = CollectionDecorator.new([Product.new, Product.new])
+          other = [Product.new, Product.new]
+
+          expect(decorator == other).to be_false
+        end
+      end
+
+      context "when the decorated collection has been modified" do
+        it "is no longer equal to the source" do
+          source = [Product.new, Product.new]
+          decorator = CollectionDecorator.new(source)
+          other = source.dup
+
+          decorator << Product.new.decorate
+          expect(decorator == other).to be_false
+        end
       end
     end
+
+    describe "#to_s" do
+      context "when :with option was given" do
+        it "returns a string representation of the collection decorator" do
+          decorator = CollectionDecorator.new(["a", "b", "c"], with: ProductDecorator)
+
+          expect(decorator.to_s).to eq '#<Draper::CollectionDecorator of ProductDecorator for ["a", "b", "c"]>'
+        end
+      end
+
+      context "when :with option was not given" do
+        it "returns a string representation of the collection decorator" do
+          decorator = CollectionDecorator.new(["a", "b", "c"])
+
+          expect(decorator.to_s).to eq '#<Draper::CollectionDecorator of inferred decorators for ["a", "b", "c"]>'
+        end
+      end
+
+      context "for a custom subclass" do
+        it "uses the custom class name" do
+          decorator = ProductsDecorator.new([])
+
+          expect(decorator.to_s).to match /ProductsDecorator/
+        end
+      end
+    end
+
   end
-
-  describe "#helpers" do
-    it "returns a HelperProxy" do
-      subject.helpers.should be_a Draper::HelperProxy
-    end
-
-    it "is aliased to #h" do
-      subject.h.should be subject.helpers
-    end
-
-    it "initializes the wrapper only once" do
-      helper_proxy = subject.helpers
-      helper_proxy.stub(:test_method) { "test_method" }
-      subject.helpers.test_method.should == "test_method"
-      subject.helpers.test_method.should == "test_method"
-    end
-  end
-
-  describe "#localize" do
-    before { subject.helpers.should_receive(:localize).with(:an_object, {some: 'parameter'}) }
-
-    it "delegates to helpers" do
-      subject.localize(:an_object, some: 'parameter')
-    end
-
-    it "is aliased to #l" do
-      subject.l(:an_object, some: 'parameter')
-    end
-  end
-
-  describe ".helpers" do
-    it "returns a HelperProxy" do
-      subject.class.helpers.should be_a Draper::HelperProxy
-    end
-
-    it "is aliased to .h" do
-      subject.class.h.should be subject.class.helpers
-    end
-  end
-
-  describe "#to_ary" do
-    # required for `render @collection` in Rails
-    it "delegates to the decorated collection" do
-      subject.decorated_collection.stub to_ary: :an_array
-      subject.to_ary.should == :an_array
-    end
-  end
-
-  it "delegates array methods to the decorated collection" do
-    subject.decorated_collection.should_receive(:[]).with(42).and_return(:the_answer)
-    subject[42].should == :the_answer
-  end
-
-  describe "#==" do
-    context "when comparing to a collection decorator with the same source" do
-      it "returns true" do
-        a = Draper::CollectionDecorator.new(source, with: ProductDecorator)
-        b = ProductsDecorator.new(source)
-        a.should == b
-      end
-    end
-
-    context "when comparing to a collection decorator with a different source" do
-      it "returns false" do
-        a = Draper::CollectionDecorator.new(source, with: ProductDecorator)
-        b = ProductsDecorator.new([Product.new])
-        a.should_not == b
-      end
-    end
-
-    context "when comparing to a collection of the same items" do
-      it "returns true" do
-        a = Draper::CollectionDecorator.new(source, with: ProductDecorator)
-        b = source.dup
-        a.should == b
-      end
-    end
-
-    context "when comparing to a collection of different items" do
-      it "returns true" do
-        a = Draper::CollectionDecorator.new(source, with: ProductDecorator)
-        b = [Product.new]
-        a.should_not == b
-      end
-    end
-
-    context "when the decorated collection has been modified" do
-      it "is no longer equal to the source" do
-        a = Draper::CollectionDecorator.new(source, with: ProductDecorator)
-        b = source.dup
-
-        a << Product.new.decorate
-        a.should_not == b
-      end
-    end
-  end
-
-  describe "#to_s" do
-    subject { Draper::CollectionDecorator.new(source, options) }
-    let(:source) { ["a", "b", "c"] }
-
-    context "when :with option was given" do
-      let(:options) { {with: ProductDecorator} }
-
-      it "returns a string representation of the CollectionDecorator" do
-        subject.to_s.should == '#<Draper::CollectionDecorator of ProductDecorator for ["a", "b", "c"]>'
-      end
-    end
-
-    context "when :with option was not given" do
-      let(:options) { {} }
-
-      it "returns a string representation of the CollectionDecorator" do
-        subject.to_s.should == '#<Draper::CollectionDecorator of inferred decorators for ["a", "b", "c"]>'
-      end
-    end
-
-    context "for a custom subclass" do
-      subject { ProductsDecorator.new(source) }
-
-      it "uses the custom class name" do
-        subject.to_s.should =~ /ProductsDecorator/
-      end
-    end
-  end
-
 end

@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'ammeter/init'
 
 # Generators are not automatically loaded by Rails
 require 'generators/decorator/decorator_generator'
