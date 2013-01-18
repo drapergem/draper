@@ -156,11 +156,11 @@ module Draper
       true
     end
 
-    # Delegated to the source object.
+    # Compares the source with a possibly-decorated object.
     #
     # @return [Boolean]
     def ==(other)
-      source == (other.respond_to?(:source) ? other.source : other)
+      source.extend(Draper::Decoratable::Equality) == other
     end
 
     # Checks if `self.kind_of?(klass)` or `source.kind_of?(klass)`

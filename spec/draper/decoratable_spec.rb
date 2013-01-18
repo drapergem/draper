@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'support/shared_examples/decoratable_equality'
 
 module Draper
   describe Decoratable do
@@ -55,31 +56,7 @@ module Draper
     end
 
     describe "#==" do
-      it "is true for itself" do
-        product = Product.new
-
-        expect(product == product).to be_true
-      end
-
-      it "is false for another instance" do
-        product = Product.new
-
-        expect(product == Product.new).to be_false
-      end
-
-      it "is true for a decorated version of itself" do
-        product = Product.new
-        decorator = double(source: product)
-
-        expect(product == decorator).to be_true
-      end
-
-      it "is false for a decorated other instance" do
-        product = Product.new
-        decorator = double(source: Product.new)
-
-        expect(product == decorator).to be_false
-      end
+      it_behaves_like "decoration-aware #==", Product.new
     end
 
     describe "#===" do

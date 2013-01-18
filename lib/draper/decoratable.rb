@@ -1,3 +1,5 @@
+require 'draper/decoratable/equality'
+
 module Draper
   # Provides shortcuts to decorate objects directly, so you can do
   # `@product.decorate` instead of `ProductDecorator.new(@product)`.
@@ -7,6 +9,7 @@ module Draper
   # plain old Ruby objects, you can include it manually.
   module Decoratable
     extend ActiveSupport::Concern
+    include Draper::Decoratable::Equality
 
     # Decorates the object using the inferred {#decorator_class}.
     # @param [Hash] options
@@ -38,13 +41,6 @@ module Draper
     # @return [false]
     def decorated?
       false
-    end
-
-    # Compares with possibly-decorated objects.
-    #
-    # @return [Boolean]
-    def ==(other)
-      super || (other.respond_to?(:source) && self == other.source)
     end
 
     module ClassMethods
