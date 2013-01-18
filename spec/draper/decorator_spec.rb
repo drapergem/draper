@@ -354,37 +354,33 @@ module Draper
     end
 
     describe "#==" do
-      it "is true for itself" do
-        decorator = Decorator.new(Model.new)
-
-        expect(decorator == decorator).to be_true
-      end
-
-      it "is true for another decorator with the same source" do
-        source = Model.new
+      it "ensures the source has a decoration-aware #==" do
+        source = Object.new
         decorator = Decorator.new(source)
 
-        expect(decorator == OtherDecorator.new(source)).to be_true
+        expect(source).not_to be_a_kind_of Draper::Decoratable::Equality
+        decorator == :something
+        expect(source).to be_a_kind_of Draper::Decoratable::Equality
       end
 
-      it "is false for another decorator with a different source" do
-        decorator = Decorator.new(Model.new)
-
-        expect(decorator == OtherDecorator.new(Model.new)).to be_false
-      end
-
-      it "is true for the source object" do
+      it "is true when source #== is true" do
         source = Model.new
         decorator = Decorator.new(source)
+        other = double(source: Model.new)
 
-        expect(decorator == source).to be_true
+        source.should_receive(:==).with(other).and_return(true)
+        expect(decorator == other).to be_true
       end
 
-      it "is false for any other object" do
-        decorator = Decorator.new(Model.new)
+      it "is false when source #== is false" do
+        source = Model.new
+        decorator = Decorator.new(source)
+        other = double(source: Model.new)
 
-        expect(decorator == Model.new).to be_false
+        source.should_receive(:==).with(other).and_return(false)
+        expect(decorator == other).to be_false
       end
+
     end
 
     describe "#===" do
