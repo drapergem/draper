@@ -24,10 +24,11 @@ module Draper
     base.class_eval do
       include Draper::ViewContext
       extend  Draper::HelperSupport
-      before_filter ->(controller) {
-        Draper::ViewContext.current = nil
-        Draper::ViewContext.current_controller = controller
-      }
+
+      before_filter do |controller|
+        Draper::ViewContext.clear!
+        Draper::ViewContext.controller = controller
+      end
     end
   end
 
