@@ -1,6 +1,4 @@
-require File.expand_path('../../config/environment', __FILE__)
-require 'minitest/autorun'
-require 'minitest/rails'
+require 'minitest_helper'
 
 def it_is_a_decorator_test
   it "is a decorator test" do
@@ -30,6 +28,14 @@ describe "ProductDecorator" do
 end
 
 describe "AnyDecorator" do
+  it_is_a_decorator_test
+end
+
+describe "Any decorator" do
+  it_is_a_decorator_test
+end
+
+describe "AnyDecoratorTest" do
   it_is_a_decorator_test
 end
 

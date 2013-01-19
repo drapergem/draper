@@ -62,3 +62,4 @@ module Dummy
   end
 end
 
+ActiveRecord::Migration.verbose = false

@@ -25,5 +25,9 @@ describe PostMailer do
     it "can use url helpers with an id" do
       expect(email_body).to have_css "#url_with_id", text: "http://www.example.com:12345/en/posts/#{post.id}"
     end
+
+    it "uses the correct view context controller" do
+      expect(email_body).to have_css "#controller", text: "PostMailer"
+    end
   end
 end

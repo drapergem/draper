@@ -264,6 +264,22 @@ In your `Spork.prefork` block of `spec_helper.rb`, add this:
 require 'draper/test/rspec_integration'
 ```
 
+### Isolated tests
+
+In tests, Draper needs to build a view context to access helper methods. By default, it will create an `ApplicationController` and then use its view context. If you are speeding up your test suite by testing each component in isolation, you can eliminate this dependency by putting the following in your `spec_helper` or similar:
+
+```ruby
+Draper::ViewContext.test_strategy :fast
+```
+
+In doing so, your decorators will no longer have access to your application's helpers. If you need to selectively include such helpers, you can pass a block:
+
+```ruby
+Draper::ViewContext.test_strategy :fast do
+  include ApplicationHelper
+end
+```
+
 ## Advanced usage
 
 ### Shared Decorator Methods
