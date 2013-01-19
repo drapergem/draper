@@ -60,6 +60,7 @@ end
 namespace "db" do
   desc "Set up databases for integration testing"
   task "setup" do
+    puts "Setting up databases"
     run_in_dummy_app "rm -f db/*.sqlite3"
     run_in_dummy_app "RAILS_ENV=development rake db:schema:load db:seed"
     run_in_dummy_app "RAILS_ENV=production rake db:schema:load db:seed"
