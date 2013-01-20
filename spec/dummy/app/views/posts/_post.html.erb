@@ -2,6 +2,9 @@
   <dt>Environment:</dt>
   <dd id="environment"><%= Rails.env %></dd>
 
+  <dt>Draper view context controller:</dt>
+  <dd id="controller"><%= Draper::ViewContext.current.controller.class %></dd>
+
   <dt>Posted:</dt>
   <dd id="posted_date"><%= post.posted_date %></dd>
 

@@ -444,7 +444,7 @@ module Draper
         it "does not confuse Kernel#Array" do
           decorator = Decorator.new(Model.new)
 
-          expect(Array(decorator)).to be_a Array
+          expect(Array(decorator)).to be_an Array
         end
 
         it "delegates already-delegated methods" do

@@ -3,14 +3,22 @@ require 'support/dummy_app'
 require 'support/matchers/have_text'
 
 app = DummyApp.new(ENV["RAILS_ENV"])
+spec_types = {
+  view: ["/posts/1", "PostsController"],
+  mailer: ["/posts/1/mail", "PostMailer"]
+}
 
 app.start_server do
-  {view: "/posts/1", mailer: "/posts/1/mail"}.each do |type, path|
+  spec_types.each do |type, (path, controller)|
     page = app.get(path)
 
     describe "in a #{type}" do
       it "runs in the correct environment" do
         expect(page).to have_text(app.environment).in("#environment")
+      end
+
+      it "uses the correct view context controller" do
+        expect(page).to have_text(controller).in("#controller")
       end
 
       it "can use built-in helpers" do

@@ -39,4 +39,8 @@ describe PostDecorator do
   it "serializes overriden attributes" do
     expect(decorator.serializable_hash["updated_at"]).to be :overridden
   end
+
+  it "uses a test view context from ApplicationController" do
+    expect(Draper::ViewContext.current.controller).to be_an ApplicationController
+  end
 end

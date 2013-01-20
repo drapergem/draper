@@ -1,10 +1,16 @@
-require 'rspec/core/rake_task'
 require 'rake/testtask'
+require 'rspec/core/rake_task'
 
-RSpec::Core::RakeTask.new :rspec
-
-Rake::TestTask.new :mini_test do |t|
-  t.test_files = ["mini_test/mini_test_integration_test.rb"]
+Rake::Task[:test].clear
+Rake::TestTask.new :test do |t|
+  t.libs << "test"
+  t.pattern = "test/**/*_test.rb"
 end
 
-task :default => [:rspec, :mini_test]
+RSpec::Core::RakeTask.new :spec
+
+RSpec::Core::RakeTask.new :fast_spec do |t|
+  t.pattern = "fast_spec/**/*_spec.rb"
+end
+
+task :default => [:test, :spec, :fast_spec]

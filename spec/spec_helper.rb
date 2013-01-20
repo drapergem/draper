@@ -1,5 +1,7 @@
 require 'bundler/setup'
 require 'draper'
+require 'action_controller'
+require 'action_controller/test_case'
 
 RSpec.configure do |config|
   config.treat_symbols_as_metadata_keys_with_true_values = true
@@ -27,4 +29,8 @@ end
 # After each example, revert changes made to the class
 def protect_class(klass)
   before { stub_const klass.name, Class.new(klass) }
+end
+
+def protect_module(mod)
+  before { stub_const mod.name, mod.dup }
 end

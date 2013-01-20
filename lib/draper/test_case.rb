@@ -13,6 +13,13 @@ module Draper
   end
 
   class TestCase < active_support_test_case
+    module ViewContextTeardown
+      def teardown
+        super
+        Draper::ViewContext.clear!
+      end
+    end
+
     module Behavior
       if defined?(::Devise)
         require 'draper/test/devise_helper'
@@ -29,5 +36,18 @@ module Draper
     end
 
     include Behavior
+    include ViewContextTeardown
+  end
+end
+
+if defined?(ActionController::TestCase)
+  class ActionController::TestCase
+    include Draper::TestCase::ViewContextTeardown
+  end
+end
+
+if defined?(ActionMailer::TestCase)
+  class ActionMailer::TestCase
+    include Draper::TestCase::ViewContextTeardown
   end
 end
