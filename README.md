@@ -397,7 +397,7 @@ This is only necessary when proxying class methods.
 
 ### Making models decoratable
 
-Models get their `decorate` method from the `Draper::Decoratable` module, which is included in `ActiveRecord::Base` and `Mongoid::Document` by default. If you're using another ORM, or want to decorate plain old Ruby objects, you can include this module manually.
+Models get their `decorate` method from the `Draper::Decoratable` module, which is included in `ActiveRecord::Base` and `Mongoid::Document` by default. If you're [using another ORM](https://github.com/drapergem/draper/wiki/Using-other-ORMs) (including versions of Mongoid prior to 3.0), or want to decorate plain old Ruby objects, you can include this module manually.
 
 ## Contributors
 
