@@ -1,9 +1,8 @@
 require File.expand_path('../boot', __FILE__)
 
 require 'rails/all'
-
-Bundler.require
-require "draper"
+require 'draper'
+require 'mongoid' if Rails.version.to_f >= 3.1
 
 module Dummy
   class Application < Rails::Application
