@@ -328,7 +328,8 @@ From your view template, assuming `@article` is decorated, you could do any of t
 
 ```ruby
 @article.title # Returns the article's `.title`
-@article.name  # Returns the article's `author.name`
+@article.body  # Returns the article's `.body`
+@article.author_name  # Returns the article's `author.name`
 @article.author_title # Returns the article's `author.title`
 ```
 
