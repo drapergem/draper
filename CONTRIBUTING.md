@@ -1,4 +1,8 @@
-# Contributing to Draper
+## Filing issues
+
+To help us fix the problem you've found, please let us know your versions of Draper and Rails (and any other gems that are relevant to your issue, e.g. RSpec if you're having trouble in your tests).
+
+## Sending a pull request
 
 So you want to help us out... thanks! Here's a quick how-to:
 
