@@ -18,7 +18,7 @@ def show
 end
 ```
 
-In the view, you can use the decorator in exactly the same way as you would have used the model. But whenever you start needing logic in the view or start thinking about a helper menthod, you can implement a method on the decorator instead.
+In the view, you can use the decorator in exactly the same way as you would have used the model. But whenever you start needing logic in the view or start thinking about a helper method, you can implement a method on the decorator instead.
 
 Let's look at how you could convert an existing Rails helper to a decorator method. You have this existing helper:
 
