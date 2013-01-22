@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.email       = ["jeff@casimircreative.com", "steve@steveklabnik.com"]
   s.homepage    = "http://github.com/drapergem/draper"
   s.summary     = "View Models for Rails"
-  s.description = "Draper adds a nicely-separated object-oriented layer of presentation logic to your Rails apps."
+  s.description = "Draper adds an object-oriented layer of presentation logic to your Rails apps."
   s.rubyforge_project = "draper"
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
