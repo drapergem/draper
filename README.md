@@ -320,7 +320,7 @@ We omit the `:to` argument here as it defaults to the `source` object. You could
 ```ruby
 class ArticleDecorator < Draper::Decorator
   delegate :title, :body
-  delegate :name, :title, :to => :author, :prefix => true
+  delegate :name, :title, to: :author, prefix: true
 end
 ```
 
