@@ -211,6 +211,8 @@ end
 
 The `delegate` method used here is the same as that added by [Active Support](http://api.rubyonrails.org/classes/Module.html#method-i-delegate), except that the `:to` option is not required; it defaults to `:source` when omitted.
 
+[will_paginate](https://github.com/mislav/will_paginate) needs you to `delegate :current_page, :per_page, :offset, :total_entries, :total_pages`.
+
 ### Decorating Associated Objects
 
 You can automatically decorate associated models when the primary model is decorated. Assuming an `Article` model has an associated `Author` object:
