@@ -21,25 +21,35 @@ module Draper
     end
 
     # Returns the current view context, or builds one if none is saved.
+    #
+    # @return [HelperProxy]
     def self.current
-      RequestStore.store[:current_view_context] ||= build
+      RequestStore.store.fetch(:current_view_context) { build! }
     end
 
     # Sets the current view context.
     def self.current=(view_context)
-      RequestStore.store[:current_view_context] = view_context
+      RequestStore.store[:current_view_context] = Draper::HelperProxy.new(view_context)
     end
 
     # Clears the saved controller and view context.
     def self.clear!
-      self.controller = nil
-      self.current = nil
+      RequestStore.store.delete :current_controller
+      RequestStore.store.delete :current_view_context
     end
 
     # Builds a new view context for usage in tests. See {test_strategy} for
     # details of how the view context is built.
     def self.build
       build_strategy.call
+    end
+
+    # Builds a new view context and sets it as the current view context.
+    #
+    # @return [HelperProxy]
+    def self.build!
+      # send because we want to return the HelperProxy returned from #current=
+      send :current=, build
     end
 
     # Configures the strategy used to build view contexts in tests, which

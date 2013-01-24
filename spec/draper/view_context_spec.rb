@@ -7,8 +7,8 @@ module Draper
       let(:controller) { Class.new(base) { include ViewContext } }
 
       it "saves the superclass's view context" do
+        ViewContext.should_receive(:current=).with(:controller_view_context)
         controller.new.view_context
-        expect(ViewContext.current).to be :controller_view_context
       end
 
       it "returns the superclass's view context" do
@@ -19,6 +19,7 @@ module Draper
     describe ".controller" do
       it "returns the stored controller from RequestStore" do
         RequestStore.stub store: {current_controller: :stored_controller}
+
         expect(ViewContext.controller).to be :stored_controller
       end
     end
@@ -36,23 +37,39 @@ module Draper
     describe ".current" do
       it "returns the stored view context from RequestStore" do
         RequestStore.stub store: {current_view_context: :stored_view_context}
+
         expect(ViewContext.current).to be :stored_view_context
       end
 
-      it "falls back to building a view context" do
-        RequestStore.stub store: {}
-        ViewContext.should_receive(:build).and_return(:new_view_context)
-        expect(ViewContext.current).to be :new_view_context
+      context "when no view context is stored" do
+        it "builds a view context" do
+          RequestStore.stub store: {}
+          ViewContext.stub build_strategy: ->{ :new_view_context }
+          HelperProxy.stub(:new).with(:new_view_context).and_return(:new_helper_proxy)
+
+          expect(ViewContext.current).to be :new_helper_proxy
+        end
+
+        it "stores the built view context" do
+          store = {}
+          RequestStore.stub store: store
+          ViewContext.stub build_strategy: ->{ :new_view_context }
+          HelperProxy.stub(:new).with(:new_view_context).and_return(:new_helper_proxy)
+
+          ViewContext.current
+          expect(store[:current_view_context]).to be :new_helper_proxy
+        end
       end
     end
 
     describe ".current=" do
-      it "stores a view context in RequestStore" do
+      it "stores a helper proxy for the view context in RequestStore" do
         store = {}
         RequestStore.stub store: store
+        HelperProxy.stub(:new).with(:stored_view_context).and_return(:stored_helper_proxy)
 
         ViewContext.current = :stored_view_context
-        expect(store[:current_view_context]).to be :stored_view_context
+        expect(store[:current_view_context]).to be :stored_helper_proxy
       end
     end
 
@@ -62,15 +79,35 @@ module Draper
         RequestStore.stub store: store
 
         ViewContext.clear!
-        expect(store[:current_controller]).to be_nil
-        expect(store[:current_view_context]).to be_nil
+        expect(store).not_to have_key :current_controller
+        expect(store).not_to have_key :current_view_context
       end
     end
 
     describe ".build" do
-      it "calls the build strategy" do
+      it "returns a new view context using the build strategy" do
         ViewContext.stub build_strategy: ->{ :new_view_context }
+
         expect(ViewContext.build).to be :new_view_context
+      end
+    end
+
+    describe ".build!" do
+      it "returns a helper proxy for the new view context" do
+        ViewContext.stub build_strategy: ->{ :new_view_context }
+        HelperProxy.stub(:new).with(:new_view_context).and_return(:new_helper_proxy)
+
+        expect(ViewContext.build!).to be :new_helper_proxy
+      end
+
+      it "stores the helper proxy" do
+        store = {}
+        RequestStore.stub store: store
+        ViewContext.stub build_strategy: ->{ :new_view_context }
+        HelperProxy.stub(:new).with(:new_view_context).and_return(:new_helper_proxy)
+
+        ViewContext.build!
+        expect(store[:current_view_context]).to be :new_helper_proxy
       end
     end
 
