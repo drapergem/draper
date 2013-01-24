@@ -11,7 +11,7 @@ module Draper
       #
       # @return [HelperProxy] the helpers proxy
       def helpers
-        @helpers ||= Draper::HelperProxy.new
+        Draper::ViewContext.current
       end
       alias_method :h, :helpers
 
@@ -22,7 +22,7 @@ module Draper
     #
     # @return [HelperProxy] the helpers proxy
     def helpers
-      self.class.helpers
+      Draper::ViewContext.current
     end
     alias_method :h, :helpers
 
