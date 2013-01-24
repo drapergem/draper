@@ -12,7 +12,7 @@ module Draper
 
     # Sends helper methods to the view context.
     def method_missing(method, *args, &block)
-      self.class.delegate method, to: :view_context
+      self.class.define_proxy method
       send(method, *args, &block)
     end
 
@@ -21,6 +21,12 @@ module Draper
     attr_reader :view_context
 
     private
+
+    def self.define_proxy(name)
+      define_method name do |*args, &block|
+        view_context.send(name, *args, &block)
+      end
+    end
 
     def current_view_context
       ActiveSupport::Deprecation.warn("wrong number of arguments (0 for 1) passed to Draper::HelperProxy.new", caller[1..-1])
