@@ -8,7 +8,7 @@ end
 
 platforms :jruby do
   gem "minitest", ">= 3.0"
-  gem "activerecord-jdbcsqlite3-adapter", "~> 1.2.2.1"
+  gem "activerecord-jdbcsqlite3-adapter"
 end
 
 case ENV["RAILS_VERSION"]
