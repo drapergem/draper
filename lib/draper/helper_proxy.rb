@@ -12,7 +12,8 @@ module Draper
 
     # Sends helper methods to the view context.
     def method_missing(method, *args, &block)
-      view_context.send(method, *args, &block)
+      self.class.delegate method, to: :view_context
+      send(method, *args, &block)
     end
 
     protected

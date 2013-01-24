@@ -12,12 +12,30 @@ module Draper
     end
 
     describe "#method_missing" do
+      protect_class HelperProxy
+
       it "proxies methods to the view context" do
         view_context = double
         helper_proxy = HelperProxy.new(view_context)
 
-        view_context.should_receive(:foo).with("bar")
-        helper_proxy.foo("bar")
+        view_context.stub(:foo).and_return{|arg| arg}
+        expect(helper_proxy.foo(:passed)).to be :passed
+      end
+
+      it "passes blocks" do
+        view_context = double
+        helper_proxy = HelperProxy.new(view_context)
+
+        view_context.stub(:foo).and_return{|&block| block.call}
+        expect(helper_proxy.foo{:yielded}).to be :yielded
+      end
+
+      it "defines the method for better performance" do
+        helper_proxy = HelperProxy.new(double(foo: "bar"))
+
+        expect(HelperProxy.instance_methods).not_to include :foo
+        helper_proxy.foo
+        expect(HelperProxy.instance_methods).to include :foo
       end
     end
   end
