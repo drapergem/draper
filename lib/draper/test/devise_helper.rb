@@ -20,7 +20,11 @@ module Draper
     private
 
     def _stub_current_scope(scope, resource)
-      Draper::ViewContext.current.controller.stub "current_#{scope}" => resource
+      Draper::ViewContext.current.controller.singleton_class.class_eval do
+        define_method "current_#{scope}" do
+          resource
+        end
+      end
     end
   end
 end
