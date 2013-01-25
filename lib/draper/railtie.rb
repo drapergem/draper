@@ -17,7 +17,7 @@ module Draper
     config.after_initialize do |app|
       app.config.paths.add 'app/decorators', eager_load: true
 
-      unless Rails.env.production?
+      if Rails.env.test?
         require 'draper/test_case'
         require 'draper/test/rspec_integration' if defined?(RSpec) and RSpec.respond_to?(:configure)
         require 'draper/test/minitest_integration' if defined?(MiniTest::Rails)
