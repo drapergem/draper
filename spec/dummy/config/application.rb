@@ -1,8 +1,14 @@
 require File.expand_path('../boot', __FILE__)
 
+def attempt_require(file)
+  require file
+rescue LoadError
+end
+
 require 'rails/all'
 require 'draper'
-require 'mongoid' if Rails.version.to_f >= 3.1
+attempt_require 'mongoid'
+attempt_require 'devise'
 
 module Dummy
   class Application < Rails::Application

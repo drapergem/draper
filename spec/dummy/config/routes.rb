@@ -4,4 +4,6 @@ Dummy::Application.routes.draw do
       get "mail", on: :member
     end
   end
+
+  devise_for :users, :admins if defined?(Devise)
 end
