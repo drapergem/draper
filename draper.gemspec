@@ -27,4 +27,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rspec-rails', '~> 2.12'
   s.add_development_dependency 'minitest-rails', '~> 0.2'
   s.add_development_dependency 'capybara'
+  s.license = "MIT"
 end
