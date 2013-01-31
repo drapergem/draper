@@ -2,7 +2,10 @@ module Draper
   class Decorator
     include Draper::ViewHelpers
     extend Draper::Delegation
+
     include ActiveModel::Serialization
+    include ActiveModel::Serializers::JSON
+    include ActiveModel::Serializers::Xml
 
     # @return the object being decorated.
     attr_reader :source
@@ -187,8 +190,14 @@ module Draper
       self
     end
 
+    # @return [Hash] the source's attributes, sliced to only include those
+    # implemented by the decorator.
+    def attributes
+      source.attributes.select {|attribute, _| respond_to?(attribute) }
+    end
+
     # ActiveModel compatibility
-    delegate :attributes, :to_param, :to_partial_path
+    delegate :to_param, :to_partial_path
 
     # ActiveModel compatibility
     singleton_class.delegate :model_name, to: :source_class

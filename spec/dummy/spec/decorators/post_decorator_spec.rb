@@ -40,6 +40,17 @@ describe PostDecorator do
     expect(decorator.serializable_hash["updated_at"]).to be :overridden
   end
 
+  it "serializes to JSON" do
+    json = decorator.to_json
+    expect(json).to match /^{"post":{.+}}$/
+    expect(json).to match /"updated_at":"overridden"/
+  end
+
+  it "serializes to XML" do
+    xml = Capybara.string(decorator.to_xml)
+    expect(xml).to have_css "post > updated-at", text: "overridden"
+  end
+
   it "uses a test view context from ApplicationController" do
     expect(Draper::ViewContext.current.controller).to be_an ApplicationController
   end
