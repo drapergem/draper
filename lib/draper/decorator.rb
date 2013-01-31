@@ -187,8 +187,14 @@ module Draper
       self
     end
 
+    # @return [Hash] the source's attributes, sliced to only include those
+    # implemented by the decorator.
+    def attributes
+      source.attributes.select {|attribute, _| respond_to?(attribute) }
+    end
+
     # ActiveModel compatibility
-    delegate :attributes, :to_param, :to_partial_path
+    delegate :to_param, :to_partial_path
 
     # ActiveModel compatibility
     singleton_class.delegate :model_name, to: :source_class

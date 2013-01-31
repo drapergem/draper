@@ -345,6 +345,15 @@ module Draper
       end
     end
 
+    describe "#attributes" do
+      it "returns only the source's attributes that are implemented by the decorator" do
+        decorator = Decorator.new(double(attributes: {foo: "bar", baz: "qux"}))
+        decorator.stub(:foo)
+
+        expect(decorator.attributes).to eq({foo: "bar"})
+      end
+    end
+
     describe ".model_name" do
       it "delegates to the source class" do
         Decorator.stub source_class: double(model_name: :delegated)
