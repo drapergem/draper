@@ -1,5 +1,8 @@
 require 'action_view'
+require 'active_model/naming'
 require 'active_model/serialization'
+require 'active_model/serializers/json'
+require 'active_model/serializers/xml'
 require 'active_support/inflector'
 require 'active_support/core_ext/hash/keys'
 require 'active_support/core_ext/hash/reverse_merge'
