@@ -2,7 +2,10 @@ module Draper
   class Decorator
     include Draper::ViewHelpers
     extend Draper::Delegation
+
     include ActiveModel::Serialization
+    include ActiveModel::Serializers::JSON
+    include ActiveModel::Serializers::Xml
 
     # @return the object being decorated.
     attr_reader :source
