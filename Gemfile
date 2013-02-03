@@ -35,3 +35,6 @@ end
 gem "rails", rails
 gem "mongoid", mongoid if mongoid
 gem "devise", devise if devise
+
+gem 'guard-rspec'
+gem 'rb-fsevent'
