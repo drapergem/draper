@@ -16,6 +16,8 @@ module Draper
       send(method, *args, &block)
     end
 
+    delegate :capture, to: :view_context
+
     protected
 
     attr_reader :view_context
