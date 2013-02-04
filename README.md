@@ -134,6 +134,7 @@ include Draper::LazyHelpers
 ```
 
 ...at the top of your decorator class - you'll mix in a bazillion methods and never have to type `h.` again.
+(Note: the `capture` method is only available through `h` or `helpers`)
 
 ### Accessing the model
 

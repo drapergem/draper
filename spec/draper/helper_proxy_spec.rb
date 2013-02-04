@@ -38,5 +38,16 @@ module Draper
         expect(HelperProxy.instance_methods).to include :foo
       end
     end
+
+    describe "proxying methods which are overriding" do
+      it "proxies :capture" do
+        view_context = double
+        helper_proxy = HelperProxy.new(view_context)
+
+        view_context.stub(:capture).and_return{|*args, &block| [*args, block.call] }
+        expect(helper_proxy.capture(:first_arg, :second_arg){:yielded}).to \
+          be_eql [:first_arg, :second_arg, :yielded]
+      end
+    end
   end
 end
