@@ -4,9 +4,7 @@ module Draper
   describe LazyHelpers do
     describe "#method_missing" do
       let(:decorator) do
-        result = Class.new{include Draper::LazyHelpers}.new
-        result.stub :helpers, double
-        result
+        Struct.new(:helpers){include Draper::LazyHelpers}.new(double)
       end
 
       it "proxies methods to #helpers" do
