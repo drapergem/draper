@@ -70,6 +70,11 @@ module Draper
       @decorator_class ||= self.class.inferred_decorator_class
     end
 
+    # @return [true]
+    def decorated?
+      true
+    end
+
     protected
 
     # @return the collection being decorated.
