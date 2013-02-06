@@ -9,7 +9,7 @@ module Draper
       @association = association
 
       @scope = options[:scope]
-      @context = options.fetch(:context, owner.context)
+      @context = options.fetch(:context, ->(context){ context })
 
       @factory = Draper::Factory.new(options.slice(:with))
     end
