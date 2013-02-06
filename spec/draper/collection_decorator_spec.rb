@@ -255,5 +255,13 @@ module Draper
       end
     end
 
+    describe '#decorated?' do
+      it 'returns true' do
+        decorator = ProductsDecorator.new([Product.new])
+
+        expect(decorator).to be_decorated
+      end
+    end
+
   end
 end
