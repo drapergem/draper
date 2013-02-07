@@ -16,10 +16,12 @@ require 'draper/decorator'
 require 'draper/helper_proxy'
 require 'draper/lazy_helpers'
 require 'draper/decoratable'
+require 'draper/factory'
 require 'draper/decorated_association'
 require 'draper/helper_support'
 require 'draper/view_context'
 require 'draper/collection_decorator'
+require 'draper/decorates_assigned'
 require 'draper/railtie' if defined?(Rails)
 
 module Draper
@@ -27,6 +29,7 @@ module Draper
     base.class_eval do
       include Draper::ViewContext
       extend  Draper::HelperSupport
+      extend  Draper::DecoratesAssigned
 
       before_filter do |controller|
         Draper::ViewContext.clear!

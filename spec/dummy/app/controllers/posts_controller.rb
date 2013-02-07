@@ -1,6 +1,8 @@
 class PostsController < ApplicationController
+  decorates_assigned :post
+
   def show
-    @post = Post.find(params[:id]).decorate
+    @post = Post.find(params[:id])
   end
 
   def mail
