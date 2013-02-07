@@ -104,10 +104,8 @@ module Draper
     describe "#context" do
       let(:owner_context) { {some: "context"} }
       let(:options) { {} }
-      let(:decorated_association) do
-        owner = double(context: owner_context)
-        DecoratedAssociation.new(owner, :association, options)
-      end
+      let(:owner) { double(context: owner_context) }
+      let(:decorated_association) { DecoratedAssociation.new(owner, :association, options) }
 
       context "when :context option was given" do
         let(:options) { {context: context} }
@@ -137,6 +135,13 @@ module Draper
       context "when :context option was not given" do
         it "returns the owner's context" do
           expect(decorated_association.context).to be owner_context
+        end
+
+        it "returns the new context if the owner's context changes" do
+          new_context = {other: "context"}
+          owner.stub context: new_context
+
+          expect(decorated_association.context).to be new_context
         end
       end
     end
