@@ -47,7 +47,7 @@ module Draper
     console do
       require 'action_controller/test_case'
       ApplicationController.new.view_context
-      Draper::ViewContext.build_view_context
+      Draper::ViewContext.build
     end
 
     rake_tasks do
