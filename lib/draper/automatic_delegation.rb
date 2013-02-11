@@ -16,6 +16,14 @@ module Draper
       super || delegatable?(method)
     end
 
+    if RUBY_VERSION >= "1.9.2"
+      # respond_to_missing? functions identically to respond_to?, but enables
+      # reflection with Object#method.
+      def respond_to_missing?(method, include_private = false)
+        super || delegatable?(method)
+      end
+    end
+
     # @private
     def delegatable?(method)
       source.respond_to?(method)
@@ -33,6 +41,14 @@ module Draper
       # it to the source class.
       def respond_to?(method, include_private = false)
         super || delegatable?(method)
+      end
+
+      if RUBY_VERSION >= "1.9.2"
+        # respond_to_missing? functions identically to respond_to?, but enables
+        # reflection with Object.method.
+        def respond_to_missing?(method, include_private = false)
+          super || delegatable?(method)
+        end
       end
 
       # @private
