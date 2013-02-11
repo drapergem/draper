@@ -564,24 +564,22 @@ module Draper
         end
       end
 
-      if RUBY_VERSION >= "1.9.2"
-        describe "#respond_to_missing?" do
-          it "allows #method to be called on delegated methods" do
-            source = Class.new{def hello_world; end}.new
-            decorator = Decorator.new(source)
+      describe "#respond_to_missing?" do
+        it "allows #method to be called on delegated methods" do
+          source = Class.new{def hello_world; end}.new
+          decorator = Decorator.new(source)
 
-            expect { decorator.method(:hello_world) }.not_to raise_error NameError
-            expect(decorator.method(:hello_world)).not_to be_nil
-          end
+          expect { decorator.method(:hello_world) }.not_to raise_error NameError
+          expect(decorator.method(:hello_world)).not_to be_nil
         end
+      end
 
-        describe ".respond_to_missing?" do
-          it "allows .method to be called on delegated class methods" do
-            Decorator.stub source_class: double(hello_world: :delegated)
+      describe ".respond_to_missing?" do
+        it "allows .method to be called on delegated class methods" do
+          Decorator.stub source_class: double(hello_world: :delegated)
 
-            expect { Decorator.method(:hello_world) }.not_to raise_error NameError
-            expect(Decorator.method(:hello_world)).not_to be_nil
-          end
+          expect { Decorator.method(:hello_world) }.not_to raise_error NameError
+          expect(Decorator.method(:hello_world)).not_to be_nil
         end
       end
     end

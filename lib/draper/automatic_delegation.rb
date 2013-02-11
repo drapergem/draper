@@ -12,16 +12,8 @@ module Draper
 
     # Checks if the decorator responds to an instance method, or is able to
     # proxy it to the source object.
-    def respond_to?(method, include_private = false)
+    def respond_to_missing?(method, include_private = false)
       super || delegatable?(method)
-    end
-
-    if RUBY_VERSION >= "1.9.2"
-      # respond_to_missing? functions identically to respond_to?, but enables
-      # reflection with Object#method.
-      def respond_to_missing?(method, include_private = false)
-        super || delegatable?(method)
-      end
     end
 
     # @private
@@ -39,16 +31,8 @@ module Draper
 
       # Checks if the decorator responds to a class method, or is able to proxy
       # it to the source class.
-      def respond_to?(method, include_private = false)
+      def respond_to_missing?(method, include_private = false)
         super || delegatable?(method)
-      end
-
-      if RUBY_VERSION >= "1.9.2"
-        # respond_to_missing? functions identically to respond_to?, but enables
-        # reflection with Object.method.
-        def respond_to_missing?(method, include_private = false)
-          super || delegatable?(method)
-        end
       end
 
       # @private
