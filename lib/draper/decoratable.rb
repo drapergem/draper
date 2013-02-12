@@ -52,7 +52,7 @@ module Draper
       # @param [Hash] options
       #   see {Decorator.decorate_collection}.
       def decorate(options = {})
-        decorator_class.decorate_collection(self.scoped, options)
+        decorator_class.decorate_collection(scoped, options.reverse_merge(with: nil))
       end
 
       # Infers the decorator class to be used by {Decoratable#decorate} (e.g.
