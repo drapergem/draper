@@ -44,6 +44,12 @@ module Draper
       end
     end
 
+    initializer "draper.setup_active_model_serializers" do |app|
+      ActiveSupport.on_load :active_model_serializers do
+        Draper::CollectionDecorator.send :include, ActiveModel::ArraySerializerSupport
+      end
+    end
+
     console do
       require 'action_controller/test_case'
       ApplicationController.new.view_context
