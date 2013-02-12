@@ -112,12 +112,12 @@ module Draper
         scoped = [Product.new]
         Product.stub scoped: scoped
 
-        Product.decorator_class.should_receive(:decorate_collection).with(scoped, {}).and_return(:decorated_collection)
+        Product.decorator_class.should_receive(:decorate_collection).with(scoped, with: nil).and_return(:decorated_collection)
         expect(Product.decorate).to be :decorated_collection
       end
 
       it "accepts options" do
-        options = {context: {some: "context"}}
+        options = {with: ProductDecorator, context: {some: "context"}}
         Product.stub scoped: []
 
         Product.decorator_class.should_receive(:decorate_collection).with([], options)
