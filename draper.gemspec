@@ -10,7 +10,8 @@ Gem::Specification.new do |s|
   s.homepage    = "http://github.com/drapergem/draper"
   s.summary     = "View Models for Rails"
   s.description = "Draper adds an object-oriented layer of presentation logic to your Rails apps."
-  s.rubyforge_project = "draper"
+  s.license     = "MIT"
+
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
@@ -27,5 +28,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rspec-rails', '~> 2.12'
   s.add_development_dependency 'minitest-rails', '~> 0.2'
   s.add_development_dependency 'capybara'
-  s.license = "MIT"
+  s.add_development_dependency 'active_model_serializers'
 end
