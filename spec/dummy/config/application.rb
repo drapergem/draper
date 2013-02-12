@@ -9,6 +9,7 @@ require 'rails/all'
 require 'draper'
 attempt_require 'mongoid'
 attempt_require 'devise'
+require 'active_model_serializers'
 
 module Dummy
   class Application < Rails::Application
