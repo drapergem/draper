@@ -22,8 +22,10 @@ end
 
 mongoid = case version
 when "master"
-  {github: "mongoid/mongoid", branch: "4.0.0-dev"}
-when "3.1", "3.2"
+  {github: "mongoid/mongoid"}
+when "3.2"
+  "~> 3.1.0"
+when "3.1"
   "~> 3.0.0"
 end
 
