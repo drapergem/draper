@@ -89,39 +89,19 @@ module Draper
         end
       end
 
-      context "when the item decorator is inferrable from the collection decorator" do
-        context "when the :with option was given" do
-          it "uses the :with option" do
-            decorator = ProductsDecorator.new([Product.new], with: OtherDecorator)
+      context "when the :with option was given" do
+        it "uses the :with option" do
+          decorator = CollectionDecorator.new([Product.new], with: OtherDecorator).first
 
-            expect(*decorator).to be_decorated_with OtherDecorator
-          end
-        end
-
-        context "when the :with option was not given" do
-          it "infers the item decorator from the collection decorator" do
-            decorator = ProductsDecorator.new([Product.new])
-
-            expect(*decorator).to be_decorated_with ProductDecorator
-          end
+          expect(decorator).to be_decorated_with OtherDecorator
         end
       end
 
-      context "when the item decorator is not inferrable from the collection decorator" do
-        context "when the :with option was given" do
-          it "uses the :with option" do
-            decorator = CollectionDecorator.new([Product.new], with: OtherDecorator)
+      context "when the :with option was not given" do
+        it "infers the item decorator from each item" do
+          decorator = CollectionDecorator.new([double(decorate: :inferred_decorator)]).first
 
-            expect(*decorator).to be_decorated_with OtherDecorator
-          end
-        end
-
-        context "when the :with option was not given" do
-          it "infers the item decorator from each item" do
-            decorator = CollectionDecorator.new([double(decorate: :inferred_decorator)])
-
-            expect(*decorator).to be :inferred_decorator
-          end
+          expect(decorator).to be :inferred_decorator
         end
       end
     end

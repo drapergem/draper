@@ -198,7 +198,7 @@ end
 @articles = ArticlesDecorator.decorate(Article.all)
 ```
 
-Draper infers the decorator used for each item from the name of the collection decorator (`ArticlesDecorator` implies `ArticleDecorator`). If that fails, it falls back to using each item's `decorate` method. Alternatively, you can specify a decorator by overriding the collection decorator's `decorator_class` method.
+Draper decorates each item using its `decorate` method. Alternatively, you can specify a decorator by overriding the collection decorator's `decorator_class` method, or by passing the `:with` option to the constructor.
 
 #### Using pagination
 
