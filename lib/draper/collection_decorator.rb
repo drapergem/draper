@@ -4,6 +4,10 @@ module Draper
     include Draper::ViewHelpers
     extend Draper::Delegation
 
+    # @return [Class] the decorator class used to decorate each item, as set by
+    #   {#initialize}.
+    attr_reader :decorator_class
+
     # @return [Hash] extra data to be used in user-defined methods, and passed
     #   to each item's decorator.
     attr_accessor :context
@@ -49,25 +53,12 @@ module Draper
     end
 
     def to_s
-      klass = begin
-        decorator_class
-      rescue Draper::UninferrableDecoratorError
-        "inferred decorators"
-      end
-
-      "#<#{self.class.name} of #{klass} for #{source.inspect}>"
+      "#<#{self.class.name} of #{decorator_class || "inferred decorators"} for #{source.inspect}>"
     end
 
     def context=(value)
       @context = value
       each {|item| item.context = value } if @decorated_collection
-    end
-
-    # @return [Class] the decorator class used to decorate each item, as set by
-    #   {#initialize} or as inferred from the collection decorator class (e.g.
-    #   `ProductsDecorator` maps to `ProductDecorator`).
-    def decorator_class
-      @decorator_class ||= self.class.inferred_decorator_class
     end
 
     # @return [true]
@@ -87,24 +78,10 @@ module Draper
 
     private
 
-    def self.inferred_decorator_class
-      decorator_name = "#{name.chomp("Decorator").singularize}Decorator"
-      decorator_uninferrable if decorator_name == name
-
-      decorator_name.constantize
-
-    rescue NameError
-      decorator_uninferrable
-    end
-
-    def self.decorator_uninferrable
-      raise Draper::UninferrableDecoratorError.new(self)
-    end
-
     def item_decorator
-      @item_decorator ||= begin
+      if decorator_class
         decorator_class.method(:decorate)
-      rescue Draper::UninferrableDecoratorError
+      else
         ->(item, options) { item.decorate(options) }
       end
     end
