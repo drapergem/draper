@@ -39,6 +39,12 @@ module Draper
       def delegatable?(method)
         source_class? && source_class.respond_to?(method)
       end
+
+      # @private
+      # Avoids reloading the model class when ActiveSupport clears autoloaded
+      # dependencies in development mode.
+      def before_remove_const
+      end
     end
 
     included do
