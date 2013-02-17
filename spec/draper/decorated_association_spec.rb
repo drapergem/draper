@@ -4,144 +4,78 @@ module Draper
   describe DecoratedAssociation do
 
     describe "#initialize" do
-      describe "options validation" do
-        it "does not raise error on valid options" do
-          valid_options = {with: Decorator, scope: :foo, context: {}}
-          expect{DecoratedAssociation.new(Decorator.new(Model.new), :association, valid_options)}.not_to raise_error
-        end
+      it "accepts valid options" do
+        valid_options = {with: Decorator, scope: :foo, context: {}}
+        expect{DecoratedAssociation.new(Decorator.new(Model.new), :association, valid_options)}.not_to raise_error
+      end
 
-        it "raises error on invalid options" do
-          expect{DecoratedAssociation.new(Decorator.new(Model.new), :association, foo: "bar")}.to raise_error ArgumentError, /Unknown key/
+      it "rejects invalid options" do
+        expect{DecoratedAssociation.new(Decorator.new(Model.new), :association, foo: "bar")}.to raise_error ArgumentError, /Unknown key/
+      end
+
+      it "creates a factory" do
+        options = {with: Decorator, context: {foo: "bar"}}
+
+        Factory.should_receive(:new).with(options)
+        DecoratedAssociation.new(double, :association, options)
+      end
+
+      describe ":with option" do
+        it "defaults to nil" do
+          Factory.should_receive(:new).with(with: nil, context: anything())
+          DecoratedAssociation.new(double, :association, {})
+        end
+      end
+
+      describe ":context option" do
+        it "defaults to the identity function" do
+          Factory.should_receive(:new).with do |options|
+            options[:context].call(:anything) == :anything
+          end
+          DecoratedAssociation.new(double, :association, {})
         end
       end
     end
 
     describe "#call" do
-      let(:context) { {some: "context"} }
-      let(:options) { {} }
+      it "calls the factory" do
+        factory = double
+        Factory.stub new: factory
+        associated = double
+        owner_context = {foo: "bar"}
+        source = double(association: associated)
+        owner = double(source: source, context: owner_context)
+        decorated_association = DecoratedAssociation.new(owner, :association, {})
+        decorated = double
 
-      let(:decorated_association) do
-        owner = double(context: nil, source: double(association: associated))
-
-        DecoratedAssociation.new(owner, :association, options).tap do |decorated_association|
-          decorated_association.stub context: context
-        end
+        factory.should_receive(:decorate).with(associated, context_args: owner_context).and_return(decorated)
+        expect(decorated_association.call).to be decorated
       end
 
-      context "for a singular association" do
-        let(:associated) { Model.new }
+      it "memoizes" do
+        factory = double
+        Factory.stub new: factory
+        owner = double(source: double(association: double), context: {})
+        decorated_association = DecoratedAssociation.new(owner, :association, {})
+        decorated = double
 
-        context "when :with option was given" do
-          let(:options) { {with: Decorator} }
-
-          it "uses the specified decorator" do
-            Decorator.should_receive(:decorate).with(associated, context: context).and_return(:decorated)
-            expect(decorated_association.call).to be :decorated
-          end
-        end
-
-        context "when :with option was not given" do
-          it "infers the decorator" do
-            associated.stub decorator_class: OtherDecorator
-
-            OtherDecorator.should_receive(:decorate).with(associated, context: context).and_return(:decorated)
-            expect(decorated_association.call).to be :decorated
-          end
-        end
+        factory.should_receive(:decorate).once.and_return(decorated)
+        expect(decorated_association.call).to be decorated
+        expect(decorated_association.call).to be decorated
       end
 
-      context "for a collection association" do
-        let(:associated) { [] }
-
-        context "when :with option is a collection decorator" do
-          let(:options) { {with: ProductsDecorator} }
-
-          it "uses the specified decorator" do
-            ProductsDecorator.should_receive(:decorate).with(associated, context: context).and_return(:decorated_collection)
-            expect(decorated_association.call).to be :decorated_collection
-          end
-        end
-
-        context "when :with option is a singular decorator" do
-          let(:options) { {with: ProductDecorator} }
-
-          it "uses a CollectionDecorator of the specified decorator" do
-            ProductDecorator.should_receive(:decorate_collection).with(associated, context: context).and_return(:decorated_collection)
-            expect(decorated_association.call).to be :decorated_collection
-          end
-        end
-
-        context "when :with option was not given" do
-          context "when the collection itself is decoratable" do
-            before { associated.stub decorator_class: ProductsDecorator }
-
-            it "infers the decorator" do
-              ProductsDecorator.should_receive(:decorate).with(associated, context: context).and_return(:decorated_collection)
-              expect(decorated_association.call).to be :decorated_collection
-            end
-          end
-
-          context "when the collection is not decoratable" do
-            it "uses a CollectionDecorator of inferred decorators" do
-              CollectionDecorator.should_receive(:decorate).with(associated, context: context).and_return(:decorated_collection)
-              expect(decorated_association.call).to be :decorated_collection
-            end
-          end
-        end
-      end
-
-      context "with a scope" do
-        let(:options) { {scope: :foo} }
-        let(:associated) { double(foo: scoped) }
-        let(:scoped) { Product.new }
-
+      context "when the :scope option was given" do
         it "applies the scope before decoration" do
-          expect(decorated_association.call.source).to be scoped
-        end
-      end
-    end
+          factory = double
+          Factory.stub new: factory
+          scoped = double
+          source = double(association: double(applied_scope: scoped))
+          owner = double(source: source, context: {})
+          decorated_association = DecoratedAssociation.new(owner, :association, scope: :applied_scope)
+          decorated = double
 
-    describe "#context" do
-      let(:owner_context) { {some: "context"} }
-      let(:options) { {} }
-      let(:owner) { double(context: owner_context) }
-      let(:decorated_association) { DecoratedAssociation.new(owner, :association, options) }
-
-      context "when :context option was given" do
-        let(:options) { {context: context} }
-
-        context "and is callable" do
-          let(:context) { ->(*){ :dynamic_context } }
-
-          it "calls it with the owner's context" do
-            context.should_receive(:call).with(owner_context)
-            decorated_association.context
-          end
-
-          it "returns the lambda's return value" do
-            expect(decorated_association.context).to be :dynamic_context
-          end
-        end
-
-        context "and is not callable" do
-          let(:context) { {other: "context"} }
-
-          it "returns the specified value" do
-            expect(decorated_association.context).to be context
-          end
-        end
-      end
-
-      context "when :context option was not given" do
-        it "returns the owner's context" do
-          expect(decorated_association.context).to be owner_context
-        end
-
-        it "returns the new context if the owner's context changes" do
-          new_context = {other: "context"}
-          owner.stub context: new_context
-
-          expect(decorated_association.context).to be new_context
+          factory.should_receive(:decorate).with(scoped, anything()).and_return(decorated)
+          expect(decorated_association.call).to be decorated
         end
       end
     end

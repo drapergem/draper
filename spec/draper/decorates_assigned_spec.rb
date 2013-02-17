@@ -49,7 +49,7 @@ module Draper
           controller = controller_class.new
           controller.instance_variable_set "@article", source
 
-          factory.should_receive(:decorate).with(source).and_return(:decorated)
+          factory.should_receive(:decorate).with(source, context_args: controller).and_return(:decorated)
           expect(controller.article).to be :decorated
         end
 
