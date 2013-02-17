@@ -9,19 +9,15 @@ module Draper
       @association = association
 
       @scope = options[:scope]
-      @context = options.fetch(:context, ->(context){ context })
 
-      @factory = Draper::Factory.new(options.slice(:with))
+      decorator_class = options[:with]
+      context = options.fetch(:context, ->(context){ context })
+      @factory = Draper::Factory.new(with: decorator_class, context: context)
     end
 
     def call
       decorate unless defined?(@decorated)
       @decorated
-    end
-
-    def context
-      return @context.call(owner.context) if @context.respond_to?(:call)
-      @context
     end
 
     private
@@ -32,7 +28,7 @@ module Draper
       associated = owner.source.send(association)
       associated = associated.send(scope) if scope
 
-      @decorated = factory.decorate(associated, context: context)
+      @decorated = factory.decorate(associated, context_args: owner.context)
     end
 
   end

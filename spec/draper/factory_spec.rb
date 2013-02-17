@@ -104,6 +104,48 @@ module Draper
         decorator.should_receive(:call).with(source, options).and_return(:decorated)
         expect(worker.call(options)).to be :decorated
       end
+
+      context "when the :context option is callable" do
+        it "calls it" do
+          worker = Factory::Worker.new(double, double)
+          decorator = ->(*){}
+          worker.stub decorator: decorator
+          context = {foo: "bar"}
+
+          decorator.should_receive(:call).with(anything(), context: context)
+          worker.call(context: ->{ context })
+        end
+
+        it "receives arguments from the :context_args option" do
+          worker = Factory::Worker.new(double, double)
+          worker.stub decorator: ->(*){}
+          context = ->{}
+
+          context.should_receive(:call).with(:foo, :bar)
+          worker.call(context: context, context_args: [:foo, :bar])
+        end
+      end
+
+      context "when the :context option is not callable" do
+        it "doesn't call it" do
+          worker = Factory::Worker.new(double, double)
+          decorator = ->(*){}
+          worker.stub decorator: decorator
+          context = {foo: "bar"}
+
+          decorator.should_receive(:call).with(anything(), context: context)
+          worker.call(context: context)
+        end
+      end
+
+      it "does not pass the :context_args option to the decorator" do
+        worker = Factory::Worker.new(double, double)
+        decorator = ->(*){}
+        worker.stub decorator: decorator
+
+        decorator.should_receive(:call).with(anything(), foo: "bar")
+        worker.call(foo: "bar", context_args: [])
+      end
     end
 
     describe "#decorator" do
