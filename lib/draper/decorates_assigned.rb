@@ -19,7 +19,12 @@ module Draper
     #   @param [Symbols*] variables
     #     names of the instance variables to decorate (without the `@`).
     #   @param [Hash] options
-    #     see {Factory#initialize}
+    #   @option options [Decorator, CollectionDecorator] :with (nil)
+    #     decorator class to use. If nil, it is inferred from the instance
+    #     variable.
+    #   @option options [Hash, #call] :context
+    #     extra data to be stored in the decorator. If a Proc is given, it will
+    #     be passed the controller and should return a new context hash.
     def decorates_assigned(*variables)
       factory = Draper::Factory.new(variables.extract_options!)
 
@@ -29,7 +34,7 @@ module Draper
 
         define_method variable do
           return instance_variable_get(decorated) if instance_variable_defined?(decorated)
-          instance_variable_set decorated, factory.decorate(instance_variable_get(undecorated))
+          instance_variable_set decorated, factory.decorate(instance_variable_get(undecorated), context_args: self)
         end
 
         helper_method variable
