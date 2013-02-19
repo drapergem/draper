@@ -80,7 +80,7 @@ module Draper
 
       def update_context(options)
         args = options.delete(:context_args)
-        options[:context] = options[:context].call(*args) if options[:context].respond_to?(:call)
+        options[:context] = options[:context].call(*Array.wrap(args)) if options[:context].respond_to?(:call)
       end
     end
   end

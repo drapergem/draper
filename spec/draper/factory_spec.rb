@@ -124,6 +124,16 @@ module Draper
           context.should_receive(:call).with(:foo, :bar)
           worker.call(context: context, context_args: [:foo, :bar])
         end
+
+        it "wraps non-arrays passed to :context_args" do
+          worker = Factory::Worker.new(double, double)
+          worker.stub decorator: ->(*){}
+          context = ->{}
+          hash = {foo: "bar"}
+
+          context.should_receive(:call).with(hash)
+          worker.call(context: context, context_args: hash)
+        end
       end
 
       context "when the :context option is not callable" do
