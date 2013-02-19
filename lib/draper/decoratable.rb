@@ -15,12 +15,13 @@ module Draper
     # @param [Hash] options
     #   see {Decorator#initialize}
     def decorate(options = {})
-      decorator_class.decorate(self, options)
+      namespace = options.delete(:namespace)
+      decorator_class(namespace).decorate(self, options)
     end
 
     # (see ClassMethods#decorator_class)
-    def decorator_class
-      self.class.decorator_class
+    def decorator_class(namespace=nil)
+      self.class.decorator_class(namespace)
     end
 
     # The list of decorators that have been applied to the object.
@@ -52,16 +53,20 @@ module Draper
       # @param [Hash] options
       #   see {Decorator.decorate_collection}.
       def decorate(options = {})
-        decorator_class.decorate_collection(scoped, options.reverse_merge(with: nil))
+        decorator_class(options[:namespace]).decorate_collection(scoped, options.reverse_merge(with: nil))
       end
 
       # Infers the decorator class to be used by {Decoratable#decorate} (e.g.
       # `Product` maps to `ProductDecorator`).
       #
       # @return [Class] the inferred decorator class.
-      def decorator_class
-        prefix = respond_to?(:model_name) ? model_name : name
-        "#{prefix}Decorator".constantize
+      # @param [Module] namespace (nil)
+      #   see {Decorator.decorate_collection}
+      def decorator_class(namespace=nil)
+        prefix         = respond_to?(:model_name) ? model_name : name
+        decorator_name = [(namespace && namespace.name), "#{prefix}Decorator"].compact.join("::")
+
+        decorator_name.constantize
       rescue NameError
         raise Draper::UninferrableDecoratorError.new(self)
       end

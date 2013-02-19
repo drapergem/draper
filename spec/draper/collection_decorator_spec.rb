@@ -37,6 +37,22 @@ module Draper
       end
     end
 
+    describe "with decorator namespace" do
+      it "stores the namespace itself" do
+        decorator = CollectionDecorator.new([], namespace: DecoratorNamespace)
+
+        expect(decorator.decorator_namespace).to be DecoratorNamespace
+      end
+
+      it "passes the namespace to the individual decorators" do
+        decorator = CollectionDecorator.new([Product.new, Product.new], namespace: DecoratorNamespace)
+
+        decorator.each do |item|
+          expect(item).to be_an_instance_of(DecoratorNamespace::ProductDecorator)
+        end
+      end
+    end
+
     describe "#context=" do
       it "updates the stored context" do
         decorator = CollectionDecorator.new([], context: {some: "context"})

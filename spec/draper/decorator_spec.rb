@@ -145,6 +145,15 @@ module Draper
           ProductDecorator.decorate_collection([], options)
         end
       end
+
+      context "with a custom decorator namespace" do
+        it "passes the namespace option to the collection decorator" do
+          source = [Model.new]
+
+          CollectionDecorator.should_receive(:new).with(source, with: nil, namespace: DecoratorNamespace)
+          Decorator.decorate_collection(source, with: nil, namespace: DecoratorNamespace)
+        end
+      end
     end
 
     describe ".decorates" do
