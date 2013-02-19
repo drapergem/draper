@@ -156,6 +156,22 @@ module Draper
         end
       end
 
+      context "when a namespace is supplied" do
+        context "for classes" do
+          it "infers the decorator from the class and provided namespace" do
+            expect(Product.decorator_class(DecoratorNamespace)).to be DecoratorNamespace::ProductDecorator
+          end
+        end
+
+        context "for ActiveModel classes" do
+          it "infers the decorator from the model name and provided namespace" do
+            Product.stub(:model_name).and_return("Other")
+
+            expect(Product.decorator_class(DecoratorNamespace)).to be DecoratorNamespace::OtherDecorator
+          end
+        end
+      end
+
       context "when the decorator can't be inferred" do
         it "throws an UninferrableDecoratorError" do
           expect{Model.decorator_class}.to raise_error UninferrableDecoratorError
