@@ -53,7 +53,8 @@ module Draper
       # @param [Hash] options
       #   see {Decorator.decorate_collection}.
       def decorate(options = {})
-        decorator_class(options[:namespace]).decorate_collection(scoped, options.reverse_merge(with: nil))
+        collection = Rails::VERSION::MAJOR >= 4 ? all : scoped
+        decorator_class(options[:namespace]).decorate_collection(collection, options.reverse_merge(with: nil))
       end
 
       # Infers the decorator class to be used by {Decoratable#decorate} (e.g.
