@@ -3,6 +3,9 @@ language: ruby
 before_install:
   - gem install bundler --pre
 
+services:
+  - mongodb
+
 rvm:
   - 1.9.3
   - 2.0.0
