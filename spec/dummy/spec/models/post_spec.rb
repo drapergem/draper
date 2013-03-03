@@ -1,14 +1,6 @@
 require 'spec_helper'
+require 'shared_examples/decoratable'
 
 describe Post do
-  describe "#==" do
-    it "is true for other instances' decorators" do
-      Post.create
-      one = Post.first
-      other = Post.first
-
-      expect(one).not_to be other
-      expect(one == other.decorate).to be_true
-    end
-  end
+  it_behaves_like "a decoratable model"
 end
