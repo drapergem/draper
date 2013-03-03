@@ -1,5 +1,6 @@
 require 'bundler/setup'
 require 'draper'
+require 'rails/version'
 require 'action_controller'
 require 'action_controller/test_case'
 

@@ -46,8 +46,8 @@ describe PostDecorator do
   end
 
   it "serializes to XML" do
-    # Rails < 3.2 does not use `serializable_hash` in `to_xml`
-    pending if Rails.version.to_f < 3.2
+    pending("Rails < 3.2 does not use `serializable_hash` in `to_xml`") if Rails.version.to_f < 3.2
+
     xml = Capybara.string(decorator.to_xml)
     expect(xml).to have_css "post > updated-at", text: "overridden"
   end
