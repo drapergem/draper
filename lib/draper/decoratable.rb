@@ -68,7 +68,8 @@ module Draper
         decorator_name = [(namespace && namespace.name), "#{prefix}Decorator"].compact.join("::")
 
         decorator_name.constantize
-      rescue NameError
+      rescue NameError => error
+        raise unless error.missing_name?(decorator_name)
         raise Draper::UninferrableDecoratorError.new(self)
       end
 

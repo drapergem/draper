@@ -154,6 +154,13 @@ module Draper
           Decorator.decorate_collection(source, with: nil, namespace: DecoratorNamespace)
         end
       end
+
+      context "when a NameError is thrown" do
+        it "re-raises that error" do
+          String.any_instance.stub(:constantize).and_return{Draper::DecoratedEnumerableProxy}
+          expect{ProductDecorator.decorate_collection([])}.to raise_error NameError, /Draper::DecoratedEnumerableProxy/
+        end
+      end
     end
 
     describe ".decorates" do
@@ -179,20 +186,23 @@ module Draper
     end
 
     describe ".source_class" do
+      protect_class ProductDecorator
+      protect_class Namespaced::ProductDecorator
+
       context "when not set by .decorates" do
-        it "raises an error for a so-named 'Decorator'" do
+        it "raises an UninferrableSourceError for a so-named 'Decorator'" do
           expect{Decorator.source_class}.to raise_error UninferrableSourceError
         end
 
-        it "raises an error for anonymous decorators" do
+        it "raises an UninferrableSourceError for anonymous decorators" do
           expect{Class.new(Decorator).source_class}.to raise_error UninferrableSourceError
         end
 
-        it "raises an error for a decorator without a model" do
+        it "raises an UninferrableSourceError for a decorator without a model" do
           expect{OtherDecorator.source_class}.to raise_error UninferrableSourceError
         end
 
-        it "raises an error for other naming conventions" do
+        it "raises an UninferrableSourceError for other naming conventions" do
           expect{ProductPresenter.source_class}.to raise_error UninferrableSourceError
         end
 
@@ -202,6 +212,13 @@ module Draper
 
         it "infers namespaced sources" do
           expect(Namespaced::ProductDecorator.source_class).to be Namespaced::Product
+        end
+
+        context "when an unrelated NameError is thrown" do
+          it "re-raises that error" do
+            String.any_instance.stub(:constantize).and_return{SomethingThatDoesntExist}
+            expect{ProductDecorator.source_class}.to raise_error NameError, /SomethingThatDoesntExist/
+          end
         end
       end
     end
