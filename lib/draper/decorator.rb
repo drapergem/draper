@@ -212,8 +212,10 @@ module Draper
 
     # @return [Class] the class created by {decorate_collection}.
     def self.collection_decorator_class(namespace=nil)
-      collection_decorator_name(namespace).constantize
-    rescue NameError
+      name = collection_decorator_name(namespace)
+      name.constantize
+    rescue NameError => error
+      raise if name && !error.missing_name?(name)
       Draper::CollectionDecorator
     end
 
@@ -225,8 +227,10 @@ module Draper
     end
 
     def self.inferred_source_class
-      source_name.constantize
-    rescue NameError
+      name = source_name
+      name.constantize
+    rescue NameError => error
+      raise if name && !error.missing_name?(name)
       raise Draper::UninferrableSourceError.new(self)
     end
 
