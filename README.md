@@ -117,7 +117,7 @@ rails generate decorator Article
 
 ### Accessing Helpers
 
-Normal Rails helpers are still useful for lots tasks. Both Rails' provided helper and those defined in your app can be accessed via the `h` method:
+Normal Rails helpers are still useful for lots of tasks. Both Rails' provided helper and those defined in your app can be accessed via the `h` method:
 
 ```ruby
 class ArticleDecorator < Draper::Decorator
