@@ -48,7 +48,8 @@ module Draper
 
       def call(options)
         update_context options
-        decorator(options[:namespace]).call(source, options)
+        return decorator(options[:namespace]).call(source, options) if @decorator_class
+        source.decorate(options)
       end
 
       def decorator(namespace=nil)
