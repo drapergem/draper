@@ -48,18 +48,22 @@ module Draper
       end
 
       def decorator
-        return collection_decorator if collection?
-        decorator_class.method(:decorate)
+        return decorator_method(decorator_class) if decorator_class
+        return source_decorator if decoratable?
+        return decorator_method(Draper::CollectionDecorator) if collection?
+        raise Draper::UninferrableDecoratorError.new(source.class)
       end
 
       private
 
-      attr_reader :source
+      attr_reader :decorator_class, :source
 
-      def collection_decorator
-        klass = decorator_class || Draper::CollectionDecorator
+      def source_decorator
+        ->(source, options) { source.decorate(options) }
+      end
 
-        if klass.respond_to?(:decorate_collection)
+      def decorator_method(klass)
+        if collection? && klass.respond_to?(:decorate_collection)
           klass.method(:decorate_collection)
         else
           klass.method(:decorate)
@@ -70,12 +74,8 @@ module Draper
         source.respond_to?(:first)
       end
 
-      def decorator_class
-        @decorator_class || source_decorator_class
-      end
-
-      def source_decorator_class
-        source.decorator_class if source.respond_to?(:decorator_class)
+      def decoratable?
+        source.respond_to?(:decorate)
       end
 
       def update_context(options)

@@ -170,12 +170,24 @@ module Draper
         end
 
         context "when decorator_class is unspecified" do
-          it "returns the .decorate method from the source's decorator" do
-            decorator_class = Class.new(Decorator)
-            source = double(decorator_class: decorator_class)
-            worker = Factory::Worker.new(nil, source)
+          context "and the source is decoratable" do
+            it "returns the source's #decorate method" do
+              source = double
+              options = {foo: "bar"}
+              worker = Factory::Worker.new(nil, source)
 
-            expect(worker.decorator).to eq decorator_class.method(:decorate)
+              source.should_receive(:decorate).with(options).and_return(:decorated)
+              expect(worker.decorator.call(source, options)).to be :decorated
+            end
+          end
+
+          context "and the source is not decoratable" do
+            it "raises an error" do
+              source = double
+              worker = Factory::Worker.new(nil, source)
+
+              expect{worker.decorator}.to raise_error UninferrableDecoratorError
+            end
           end
         end
       end
@@ -201,13 +213,13 @@ module Draper
 
         context "when decorator_class is unspecified" do
           context "and the source is decoratable" do
-            it "returns the .decorate method from the source's decorator" do
-              decorator_class = Class.new(CollectionDecorator)
+            it "returns the source's #decorate method" do
               source = []
-              source.stub decorator_class: decorator_class
+              options = {foo: "bar"}
               worker = Factory::Worker.new(nil, source)
 
-              expect(worker.decorator).to eq decorator_class.method(:decorate)
+              source.should_receive(:decorate).with(options).and_return(:decorated)
+              expect(worker.decorator.call(source, options)).to be :decorated
             end
           end
 
