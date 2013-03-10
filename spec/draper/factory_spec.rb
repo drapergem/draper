@@ -178,18 +178,6 @@ module Draper
             expect(worker.decorator).to eq decorator_class.method(:decorate)
           end
         end
-
-        context "when a decorator namespace is supplied" do
-          it "passes the namespace option to the source when finding the decorator" do
-            decorator_class = Class.new(Decorator)
-            namespace = Module.new
-            source = double(decorator_class: decorator_class)
-            worker = Factory::Worker.new(nil, source)
-
-            source.should_receive(:decorator_class).with(namespace)
-            expect(worker.decorator(namespace)).to eq decorator_class.method(:decorate)
-          end
-        end
       end
 
       context "for a collection source" do

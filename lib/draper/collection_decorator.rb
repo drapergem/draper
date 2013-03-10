@@ -8,10 +8,6 @@ module Draper
     #   {#initialize}.
     attr_reader :decorator_class
 
-    # @return [Module] then namespace passed to each item if necessary to
-    #   infer a decorator class, as set by {#initialize}
-    attr_reader :decorator_namespace
-
     # @return [Hash] extra data to be used in user-defined methods, and passed
     #   to each item's decorator.
     attr_accessor :context
@@ -30,10 +26,9 @@ module Draper
     #   extra data to be stored in the collection decorator and used in
     #   user-defined methods, and passed to each item's decorator.
     def initialize(source, options = {})
-      options.assert_valid_keys(:with, :namespace, :context)
+      options.assert_valid_keys(:with, :context)
       @source = source
       @decorator_class = options[:with]
-      @decorator_namespace = options[:namespace]
       @context = options.fetch(:context, {})
     end
 
@@ -78,7 +73,7 @@ module Draper
 
     # Decorates the given item.
     def decorate_item(item)
-      item_decorator.call(item, namespace: decorator_namespace, context: context)
+      item_decorator.call(item, context: context)
     end
 
     private
