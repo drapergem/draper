@@ -1,8 +1,5 @@
 language: ruby
 
-before_install:
-  - gem install bundler
-
 services:
   - mongodb
 
