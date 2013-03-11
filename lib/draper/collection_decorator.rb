@@ -74,7 +74,7 @@ module Draper
     def kind_of?(klass)
       decorated_collection.kind_of?(klass) || super
     end
-    alias :is_a? :kind_of?
+    alias_method :is_a?, :kind_of?
 
     protected
 
