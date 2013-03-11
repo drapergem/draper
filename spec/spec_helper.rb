@@ -27,13 +27,6 @@ module Namespaced
   class OtherDecorator < Draper::Decorator; end
 end
 
-module DecoratorNamespace
-  class ProductDecorator < Draper::Decorator; end
-  class ProductsDecorator < Draper::CollectionDecorator; end
-
-  class OtherDecorator < Draper::Decorator; end
-end
-
 # After each example, revert changes made to the class
 def protect_class(klass)
   before { stub_const klass.name, Class.new(klass) }

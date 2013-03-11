@@ -146,15 +146,6 @@ module Draper
         end
       end
 
-      context "with a custom decorator namespace" do
-        it "passes the namespace option to the collection decorator" do
-          source = [Model.new]
-
-          CollectionDecorator.should_receive(:new).with(source, with: nil, namespace: DecoratorNamespace)
-          Decorator.decorate_collection(source, with: nil, namespace: DecoratorNamespace)
-        end
-      end
-
       context "when a NameError is thrown" do
         it "re-raises that error" do
           String.any_instance.stub(:constantize).and_return{Draper::DecoratedEnumerableProxy}

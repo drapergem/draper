@@ -22,10 +22,6 @@ module Draper
     #   @option options [Decorator, CollectionDecorator] :with (nil)
     #     decorator class to use. If nil, it is inferred from the instance
     #     variable.
-    #   @option options [Module, nil] :namespace (nil)
-    #     a namespace within which to look for inferred decorators (e.g. if
-    #     +:namespace => API+, a model +Product+ would be decorated with
-    #     +API::ProductDecorator+ (if defined)
     #   @option options [Hash, #call] :context
     #     extra data to be stored in the decorator. If a Proc is given, it will
     #     be passed the controller and should return a new context hash.

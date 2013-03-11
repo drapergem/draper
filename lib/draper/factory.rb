@@ -5,16 +5,12 @@ module Draper
     # @option options [Decorator, CollectionDecorator] :with (nil)
     #   decorator class to use. If nil, it is inferred from the object
     #   passed to {#decorate}.
-    # @option options [Module, nil] :namespace (nil)
-    #   a namespace within which to look for an inferred decorator (e.g. if
-    #   +:namespace => API+, a model +Product+ would be decorated with
-    #   +API::ProductDecorator+ (if defined)
     # @option options [Hash, #call] context
     #   extra data to be stored in created decorators. If a proc is given, it
     #   will be called each time {#decorate} is called and its return value
     #   will be used as the context.
     def initialize(options = {})
-      options.assert_valid_keys(:with, :namespace, :context)
+      options.assert_valid_keys(:with, :context)
       @decorator_class = options.delete(:with)
       @default_options = options
     end
@@ -48,22 +44,26 @@ module Draper
 
       def call(options)
         update_context options
-        decorator(options[:namespace]).call(source, options)
+        decorator.call(source, options)
       end
 
-      def decorator(namespace=nil)
-        return collection_decorator(namespace) if collection?
-        decorator_class(namespace).method(:decorate)
+      def decorator
+        return decorator_method(decorator_class) if decorator_class
+        return source_decorator if decoratable?
+        return decorator_method(Draper::CollectionDecorator) if collection?
+        raise Draper::UninferrableDecoratorError.new(source.class)
       end
 
       private
 
-      attr_reader :source
+      attr_reader :decorator_class, :source
 
-      def collection_decorator(namespace=nil)
-        klass = decorator_class(namespace) || Draper::CollectionDecorator
+      def source_decorator
+        ->(source, options) { source.decorate(options) }
+      end
 
-        if klass.respond_to?(:decorate_collection)
+      def decorator_method(klass)
+        if collection? && klass.respond_to?(:decorate_collection)
           klass.method(:decorate_collection)
         else
           klass.method(:decorate)
@@ -74,12 +74,8 @@ module Draper
         source.respond_to?(:first)
       end
 
-      def decorator_class(namespace=nil)
-        @decorator_class || source_decorator_class(namespace)
-      end
-
-      def source_decorator_class(namespace=nil)
-        source.decorator_class(namespace) if source.respond_to?(:decorator_class)
+      def decoratable?
+        source.respond_to?(:decorate)
       end
 
       def update_context(options)
