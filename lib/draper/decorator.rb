@@ -93,6 +93,10 @@ module Draper
     #   name of the association to decorate (e.g. `:products`).
     # @option options [Class] :with
     #   the decorator to apply to the association.
+    # @option options [Module, nil] :namespace (nil)
+    #   a namespace within which to look for an inferred decorator (e.g. if
+    #   +:namespace => API+, a model +Product+ would be decorated with
+    #   +API::ProductDecorator+ (if defined)
     # @option options [Symbol] :scope
     #   a scope to apply when fetching the association.
     # @option options [Hash, #call] :context
@@ -133,6 +137,10 @@ module Draper
     # @option options [Class, nil] :with (self)
     #   the decorator class used to decorate each item. When `nil`, it is
     #   inferred from each item.
+    # @option options [Module, nil] :namespace (nil)
+    #   a namespace within which to look for an inferred decorator (e.g. if
+    #   +:namespace => API+, a model +Product+ would be decorated with
+    #   +API::ProductDecorator+ (if defined)
     # @option options [Hash] :context
     #   extra data to be stored in the collection decorator.
     def self.decorate_collection(source, options = {})
@@ -205,8 +213,8 @@ module Draper
     singleton_class.delegate :model_name, to: :source_class
 
     # @return [Class] the class created by {decorate_collection}.
-    def self.collection_decorator_class
-      name = collection_decorator_name
+    def self.collection_decorator_class(options = {})
+      name = collection_decorator_name(options)
       name.constantize
     rescue NameError => error
       raise if name && !error.missing_name?(name)
@@ -228,10 +236,12 @@ module Draper
       raise Draper::UninferrableSourceError.new(self)
     end
 
-    def self.collection_decorator_name
+    def self.collection_decorator_name(options = {})
       plural = source_name.pluralize
       raise NameError if plural == source_name
-      "#{plural}Decorator"
+      namespace = options[:namespace]
+      base_name = "#{plural}Decorator"
+      decorator_name = namespace ? "#{namespace.name}::#{base_name}" : base_name
     end
 
     def handle_multiple_decoration(options)

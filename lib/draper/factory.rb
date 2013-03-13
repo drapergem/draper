@@ -5,6 +5,10 @@ module Draper
     # @option options [Decorator, CollectionDecorator] :with (nil)
     #   decorator class to use. If nil, it is inferred from the object
     #   passed to {#decorate}.
+    # @option options [Module, nil] :namespace (nil)
+    #   a namespace within which to look for an inferred decorator (e.g. if
+    #   +:namespace => API+, a model +Product+ would be decorated with
+    #   +API::ProductDecorator+ (if defined)
     # @option options [Hash, #call] context
     #   extra data to be stored in created decorators. If a proc is given, it
     #   will be called each time {#decorate} is called and its return value

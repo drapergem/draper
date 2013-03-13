@@ -4,7 +4,7 @@ module Draper
     include Draper::ViewHelpers
     extend Draper::Delegation
 
-    VALID_OPTIONS = [:with] + Decorator::VALID_OPTIONS
+    VALID_OPTIONS = [:with] + Decoratable::VALID_OPTIONS
 
     # @return [Class] the decorator class used to decorate each item, as set by
     #   {#initialize}.
@@ -33,6 +33,10 @@ module Draper
     #   inferred from the collection decorator class if possible (e.g.
     #   `ProductsDecorator` maps to `ProductDecorator`), otherwise each item's
     #   {Decoratable#decorate decorate} method will be used.
+    # @option options [Module, nil] :namespace (nil)
+    #   a namespace within which to look for an inferred decorator (e.g. if
+    #   +:namespace => API+, a model +Product+ would be decorated with
+    #   +API::ProductDecorator+ (if defined)
     # @option options [Hash] :context ({})
     #   extra data to be stored in the collection decorator and used in
     #   user-defined methods, and passed to each item's decorator.
@@ -86,7 +90,7 @@ module Draper
       if decorator_class
         decorator_class.decorate(item, @decoration_options.slice(*Decorator::VALID_OPTIONS))
       else
-        item.decorate(@decoration_options.slice(*Decorator::VALID_OPTIONS))
+        item.decorate(@decoration_options.slice(*Decoratable::VALID_OPTIONS))
       end
     end
 
