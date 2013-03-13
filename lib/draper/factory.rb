@@ -10,9 +10,9 @@ module Draper
     #   will be called each time {#decorate} is called and its return value
     #   will be used as the context.
     def initialize(options = {})
-      options.assert_valid_keys(:with, :context)
-      @decorator_class = options.delete(:with)
-      @default_options = options
+      options.assert_valid_keys(*CollectionDecorator::VALID_OPTIONS)
+      @decorator_class = options[:with]
+      @default_options = options.slice(*Decorator::VALID_OPTIONS)
     end
 
     # Decorates an object, inferring whether to create a singular or collection

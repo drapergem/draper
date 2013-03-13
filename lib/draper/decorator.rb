@@ -7,6 +7,8 @@ module Draper
     include ActiveModel::Serializers::JSON
     include ActiveModel::Serializers::Xml
 
+    VALID_OPTIONS = [:context]
+
     # @return the object being decorated.
     attr_reader :source
     alias_method :model, :source
@@ -27,7 +29,7 @@ module Draper
     #   extra data to be stored in the decorator and used in user-defined
     #   methods.
     def initialize(source, options = {})
-      options.assert_valid_keys(:context)
+      options.assert_valid_keys(*Decorator::VALID_OPTIONS)
       @source = source
       @context = options.fetch(:context, {})
       handle_multiple_decoration(options) if source.instance_of?(self.class)
@@ -100,7 +102,7 @@ module Draper
     #   context and should return a new context hash for the association.
     # @return [void]
     def self.decorates_association(association, options = {})
-      options.assert_valid_keys(:with, :scope, :context)
+      options.assert_valid_keys(*DecoratedAssociation::VALID_OPTIONS)
       define_method(association) do
         decorated_associations[association] ||= Draper::DecoratedAssociation.new(self, association, options)
         decorated_associations[association].call
@@ -134,7 +136,7 @@ module Draper
     # @option options [Hash] :context
     #   extra data to be stored in the collection decorator.
     def self.decorate_collection(source, options = {})
-      options.assert_valid_keys(:with, :context)
+      options.assert_valid_keys(*CollectionDecorator::VALID_OPTIONS)
       collection_decorator_class.new(source, options.reverse_merge(with: self))
     end
 

@@ -4,13 +4,24 @@ module Draper
     include Draper::ViewHelpers
     extend Draper::Delegation
 
+    VALID_OPTIONS = [:with] + Decorator::VALID_OPTIONS
+
     # @return [Class] the decorator class used to decorate each item, as set by
     #   {#initialize}.
-    attr_reader :decorator_class
+    def decorator_class
+      @decoration_options[:with]
+    end
 
     # @return [Hash] extra data to be used in user-defined methods, and passed
     #   to each item's decorator.
-    attr_accessor :context
+    def context
+      @decoration_options[:context]
+    end
+
+    def context=(value)
+      @decoration_options[:context] = value
+      each {|item| item.context = value } if @decorated_collection
+    end
 
     array_methods = Array.instance_methods - Object.instance_methods
     delegate :==, :as_json, *array_methods, to: :decorated_collection
@@ -26,10 +37,9 @@ module Draper
     #   extra data to be stored in the collection decorator and used in
     #   user-defined methods, and passed to each item's decorator.
     def initialize(source, options = {})
-      options.assert_valid_keys(:with, :context)
-      @source = source
-      @decorator_class = options[:with]
-      @context = options.fetch(:context, {})
+      options.assert_valid_keys(*CollectionDecorator::VALID_OPTIONS)
+      @source             = source
+      @decoration_options = options.reverse_merge(context: {})
     end
 
     class << self
@@ -56,11 +66,6 @@ module Draper
       "#<#{self.class.name} of #{decorator_class || "inferred decorators"} for #{source.inspect}>"
     end
 
-    def context=(value)
-      @context = value
-      each {|item| item.context = value } if @decorated_collection
-    end
-
     # @return [true]
     def decorated?
       true
@@ -78,17 +83,12 @@ module Draper
 
     # Decorates the given item.
     def decorate_item(item)
-      item_decorator.call(item, context: context)
-    end
-
-    private
-
-    def item_decorator
       if decorator_class
-        decorator_class.method(:decorate)
+        decorator_class.decorate(item, @decoration_options.slice(*Decorator::VALID_OPTIONS))
       else
-        ->(item, options) { item.decorate(options) }
+        item.decorate(@decoration_options.slice(*Decorator::VALID_OPTIONS))
       end
     end
+
   end
 end

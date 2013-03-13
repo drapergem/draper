@@ -20,13 +20,6 @@ module Draper
         DecoratedAssociation.new(double, :association, options)
       end
 
-      describe ":with option" do
-        it "defaults to nil" do
-          Factory.should_receive(:new).with(with: nil, context: anything())
-          DecoratedAssociation.new(double, :association, {})
-        end
-      end
-
       describe ":context option" do
         it "defaults to the identity function" do
           Factory.should_receive(:new).with do |options|
