@@ -5,7 +5,7 @@ module Draper
 
     describe "#initialize" do
       it "accepts valid options" do
-        valid_options = {with: Decorator, scope: :foo, context: {}}
+        valid_options = {with: Decorator, scope: :foo, namespace: DecoratorNamespace, context: {}}
         expect{DecoratedAssociation.new(Decorator.new(Model.new), :association, valid_options)}.not_to raise_error
       end
 
@@ -14,17 +14,10 @@ module Draper
       end
 
       it "creates a factory" do
-        options = {with: Decorator, context: {foo: "bar"}}
+        options = {with: Decorator, namespace: nil, context: {foo: "bar"}}
 
         Factory.should_receive(:new).with(options)
         DecoratedAssociation.new(double, :association, options)
-      end
-
-      describe ":with option" do
-        it "defaults to nil" do
-          Factory.should_receive(:new).with(with: nil, context: anything())
-          DecoratedAssociation.new(double, :association, {})
-        end
       end
 
       describe ":context option" do

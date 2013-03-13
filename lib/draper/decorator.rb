@@ -7,6 +7,8 @@ module Draper
     include ActiveModel::Serializers::JSON
     include ActiveModel::Serializers::Xml
 
+    VALID_OPTIONS = [:context]
+
     # @return the object being decorated.
     attr_reader :source
     alias_method :model, :source
@@ -27,7 +29,7 @@ module Draper
     #   extra data to be stored in the decorator and used in user-defined
     #   methods.
     def initialize(source, options = {})
-      options.assert_valid_keys(:context)
+      options.assert_valid_keys(*Decorator::VALID_OPTIONS)
       @source = source
       @context = options.fetch(:context, {})
       handle_multiple_decoration(options) if source.instance_of?(self.class)
@@ -91,6 +93,10 @@ module Draper
     #   name of the association to decorate (e.g. `:products`).
     # @option options [Class] :with
     #   the decorator to apply to the association.
+    # @option options [Module, nil] :namespace (nil)
+    #   a namespace within which to look for an inferred decorator (e.g. if
+    #   +:namespace => API+, a model +Product+ would be decorated with
+    #   +API::ProductDecorator+ (if defined)
     # @option options [Symbol] :scope
     #   a scope to apply when fetching the association.
     # @option options [Hash, #call] :context
@@ -100,7 +106,7 @@ module Draper
     #   context and should return a new context hash for the association.
     # @return [void]
     def self.decorates_association(association, options = {})
-      options.assert_valid_keys(:with, :scope, :context)
+      options.assert_valid_keys(*DecoratedAssociation::VALID_OPTIONS)
       define_method(association) do
         decorated_associations[association] ||= Draper::DecoratedAssociation.new(self, association, options)
         decorated_associations[association].call
@@ -131,10 +137,14 @@ module Draper
     # @option options [Class, nil] :with (self)
     #   the decorator class used to decorate each item. When `nil`, it is
     #   inferred from each item.
+    # @option options [Module, nil] :namespace (nil)
+    #   a namespace within which to look for an inferred decorator (e.g. if
+    #   +:namespace => API+, a model +Product+ would be decorated with
+    #   +API::ProductDecorator+ (if defined)
     # @option options [Hash] :context
     #   extra data to be stored in the collection decorator.
     def self.decorate_collection(source, options = {})
-      options.assert_valid_keys(:with, :context)
+      options.assert_valid_keys(*CollectionDecorator::VALID_OPTIONS)
       collection_decorator_class.new(source, options.reverse_merge(with: self))
     end
 
@@ -203,8 +213,8 @@ module Draper
     singleton_class.delegate :model_name, to: :source_class
 
     # @return [Class] the class created by {decorate_collection}.
-    def self.collection_decorator_class
-      name = collection_decorator_name
+    def self.collection_decorator_class(options = {})
+      name = collection_decorator_name(options)
       name.constantize
     rescue NameError => error
       raise if name && !error.missing_name?(name)
@@ -226,10 +236,12 @@ module Draper
       raise Draper::UninferrableSourceError.new(self)
     end
 
-    def self.collection_decorator_name
+    def self.collection_decorator_name(options = {})
       plural = source_name.pluralize
       raise NameError if plural == source_name
-      "#{plural}Decorator"
+      namespace = options[:namespace]
+      base_name = "#{plural}Decorator"
+      decorator_name = namespace ? "#{namespace.name}::#{base_name}" : base_name
     end
 
     def handle_multiple_decoration(options)

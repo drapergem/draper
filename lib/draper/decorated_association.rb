@@ -1,18 +1,22 @@
+require 'draper/collection_decorator'
+
 module Draper
   # @private
   class DecoratedAssociation
 
+    VALID_OPTIONS = [:scope] + CollectionDecorator::VALID_OPTIONS
+
     def initialize(owner, association, options)
-      options.assert_valid_keys(:with, :scope, :context)
+      options.assert_valid_keys(*DecoratedAssociation::VALID_OPTIONS)
 
-      @owner = owner
+      @owner       = owner
       @association = association
+      @scope       = options[:scope]
 
-      @scope = options[:scope]
+      factory_options = options.slice(*CollectionDecorator::VALID_OPTIONS)
+      factory_options[:context] ||= ->(context){ context }
 
-      decorator_class = options[:with]
-      context = options.fetch(:context, ->(context){ context })
-      @factory = Draper::Factory.new(with: decorator_class, context: context)
+      @factory = Draper::Factory.new(factory_options)
     end
 
     def call

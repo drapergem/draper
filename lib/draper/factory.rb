@@ -5,14 +5,18 @@ module Draper
     # @option options [Decorator, CollectionDecorator] :with (nil)
     #   decorator class to use. If nil, it is inferred from the object
     #   passed to {#decorate}.
+    # @option options [Module, nil] :namespace (nil)
+    #   a namespace within which to look for an inferred decorator (e.g. if
+    #   +:namespace => API+, a model +Product+ would be decorated with
+    #   +API::ProductDecorator+ (if defined)
     # @option options [Hash, #call] context
     #   extra data to be stored in created decorators. If a proc is given, it
     #   will be called each time {#decorate} is called and its return value
     #   will be used as the context.
     def initialize(options = {})
-      options.assert_valid_keys(:with, :context)
-      @decorator_class = options.delete(:with)
-      @default_options = options
+      options.assert_valid_keys(*CollectionDecorator::VALID_OPTIONS)
+      @decorator_class = options[:with]
+      @default_options = options.slice(*Decorator::VALID_OPTIONS)
     end
 
     # Decorates an object, inferring whether to create a singular or collection
