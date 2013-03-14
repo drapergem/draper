@@ -66,6 +66,8 @@ module Draper
       true
     end
 
+    alias_method :decorated_with?, :instance_of?
+
     def kind_of?(klass)
       decorated_collection.kind_of?(klass) || super
     end
