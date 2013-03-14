@@ -66,12 +66,7 @@ module Draper
       true
     end
 
-    # Checks if a given decorator has been applied to the collection.
-    #
-    # @param [Class] decorator_class
-    def decorated_with?(decorator_class)
-      self.instance_of? decorator_class
-    end
+    alias_method :decorated_with?, :instance_of?
 
     def kind_of?(klass)
       decorated_collection.kind_of?(klass) || super
