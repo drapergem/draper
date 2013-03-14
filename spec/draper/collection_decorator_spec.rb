@@ -243,6 +243,15 @@ module Draper
       end
     end
 
+    describe '#decorated_with?' do
+      it "checks if a decorator has been applied to a collection" do
+        decorator = ProductsDecorator.new([Product.new])
+
+        expect(decorator).to be_decorated_with ProductsDecorator
+        expect(decorator).not_to be_decorated_with OtherDecorator
+      end
+    end
+
     describe '#kind_of?' do
       it 'asks the kind of its decorated collection' do
         decorator = ProductsDecorator.new([])
