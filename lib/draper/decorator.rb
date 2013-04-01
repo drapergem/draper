@@ -163,7 +163,7 @@ module Draper
     #
     # @return [Boolean]
     def ==(other)
-      source.extend(Draper::Decoratable::Equality) == other
+      Draper::Decoratable::Equality.test(source, other)
     end
 
     # Checks if `self.kind_of?(klass)` or `source.kind_of?(klass)`
