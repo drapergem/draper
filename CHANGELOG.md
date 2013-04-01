@@ -1,5 +1,39 @@
 # Draper Changelog
 
+## 1.2.0
+
+[78 commits by 14 authors](https://github.com/drapergem/draper/compare/v1.1.0...v1.2.0)
+
+* [Added license to the gemspec](https://github.com/drapergem/draper/commit/731fa85f7744a12da1364a3aa94cdf6994efa9e2)
+
+* [Improvements in serialization](https://github.com/drapergem/draper/pull/448)
+
+* [Fix support for Guard in development](https://github.com/drapergem/draper/commit/93c95200277fd3922e30e74c7a7e05563747e896)
+
+* [Improved support for #capture](https://github.com/drapergem/draper/commit/efb934a6f59b9d8afe4a7fe29e9a94aae983b05c)
+
+* [CollectionDecorator now has #decorated?](https://github.com/drapergem/draper/commit/65e3c4e4573173b510440b7e80f95a87109a1d15)
+
+* [Added #respond_to_missing?](https://github.com/drapergem/draper/commit/11bb59bcf89f8e0be4ba2851eb78634caf783ecd)
+
+* [Add proper STI support](https://github.com/drapergem/draper/commit/7802d97446cf6ea130a66c2781f5a7a087d28c0a)
+
+* [Added before_remove_const callback for ActiveSupport](https://github.com/drapergem/draper/commit/9efda27c6a4f8680df4fad8f67ecb58e3f91703f)
+
+* [Accept a lambda for context](https://github.com/drapergem/draper/commit/3ab3b35e875b8b2bd99a57e4add388313e765230)
+
+* [Start testing against Ruby 2.0.0](https://github.com/drapergem/draper/commit/dbd1cbceedb0ddb3f060196cd31eb967db8a370b)
+
+* [Fix our use of #scoped per Rails 4 deprecation](https://github.com/haines/draper/commit/47ee29c3b739eee3fc28a561432ad2363c14813c)
+
+* [Properly swallow NameErrors](https://github.com/haines/draper/commit/09ad84fb712a30dd4302b9daa03d11281ac7d169)
+
+* [Delegate CollectionDecorator#kind_of? to the underlying collection](https://github.com/drapergem/draper/commit/d5975f2c5b810306a96d9485fd39d550896dc2a1)
+
+* [Make CollectionDecorators respond to #decorated_with?](https://github.com/drapergem/draper/commit/dc430b3e82de0d9cae86f7297f816e5b69d9ca58)
+
+* [Avoid using #extend in Decorator#== for performance reasons](https://github.com/drapergem/draper/commit/205a0d43b4141f7b1756fe2b44b877545eb37517)
+
 ## 1.1.0
 
 [44 commits by 6 authors](https://github.com/drapergem/draper/compare/v1.0.0...v1.1.0)
