@@ -380,13 +380,18 @@ module Draper
     end
 
     describe "#==" do
-      it "ensures the source has a decoration-aware #==" do
+      it "works for a source that does not include Decoratable" do
         source = Object.new
         decorator = Decorator.new(source)
 
-        expect(source).not_to be_a_kind_of Draper::Decoratable::Equality
-        decorator == :something
-        expect(source).to be_a_kind_of Draper::Decoratable::Equality
+        expect(decorator).to eq Decorator.new(source)
+      end
+
+      it "works for a multiply-decorated source that does not include Decoratable" do
+        source = Object.new
+        decorator = Decorator.new(source)
+
+        expect(decorator).to eq ProductDecorator.new(Decorator.new(source))
       end
 
       it "is true when source #== is true" do

@@ -5,9 +5,21 @@ module Draper
       #
       # @return [Boolean]
       def ==(other)
-        super ||
-          other.respond_to?(:decorated?) && other.decorated? &&
-          other.respond_to?(:source) && self == other.source
+        super || Equality.test_for_decorator(self, other)
+      end
+
+      # Compares an object to a possibly-decorated object.
+      #
+      # @return [Boolean]
+      def self.test(object, other)
+        return object == other if object.is_a?(Decoratable)
+        object == other || test_for_decorator(object, other)
+      end
+
+      # @private
+      def self.test_for_decorator(object, other)
+        other.respond_to?(:decorated?) && other.decorated? &&
+        other.respond_to?(:source) && test(object, other.source)
       end
     end
   end
