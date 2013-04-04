@@ -6,7 +6,7 @@ module ActiveModel
       app ||= Rails.application # Rails 3.0.x does not yield `app`
 
       Rails::Generators.configure! app.config.generators
-      require 'generators/resource_override'
+      require_relative 'generators/resource_override'
     end
   end
 end
