@@ -242,6 +242,36 @@ end
 @article = ArticleDecorator.find(params[:id])
 ```
 
+### When to decorate objects
+
+Decorators are supposed to behave very much like the models they decorate, and for that reason it is very tempting to just decorate your objects at the start of your controller action and then use the decorators throughout. *Don't*.
+
+Because decorators are designed to be consumed by the view, you should only be accessing them there. Manipulate your models to get things ready, then decorate at the last minute, right before you render the view. This avoids many of the common pitfalls that arise from attempting to modify decorators (in particular, collection decorators) after creating them.
+
+To help you make your decorators read-only, we have the `decorates_assigned` method in your controller. It adds a helper method that returns the decorated version of an instance variable:
+
+```ruby
+# app/controllers/articles_controller.rb
+class ArticlesController < ApplicationController
+  decorates_assigned :article
+
+  def show
+    @article = Article.find(params[:id])
+  end
+end
+```
+
+The `decorates_assigned :article` bit is roughly equivalent to
+
+```ruby
+def article
+  @decorated_article ||= @article.decorate
+end
+helper_method :article
+```
+
+This means that you can just replace `@article` with `article` in your views and you'll have access to an ArticleDecorator object instead. In your controller you can continue to use the `@article` instance variable to manipulate the model - for example, `@article.comments.build` to add a new blank comment for a form.
+
 ## Testing
 
 Draper supports RSpec, MiniTest::Rails, and Test::Unit, and will add the appropriate tests when you generate a decorator.
