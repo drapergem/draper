@@ -390,6 +390,29 @@ Draper::ViewContext.test_strategy :fast do
 end
 ```
 
+#### Stubbing route helper functions
+
+If you are writing isolated tests for Draper methods that call route helper
+methods, you can stub them instead of needing to require Rails.
+
+If you are using RSpec, minitest-rails, or the Test::Unit syntax of minitest,
+you already have access to the Draper `helpers` in your tests since they
+inherit from `Draper::TestCase`. If you are using minitest's spec syntax
+without minitest-rails, you can explicitly include the Draper `helpers`:
+
+```ruby
+describe YourDecorator do
+  include Draper::ViewHelpers
+end
+```
+
+Then you can stub the specific route helper functions you need using your
+preferred stubbing technique (this example uses RSpec's `stub` method):
+
+```ruby
+helpers.stub(users_path: '/users')
+```
+
 ## Advanced usage
 
 ### Shared Decorator Methods
