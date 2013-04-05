@@ -393,9 +393,12 @@ end
 #### Stubbing route helper functions
 
 If you are writing isolated tests for Draper methods that call route helper
-methods, you can stub them instead of needing to include Rails.
+methods, you can stub them instead of needing to require Rails.
 
-To get access to the Draper `helpers` in your test, include them in your tests:
+If you are using RSpec, minitest-rails, or the Test::Unit syntax of minitest,
+you already have access to the Draper `helpers` in your tests since they
+inherit from `Draper::TestCase`. If you are using minitest's spec syntax
+without minitest-rails, you can explicitly include the Draper `helpers`:
 
 ```ruby
 describe YourDecorator do
@@ -404,12 +407,11 @@ end
 ```
 
 Then you can stub the specific route helper functions you need using your
-preferred stubbing technique (this example uses mocha):
+preferred stubbing technique (this example uses RSpec's `stub` method):
 
 ```ruby
-helpers.stubs(users_path: '/users')
+helpers.stub(users_path: '/users')
 ```
-
 
 ## Advanced usage
 
