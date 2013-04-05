@@ -48,7 +48,8 @@ module Draper
       if block_given?
         decorated_collection.find(*args, &block)
       else
-        decorator_class.find(*args)
+        ActiveSupport::Deprecation.warn("Using ActiveRecord's `find` on a CollectionDecorator is deprecated. Call `find` on a model, and then decorate the result", caller)
+        decorate_item(source.find(*args))
       end
     end
 
