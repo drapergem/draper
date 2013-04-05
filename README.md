@@ -390,6 +390,27 @@ Draper::ViewContext.test_strategy :fast do
 end
 ```
 
+#### Stubbing route helper functions
+
+If you are writing isolated tests for Draper methods that call route helper
+methods, you can stub them instead of needing to include Rails.
+
+To get access to the Draper `helpers` in your test, include them in your tests:
+
+```ruby
+describe YourDecorator do
+  include Draper::ViewHelpers
+end
+```
+
+Then you can stub the specific route helper functions you need using your
+preferred stubbing technique (this example uses mocha):
+
+```ruby
+helpers.stubs(users_path: '/users')
+```
+
+
 ## Advanced usage
 
 ### Shared Decorator Methods
