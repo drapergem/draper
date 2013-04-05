@@ -131,12 +131,15 @@ module Draper
       end
 
       context "without a block" do
-        it "decorates Model.find" do
-          item_decorator = Class.new
-          decorator = CollectionDecorator.new([], with: item_decorator)
+        it "decorates source.find" do
+          source = []
+          found = stub(decorate: :decorated)
+          decorator = CollectionDecorator.new(source)
 
-          item_decorator.should_receive(:find).with(1).and_return(:delegated)
-          expect(decorator.find(1)).to be :delegated
+          source.should_receive(:find).and_return(found)
+          ActiveSupport::Deprecation.silence do
+            expect(decorator.find(1)).to be :decorated
+          end
         end
       end
     end
