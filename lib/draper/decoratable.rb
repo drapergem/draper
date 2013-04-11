@@ -15,7 +15,7 @@ module Draper
     # @param [Hash] options
     #   see {Decorator#initialize}
     def decorate(options = {})
-      decorator_class.decorate(self, options)
+      @decorated ||= decorator_class.decorate(self, options)
     end
 
     # (see ClassMethods#decorator_class)
