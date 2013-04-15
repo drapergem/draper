@@ -278,5 +278,21 @@ module Draper
       end
     end
 
+    describe "#replace" do
+      it "replaces the decorated collection" do
+        decorator = CollectionDecorator.new([Product.new])
+        replacement = [:foo, :bar]
+
+        decorator.replace replacement
+        expect(decorator).to match_array replacement
+      end
+
+      it "returns itself" do
+        decorator = CollectionDecorator.new([Product.new])
+
+        expect(decorator.replace([:foo, :bar])).to be decorator
+      end
+    end
+
   end
 end

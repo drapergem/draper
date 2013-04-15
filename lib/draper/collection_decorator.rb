@@ -72,6 +72,11 @@ module Draper
     end
     alias_method :is_a?, :kind_of?
 
+    def replace(other)
+      decorated_collection.replace(other)
+      self
+    end
+
     protected
 
     # @return the collection being decorated.
