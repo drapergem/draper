@@ -18,9 +18,7 @@ module Draper
     # @param [Enumerable] source
     #   collection to decorate.
     # @option options [Class, nil] :with (nil)
-    #   the decorator class used to decorate each item. When `nil`, it is
-    #   inferred from the collection decorator class if possible (e.g.
-    #   `ProductsDecorator` maps to `ProductDecorator`), otherwise each item's
+    #   the decorator class used to decorate each item. When `nil`, each item's
     #   {Decoratable#decorate decorate} method will be used.
     # @option options [Hash] :context ({})
     #   extra data to be stored in the collection decorator and used in
