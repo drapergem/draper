@@ -213,13 +213,15 @@ module Draper
 
         context "when decorator_class is unspecified" do
           context "and the source is decoratable" do
-            it "returns the source's #decorate method" do
+            it "returns the .decorate_collection method from the source's decorator" do
               source = []
-              options = {foo: "bar"}
+              decorator_class = Class.new(Decorator)
+              source.stub decorator_class: decorator_class
+              source.stub decorate: nil
               worker = Factory::Worker.new(nil, source)
 
-              source.should_receive(:decorate).with(options).and_return(:decorated)
-              expect(worker.decorator.call(source, options)).to be :decorated
+              decorator_class.should_receive(:decorate_collection).with(source, foo: "bar", with: nil).and_return(:decorated)
+              expect(worker.decorator.call(source, foo: "bar")).to be :decorated
             end
           end
 
