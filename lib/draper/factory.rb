@@ -59,7 +59,11 @@ module Draper
       attr_reader :decorator_class, :source
 
       def source_decorator
-        ->(source, options) { source.decorate(options) }
+        if collection?
+          ->(source, options) { source.decorator_class.decorate_collection(source, options.reverse_merge(with: nil))}
+        else
+          ->(source, options) { source.decorate(options) }
+        end
       end
 
       def decorator_method(klass)
