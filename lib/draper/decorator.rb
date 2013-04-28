@@ -183,6 +183,7 @@ module Draper
 
     # In case source is nil
     delegate :present?
+    delegate :blank?
 
     # ActiveModel compatibility
     # @private
