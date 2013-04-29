@@ -354,6 +354,14 @@ module Draper
       end
     end
 
+    describe "#blank?" do
+      it "delegates to the source" do
+        decorator = Decorator.new(double(blank?: :delegated))
+
+        expect(decorator.blank?).to be :delegated
+      end
+    end
+
     describe "#to_partial_path" do
       it "delegates to the source" do
         decorator = Decorator.new(double(to_partial_path: :delegated))
