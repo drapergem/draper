@@ -27,8 +27,8 @@ module Rails
 
       # Rails 3.0.X compatibility, stolen from https://github.com/jnunemaker/mongomapper/pull/385/files#L1R32
       unless methods.include?(:module_namespacing)
-        def module_namespacing(&block)
-          yield if block
+        def module_namespacing
+          yield if block_given?
         end
       end
     end
