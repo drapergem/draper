@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'rails'
 require 'ammeter/init'
 require 'generators/decorator/decorator_generator'
 
