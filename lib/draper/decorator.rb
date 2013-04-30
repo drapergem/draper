@@ -39,7 +39,7 @@ module Draper
     end
 
     # Automatically delegates instance methods to the source object. Class
-    # methods will be delegated to the {source_class}, if it is set.
+    # methods will be delegated to the {object_class}, if it is set.
     #
     # @return [void]
     def self.delegate_all
@@ -52,11 +52,11 @@ module Draper
     #   source (including when using {decorates_finders}), and the source class
     #   cannot be inferred from the decorator class (e.g. `ProductDecorator`
     #   maps to `Product`).
-    # @param [String, Symbol, Class] source_class
+    # @param [String, Symbol, Class] object_class
     #   source class (or class name) that corresponds to this decorator.
     # @return [void]
-    def self.decorates(source_class)
-      @source_class = source_class.to_s.camelize.constantize
+    def self.decorates(object_class)
+      @object_class = object_class.to_s.camelize.constantize
     end
 
     # Returns the source class corresponding to the decorator class, as set by
@@ -64,22 +64,27 @@ module Draper
     # `ProductDecorator` maps to `Product`).
     #
     # @return [Class] the source class that corresponds to this decorator.
-    def self.source_class
-      @source_class ||= inferred_source_class
+    def self.object_class
+      @object_class ||= inferred_object_class
     end
 
-    # Checks whether this decorator class has a corresponding {source_class}.
-    def self.source_class?
-      source_class
+    # Checks whether this decorator class has a corresponding {object_class}.
+    def self.object_class?
+      object_class
     rescue Draper::UninferrableSourceError
       false
+    end
+
+    class << self # TODO deprecate this
+      alias_method :source_class, :object_class
+      alias_method :source_class?, :object_class?
     end
 
     # Automatically decorates ActiveRecord finder methods, so that you can use
     # `ProductDecorator.find(id)` instead of
     # `ProductDecorator.decorate(Product.find(id))`.
     #
-    # Finder methods are applied to the {source_class}.
+    # Finder methods are applied to the {object_class}.
     #
     # @return [void]
     def self.decorates_finders
@@ -201,7 +206,7 @@ module Draper
     delegate :to_param, :to_partial_path
 
     # ActiveModel compatibility
-    singleton_class.delegate :model_name, to: :source_class
+    singleton_class.delegate :model_name, to: :object_class
 
     # @return [Class] the class created by {decorate_collection}.
     def self.collection_decorator_class
@@ -214,13 +219,13 @@ module Draper
 
     private
 
-    def self.source_name
+    def self.object_class_name
       raise NameError if name.nil? || name.demodulize !~ /.+Decorator$/
       name.chomp("Decorator")
     end
 
-    def self.inferred_source_class
-      name = source_name
+    def self.inferred_object_class
+      name = object_class_name
       name.constantize
     rescue NameError => error
       raise if name && !error.missing_name?(name)
@@ -228,8 +233,8 @@ module Draper
     end
 
     def self.collection_decorator_name
-      plural = source_name.pluralize
-      raise NameError if plural == source_name
+      plural = object_class_name.pluralize
+      raise NameError if plural == object_class_name
       "#{plural}Decorator"
     end
 

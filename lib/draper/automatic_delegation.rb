@@ -26,7 +26,7 @@ module Draper
       def method_missing(method, *args, &block)
         return super unless delegatable?(method)
 
-        source_class.send(method, *args, &block)
+        object_class.send(method, *args, &block)
       end
 
       # Checks if the decorator responds to a class method, or is able to proxy
@@ -37,7 +37,7 @@ module Draper
 
       # @private
       def delegatable?(method)
-        source_class? && source_class.respond_to?(method)
+        object_class? && object_class.respond_to?(method)
       end
 
       # @private
