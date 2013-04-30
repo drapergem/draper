@@ -25,7 +25,7 @@ module Draper
     attr_reader :factory, :owner, :association, :scope
 
     def decorate
-      associated = owner.source.send(association)
+      associated = owner.object.send(association)
       associated = associated.send(scope) if scope
 
       @decorated = factory.decorate(associated, context_args: owner.context)

@@ -15,7 +15,7 @@ class PostDecorator < Draper::Decorator
   end
 
   def path_with_model
-    h.post_path(source)
+    h.post_path(object)
   end
 
   def path_with_id
@@ -23,7 +23,7 @@ class PostDecorator < Draper::Decorator
   end
 
   def url_with_model
-    h.post_url(source)
+    h.post_url(object)
   end
 
   def url_with_id

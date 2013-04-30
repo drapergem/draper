@@ -16,7 +16,7 @@ module Draper
         Product.stub(:find).and_return(found)
         decorator = ProductDecorator.find(1)
         expect(decorator).to be_a ProductDecorator
-        expect(decorator.source).to be found
+        expect(decorator.object).to be found
       end
 
       it "passes context to the decorator" do
@@ -39,7 +39,7 @@ module Draper
         Product.stub(:find_by_name).and_return(found)
         decorator = ProductDecorator.find_by_name("apples")
         expect(decorator).to be_a ProductDecorator
-        expect(decorator.source).to be found
+        expect(decorator.object).to be found
       end
 
       it "proxies complex ProductDecorators" do
@@ -127,7 +127,7 @@ module Draper
         Product.stub(:first).and_return(first)
         decorator = ProductDecorator.first
         expect(decorator).to be_a ProductDecorator
-        expect(decorator.source).to be first
+        expect(decorator.object).to be first
       end
 
       it "passes context to the decorator" do
@@ -150,7 +150,7 @@ module Draper
         Product.stub(:last).and_return(last)
         decorator = ProductDecorator.last
         expect(decorator).to be_a ProductDecorator
-        expect(decorator.source).to be last
+        expect(decorator.object).to be last
       end
 
       it "passes context to the decorator" do

@@ -17,11 +17,11 @@ module Draper
         end
       end
 
-      it "sets the source" do
-        source = Model.new
-        decorator = Decorator.new(source)
+      it "sets the object" do
+        object = Model.new
+        decorator = Decorator.new(object)
 
-        expect(decorator.source).to be source
+        expect(decorator.object).to be object
       end
 
       it "stores context" do
@@ -32,12 +32,12 @@ module Draper
       end
 
       context "when decorating an instance of itself" do
-        it "applies to the source instead" do
-          source = Model.new
-          decorated = Decorator.new(source)
+        it "applies to the object instead" do
+          object = Model.new
+          decorated = Decorator.new(object)
           redecorated = Decorator.new(decorated)
 
-          expect(redecorated.source).to be source
+          expect(redecorated.object).to be object
         end
 
         context "with context" do
@@ -65,7 +65,7 @@ module Draper
         decorated = OtherDecorator.new(Model.new)
         redecorated = Decorator.new(decorated)
 
-        expect(redecorated.source).to be decorated
+        expect(redecorated.object).to be decorated
       end
 
       context "when it has been applied previously" do
@@ -85,7 +85,7 @@ module Draper
           Object.any_instance.stub(:warn)
           redecorated = Decorator.decorate(decorated)
 
-          expect(redecorated.source).to be decorated
+          expect(redecorated.object).to be decorated
         end
       end
     end
@@ -116,10 +116,10 @@ module Draper
 
       context "without a custom collection decorator" do
         it "creates a CollectionDecorator using itself for each item" do
-          source = [Model.new]
+          object = [Model.new]
 
-          CollectionDecorator.should_receive(:new).with(source, with: Decorator)
-          Decorator.decorate_collection(source)
+          CollectionDecorator.should_receive(:new).with(object, with: Decorator)
+          Decorator.decorate_collection(object)
         end
 
         it "passes options to the collection decorator" do
@@ -132,10 +132,10 @@ module Draper
 
       context "with a custom collection decorator" do
         it "creates a custom collection decorator using itself for each item" do
-          source = [Model.new]
+          object = [Model.new]
 
-          ProductsDecorator.should_receive(:new).with(source, with: ProductDecorator)
-          ProductDecorator.decorate_collection(source)
+          ProductsDecorator.should_receive(:new).with(object, with: ProductDecorator)
+          ProductDecorator.decorate_collection(object)
         end
 
         it "passes options to the collection decorator" do
@@ -319,14 +319,35 @@ module Draper
       end
     end
 
-    describe "#source" do
+    describe "#object" do
       it "returns the wrapped object" do
-        source = Model.new
-        decorator = Decorator.new(source)
+        object = Model.new
+        decorator = Decorator.new(object)
 
-        expect(decorator.source).to be source
-        expect(decorator.model).to be source
-        expect(decorator.to_source).to be source
+        expect(decorator.object).to be object
+        expect(decorator.model).to be object
+        expect(decorator.to_source).to be object
+      end
+
+      it "is aliased to #model" do
+        object = Model.new
+        decorator = Decorator.new(object)
+
+        expect(decorator.model).to be object
+      end
+
+      it "is aliased to #source" do
+        object = Model.new
+        decorator = Decorator.new(object)
+
+        expect(decorator.source).to be object
+      end
+
+      it "is aliased to #to_source" do
+        object = Model.new
+        decorator = Decorator.new(object)
+
+        expect(decorator.to_source).to be object
       end
     end
 
@@ -339,7 +360,7 @@ module Draper
     end
 
     describe "#to_param" do
-      it "delegates to the source" do
+      it "delegates to the object" do
         decorator = Decorator.new(double(to_param: :delegated))
 
         expect(decorator.to_param).to be :delegated
@@ -347,7 +368,7 @@ module Draper
     end
 
     describe "#present?" do
-      it "delegates to the source" do
+      it "delegates to the object" do
         decorator = Decorator.new(double(present?: :delegated))
 
         expect(decorator.present?).to be :delegated
@@ -355,7 +376,7 @@ module Draper
     end
 
     describe "#blank?" do
-      it "delegates to the source" do
+      it "delegates to the object" do
         decorator = Decorator.new(double(blank?: :delegated))
 
         expect(decorator.blank?).to be :delegated
@@ -363,7 +384,7 @@ module Draper
     end
 
     describe "#to_partial_path" do
-      it "delegates to the source" do
+      it "delegates to the object" do
         decorator = Decorator.new(double(to_partial_path: :delegated))
 
         expect(decorator.to_partial_path).to be :delegated
@@ -371,7 +392,7 @@ module Draper
     end
 
     describe "#attributes" do
-      it "returns only the source's attributes that are implemented by the decorator" do
+      it "returns only the object's attributes that are implemented by the decorator" do
         decorator = Decorator.new(double(attributes: {foo: "bar", baz: "qux"}))
         decorator.stub(:foo)
 
@@ -388,35 +409,35 @@ module Draper
     end
 
     describe "#==" do
-      it "works for a source that does not include Decoratable" do
-        source = Object.new
-        decorator = Decorator.new(source)
+      it "works for a object that does not include Decoratable" do
+        object = Object.new
+        decorator = Decorator.new(object)
 
-        expect(decorator).to eq Decorator.new(source)
+        expect(decorator).to eq Decorator.new(object)
       end
 
-      it "works for a multiply-decorated source that does not include Decoratable" do
-        source = Object.new
-        decorator = Decorator.new(source)
+      it "works for a multiply-decorated object that does not include Decoratable" do
+        object = Object.new
+        decorator = Decorator.new(object)
 
-        expect(decorator).to eq ProductDecorator.new(Decorator.new(source))
+        expect(decorator).to eq ProductDecorator.new(Decorator.new(object))
       end
 
-      it "is true when source #== is true" do
-        source = Model.new
-        decorator = Decorator.new(source)
-        other = double(source: Model.new)
+      it "is true when object #== is true" do
+        object = Model.new
+        decorator = Decorator.new(object)
+        other = double(object: Model.new)
 
-        source.should_receive(:==).with(other).and_return(true)
+        object.should_receive(:==).with(other).and_return(true)
         expect(decorator == other).to be_true
       end
 
-      it "is false when source #== is false" do
-        source = Model.new
-        decorator = Decorator.new(source)
-        other = double(source: Model.new)
+      it "is false when object #== is false" do
+        object = Model.new
+        decorator = Decorator.new(object)
+        other = double(object: Model.new)
 
-        source.should_receive(:==).with(other).and_return(false)
+        object.should_receive(:==).with(other).and_return(false)
         expect(decorator == other).to be_false
       end
 
@@ -441,8 +462,8 @@ module Draper
     describe ".delegate" do
       protect_class Decorator
 
-      it "defaults the :to option to :source" do
-        Object.should_receive(:delegate).with(:foo, :bar, to: :source)
+      it "defaults the :to option to :object" do
+        Object.should_receive(:delegate).with(:foo, :bar, to: :object)
         Decorator.delegate :foo, :bar
       end
 
@@ -458,7 +479,7 @@ module Draper
       before { Decorator.delegate_all }
 
       describe "#method_missing" do
-        it "delegates missing methods that exist on the source" do
+        it "delegates missing methods that exist on the object" do
           decorator = Decorator.new(double(hello_world: :delegated))
 
           expect(decorator.hello_world).to be :delegated
@@ -473,9 +494,9 @@ module Draper
         end
 
         it "passes blocks to delegated methods" do
-          source = Model.new
-          source.stub(:hello_world).and_return{|*args, &block| block.call}
-          decorator = Decorator.new(source)
+          object = Model.new
+          object.stub(:hello_world).and_return{|*args, &block| block.call}
+          decorator = Decorator.new(object)
 
           expect(decorator.hello_world{:yielded}).to be :yielded
         end
@@ -487,21 +508,21 @@ module Draper
         end
 
         it "delegates already-delegated methods" do
-          source = Class.new{ delegate :bar, to: :foo }.new
-          source.stub foo: double(bar: :delegated)
-          decorator = Decorator.new(source)
+          object = Class.new{ delegate :bar, to: :foo }.new
+          object.stub foo: double(bar: :delegated)
+          decorator = Decorator.new(object)
 
           expect(decorator.bar).to be :delegated
         end
 
         it "does not delegate private methods" do
-          source = Class.new{ private; def hello_world; end }.new
-          decorator = Decorator.new(source)
+          object = Class.new{ private; def hello_world; end }.new
+          decorator = Decorator.new(object)
 
           expect{decorator.hello_world}.to raise_error NoMethodError
         end
 
-        it "does not delegate methods that do not exist on the source" do
+        it "does not delegate methods that do not exist on the object" do
           decorator = Decorator.new(Model.new)
 
           expect(decorator.methods).not_to include :hello_world
@@ -542,7 +563,7 @@ module Draper
           expect(decorator).to respond_to :hello_world
         end
 
-        it "returns true for the source's methods" do
+        it "returns true for the object's methods" do
           decorator = Decorator.new(double(hello_world: :delegated))
 
           expect(decorator).to respond_to :hello_world
@@ -556,9 +577,9 @@ module Draper
             expect(decorator.respond_to?(:hello_world, true)).to be_true
           end
 
-          it "returns false for the source's private methods" do
-            source = Class.new{private; def hello_world; end}.new
-            decorator = Decorator.new(source)
+          it "returns false for the object's private methods" do
+            object = Class.new{private; def hello_world; end}.new
+            decorator = Decorator.new(object)
 
             expect(decorator.respond_to?(:hello_world, true)).to be_false
           end
@@ -596,8 +617,8 @@ module Draper
 
       describe "#respond_to_missing?" do
         it "allows #method to be called on delegated methods" do
-          source = Class.new{def hello_world; end}.new
-          decorator = Decorator.new(source)
+          object = Class.new{def hello_world; end}.new
+          decorator = Decorator.new(object)
 
           expect { decorator.method(:hello_world) }.not_to raise_error NameError
           expect(decorator.method(:hello_world)).not_to be_nil

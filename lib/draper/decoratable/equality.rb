@@ -19,7 +19,7 @@ module Draper
       # @private
       def self.test_for_decorator(object, other)
         other.respond_to?(:decorated?) && other.decorated? &&
-        other.respond_to?(:source) && test(object, other.source)
+        other.respond_to?(:object) && test(object, other.object)
       end
     end
   end

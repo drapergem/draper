@@ -84,8 +84,8 @@ module Draper
         collection = [Product.new, Product.new]
         decorator = CollectionDecorator.new(collection)
 
-        decorator.zip collection do |item, source|
-          expect(item.source).to be source
+        decorator.zip collection do |item, object|
+          expect(item.object).to be object
         end
       end
 
@@ -109,8 +109,8 @@ module Draper
     describe ".delegate" do
       protect_class ProductsDecorator
 
-      it "defaults the :to option to :source" do
-        Object.should_receive(:delegate).with(:foo, :bar, to: :source)
+      it "defaults the :to option to :object" do
+        Object.should_receive(:delegate).with(:foo, :bar, to: :object)
         ProductsDecorator.delegate :foo, :bar
       end
 
@@ -131,12 +131,12 @@ module Draper
       end
 
       context "without a block" do
-        it "decorates source.find" do
-          source = []
+        it "decorates object.find" do
+          object = []
           found = stub(decorate: :decorated)
-          decorator = CollectionDecorator.new(source)
+          decorator = CollectionDecorator.new(object)
 
-          source.should_receive(:find).and_return(found)
+          object.should_receive(:find).and_return(found)
           ActiveSupport::Deprecation.silence do
             expect(decorator.find(1)).to be :decorated
           end
@@ -162,17 +162,17 @@ module Draper
     end
 
     describe "#==" do
-      context "when comparing to a collection decorator with the same source" do
+      context "when comparing to a collection decorator with the same object" do
         it "returns true" do
-          source = [Product.new, Product.new]
-          decorator = CollectionDecorator.new(source)
-          other = ProductsDecorator.new(source)
+          object = [Product.new, Product.new]
+          decorator = CollectionDecorator.new(object)
+          other = ProductsDecorator.new(object)
 
           expect(decorator == other).to be_true
         end
       end
 
-      context "when comparing to a collection decorator with a different source" do
+      context "when comparing to a collection decorator with a different object" do
         it "returns false" do
           decorator = CollectionDecorator.new([Product.new, Product.new])
           other = ProductsDecorator.new([Product.new, Product.new])
@@ -183,9 +183,9 @@ module Draper
 
       context "when comparing to a collection of the same items" do
         it "returns true" do
-          source = [Product.new, Product.new]
-          decorator = CollectionDecorator.new(source)
-          other = source.dup
+          object = [Product.new, Product.new]
+          decorator = CollectionDecorator.new(object)
+          other = object.dup
 
           expect(decorator == other).to be_true
         end
@@ -201,10 +201,10 @@ module Draper
       end
 
       context "when the decorated collection has been modified" do
-        it "is no longer equal to the source" do
-          source = [Product.new, Product.new]
-          decorator = CollectionDecorator.new(source)
-          other = source.dup
+        it "is no longer equal to the object" do
+          object = [Product.new, Product.new]
+          decorator = CollectionDecorator.new(object)
+          other = object.dup
 
           decorator << Product.new.decorate
           expect(decorator == other).to be_false
