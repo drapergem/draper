@@ -157,74 +157,84 @@ module Draper
     describe ".decorates" do
       protect_class Decorator
 
-      it "sets .source_class with a symbol" do
+      it "sets .object_class with a symbol" do
         Decorator.decorates :product
 
-        expect(Decorator.source_class).to be Product
+        expect(Decorator.object_class).to be Product
       end
 
-      it "sets .source_class with a string" do
+      it "sets .object_class with a string" do
         Decorator.decorates "product"
 
-        expect(Decorator.source_class).to be Product
+        expect(Decorator.object_class).to be Product
       end
 
-      it "sets .source_class with a class" do
+      it "sets .object_class with a class" do
         Decorator.decorates Product
 
-        expect(Decorator.source_class).to be Product
+        expect(Decorator.object_class).to be Product
       end
     end
 
-    describe ".source_class" do
+    describe ".object_class" do
       protect_class ProductDecorator
       protect_class Namespaced::ProductDecorator
 
       context "when not set by .decorates" do
         it "raises an UninferrableSourceError for a so-named 'Decorator'" do
-          expect{Decorator.source_class}.to raise_error UninferrableSourceError
+          expect{Decorator.object_class}.to raise_error UninferrableSourceError
         end
 
         it "raises an UninferrableSourceError for anonymous decorators" do
-          expect{Class.new(Decorator).source_class}.to raise_error UninferrableSourceError
+          expect{Class.new(Decorator).object_class}.to raise_error UninferrableSourceError
         end
 
         it "raises an UninferrableSourceError for a decorator without a model" do
-          expect{OtherDecorator.source_class}.to raise_error UninferrableSourceError
+          expect{OtherDecorator.object_class}.to raise_error UninferrableSourceError
         end
 
         it "raises an UninferrableSourceError for other naming conventions" do
-          expect{ProductPresenter.source_class}.to raise_error UninferrableSourceError
+          expect{ProductPresenter.object_class}.to raise_error UninferrableSourceError
         end
 
         it "infers the source for '<Model>Decorator'" do
-          expect(ProductDecorator.source_class).to be Product
+          expect(ProductDecorator.object_class).to be Product
         end
 
         it "infers namespaced sources" do
-          expect(Namespaced::ProductDecorator.source_class).to be Namespaced::Product
+          expect(Namespaced::ProductDecorator.object_class).to be Namespaced::Product
         end
 
         context "when an unrelated NameError is thrown" do
           it "re-raises that error" do
             String.any_instance.stub(:constantize).and_return{SomethingThatDoesntExist}
-            expect{ProductDecorator.source_class}.to raise_error NameError, /SomethingThatDoesntExist/
+            expect{ProductDecorator.object_class}.to raise_error NameError, /SomethingThatDoesntExist/
           end
         end
       end
+
+      it "is aliased to .source_class" do
+        expect(ProductDecorator.source_class).to be Product
+      end
     end
 
-    describe ".source_class?" do
-      it "returns truthy when .source_class is set" do
-        Decorator.stub(:source_class).and_return(Model)
+    describe ".object_class?" do
+      it "returns truthy when .object_class is set" do
+        Decorator.stub(:object_class).and_return(Model)
 
-        expect(Decorator.source_class?).to be_true
+        expect(Decorator.object_class?).to be_true
       end
 
-      it "returns false when .source_class is not inferrable" do
-        Decorator.stub(:source_class).and_raise(UninferrableSourceError.new(Decorator))
+      it "returns false when .object_class is not inferrable" do
+        Decorator.stub(:object_class).and_raise(UninferrableSourceError.new(Decorator))
 
-        expect(Decorator.source_class?).to be_false
+        expect(Decorator.object_class?).to be_false
+      end
+
+      it "is aliased to .source_class?" do
+        Decorator.stub(:object_class).and_return(Model)
+
+        expect(Decorator.source_class?).to be_true
       end
     end
 
@@ -402,7 +412,7 @@ module Draper
 
     describe ".model_name" do
       it "delegates to the source class" do
-        Decorator.stub source_class: double(model_name: :delegated)
+        Decorator.stub object_class: double(model_name: :delegated)
 
         expect(Decorator.model_name).to be :delegated
       end
@@ -540,15 +550,15 @@ module Draper
 
         context "with a source class" do
           it "delegates methods that exist on the source class" do
-            source_class = Class.new
-            source_class.stub hello_world: :delegated
-            Decorator.stub source_class: source_class
+            object_class = Class.new
+            object_class.stub hello_world: :delegated
+            Decorator.stub object_class: object_class
 
             expect(Decorator.hello_world).to be :delegated
           end
 
           it "does not delegate methods that do not exist on the source class" do
-            Decorator.stub source_class: Class.new
+            Decorator.stub object_class: Class.new
 
             expect{Decorator.hello_world}.to raise_error NoMethodError
           end
@@ -602,13 +612,13 @@ module Draper
         context "with a source class" do
           it "returns true for its own class methods" do
             Decorator.class_eval{def self.hello_world; end}
-            Decorator.stub source_class: Class.new
+            Decorator.stub object_class: Class.new
 
             expect(Decorator).to respond_to :hello_world
           end
 
           it "returns true for the source's class methods" do
-            Decorator.stub source_class: double(hello_world: :delegated)
+            Decorator.stub object_class: double(hello_world: :delegated)
 
             expect(Decorator).to respond_to :hello_world
           end
@@ -627,7 +637,7 @@ module Draper
 
       describe ".respond_to_missing?" do
         it "allows .method to be called on delegated class methods" do
-          Decorator.stub source_class: double(hello_world: :delegated)
+          Decorator.stub object_class: double(hello_world: :delegated)
 
           expect { Decorator.method(:hello_world) }.not_to raise_error NameError
           expect(Decorator.method(:hello_world)).not_to be_nil
