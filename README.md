@@ -82,7 +82,7 @@ class ArticleDecorator < Draper::Decorator
   end
 
   def published_at
-    source.published_at.strftime("%A, %B %e")
+    object.published_at.strftime("%A, %B %e")
   end
 end
 ```
@@ -173,12 +173,12 @@ never have to type `h.` again.
 
 When writing decorator methods you'll usually need to access the wrapped model.
 While you may choose to use delegation ([covered below](#delegating-methods))
-for convenience, you can always use the `source` (or its alias `model`):
+for convenience, you can always use the `object` (or its alias `model`):
 
 ```ruby
 class ArticleDecorator < Draper::Decorator
   def published_at
-    source.published_at.strftime("%A, %B %e")
+    object.published_at.strftime("%A, %B %e")
   end
 end
 ```
@@ -250,7 +250,7 @@ Some pagination gems add methods to `ActiveRecord::Relation`. For example,
 [Kaminari](https://github.com/amatsuda/kaminari)'s `paginate` helper method
 requires the collection to implement `current_page`, `total_pages`, and
 `limit_value`. To expose these on a collection decorator, you can delegate to
-the `source`:
+the `object`:
 
 ```ruby
 class PaginatingDecorator < Draper::CollectionDecorator
@@ -260,7 +260,7 @@ end
 
 The `delegate` method used here is the same as that added by [Active
 Support](http://api.rubyonrails.org/classes/Module.html#method-i-delegate),
-except that the `:to` option is not required; it defaults to `:source` when
+except that the `:to` option is not required; it defaults to `:object` when
 omitted.
 
 [will_paginate](https://github.com/mislav/will_paginate) needs you to
@@ -444,7 +444,7 @@ end
 ### Delegating Methods
 
 When your decorator calls `delegate_all`, any method called on the decorator not
-defined in the decorator itself will be delegated to the decorated source. This
+defined in the decorator itself will be delegated to the decorated object. This
 is a very permissive interface.
 
 If you want to strictly control which methods are called within views, you can
@@ -456,8 +456,8 @@ class ArticleDecorator < Draper::Decorator
 end
 ```
 
-We omit the `:to` argument here as it defaults to the `source` object. You could
-choose to delegate methods to other places like this:
+We omit the `:to` argument here as it defaults to the `object` being decorated.
+You could choose to delegate methods to other places like this:
 
 ```ruby
 class ArticleDecorator < Draper::Decorator

@@ -41,15 +41,15 @@ module Draper
 
       describe "the generated method" do
         it "decorates the instance variable" do
-          source = double
+          object = double
           factory = double
           Factory.stub new: factory
 
           controller_class.decorates_assigned :article
           controller = controller_class.new
-          controller.instance_variable_set "@article", source
+          controller.instance_variable_set "@article", object
 
-          factory.should_receive(:decorate).with(source, context_args: controller).and_return(:decorated)
+          factory.should_receive(:decorate).with(object, context_args: controller).and_return(:decorated)
           expect(controller.article).to be :decorated
         end
 

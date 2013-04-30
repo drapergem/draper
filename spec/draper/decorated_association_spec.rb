@@ -43,8 +43,8 @@ module Draper
         Factory.stub new: factory
         associated = double
         owner_context = {foo: "bar"}
-        source = double(association: associated)
-        owner = double(source: source, context: owner_context)
+        object = double(association: associated)
+        owner = double(object: object, context: owner_context)
         decorated_association = DecoratedAssociation.new(owner, :association, {})
         decorated = double
 
@@ -55,7 +55,7 @@ module Draper
       it "memoizes" do
         factory = double
         Factory.stub new: factory
-        owner = double(source: double(association: double), context: {})
+        owner = double(object: double(association: double), context: {})
         decorated_association = DecoratedAssociation.new(owner, :association, {})
         decorated = double
 
@@ -69,8 +69,8 @@ module Draper
           factory = double
           Factory.stub new: factory
           scoped = double
-          source = double(association: double(applied_scope: scoped))
-          owner = double(source: source, context: {})
+          object = double(association: double(applied_scope: scoped))
+          owner = double(object: object, context: {})
           decorated_association = DecoratedAssociation.new(owner, :association, scope: :applied_scope)
           decorated = double
 

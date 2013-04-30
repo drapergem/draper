@@ -18,7 +18,7 @@ module Draper
 
     # @private
     def delegatable?(method)
-      source.respond_to?(method)
+      object.respond_to?(method)
     end
 
     module ClassMethods

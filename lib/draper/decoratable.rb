@@ -73,7 +73,7 @@ module Draper
       #
       # @return [Boolean]
       def ===(other)
-        super || (other.respond_to?(:source) && super(other.source))
+        super || (other.respond_to?(:object) && super(other.object))
       end
 
     end
