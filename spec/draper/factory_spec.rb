@@ -15,7 +15,7 @@ module Draper
     end
 
     describe "#decorate" do
-      context "when source is nil" do
+      context "when object is nil" do
         it "returns nil" do
           factory = Factory.new
 
@@ -31,12 +31,12 @@ module Draper
         expect(factory.decorate(double)).to be :decorated
       end
 
-      it "passes the source to the worker" do
+      it "passes the object to the worker" do
         factory = Factory.new
-        source = double
+        object = double
 
-        Factory::Worker.should_receive(:new).with(anything(), source).and_return(->(*){})
-        factory.decorate(source)
+        Factory::Worker.should_receive(:new).with(anything(), object).and_return(->(*){})
+        factory.decorate(object)
       end
 
       context "when the :with option was given" do
@@ -95,13 +95,13 @@ module Draper
 
     describe "#call" do
       it "calls the decorator method" do
-        source = double
+        object = double
         options = {foo: "bar"}
-        worker = Factory::Worker.new(double, source)
+        worker = Factory::Worker.new(double, object)
         decorator = ->(*){}
         worker.stub decorator: decorator
 
-        decorator.should_receive(:call).with(source, options).and_return(:decorated)
+        decorator.should_receive(:call).with(object, options).and_return(:decorated)
         expect(worker.call(options)).to be :decorated
       end
 
@@ -159,7 +159,7 @@ module Draper
     end
 
     describe "#decorator" do
-      context "for a singular source" do
+      context "for a singular object" do
         context "when decorator_class is specified" do
           it "returns the .decorate method from the decorator" do
             decorator_class = Class.new(Decorator)
@@ -170,21 +170,21 @@ module Draper
         end
 
         context "when decorator_class is unspecified" do
-          context "and the source is decoratable" do
-            it "returns the source's #decorate method" do
-              source = double
+          context "and the object is decoratable" do
+            it "returns the object's #decorate method" do
+              object = double
               options = {foo: "bar"}
-              worker = Factory::Worker.new(nil, source)
+              worker = Factory::Worker.new(nil, object)
 
-              source.should_receive(:decorate).with(options).and_return(:decorated)
-              expect(worker.decorator.call(source, options)).to be :decorated
+              object.should_receive(:decorate).with(options).and_return(:decorated)
+              expect(worker.decorator.call(object, options)).to be :decorated
             end
           end
 
-          context "and the source is not decoratable" do
+          context "and the object is not decoratable" do
             it "raises an error" do
-              source = double
-              worker = Factory::Worker.new(nil, source)
+              object = double
+              worker = Factory::Worker.new(nil, object)
 
               expect{worker.decorator}.to raise_error UninferrableDecoratorError
             end
@@ -192,7 +192,7 @@ module Draper
         end
       end
 
-      context "for a collection source" do
+      context "for a collection object" do
         context "when decorator_class is a CollectionDecorator" do
           it "returns the .decorate method from the collection decorator" do
             decorator_class = Class.new(CollectionDecorator)
@@ -212,20 +212,20 @@ module Draper
         end
 
         context "when decorator_class is unspecified" do
-          context "and the source is decoratable" do
-            it "returns the .decorate_collection method from the source's decorator" do
-              source = []
+          context "and the object is decoratable" do
+            it "returns the .decorate_collection method from the object's decorator" do
+              object = []
               decorator_class = Class.new(Decorator)
-              source.stub decorator_class: decorator_class
-              source.stub decorate: nil
-              worker = Factory::Worker.new(nil, source)
+              object.stub decorator_class: decorator_class
+              object.stub decorate: nil
+              worker = Factory::Worker.new(nil, object)
 
-              decorator_class.should_receive(:decorate_collection).with(source, foo: "bar", with: nil).and_return(:decorated)
-              expect(worker.decorator.call(source, foo: "bar")).to be :decorated
+              decorator_class.should_receive(:decorate_collection).with(object, foo: "bar", with: nil).and_return(:decorated)
+              expect(worker.decorator.call(object, foo: "bar")).to be :decorated
             end
           end
 
-          context "and the source is not decoratable" do
+          context "and the object is not decoratable" do
             it "returns the .decorate method from CollectionDecorator" do
               worker = Factory::Worker.new(nil, [])
 

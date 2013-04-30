@@ -15,7 +15,7 @@ module Draper
     array_methods = Array.instance_methods - Object.instance_methods
     delegate :==, :as_json, *array_methods, to: :decorated_collection
 
-    # @param [Enumerable] source
+    # @param [Enumerable] object
     #   collection to decorate.
     # @option options [Class, nil] :with (nil)
     #   the decorator class used to decorate each item. When `nil`, each item's
@@ -23,9 +23,9 @@ module Draper
     # @option options [Hash] :context ({})
     #   extra data to be stored in the collection decorator and used in
     #   user-defined methods, and passed to each item's decorator.
-    def initialize(source, options = {})
+    def initialize(object, options = {})
       options.assert_valid_keys(:with, :context)
-      @source = source
+      @object = object
       @decorator_class = options[:with]
       @context = options.fetch(:context, {})
     end
@@ -36,7 +36,7 @@ module Draper
 
     # @return [Array] the decorated items.
     def decorated_collection
-      @decorated_collection ||= source.map{|item| decorate_item(item)}
+      @decorated_collection ||= object.map{|item| decorate_item(item)}
     end
 
     # Delegated to the decorated collection when using the block form
@@ -47,12 +47,12 @@ module Draper
         decorated_collection.find(*args, &block)
       else
         ActiveSupport::Deprecation.warn("Using ActiveRecord's `find` on a CollectionDecorator is deprecated. Call `find` on a model, and then decorate the result", caller)
-        decorate_item(source.find(*args))
+        decorate_item(object.find(*args))
       end
     end
 
     def to_s
-      "#<#{self.class.name} of #{decorator_class || "inferred decorators"} for #{source.inspect}>"
+      "#<#{self.class.name} of #{decorator_class || "inferred decorators"} for #{object.inspect}>"
     end
 
     def context=(value)
@@ -80,7 +80,7 @@ module Draper
     protected
 
     # @return the collection being decorated.
-    attr_reader :source
+    attr_reader :object
 
     # Decorates the given item.
     def decorate_item(item)

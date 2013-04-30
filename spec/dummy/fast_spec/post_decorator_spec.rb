@@ -9,8 +9,8 @@ Draper::ViewContext.test_strategy :fast
 Post = Struct.new(:id) { extend ActiveModel::Naming }
 
 describe PostDecorator do
-  let(:decorator) { PostDecorator.new(source) }
-  let(:source) { Post.new(42) }
+  let(:decorator) { PostDecorator.new(object) }
+  let(:object) { Post.new(42) }
 
   it "can use built-in helpers" do
     expect(decorator.truncated).to eq "Once upon a..."

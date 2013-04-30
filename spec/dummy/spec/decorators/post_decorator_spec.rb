@@ -1,8 +1,8 @@
 require 'spec_helper'
 
 describe PostDecorator do
-  let(:decorator) { PostDecorator.new(source) }
-  let(:source) { Post.create }
+  let(:decorator) { PostDecorator.new(object) }
+  let(:object) { Post.create }
 
   it "can use built-in helpers" do
     expect(decorator.truncated).to eq "Once upon a..."
@@ -17,23 +17,23 @@ describe PostDecorator do
   end
 
   it "can use path helpers with its model" do
-    expect(decorator.path_with_model).to eq "/en/posts/#{source.id}"
+    expect(decorator.path_with_model).to eq "/en/posts/#{object.id}"
   end
 
   it "can use path helpers with its id" do
-    expect(decorator.path_with_id).to eq "/en/posts/#{source.id}"
+    expect(decorator.path_with_id).to eq "/en/posts/#{object.id}"
   end
 
   it "can use url helpers with its model" do
-    expect(decorator.url_with_model).to eq "http://www.example.com:12345/en/posts/#{source.id}"
+    expect(decorator.url_with_model).to eq "http://www.example.com:12345/en/posts/#{object.id}"
   end
 
   it "can use url helpers with its id" do
-    expect(decorator.url_with_id).to eq "http://www.example.com:12345/en/posts/#{source.id}"
+    expect(decorator.url_with_id).to eq "http://www.example.com:12345/en/posts/#{object.id}"
   end
 
   it "can be passed implicitly to url_for" do
-    expect(decorator.link).to eq "<a href=\"/en/posts/#{source.id}\">#{source.id}</a>"
+    expect(decorator.link).to eq "<a href=\"/en/posts/#{object.id}\">#{object.id}</a>"
   end
 
   it "serializes overriden attributes" do

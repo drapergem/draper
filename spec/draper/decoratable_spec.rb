@@ -10,7 +10,7 @@ module Draper
         decorator = product.decorate
 
         expect(decorator).to be_a ProductDecorator
-        expect(decorator.source).to be product
+        expect(decorator.object).to be product
      end
 
       it "accepts context" do
@@ -89,19 +89,19 @@ module Draper
       end
 
       it "is true for a decorated instance" do
-        decorator = double(source: Product.new)
+        decorator = double(object: Product.new)
 
         expect(Product === decorator).to be_true
       end
 
       it "is true for a decorated derived instance" do
-        decorator = double(source: Class.new(Product).new)
+        decorator = double(object: Class.new(Product).new)
 
         expect(Product === decorator).to be_true
       end
 
       it "is false for a decorated unrelated instance" do
-        decorator = double(source: Model.new)
+        decorator = double(object: Model.new)
 
         expect(Product === decorator).to be_false
       end

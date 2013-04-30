@@ -18,7 +18,7 @@ module Draper
     # Decorates an object, inferring whether to create a singular or collection
     # decorator from the type of object passed.
     #
-    # @param [Object] source
+    # @param [Object] object
     #   object to decorate.
     # @option options [Hash] context
     #   extra data to be stored in the decorator. Overrides any context passed
@@ -26,9 +26,9 @@ module Draper
     # @option options [Object, Array] context_args (nil)
     #   argument(s) to be passed to the context proc.
     # @return [Decorator, CollectionDecorator] the decorated object.
-    def decorate(source, options = {})
-      return nil if source.nil?
-      Worker.new(decorator_class, source).call(options.reverse_merge(default_options))
+    def decorate(object, options = {})
+      return nil if object.nil?
+      Worker.new(decorator_class, object).call(options.reverse_merge(default_options))
     end
 
     private
@@ -37,32 +37,32 @@ module Draper
 
     # @private
     class Worker
-      def initialize(decorator_class, source)
+      def initialize(decorator_class, object)
         @decorator_class = decorator_class
-        @source = source
+        @object = object
       end
 
       def call(options)
         update_context options
-        decorator.call(source, options)
+        decorator.call(object, options)
       end
 
       def decorator
         return decorator_method(decorator_class) if decorator_class
-        return source_decorator if decoratable?
+        return object_decorator if decoratable?
         return decorator_method(Draper::CollectionDecorator) if collection?
-        raise Draper::UninferrableDecoratorError.new(source.class)
+        raise Draper::UninferrableDecoratorError.new(object.class)
       end
 
       private
 
-      attr_reader :decorator_class, :source
+      attr_reader :decorator_class, :object
 
-      def source_decorator
+      def object_decorator
         if collection?
-          ->(source, options) { source.decorator_class.decorate_collection(source, options.reverse_merge(with: nil))}
+          ->(object, options) { object.decorator_class.decorate_collection(object, options.reverse_merge(with: nil))}
         else
-          ->(source, options) { source.decorate(options) }
+          ->(object, options) { object.decorate(options) }
         end
       end
 
@@ -75,11 +75,11 @@ module Draper
       end
 
       def collection?
-        source.respond_to?(:first)
+        object.respond_to?(:first)
       end
 
       def decoratable?
-        source.respond_to?(:decorate)
+        object.respond_to?(:decorate)
       end
 
       def update_context(options)

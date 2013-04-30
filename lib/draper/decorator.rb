@@ -8,9 +8,10 @@ module Draper
     include ActiveModel::Serializers::Xml
 
     # @return the object being decorated.
-    attr_reader :source
-    alias_method :model, :source
-    alias_method :to_source, :source
+    attr_reader :object
+    alias_method :model, :object
+    alias_method :source, :object # TODO: deprecate this
+    alias_method :to_source, :object # TODO: deprecate this
 
     # @return [Hash] extra data to be used in user-defined methods.
     attr_accessor :context
@@ -21,16 +22,16 @@ module Draper
     # decorator to an instance of itself will create a decorator with the same
     # source as the original, rather than redecorating the other instance.
     #
-    # @param [Object] source
+    # @param [Object] object
     #   object to decorate.
     # @option options [Hash] :context ({})
     #   extra data to be stored in the decorator and used in user-defined
     #   methods.
-    def initialize(source, options = {})
+    def initialize(object, options = {})
       options.assert_valid_keys(:context)
-      @source = source
+      @object = object
       @context = options.fetch(:context, {})
-      handle_multiple_decoration(options) if source.instance_of?(self.class)
+      handle_multiple_decoration(options) if object.instance_of?(self.class)
     end
 
     class << self
@@ -126,22 +127,22 @@ module Draper
     # maps to `ProductsDecorator`), but otherwise defaults to
     # {Draper::CollectionDecorator}.
     #
-    # @param [Object] source
+    # @param [Object] object
     #   collection to decorate.
     # @option options [Class, nil] :with (self)
     #   the decorator class used to decorate each item. When `nil`, it is
     #   inferred from each item.
     # @option options [Hash] :context
     #   extra data to be stored in the collection decorator.
-    def self.decorate_collection(source, options = {})
+    def self.decorate_collection(object, options = {})
       options.assert_valid_keys(:with, :context)
-      collection_decorator_class.new(source, options.reverse_merge(with: self))
+      collection_decorator_class.new(object, options.reverse_merge(with: self))
     end
 
     # @return [Array<Class>] the list of decorators that have been applied to
     #   the object.
     def applied_decorators
-      chain = source.respond_to?(:applied_decorators) ? source.applied_decorators : []
+      chain = object.respond_to?(:applied_decorators) ? object.applied_decorators : []
       chain << self.class
     end
 
@@ -159,29 +160,29 @@ module Draper
       true
     end
 
-    # Compares the source with a possibly-decorated object.
+    # Compares the source object with a possibly-decorated object.
     #
     # @return [Boolean]
     def ==(other)
-      Draper::Decoratable::Equality.test(source, other)
+      Draper::Decoratable::Equality.test(object, other)
     end
 
-    # Checks if `self.kind_of?(klass)` or `source.kind_of?(klass)`
+    # Checks if `self.kind_of?(klass)` or `object.kind_of?(klass)`
     #
     # @param [Class] klass
     def kind_of?(klass)
-      super || source.kind_of?(klass)
+      super || object.kind_of?(klass)
     end
     alias_method :is_a?, :kind_of?
 
-    # Checks if `self.instance_of?(klass)` or `source.instance_of?(klass)`
+    # Checks if `self.instance_of?(klass)` or `object.instance_of?(klass)`
     #
     # @param [Class] klass
     def instance_of?(klass)
-      super || source.instance_of?(klass)
+      super || object.instance_of?(klass)
     end
 
-    # In case source is nil
+    # In case object is nil
     delegate :present?, :blank?
 
     # ActiveModel compatibility
@@ -190,10 +191,10 @@ module Draper
       self
     end
 
-    # @return [Hash] the source's attributes, sliced to only include those
+    # @return [Hash] the object's attributes, sliced to only include those
     # implemented by the decorator.
     def attributes
-      source.attributes.select {|attribute, _| respond_to?(attribute) }
+      object.attributes.select {|attribute, _| respond_to?(attribute) }
     end
 
     # ActiveModel compatibility
@@ -233,9 +234,9 @@ module Draper
     end
 
     def handle_multiple_decoration(options)
-      if source.applied_decorators.last == self.class
-        @context = source.context unless options.has_key?(:context)
-        @source = source.source
+      if object.applied_decorators.last == self.class
+        @context = object.context unless options.has_key?(:context)
+        @object = object.object
       else
         warn "Reapplying #{self.class} decorator to target that is already decorated with it. Call stack:\n#{caller(1).join("\n")}"
       end
