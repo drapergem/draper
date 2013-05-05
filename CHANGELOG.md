@@ -1,5 +1,15 @@
 # Draper Changelog
 
+## 1.2.1
+
+[28 commits by 4 authors](https://github.com/drapergem/draper/compare/v1.2.0...v1.2.1)
+
+* [Document stubbing route helpers](https://github.com/drapergem/draper/commit/dbe8a81ca7d4d9ae87b4b62926a0ba6379397fbc)
+
+* [Rename `source` to `object`. `source` still works, but will be depreciated in a future release.](https://github.com/drapergem/draper/commit/4b933ef39d252ecfe93c573a072633be545c49fb)
+
+Various bugfixes, as always.
+
 ## 1.2.0
 
 [78 commits by 14 authors](https://github.com/drapergem/draper/compare/v1.1.0...v1.2.0)
