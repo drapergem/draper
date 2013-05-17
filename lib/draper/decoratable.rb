@@ -23,6 +23,10 @@ module Draper
       self.class.decorator_class
     end
 
+    def decorator_class?
+      self.class.decorator_class?
+    end
+
     # The list of decorators that have been applied to the object.
     #
     # @return [Array<Class>] `[]`
@@ -54,6 +58,12 @@ module Draper
       def decorate(options = {})
         collection = Rails::VERSION::MAJOR >= 4 ? all : scoped
         decorator_class.decorate_collection(collection, options.reverse_merge(with: nil))
+      end
+
+      def decorator_class?
+        decorator_class
+      rescue Draper::UninferrableDecoratorError
+        false
       end
 
       # Infers the decorator class to be used by {Decoratable#decorate} (e.g.
