@@ -361,6 +361,23 @@ module Draper
       end
     end
 
+    describe "aliasing object to wrapped model name" do
+      class ::ProductDecorator < Decorator; end
+      class ::Product
+        attr_reader :name
+        def initialize
+          @name = "bob"
+        end
+      end
+
+      it "aliases object to wrapped model name" do
+        decorator = ProductDecorator.new(Product.new)
+
+        expect(decorator.product).not_to be nil
+        expect(decorator.product.name).to eq "bob"
+      end
+    end
+
     describe "#to_model" do
       it "returns the decorator" do
         decorator = Decorator.new(Model.new)
