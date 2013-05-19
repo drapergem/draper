@@ -32,6 +32,14 @@ module Draper
       @object = object
       @context = options.fetch(:context, {})
       handle_multiple_decoration(options) if object.instance_of?(self.class)
+      alias_to_wrapped_model_name
+    end
+
+    def alias_to_wrapped_model_name
+      begin
+        wrapped_model_name = object.class.name.downcase.to_sym
+        Decorator.send(:alias_method, wrapped_model_name, :object)
+      rescue; end
     end
 
     class << self
