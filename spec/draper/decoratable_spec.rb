@@ -46,6 +46,26 @@ module Draper
       end
     end
 
+    describe "#decorator_class?" do
+      it "returns true for decoratable model" do
+        expect(Product.new.decorator_class?).to be_true
+      end
+
+      it "returns false for non-decoratable model" do
+        expect(Model.new.decorator_class?).to be_false
+      end
+    end
+
+    describe ".decorator_class?" do
+      it "returns true for decoratable model" do
+        expect(Product.decorator_class?).to be_true
+      end
+
+      it "returns false for non-decoratable model" do
+        expect(Model.decorator_class?).to be_false
+      end
+    end
+
     describe "#decorator_class" do
       it "delegates to .decorator_class" do
         product = Product.new
