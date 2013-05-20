@@ -16,15 +16,6 @@ module Draper
     # @return [Hash] extra data to be used in user-defined methods.
     attr_accessor :context
 
-    def self.inherited(klass)
-      begin
-        alias_name = klass.name.downcase.gsub(/decorator/, "").to_sym
-        klass.send(:define_method, alias_name) do
-          object
-        end
-      rescue; end
-    end
-
     # Wraps an object in a new instance of the decorator.
     #
     # Decorators may be applied to other decorators. However, applying a
@@ -66,6 +57,7 @@ module Draper
     # @return [void]
     def self.decorates(object_class)
       @object_class = object_class.to_s.camelize.constantize
+      alias_object_to_object_class_name
     end
 
     # Returns the source class corresponding to the decorator class, as set by
@@ -227,6 +219,15 @@ module Draper
     end
 
     private
+
+    def self.inherited(subclass)
+      subclass.alias_object_to_object_class_name
+      super
+    end
+
+    def self.alias_object_to_object_class_name
+      alias_method object_class.name.underscore, :object if object_class?
+    end
 
     def self.object_class_name
       raise NameError if name.nil? || name.demodulize !~ /.+Decorator$/
