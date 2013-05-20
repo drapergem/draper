@@ -16,6 +16,15 @@ module Draper
     # @return [Hash] extra data to be used in user-defined methods.
     attr_accessor :context
 
+    def self.inherited(klass)
+      begin
+        alias_name = klass.name.downcase.gsub(/decorator/, "").to_sym
+        klass.send(:define_method, alias_name) do
+          object
+        end
+      rescue; end
+    end
+
     # Wraps an object in a new instance of the decorator.
     #
     # Decorators may be applied to other decorators. However, applying a
@@ -32,14 +41,6 @@ module Draper
       @object = object
       @context = options.fetch(:context, {})
       handle_multiple_decoration(options) if object.instance_of?(self.class)
-      alias_to_wrapped_model_name
-    end
-
-    def alias_to_wrapped_model_name
-      begin
-        wrapped_model_name = object.class.name.downcase.to_sym
-        Decorator.send(:alias_method, wrapped_model_name, :object)
-      rescue; end
     end
 
     class << self
