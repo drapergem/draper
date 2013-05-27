@@ -1,1 +1,2 @@
 gem "rails", "~> 3.0.0"
+gem "active_model_serializers", "~> 0.7.0"
