@@ -361,6 +361,46 @@ module Draper
       end
     end
 
+    describe "aliasing object to object class name" do
+      context "when object_class is inferrable from the decorator name" do
+        it "aliases object to the object class name" do
+          object = stub
+          decorator = ProductDecorator.new(object)
+
+          expect(decorator.product).to be object
+        end
+      end
+
+      context "when object_class is set by decorates" do
+        it "aliases object to the object class name" do
+          decorator_class = Class.new(Decorator) { decorates Product }
+          object = stub
+          decorator = decorator_class.new(object)
+
+          expect(decorator.product).to be object
+        end
+      end
+
+      context "when object_class's name is several words long" do
+        it "underscores the method name" do
+          stub_const "LongWindedModel", Class.new
+          decorator_class = Class.new(Decorator) { decorates LongWindedModel }
+          object = stub
+          decorator = decorator_class.new(object)
+
+          expect(decorator.long_winded_model).to be object
+        end
+      end
+
+      context "when object_class is not set" do
+        it "does not alias object" do
+          decorator_class = Class.new(Decorator)
+
+          expect(decorator_class.instance_methods).to eq Decorator.instance_methods
+        end
+      end
+    end
+
     describe "#to_model" do
       it "returns the decorator" do
         decorator = Decorator.new(Model.new)
