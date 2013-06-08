@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'rails'
 require 'ammeter/init'
-require 'generators/decorator/decorator_generator'
+require 'generators/rails/decorator_generator'
 
 describe Rails::Generators::DecoratorGenerator do
   destination File.expand_path("../tmp", __FILE__)
