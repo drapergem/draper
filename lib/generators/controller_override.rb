@@ -4,7 +4,6 @@ require "rails/generators/rails/scaffold_controller/scaffold_controller_generato
 
 module Rails
   module Generators
-
     class ControllerGenerator
       hook_for :decorator, default: true
     end
@@ -12,6 +11,5 @@ module Rails
     class ScaffoldControllerGenerator
       hook_for :decorator, default: true
     end
-
   end
 end
