@@ -131,11 +131,12 @@ end
 
 ### Generators
 
-When you have Draper installed and generate a resource with...
+When you have Draper installed and generate a controller for example with...
 
 ```
 rails generate resource Article
 ```
+
 ...you'll get a decorator for free!
 
 But if the `Article` model already exists, you can run...
