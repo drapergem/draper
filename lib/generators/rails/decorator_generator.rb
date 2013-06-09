@@ -5,9 +5,16 @@ module Rails
       check_class_collision suffix: "Decorator"
 
       class_option :parent, type: :string, desc: "The parent class for the generated decorator"
+      class_option :collection, type: :boolean, desc: "Also create a collection decorator for the given class"
+      class_option :collection_parent, type: :string, desc: "The parent class for the optionally generated collection decorator"
 
       def create_decorator_file
         template 'decorator.rb', File.join('app/decorators', class_path, "#{file_name}_decorator.rb")
+      end
+
+      def create_collection_decorator_file
+        return unless options["collection"]
+        template 'collection_decorator.rb', File.join('app/decorators', class_path, "#{plural_file_name}_decorator.rb")
       end
 
       hook_for :test_framework
@@ -21,6 +28,17 @@ module Rails
             ApplicationDecorator
           rescue LoadError
             "Draper::Decorator"
+          end
+        end
+      end
+
+      def collection_parent_class_name
+        options.fetch("collection_parent") do
+          begin
+            require 'collection_decorator'
+            CollectionDecorator
+          rescue LoadError
+            "Draper::CollectionDecorator"
           end
         end
       end
