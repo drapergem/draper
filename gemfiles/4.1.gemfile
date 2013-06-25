@@ -1,0 +1,2 @@
+gem "rails", github: "rails/rails"
+gem "devise", github: "plataformatec/devise"
