@@ -188,6 +188,8 @@ module Draper
       super || object.instance_of?(klass)
     end
 
+    delegate :to_s
+
     # In case object is nil
     delegate :present?, :blank?
 
