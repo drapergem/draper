@@ -441,6 +441,14 @@ module Draper
       end
     end
 
+    describe "#to_s" do
+      it "delegates to the object" do
+        decorator = Decorator.new(double(to_s: :delegated))
+
+        expect(decorator.to_s).to be :delegated
+      end
+    end
+
     describe "#attributes" do
       it "returns only the object's attributes that are implemented by the decorator" do
         decorator = Decorator.new(double(attributes: {foo: "bar", baz: "qux"}))
