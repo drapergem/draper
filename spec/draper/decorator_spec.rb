@@ -364,7 +364,7 @@ module Draper
     describe "aliasing object to object class name" do
       context "when object_class is inferrable from the decorator name" do
         it "aliases object to the object class name" do
-          object = stub
+          object = double
           decorator = ProductDecorator.new(object)
 
           expect(decorator.product).to be object
@@ -374,7 +374,7 @@ module Draper
       context "when object_class is set by decorates" do
         it "aliases object to the object class name" do
           decorator_class = Class.new(Decorator) { decorates Product }
-          object = stub
+          object = double
           decorator = decorator_class.new(object)
 
           expect(decorator.product).to be object
@@ -385,7 +385,7 @@ module Draper
         it "underscores the method name" do
           stub_const "LongWindedModel", Class.new
           decorator_class = Class.new(Decorator) { decorates LongWindedModel }
-          object = stub
+          object = double
           decorator = decorator_class.new(object)
 
           expect(decorator.long_winded_model).to be object
@@ -678,7 +678,6 @@ module Draper
           object = Class.new{def hello_world; end}.new
           decorator = Decorator.new(object)
 
-          expect { decorator.method(:hello_world) }.not_to raise_error NameError
           expect(decorator.method(:hello_world)).not_to be_nil
         end
       end
@@ -687,7 +686,6 @@ module Draper
         it "allows .method to be called on delegated class methods" do
           Decorator.stub object_class: double(hello_world: :delegated)
 
-          expect { Decorator.method(:hello_world) }.not_to raise_error NameError
           expect(Decorator.method(:hello_world)).not_to be_nil
         end
       end

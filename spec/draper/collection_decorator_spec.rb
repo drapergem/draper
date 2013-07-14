@@ -133,7 +133,7 @@ module Draper
       context "without a block" do
         it "decorates object.find" do
           object = []
-          found = stub(decorate: :decorated)
+          found = double(decorate: :decorated)
           decorator = CollectionDecorator.new(object)
 
           object.should_receive(:find).and_return(found)
