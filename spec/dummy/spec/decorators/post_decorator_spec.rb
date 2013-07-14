@@ -16,12 +16,20 @@ describe PostDecorator do
     expect(decorator.hello_world).to eq "Hello, world!"
   end
 
+  it "can be passed to path helpers" do
+    expect(helpers.post_path(decorator)).to eq "/en/posts/#{object.id}"
+  end
+
   it "can use path helpers with its model" do
     expect(decorator.path_with_model).to eq "/en/posts/#{object.id}"
   end
 
   it "can use path helpers with its id" do
     expect(decorator.path_with_id).to eq "/en/posts/#{object.id}"
+  end
+
+  it "can be passed to url helpers" do
+    expect(helpers.post_url(decorator)).to eq "http://www.example.com:12345/en/posts/#{object.id}"
   end
 
   it "can use url helpers with its model" do

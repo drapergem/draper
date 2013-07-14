@@ -20,11 +20,17 @@
   <dt>Helpers from the controller:</dt>
   <dd id="goodnight_moon"><%= post.goodnight_moon %></dd>
 
+  <dt>Path with decorator:</dt>
+  <dd id="path_with_decorator"><%= post_path(post) %></dd>
+
   <dt>Path with model:</dt>
   <dd id="path_with_model"><%= post.path_with_model %></dd>
 
   <dt>Path with id:</dt>
   <dd id="path_with_id"><%= post.path_with_id %></dd>
+
+  <dt>URL with decorator:</dt>
+  <dd id="url_with_decorator"><%= post_url(post) %></dd>
 
   <dt>URL with model:</dt>
   <dd id="url_with_model"><%= post.url_with_model %></dd>

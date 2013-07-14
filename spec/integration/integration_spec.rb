@@ -38,12 +38,20 @@ app.start_server do
         expect(page).to have_text("Goodnight, moon!").in("#goodnight_moon")
       end
 
+      it "can be passed to path helpers" do
+        expect(page).to have_text("/en/posts/1").in("#path_with_decorator")
+      end
+
       it "can use path helpers with a model" do
         expect(page).to have_text("/en/posts/1").in("#path_with_model")
       end
 
       it "can use path helpers with an id" do
         expect(page).to have_text("/en/posts/1").in("#path_with_id")
+      end
+
+      it "can be passed to url helpers" do
+        expect(page).to have_text("http://www.example.com:12345/en/posts/1").in("#url_with_decorator")
       end
 
       it "can use url helpers with a model" do
