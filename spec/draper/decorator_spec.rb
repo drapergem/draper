@@ -449,6 +449,33 @@ module Draper
       end
     end
 
+    describe "#inspect" do
+      it "returns a detailed description of the decorator" do
+        decorator = ProductDecorator.new(double)
+
+        expect(decorator.inspect).to match /#<ProductDecorator:0x\h+ .+>/
+      end
+
+      it "includes the object" do
+        decorator = Decorator.new(double(inspect: "#<the object>"))
+
+        expect(decorator.inspect).to include "@object=#<the object>"
+      end
+
+      it "includes the context" do
+        decorator = Decorator.new(double, context: {foo: "bar"})
+
+        expect(decorator.inspect).to include '@context={:foo=>"bar"}'
+      end
+
+      it "includes other instance variables" do
+        decorator = Decorator.new(double)
+        decorator.instance_variable_set :@foo, "bar"
+
+        expect(decorator.inspect).to include '@foo="bar"'
+      end
+    end
+
     describe "#attributes" do
       it "returns only the object's attributes that are implemented by the decorator" do
         decorator = Decorator.new(double(attributes: {foo: "bar", baz: "qux"}))
