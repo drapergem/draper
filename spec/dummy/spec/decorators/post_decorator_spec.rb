@@ -53,6 +53,18 @@ describe PostDecorator do
     expect(json).to match /"updated_at":"overridden"/
   end
 
+  it "honors include_root_in_json when false" do
+    Post.include_root_in_json = false
+    json = decorator.to_json
+    expect(json).to match Regexp.new("^{\"id\":#{decorator.id}")
+  end
+
+  it "honors include_root_in_json when true" do
+    Post.include_root_in_json = true
+    json = decorator.to_json
+    expect(json).to match Regexp.new("^{\"post\":{\"id\":#{decorator.id}")
+  end
+
   it "serializes to XML" do
     pending("Rails < 3.2 does not use `serializable_hash` in `to_xml`") if Rails.version.to_f < 3.2
 
