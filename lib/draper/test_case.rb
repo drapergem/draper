@@ -1,12 +1,17 @@
 module Draper
   begin
+    require "rails/test_help"
     require 'minitest/rails'
   rescue LoadError
   end
 
   active_support_test_case = begin
     require 'minitest/rails/active_support' # minitest-rails < 0.5
-    ::MiniTest::Rails::ActiveSupport::TestCase
+    if ::MiniTest::Rails::VERSION < "0.9"
+      ::MiniTest::Rails::ActiveSupport::TestCase
+    else
+      ::ActiveSupport::TestCase
+    end
   rescue LoadError
     require 'active_support/test_case'
     ::ActiveSupport::TestCase
