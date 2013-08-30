@@ -255,6 +255,19 @@ module Draper
       end
     end
 
+    describe "#object" do
+      it "returns the wrapped collection object" do
+        decorator_class = Class.new(Draper::CollectionDecorator) do
+          def sum
+            object.sum < 0 ? "-" : "+"
+          end
+        end
+
+        decorator = decorator_class.new([1])
+        expect(decorator.sum).to eq '+'
+      end
+    end
+
     describe '#kind_of?' do
       it 'asks the kind of its decorated collection' do
         decorator = ProductsDecorator.new([])
