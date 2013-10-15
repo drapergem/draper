@@ -525,7 +525,6 @@ module Draper
         object.should_receive(:==).with(other).and_return(false)
         expect(decorator == other).to be_false
       end
-
     end
 
     describe "#===" do
@@ -541,6 +540,31 @@ module Draper
         decorator.stub(:==).with(:anything).and_return(false)
 
         expect(decorator === :anything).to be_false
+      end
+    end
+
+    describe "#eql?" do
+      it "is true when #eql? is true" do
+        first = Decorator.new('foo')
+        second = Decorator.new('foo')
+
+        expect(first.eql? second).to be_true
+      end
+
+      it "is false when #eql? is false" do
+        first = Decorator.new('foo')
+        second = Decorator.new('bar')
+
+        expect(first.eql? second).to be_false
+      end
+    end
+
+    describe "#hash" do
+      it "is consistent for equal objects" do
+        first = Decorator.new(Model.new)
+        second = Decorator.new(Model.new)
+
+        expect(first.hash == second.hash).to be_true
       end
     end
 
