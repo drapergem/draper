@@ -173,6 +173,14 @@ module Draper
       Draper::Decoratable::Equality.test(object, other)
     end
 
+    def eql?(other)
+      self == other
+    end
+
+    def hash
+      self.class.hash ^ object.hash
+    end
+
     # Checks if `self.kind_of?(klass)` or `object.kind_of?(klass)`
     #
     # @param [Class] klass
