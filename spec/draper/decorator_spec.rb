@@ -781,5 +781,35 @@ module Draper
       end
     end
 
+    describe "Enumerable hash and equality functionality" do
+      describe "#uniq" do
+        it "removes duplicate objects with same decorator" do
+          object = Model.new
+          array = [Decorator.new(object), Decorator.new(object)]
+
+          expect(array.uniq.count).to eq(1)
+        end
+
+        it "separates different objects with identical decorators" do
+          array = [Decorator.new('foo'), Decorator.new('bar')]
+
+          expect(array.uniq.count).to eq(2)
+        end
+
+        it "separates identical objects with different decorators" do
+          object = Model.new
+          array = [Decorator.new(object), OtherDecorator.new(object)]
+
+          expect(array.uniq.count).to eq(2)
+        end
+
+        it "distinguishes between an objects and its decorated version" do
+          object = Model.new
+          array = [Decorator.new(object), object]
+
+          expect(array.uniq.count).to eq(2)
+        end
+      end
+    end
   end
 end
