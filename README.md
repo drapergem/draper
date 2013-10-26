@@ -52,7 +52,7 @@ design calls for a slighly different formatting to the date for a `Book`.
 Now your helper method can either switch based on the input class type (poor
 Ruby style), or you break it out into two methods, `book_publication_status` and
 `article_publication_status`. And keep adding methods for each publication
-type...to the global helper namespace. And remember all the names. Ick.
+type...to the global helper namespace. And you'll have to remember all the names. Ick.
 
 Ruby thrives when we use Object-Oriented style. If you didn't know Rails'
 helpers existed, you'd probably imagine that your view template could feature
@@ -109,7 +109,7 @@ Decorators are the ideal place to:
 Add Draper to your Gemfile:
 
 ```ruby
-gem 'draper', '~> 1.0'
+gem 'draper', '~> 1.3'
 ```
 
 And run `bundle install` within your app's directory.
@@ -131,7 +131,7 @@ end
 
 ### Generators
 
-When you have Draper installed and generate a controller for example with...
+When you have Draper installed and generate a controller...
 
 ```
 rails generate resource Article
@@ -150,7 +150,7 @@ rails generate decorator Article
 ### Accessing Helpers
 
 Normal Rails helpers are still useful for lots of tasks. Both Rails' provided
-helper and those defined in your app can be accessed via the `h` method:
+helpers and those defined in your app can be accessed within a decorator via the `h` method:
 
 ```ruby
 class ArticleDecorator < Draper::Decorator
@@ -168,7 +168,8 @@ include Draper::LazyHelpers
 
 ...at the top of your decorator class - you'll mix in a bazillion methods and
 never have to type `h.` again.
-(Note: the `capture` method is only available through `h` or `helpers`)
+
+(*Note*: the `capture` method is only available through `h` or `helpers`)
 
 ### Accessing the model
 
@@ -188,7 +189,7 @@ end
 
 ### Single Objects
 
-Ok, so you've written a sweet decorator, now you're going to want to put it in
+Ok, so you've written a sweet decorator, now you're going to want to put it into
 action! A simple option is to call the `decorate` method on your model:
 
 ```ruby
@@ -207,7 +208,9 @@ control - say you want to decorate a `Widget` with a more general
 
 ### Collections
 
-If you have a whole bunch of objects, you can decorate them all in one fell
+#### Decorating Individual Elements
+
+If you have a collection of objects, you can decorate them all in one fell
 swoop:
 
 ```ruby
@@ -223,6 +226,8 @@ If your collection is an ActiveRecord query, you can use this:
 *Note:* In Rails 3, the `.all` method returns an array and not a query. Thus you
 _cannot_ use the technique of `Article.all.decorate` in Rails 3. In Rails 4,
 `.all` returns a query so this techique would work fine.
+
+#### Decorating the Collection Itself
 
 If you want to add methods to your decorated collection (for example, for
 pagination), you can subclass `Draper::CollectionDecorator`:
@@ -241,7 +246,7 @@ end
 @articles = ArticlesDecorator.decorate(Article.all)
 ```
 
-Draper decorates each item using its `decorate` method. Alternatively, you can
+Draper decorates each item by calling the `decorate` method. Alternatively, you can
 specify a decorator by overriding the collection decorator's `decorator_class`
 method, or by passing the `:with` option to the constructor.
 
@@ -264,8 +269,11 @@ Support](http://api.rubyonrails.org/classes/Module.html#method-i-delegate),
 except that the `:to` option is not required; it defaults to `:object` when
 omitted.
 
-[will_paginate](https://github.com/mislav/will_paginate) needs you to
-`delegate :current_page, :per_page, :offset, :total_entries, :total_pages`.
+[will_paginate](https://github.com/mislav/will_paginate) needs the following delegations:
+
+```ruby
+delegate :current_page, :per_page, :offset, :total_entries, :total_pages
+```
 
 ### Decorating Associated Objects
 
@@ -298,7 +306,7 @@ your `ArticleDecorator` and they'll return decorated objects:
 @article = ArticleDecorator.find(params[:id])
 ```
 
-### When to decorate objects
+### When to Decorate Objects
 
 Decorators are supposed to behave very much like the models they decorate, and
 for that reason it is very tempting to just decorate your objects at the start
@@ -370,7 +378,7 @@ In your `Spork.prefork` block of `spec_helper.rb`, add this:
 require 'draper/test/rspec_integration'
 ```
 
-### Isolated tests
+### Isolated Tests
 
 In tests, Draper needs to build a view context to access helper methods. By
 default, it will create an `ApplicationController` and then use its view
@@ -391,7 +399,7 @@ Draper::ViewContext.test_strategy :fast do
 end
 ```
 
-#### Stubbing route helper functions
+#### Stubbing Route Helper Functions
 
 If you are writing isolated tests for Draper methods that call route helper
 methods, you can stub them instead of needing to require Rails.
@@ -477,7 +485,7 @@ the following:
 @article.author_title # Returns the article's `author.title`
 ```
 
-### Adding context
+### Adding Context
 
 If you need to pass extra data to your decorators, you can use a `context` hash.
 Methods that create decorators take it as an option, for example:
@@ -555,7 +563,7 @@ end
 
 This is only necessary when proxying class methods.
 
-### Making models decoratable
+### Making Models Decoratable
 
 Models get their `decorate` method from the `Draper::Decoratable` module, which
 is included in `ActiveRecord::Base` and `Mongoid::Document` by default. If
