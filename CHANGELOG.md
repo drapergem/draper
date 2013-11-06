@@ -1,5 +1,19 @@
 # Draper Changelog
 
+## 1.3.0
+
+[30 commits by 11 authors](https://github.com/drapergem/draper/compare/v1.2.1...v1.3.0)
+
+* [Add `decorator_class?` method](https://github.com/drapergem/draper/commit/53e1df5c3ee169144a2778c6d2ee13cc6af99429)
+
+* [Clear ViewContext before specs instead of after](https://github.com/drapergem/draper/pull/547)
+
+* [Add alias method `#{model_name}` to the decorated object ](https://github.com/drapergem/draper/commit/f5f27243c3f0c37bff4872e1e78521e570ff1e4f)
+
+* [Hook into `controller_generator` and `scaffold_controller_generator` instead of resource generator](https://github.com/drapergem/draper/commit/cd4f298987c3b4ad8046563ad4a087055fc7efe2)
+
+* [Delegate `to_s` method to the object](https://github.com/drapergem/draper/commit/58b8181050c2a9a86f54660e7bb6bfefa5fd0b64)
+
 ## 1.2.1
 
 [28 commits by 4 authors](https://github.com/drapergem/draper/compare/v1.2.0...v1.2.1)
