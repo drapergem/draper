@@ -152,6 +152,12 @@ module Draper
         it "infers the decorator from the class" do
           expect(Product.decorator_class).to be ProductDecorator
         end
+
+        context "without a decorator on its own" do
+          it "infers the decorator from a superclass" do
+            expect(SpecialProduct.decorator_class).to be ProductDecorator
+          end
+        end
       end
 
       context "for ActiveModel classes" do

@@ -75,8 +75,12 @@ module Draper
         decorator_name = "#{prefix}Decorator"
         decorator_name.constantize
       rescue NameError => error
-        raise unless error.missing_name?(decorator_name)
-        raise Draper::UninferrableDecoratorError.new(self)
+        if superclass.respond_to?(:decorator_class)
+          superclass.decorator_class
+        else
+          raise unless error.missing_name?(decorator_name)
+          raise Draper::UninferrableDecoratorError.new(self)
+        end
       end
 
       # Compares with possibly-decorated objects.
