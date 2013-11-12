@@ -2,7 +2,7 @@ require 'draper'
 require 'rspec'
 
 require 'active_model/naming'
-require_relative '../app/decorators/post_decorator'
+require_relative '../app/models/decorators/post_decorator'
 
 Draper::ViewContext.test_strategy :fast
 

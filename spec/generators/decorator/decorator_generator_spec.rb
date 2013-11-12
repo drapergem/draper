@@ -10,7 +10,7 @@ describe Rails::Generators::DecoratorGenerator do
   after(:all) { FileUtils.rm_rf destination_root }
 
   describe "the generated decorator" do
-    subject { file("app/decorators/your_model_decorator.rb") }
+    subject { file("app/models/decorators/your_model_decorator.rb") }
 
     describe "naming" do
       before { run_generator %w(YourModel) }
@@ -19,7 +19,7 @@ describe Rails::Generators::DecoratorGenerator do
     end
 
     describe "namespacing" do
-      subject { file("app/decorators/namespace/your_model_decorator.rb") }
+      subject { file("app/models/decorators/namespace/your_model_decorator.rb") }
       before { run_generator %w(Namespace::YourModel) }
 
       it { should contain "class Namespace::YourModelDecorator" }

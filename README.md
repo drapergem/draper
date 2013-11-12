@@ -69,7 +69,7 @@ belong in a model.
 Instead, you implement a decorator:
 
 ```ruby
-# app/decorators/article_decorator.rb
+# app/models/decorators/article_decorator.rb
 class ArticleDecorator < Draper::Decorator
   delegate_all
 
@@ -119,11 +119,11 @@ wiki](https://github.com/drapergem/draper/wiki/Upgrading-to-1.0).
 
 ## Writing Decorators
 
-Decorators inherit from `Draper::Decorator`, live in your `app/decorators`
+Decorators inherit from `Draper::Decorator`, live in your `app/models/decorators`
 directory, and are named for the model that they decorate:
 
 ```ruby
-# app/decorators/article_decorator.rb
+# app/models/decorators/article_decorator.rb
 class ArticleDecorator < Draper::Decorator
 # ...
 end
@@ -233,7 +233,7 @@ If you want to add methods to your decorated collection (for example, for
 pagination), you can subclass `Draper::CollectionDecorator`:
 
 ```ruby
-# app/decorators/articles_decorator.rb
+# app/models/decorators/articles_decorator.rb
 class ArticlesDecorator < Draper::CollectionDecorator
   def page_number
     42
@@ -435,7 +435,7 @@ controllers inherit from `ApplicationController`. You can apply this same
 pattern to your decorators:
 
 ```ruby
-# app/decorators/application_decorator.rb
+# app/models/decorators/application_decorator.rb
 class ApplicationDecorator < Draper::Decorator
 # ...
 end
