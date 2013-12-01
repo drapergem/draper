@@ -51,6 +51,14 @@ module Draper
     end
   end
 
+  def self.setup_active_record_collection_proxy
+    ActiveRecord::Associations::CollectionProxy.class_eval do
+      def decorate(options = {})
+        @association.klass.decorator_class.decorate_collection(@association.target, options.reverse_merge(with: nil))
+      end
+    end
+  end
+
   class UninferrableDecoratorError < NameError
     def initialize(klass)
       super("Could not infer a decorator for #{klass}.")

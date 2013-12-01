@@ -43,6 +43,12 @@ module Draper
       end
     end
 
+    initializer "draper.setup_active_record_collection_proxy" do |app|
+      ActiveSupport.on_load :active_record do
+        Draper.setup_active_record_collection_proxy
+      end
+    end
+
     initializer "draper.setup_active_model_serializers" do |app|
       ActiveSupport.on_load :active_model_serializers do
         Draper::CollectionDecorator.send :include, ActiveModel::ArraySerializerSupport
