@@ -173,6 +173,21 @@ module Draper
       Draper::Decoratable::Equality.test(object, other)
     end
 
+    # Delegates the decorator's hash to it's source object
+    # This is for using decorators with array operations or as keys in a hash
+    #
+    # @return [Fixnum]
+    def hash
+      source.hash
+    end
+
+    # Compares its hash to the given object's
+    #
+    # @return [Boolean]
+    def eql?(value)
+      hash.eql? value.hash
+    end
+
     # Checks if `self.kind_of?(klass)` or `object.kind_of?(klass)`
     #
     # @param [Class] klass

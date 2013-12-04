@@ -544,6 +544,28 @@ module Draper
       end
     end
 
+    describe "#hash" do
+      it "delegates hash to the source hash" do
+        decorator = Decorator.new(model = Model.new)
+        expect(model).to receive(:hash)
+        decorator.hash
+      end
+    end
+
+    describe "#eql?" do
+      it "compares its hash to the given values" do
+        decorator = Decorator.new(Model.new).tap { |d| d.stub(:hash).and_return(10) }
+        expect(decorator.eql?(double(hash: 10))).to be_true
+        expect(decorator.eql?(double(hash: 11))).to be_false
+      end
+
+      it "works properly when used as a key in a hash" do
+        decorator1 = Decorator.new(model = Model.new)
+        decorator2 = Decorator.new(model)
+        expect({decorator1 => 'd1', decorator2 => 'd2'}.keys.count).to eq 1
+      end
+    end
+
     describe ".delegate" do
       protect_class Decorator
 
