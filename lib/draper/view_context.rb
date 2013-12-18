@@ -12,7 +12,7 @@ module Draper
 
     # Set the current controller
     def activate_draper
-      Draper::ViewContext.controller = controller
+      Draper::ViewContext.controller = self
     end
 
     # Returns the current controller.
