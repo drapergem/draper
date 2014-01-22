@@ -88,6 +88,16 @@ module Draper
           expect(redecorated.object).to be decorated
         end
       end
+
+      context 'when decorator is under a namespace but model is not' do
+        it 'decorates the model properly' do
+          model = Model.new
+          decorator = Namespaced::OtherDecorator.new(model)
+
+          expect(decorator).to be_instance_of Namespaced::OtherDecorator
+          expect(decorator.object).to eq model
+        end
+      end
     end
 
     describe "#context=" do
