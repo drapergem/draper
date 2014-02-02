@@ -147,6 +147,14 @@ rails generate decorator Article
 
 ...to create the `ArticleDecorator`.
 
+If you want to turn off draper files generator please paste lines to application.rb
+
+```ruby
+config.generators do |g|
+  g.decorator false
+end
+```
+
 ### Accessing Helpers
 
 Normal Rails helpers are still useful for lots of tasks. Both Rails' provided
