@@ -171,9 +171,50 @@ module Draper
 
       klass = Product
       klass.class_eval { def self.some_scope ; ActiveRecord::Relation.new ; end }
-      expect(Product).to respond_to(:some_scope)
-      proxy = CollectionDecorator.new(klass)
-      expect(proxy.some_scope).to be_instance_of(proxy.class)
+      collection_decorator = CollectionDecorator.new(klass)
+      expect(collection_decorator.some_scope).to be_instance_of(CollectionDecorator)
+    end
+
+    describe "delegations" do
+      context "when decorating a relation" do
+        describe "#count" do
+          it "calls out directly to the relation" do
+            module ActiveRecord
+              class Relation
+                include Draper::Decoratable
+                def count; :delegated ;end
+                def to_a; [] ;end
+              end
+            end
+            klass = Product
+            klass.class_eval { def self.some_scope ; ActiveRecord::Relation.new ; end }
+            collection_decorator = CollectionDecorator.new(klass.some_scope)
+            expect(collection_decorator.count).to be :delegated
+          end
+        end
+
+        describe "[]" do
+          it "decorates the objects as expected" do
+            module ActiveRecord
+              class Relation
+                include Draper::Decoratable
+                def klass; Product ;end
+                def all; to_a ;end
+                def to_a; [Product.new] ;end
+              end
+            end
+            klass = Product
+            klass.class_eval { def self.some_scope ; ActiveRecord::Relation.new ; end }
+            collection_decorator = CollectionDecorator.new(klass.some_scope)
+            expect(collection_decorator).to be_a(CollectionDecorator)
+            expect(collection_decorator.all.first).to be_decorated_with ProductDecorator
+          end
+        end
+      end
+
+      context "when decorating an array" do
+
+      end
     end
 
 

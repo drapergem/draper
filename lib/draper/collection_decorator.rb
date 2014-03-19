@@ -13,7 +13,7 @@ module Draper
     attr_accessor :context
 
     array_methods = Array.instance_methods - Object.instance_methods
-    delegate :==, :as_json, *array_methods, to: :decorated_collection
+    delegate :==, :as_json, :all, :last!, *array_methods, to: :decorated_collection
 
     # @param [Enumerable] object
     #   collection to decorate.
@@ -36,7 +36,12 @@ module Draper
 
     # @return [Array] the decorated items.
     def decorated_collection
-      @decorated_collection ||= object.map{|item| decorate_item(item)}
+      return @decorated_collection if instance_variable_defined?(:'@decorated_collection')
+      if defined?(ActiveRecord) && object.kind_of?(ActiveRecord::Relation)
+        @decorated_collection ||= RelationProxy.new(object) { |item| decorate_item(item) }
+      else
+        @decorated_collection ||= object.map{|item| decorate_item(item)}
+      end
     end
 
     # Delegated to the decorated collection when using the block form
@@ -115,6 +120,26 @@ module Draper
         decorator_class.method(:decorate)
       else
         ->(item, options) { item.decorate(options) }
+      end
+    end
+
+    public
+
+    class RelationProxy < SimpleDelegator
+      def initialize(object, &block)
+        super(object)
+        @block = block
+      end
+
+      def method_missing(method, *args, &block)
+        result = __getobj__.send(method, *args, &block)
+        if result.is_a?(Array)
+          result.map{|item| @block.call(item) }
+        elsif __getobj__.respond_to?(:klass) && result.is_a?(__getobj__.klass)
+          @block.call(result)
+        else
+          result
+        end
       end
     end
   end
