@@ -77,6 +77,27 @@ module Draper
       self
     end
 
+    def method_missing(method, *args, &block)
+      if object.respond_to?(method)
+        self.class.send :define_method, method do |*args, &block|
+          scoped_result = object.send(method, *args, &block)
+          if defined?(ActiveRecord) && scoped_result.kind_of?(ActiveRecord::Relation)
+            self.class.new(scoped_result, context: context)
+          else
+            scoped_result
+          end
+        end
+
+        send method, *args, &block
+      else
+        super
+      end
+
+    rescue NoMethodError => no_method_error
+      super if no_method_error.name == method
+      raise no_method_error
+    end
+
     protected
 
     # @return the collection being decorated.

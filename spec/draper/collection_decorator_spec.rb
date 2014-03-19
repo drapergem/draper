@@ -161,6 +161,23 @@ module Draper
       expect(decorator[42]).to be :delegated
     end
 
+    it "returns a collection decorator when a scope is called on the decorated collection" do
+      module ActiveRecord
+        class Relation
+          include Draper::Decoratable
+          def some_scope; self ;end
+        end
+      end
+
+      klass = Product
+      klass.class_eval { def self.some_scope ; ActiveRecord::Relation.new ; end }
+      expect(Product).to respond_to(:some_scope)
+      proxy = CollectionDecorator.new(klass)
+      expect(proxy.some_scope).to be_instance_of(proxy.class)
+    end
+
+
+
     describe "#==" do
       context "when comparing to a collection decorator with the same object" do
         it "returns true" do
