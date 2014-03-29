@@ -288,12 +288,6 @@ module Draper
       "#{plural}Decorator"
     end
 
-    def self.relation_decorator_name
-      plural = object_class_name.pluralize
-      raise NameError if plural == object_class_name
-      "#{plural}Decorator"
-    end
-
     def handle_multiple_decoration(options)
       if object.applied_decorators.last == self.class
         @context = object.context unless options.has_key?(:context)
