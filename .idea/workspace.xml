@@ -67,8 +67,8 @@
       <file leaf-file-name="relation_decorator.rb" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/lib/draper/relation_decorator.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.44130924" vertical-offset="419" max-vertical-offset="1305">
-              <caret line="54" column="0" selection-start-line="54" selection-start-column="0" selection-end-line="54" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.66139954" vertical-offset="419" max-vertical-offset="1305">
+              <caret line="67" column="81" selection-start-line="67" selection-start-column="81" selection-end-line="67" selection-end-column="81" />
               <folding />
             </state>
           </provider>
@@ -380,8 +380,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/lib/draper/relation_decorator.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.44130924" vertical-offset="419" max-vertical-offset="1305">
-          <caret line="54" column="0" selection-start-line="54" selection-start-column="0" selection-end-line="54" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.66139954" vertical-offset="419" max-vertical-offset="1305">
+          <caret line="67" column="81" selection-start-line="67" selection-start-column="81" selection-end-line="67" selection-end-column="81" />
           <folding />
         </state>
       </provider>
