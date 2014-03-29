@@ -56,7 +56,7 @@ module Draper
       if defined?(ActiveRecord) && result.is_a?(ActiveRecord::Relation)
         self.class.decorate(result, context: context)
       elsif result.is_a?(Array)
-        Decorator.collection_decorator_class.decorate(result, context: context)
+        Decorator.collection_decorator_class.decorate_collection(result, context: context)
       elsif relation.respond_to?(:klass) && result.is_a?(relation.klass) && klass.respond_to?(:decorate)
         result.decorate(context: context)
       else
