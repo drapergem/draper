@@ -1,11 +1,13 @@
 shared_examples_for "a decoratable model" do
   describe ".decorate" do
-    it "applies a collection decorator to a scope" do
+    it "applies a relation decorator to a scope" do
       described_class.create
       decorated = described_class.limit(1).decorate
 
-      expect(decorated).to have(1).items
       expect(decorated).to be_decorated
+
+      expect(decorated.all).to have(1).items
+      expect(decorated.all).to be_decorated
     end
   end
 
