@@ -23,6 +23,7 @@ module Draper
       options.assert_valid_keys(:with, :context)
       @relation = relation
       @decorator_class = options[:with]
+      @decorator_class ||= klass.decorator_class if relation.respond_to?(:klass)
       @context = options.fetch(:context, {})
     end
 
@@ -53,11 +54,11 @@ module Draper
     def method_missing(method, *args, &block)
       result = relation.send(method, *args, &block)
       if result.is_a?(ActiveRecord::Relation)
-        Decorator.relation_decorator_class.decorate(result, context: context)
+        self.class.decorate(result, context: context)
       elsif result.is_a?(Array)
         Decorator.collection_decorator_class.decorate(result, context: context)
-      elsif relation.respond_to?(:klass) && result.is_a?(relation.klass)
-        Decorator.decorate(result, context: context)
+      elsif relation.respond_to?(:klass) && result.is_a?(relation.klass) && klass.respond_to?(:decorate)
+        result.decorate(context: context)
       else
         result
       end
