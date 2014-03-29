@@ -53,7 +53,7 @@ module Draper
 
     def method_missing(method, *args, &block)
       result = relation.send(method, *args, &block)
-      if result.is_a?(ActiveRecord::Relation)
+      if defined?(ActiveRecord) && result.is_a?(ActiveRecord::Relation)
         self.class.decorate(result, context: context)
       elsif result.is_a?(Array)
         Decorator.collection_decorator_class.decorate(result, context: context)
