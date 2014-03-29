@@ -2,10 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="71813298-d93b-4bce-9b1e-b85389b202ae" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/draper/decorator.rb" afterPath="$PROJECT_DIR$/lib/draper/decorator.rb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/spec/dummy/spec/models/post_spec.rb" afterPath="$PROJECT_DIR$/spec/dummy/spec/models/post_spec.rb" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/draper/relation_decorator.rb" afterPath="$PROJECT_DIR$/lib/draper/relation_decorator.rb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="draper.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -70,8 +67,8 @@
       <file leaf-file-name="relation_decorator.rb" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/lib/draper/relation_decorator.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-0.049661398" vertical-offset="419" max-vertical-offset="1305">
-              <caret line="25" column="0" selection-start-line="25" selection-start-column="0" selection-end-line="25" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.44130924" vertical-offset="419" max-vertical-offset="1305">
+              <caret line="54" column="0" selection-start-line="54" selection-start-column="0" selection-end-line="54" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -383,8 +380,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/lib/draper/relation_decorator.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.049661398" vertical-offset="419" max-vertical-offset="1305">
-          <caret line="25" column="0" selection-start-line="25" selection-start-column="0" selection-end-line="25" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.44130924" vertical-offset="419" max-vertical-offset="1305">
+          <caret line="54" column="0" selection-start-line="54" selection-start-column="0" selection-end-line="54" selection-end-column="0" />
           <folding />
         </state>
       </provider>
