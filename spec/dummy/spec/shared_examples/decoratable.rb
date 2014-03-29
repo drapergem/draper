@@ -6,8 +6,10 @@ shared_examples_for "a decoratable model" do
 
       expect(decorated).to be_decorated
 
-      expect(decorated.all).to have(1).items
-      expect(decorated.all).to be_decorated
+      expect(decorated.to_a).to have(1).items
+      expect(decorated.to_a).to be_decorated
+
+      expect(decorated.first).to be_decorated
     end
   end
 

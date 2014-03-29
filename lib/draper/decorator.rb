@@ -251,7 +251,7 @@ module Draper
 
     # @return [Class] the class created by {decorate_relation}.
     def self.relation_decorator_class
-      name = relation_decorator_name
+      name = collection_decorator_name
       name.constantize
     rescue NameError => error
       raise if name && !error.missing_name?(name)
@@ -283,12 +283,6 @@ module Draper
     end
 
     def self.collection_decorator_name
-      plural = object_class_name.pluralize
-      raise NameError if plural == object_class_name
-      "#{plural}Decorator"
-    end
-
-    def self.relation_decorator_name
       plural = object_class_name.pluralize
       raise NameError if plural == object_class_name
       "#{plural}Decorator"

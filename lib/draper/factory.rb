@@ -49,6 +49,7 @@ module Draper
 
       def decorator
         return decorator_method(decorator_class) if decorator_class
+        return decorator_method(Draper::RelationDecorator) if relation?
         return object_decorator if decoratable?
         return decorator_method(Draper::CollectionDecorator) if collection?
         raise Draper::UninferrableDecoratorError.new(object.class)
@@ -59,7 +60,9 @@ module Draper
       attr_reader :decorator_class, :object
 
       def object_decorator
-        if collection?
+        if relation?
+          ->(object, options) { object.decorator_class.decorate_relation(object, options.reverse_merge(with: nil))}
+        elsif collection?
           ->(object, options) { object.decorator_class.decorate_collection(object, options.reverse_merge(with: nil))}
         else
           ->(object, options) { object.decorate(options) }
@@ -67,11 +70,17 @@ module Draper
       end
 
       def decorator_method(klass)
-        if collection? && klass.respond_to?(:decorate_collection)
+        if relation? && klass.respond_to?(:decorate_relation)
+          klass.method(:decorate_relation)
+        elsif collection? && klass.respond_to?(:decorate_collection)
           klass.method(:decorate_collection)
         else
           klass.method(:decorate)
         end
+      end
+
+      def relation?
+        defined?(ActiveRecord) && object.is_a?(ActiveRecord::Relation)
       end
 
       def collection?
