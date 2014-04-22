@@ -22,6 +22,7 @@ require 'draper/decorated_association'
 require 'draper/helper_support'
 require 'draper/view_context'
 require 'draper/collection_decorator'
+require 'draper/undecorate'
 require 'draper/decorates_assigned'
 require 'draper/railtie' if defined?(Rails)
 
