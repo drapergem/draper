@@ -378,6 +378,16 @@ In your `Spork.prefork` block of `spec_helper.rb`, add this:
 require 'draper/test/rspec_integration'
 ```
 
+#### Zeus Users
+
+Before `RSpec.configure` block in `spec_helper.rb`, add this:
+
+```ruby
+require 'draper/test/rspec_integration'
+```
+
+If you don't, you might face unexpected errors.
+
 ### Isolated Tests
 
 In tests, Draper needs to build a view context to access helper methods. By
