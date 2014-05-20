@@ -20,7 +20,6 @@ module Draper
       if Rails.env.test?
         require 'draper/test_case'
         require 'draper/test/rspec_integration' if defined?(RSpec) and RSpec.respond_to?(:configure)
-        require 'draper/test/minitest_integration' if defined?(MiniTest::Rails)
       end
     end
 
@@ -47,6 +46,12 @@ module Draper
     initializer "draper.setup_active_model_serializers" do |app|
       ActiveSupport.on_load :active_model_serializers do
         Draper::CollectionDecorator.send :include, ActiveModel::ArraySerializerSupport
+      end
+    end
+
+    initializer "draper.minitest-rails_integration" do |app|
+      ActiveSupport.on_load :minitest do
+        require "draper/test/minitest_integration"
       end
     end
 
