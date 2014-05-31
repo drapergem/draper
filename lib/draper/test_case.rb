@@ -1,18 +1,7 @@
 module Draper
-  begin
-    require 'minitest/rails'
-  rescue LoadError
-  end
+  require 'active_support/test_case'
 
-  active_support_test_case = begin
-    require 'minitest/rails/active_support' # minitest-rails < 0.5
-    ::MiniTest::Rails::ActiveSupport::TestCase
-  rescue LoadError
-    require 'active_support/test_case'
-    ::ActiveSupport::TestCase
-  end
-
-  class TestCase < active_support_test_case
+  class TestCase < ::ActiveSupport::TestCase
     module ViewContextTeardown
       def teardown
         super
