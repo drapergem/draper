@@ -5,9 +5,11 @@ services:
 
 rvm:
   - 1.9.3
-  - 2.0.0
-  - rbx-19mode
+  - 2.1.0
   - jruby-19mode
+  - rbx-2
+  - ruby-head
+  - jruby-head
 
 env:
   - "RAILS_VERSION=4.0"
@@ -19,3 +21,6 @@ env:
 matrix:
   allow_failures:
     - env: "RAILS_VERSION=4.1"
+    - rvm:
+      - ruby-head
+      - jruby-head
