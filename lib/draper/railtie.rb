@@ -15,12 +15,15 @@ module Draper
   class Railtie < Rails::Railtie
 
     config.after_initialize do |app|
-      app.config.paths.add 'app/decorators', eager_load: true
-
       if Rails.env.test?
         require 'draper/test_case'
         require 'draper/test/rspec_integration' if defined?(RSpec) and RSpec.respond_to?(:configure)
       end
+    end
+
+    initializer "draper.eager_load", before: :set_autoload_paths do |app|
+      app.config.eager_load_paths << 'app/decorators'
+      app.config.eager_load_paths << 'app/models/decorators'
     end
 
     initializer "draper.setup_action_controller" do |app|
