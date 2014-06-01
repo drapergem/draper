@@ -257,25 +257,19 @@ module Draper
 
     describe "#object" do
       it "returns the wrapped collection object" do
-        decorator_class = Class.new(Draper::CollectionDecorator) do
-          def sum
-            object.sum < 0 ? "-" : "+"
-          end
-        end
+        products = [Product.new]
+        decorator = ProductsDecorator.new(products)
 
-        decorator = decorator_class.new([1])
-        expect(decorator.sum).to eq '+'
+        decorator.define_singleton_method(:expose_object) { object }
+        expect(decorator.expose_object).to eq products
       end
 
       it "is aliased to #model" do
-        decorator_class = Class.new(Draper::CollectionDecorator) do
-          def sum
-            model.sum < 0 ? "-" : "+"
-          end
-        end
+        products = [Product.new]
+        decorator = ProductsDecorator.new(products)
 
-        decorator = decorator_class.new([1])
-        expect(decorator.sum).to eq '+'
+        decorator.define_singleton_method(:expose_model) { model }
+        expect(decorator.expose_model).to eq products
       end
     end
 
