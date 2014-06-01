@@ -277,28 +277,6 @@ module Draper
         decorator = decorator_class.new([1])
         expect(decorator.sum).to eq '+'
       end
-
-      it "is aliased to #source" do
-        decorator_class = Class.new(Draper::CollectionDecorator) do
-          def sum
-            source.sum < 0 ? "-" : "+"
-          end
-        end
-
-        decorator = decorator_class.new([1])
-        expect(decorator.sum).to eq '+'
-      end
-
-      it "is aliased to #to_source" do
-        decorator_class = Class.new(Draper::CollectionDecorator) do
-          def sum
-            to_source.sum < 0 ? "-" : "+"
-          end
-        end
-
-        decorator = decorator_class.new([1])
-        expect(decorator.sum).to eq '+'
-      end
     end
 
     describe '#kind_of?' do

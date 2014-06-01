@@ -81,10 +81,7 @@ module Draper
 
     # @return the collection being decorated.
     attr_reader :object
-
     alias_method :model, :object
-    alias_method :source, :object # TODO: deprecate this
-    alias_method :to_source, :object # TODO: deprecate this
 
     # Decorates the given item.
     def decorate_item(item)
