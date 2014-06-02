@@ -7,7 +7,11 @@ module Draper
   end
 
   RSpec.configure do |config|
-    config.include DecoratorExampleGroup, file_path: %r{spec/decorators}, type: :decorator
+    if RSpec::Core::Version::STRING.starts_with?("3")
+      config.include DecoratorExampleGroup, file_path: %r{spec/decorators}, type: :decorator
+    else
+      config.include DecoratorExampleGroup, example_group: {file_path: %r{spec/decorators}}, type: :decorator
+    end
 
     [:decorator, :controller, :mailer].each do |type|
       config.before(:each, type: type) { Draper::ViewContext.clear! }
