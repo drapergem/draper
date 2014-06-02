@@ -58,7 +58,7 @@ module Draper
     end
 
     def proxy_block(&original_block)
-      -> (data) { original_block.call(handle_result(data)) }
+      lambda { |data| original_block.call(handle_result(data)) }
     end
 
     def handle_result(result)
