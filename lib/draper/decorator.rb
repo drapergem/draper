@@ -145,7 +145,7 @@ module Draper
       collection_decorator_class.new(object, options.reverse_merge(with: self))
     end
 
-    # Decorates an activerecord relation. The class of the relation decorator
+    # Decorates an ActiveRecord relation. The class of the relation decorator
     # is inferred from the decorator class if possible (e.g. `ProductDecorator`
     # maps to `ProductsDecorator`), but otherwise defaults to
     # {Draper::RelationDecorator}.
