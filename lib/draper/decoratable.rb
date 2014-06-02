@@ -49,7 +49,7 @@ module Draper
 
     module ClassMethods
 
-      # Decorates an activerecord relation. Used at any point of the scope chain.
+      # Decorates an ActiveRecord relation. Used at any point of the scope chain.
       #
       # @example
       #   Product.popular.decorate.page(2)
