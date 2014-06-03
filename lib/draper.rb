@@ -33,10 +33,7 @@ module Draper
       extend  Draper::HelperSupport
       extend  Draper::DecoratesAssigned
 
-      before_filter do |controller|
-        Draper::ViewContext.clear!
-        Draper::ViewContext.controller = controller
-      end
+      before_filter :activate_draper
     end
   end
 

@@ -10,6 +10,11 @@ module Draper
       end
     end
 
+    # Set the current controller
+    def activate_draper
+      Draper::ViewContext.controller = self
+    end
+
     # Returns the current controller.
     def self.controller
       RequestStore.store[:current_controller]
