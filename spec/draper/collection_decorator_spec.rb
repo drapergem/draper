@@ -238,6 +238,15 @@ module Draper
       end
     end
 
+    describe '#object' do
+      it 'returns the underlying collection' do
+        collection = [Product.new]
+        decorator = ProductsDecorator.new(collection)
+
+        expect(decorator.object).to eq collection
+      end
+    end
+
     describe '#decorated?' do
       it 'returns true' do
         decorator = ProductsDecorator.new([Product.new])
