@@ -16,6 +16,12 @@ module Draper
       send(method, *args, &block)
     end
 
+    # Checks if the context responds to an instance method, or is able to
+    # proxy it to the view context.
+    def respond_to_missing?(method, include_private = false)
+      super || view_context.respond_to?(method)
+    end
+
     delegate :capture, to: :view_context
 
     protected

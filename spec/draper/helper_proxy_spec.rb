@@ -39,6 +39,14 @@ module Draper
       end
     end
 
+    describe "#respond_to_missing?" do
+      it "allows #method to be called on the view context" do
+        helper_proxy = HelperProxy.new(double(foo: "bar"))
+
+        expect(helper_proxy.respond_to?(:foo)).to be_true
+      end
+    end
+
     describe "proxying methods which are overriding" do
       it "proxies :capture" do
         view_context = double
