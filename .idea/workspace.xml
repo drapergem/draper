@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="71813298-d93b-4bce-9b1e-b85389b202ae" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/draper/relation_decorator.rb" afterPath="$PROJECT_DIR$/lib/draper/relation_decorator.rb" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/draper.rb" afterPath="$PROJECT_DIR$/lib/draper.rb" />
     </list>
     <ignored path="draper.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -24,11 +24,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="draper.rb" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="draper.rb" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/lib/draper.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1050">
-              <caret line="22" column="29" selection-start-line="22" selection-start-column="29" selection-end-line="22" selection-end-column="29" />
+            <state vertical-scroll-proportion="0.40632054" vertical-offset="0" max-vertical-offset="1050">
+              <caret line="24" column="0" selection-start-line="24" selection-start-column="0" selection-end-line="24" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -64,11 +64,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="relation_decorator.rb" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="relation_decorator.rb" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/lib/draper/relation_decorator.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.66139954" vertical-offset="419" max-vertical-offset="1305">
-              <caret line="67" column="81" selection-start-line="67" selection-start-column="81" selection-end-line="67" selection-end-column="81" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="419" max-vertical-offset="1305">
+              <caret line="44" column="7" selection-start-line="44" selection-start-column="7" selection-end-line="44" selection-end-column="7" />
               <folding />
             </state>
           </provider>
@@ -89,9 +89,9 @@
       <list>
         <option value="$PROJECT_DIR$/spec/dummy/spec/shared_examples/decoratable.rb" />
         <option value="$PROJECT_DIR$/lib/draper/decorator.rb" />
-        <option value="$PROJECT_DIR$/lib/draper.rb" />
         <option value="$PROJECT_DIR$/spec/dummy/spec/models/post_spec.rb" />
         <option value="$PROJECT_DIR$/lib/draper/relation_decorator.rb" />
+        <option value="$PROJECT_DIR$/lib/draper.rb" />
       </list>
     </option>
   </component>
@@ -362,14 +362,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lib/draper.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1050">
-          <caret line="22" column="29" selection-start-line="22" selection-start-column="29" selection-end-line="22" selection-end-column="29" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/spec/dummy/spec/models/post_spec.rb">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="525">
@@ -380,8 +372,16 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/lib/draper/relation_decorator.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.66139954" vertical-offset="419" max-vertical-offset="1305">
-          <caret line="67" column="81" selection-start-line="67" selection-start-column="81" selection-end-line="67" selection-end-column="81" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="419" max-vertical-offset="1305">
+          <caret line="44" column="7" selection-start-line="44" selection-start-column="7" selection-end-line="44" selection-end-column="7" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/draper.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.40632054" vertical-offset="0" max-vertical-offset="1050">
+          <caret line="24" column="0" selection-start-line="24" selection-start-column="0" selection-end-line="24" selection-end-column="0" />
           <folding />
         </state>
       </provider>
