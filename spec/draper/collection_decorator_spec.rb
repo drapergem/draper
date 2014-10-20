@@ -255,6 +255,34 @@ module Draper
       end
     end
 
+    describe "#object" do
+      it "returns the wrapped collection object to subclasses" do
+        products = [Product.new]
+        decorator = ProductsDecorator.new(products)
+
+        decorator.define_singleton_method(:expose_object) { object }
+        expect(decorator.expose_object).to eq products
+      end
+
+      it "is not public" do
+        decorator = ProductsDecorator.new([Product.new])
+        expect(decorator).to_not respond_to :object
+      end
+
+      it "is aliased to #model" do
+        products = [Product.new]
+        decorator = ProductsDecorator.new(products)
+
+        decorator.define_singleton_method(:expose_model) { model }
+        expect(decorator.expose_model).to eq products
+      end
+
+      it "does not create public aliases" do
+        decorator = ProductsDecorator.new([Product.new])
+        expect(decorator).to_not respond_to :model
+      end
+    end
+
     describe '#kind_of?' do
       it 'asks the kind of its decorated collection' do
         decorator = ProductsDecorator.new([])

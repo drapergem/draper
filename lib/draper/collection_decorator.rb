@@ -81,6 +81,7 @@ module Draper
 
     # @return the collection being decorated.
     attr_reader :object
+    alias_method :model, :object
 
     # Decorates the given item.
     def decorate_item(item)
