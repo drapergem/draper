@@ -4,6 +4,9 @@ module Draper
     include Draper::ViewHelpers
     extend Draper::Delegation
 
+    # @return the collection being decorated.
+    attr_reader :object
+
     # @return [Class] the decorator class used to decorate each item, as set by
     #   {#initialize}.
     attr_reader :decorator_class
@@ -78,9 +81,6 @@ module Draper
     end
 
     protected
-
-    # @return the collection being decorated.
-    attr_reader :object
 
     # Decorates the given item.
     def decorate_item(item)
