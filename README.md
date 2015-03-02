@@ -1,7 +1,5 @@
 # Draper: View Models for Rails
 
-**Announcement**: Draper is looking for a new maintainer. If you're interested, please [join the conversation](https://github.com/drapergem/draper/issues/621).
-
 [![TravisCI Build Status](https://travis-ci.org/drapergem/draper.svg?branch=master)](http://travis-ci.org/drapergem/draper)
 [![Code Climate](https://codeclimate.com/github/drapergem/draper.png)](https://codeclimate.com/github/drapergem/draper)
 
