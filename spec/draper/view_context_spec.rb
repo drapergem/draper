@@ -131,7 +131,7 @@ module Draper
         end
 
         it "passes a block to the strategy" do
-          ViewContext::BuildStrategy::Fast.stub(:new).and_return{|&block| block.call}
+          ViewContext::BuildStrategy::Fast.stub(:new) { |&block| block.call }
 
           expect(ViewContext.test_strategy(:fast){:passed}).to be :passed
         end
@@ -144,7 +144,7 @@ module Draper
         end
 
         it "passes a block to the strategy" do
-          ViewContext::BuildStrategy::Full.stub(:new).and_return{|&block| block.call}
+          ViewContext::BuildStrategy::Full.stub(:new) { |&block| block.call }
 
           expect(ViewContext.test_strategy(:full){:passed}).to be :passed
         end

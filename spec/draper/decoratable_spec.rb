@@ -192,7 +192,7 @@ module Draper
 
       context "when an unrelated NameError is thrown" do
         it "re-raises that error" do
-          String.any_instance.stub(:constantize).and_return{Draper::Base}
+          String.any_instance.stub(:constantize) { Draper::Base }
           expect{Product.decorator_class}.to raise_error NameError, /Draper::Base/
         end
       end

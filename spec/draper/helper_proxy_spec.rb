@@ -18,7 +18,7 @@ module Draper
         view_context = double
         helper_proxy = HelperProxy.new(view_context)
 
-        view_context.stub(:foo).and_return{|arg| arg}
+        view_context.stub(:foo) { |arg| arg }
         expect(helper_proxy.foo(:passed)).to be :passed
       end
 
@@ -26,7 +26,7 @@ module Draper
         view_context = double
         helper_proxy = HelperProxy.new(view_context)
 
-        view_context.stub(:foo).and_return{|&block| block.call}
+        view_context.stub(:foo) { |&block| block.call }
         expect(helper_proxy.foo{:yielded}).to be :yielded
       end
 
@@ -52,7 +52,7 @@ module Draper
         view_context = double
         helper_proxy = HelperProxy.new(view_context)
 
-        view_context.stub(:capture).and_return{|*args, &block| [*args, block.call] }
+        view_context.stub(:capture) { |*args, &block| [*args, block.call] }
         expect(helper_proxy.capture(:first_arg, :second_arg){:yielded}).to \
           be_eql [:first_arg, :second_arg, :yielded]
       end

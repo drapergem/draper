@@ -148,7 +148,7 @@ module Draper
 
       context "when a NameError is thrown" do
         it "re-raises that error" do
-          String.any_instance.stub(:constantize).and_return{Draper::DecoratedEnumerableProxy}
+          String.any_instance.stub(:constantize) { Draper::DecoratedEnumerableProxy }
           expect{ProductDecorator.decorate_collection([])}.to raise_error NameError, /Draper::DecoratedEnumerableProxy/
         end
       end
@@ -207,7 +207,7 @@ module Draper
 
         context "when an unrelated NameError is thrown" do
           it "re-raises that error" do
-            String.any_instance.stub(:constantize).and_return{SomethingThatDoesntExist}
+            String.any_instance.stub(:constantize) { SomethingThatDoesntExist }
             expect{ProductDecorator.object_class}.to raise_error NameError, /SomethingThatDoesntExist/
           end
         end
@@ -580,7 +580,7 @@ module Draper
 
         it "passes blocks to delegated methods" do
           object = Model.new
-          object.stub(:hello_world).and_return{|*args, &block| block.call}
+          object.stub(:hello_world) { |*args, &block| block.call }
           decorator = Decorator.new(object)
 
           expect(decorator.hello_world{:yielded}).to be :yielded
