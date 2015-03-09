@@ -43,7 +43,7 @@ module Draper
       it "allows #method to be called on the view context" do
         helper_proxy = HelperProxy.new(double(foo: "bar"))
 
-        expect(helper_proxy.respond_to?(:foo)).to be_true
+        expect(helper_proxy.respond_to?(:foo)).to be_truthy
       end
     end
 

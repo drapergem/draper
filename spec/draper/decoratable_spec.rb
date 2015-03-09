@@ -48,21 +48,21 @@ module Draper
 
     describe "#decorator_class?" do
       it "returns true for decoratable model" do
-        expect(Product.new.decorator_class?).to be_true
+        expect(Product.new.decorator_class?).to be_truthy
       end
 
       it "returns false for non-decoratable model" do
-        expect(Model.new.decorator_class?).to be_false
+        expect(Model.new.decorator_class?).to be_falsey
       end
     end
 
     describe ".decorator_class?" do
       it "returns true for decoratable model" do
-        expect(Product.decorator_class?).to be_true
+        expect(Product.decorator_class?).to be_truthy
       end
 
       it "returns false for non-decoratable model" do
-        expect(Model.decorator_class?).to be_false
+        expect(Model.decorator_class?).to be_falsey
       end
     end
 
@@ -84,46 +84,46 @@ module Draper
         product = Product.new
 
         product.should_receive(:==).and_return(true)
-        expect(product === :anything).to be_true
+        expect(product === :anything).to be_truthy
       end
 
       it "is false when #== is false" do
         product = Product.new
 
         product.should_receive(:==).and_return(false)
-        expect(product === :anything).to be_false
+        expect(product === :anything).to be_falsey
       end
     end
 
     describe ".====" do
       it "is true for an instance" do
-        expect(Product === Product.new).to be_true
+        expect(Product === Product.new).to be_truthy
       end
 
       it "is true for a derived instance" do
-        expect(Product === Class.new(Product).new).to be_true
+        expect(Product === Class.new(Product).new).to be_truthy
       end
 
       it "is false for an unrelated instance" do
-        expect(Product === Model.new).to be_false
+        expect(Product === Model.new).to be_falsey
       end
 
       it "is true for a decorated instance" do
         decorator = double(object: Product.new)
 
-        expect(Product === decorator).to be_true
+        expect(Product === decorator).to be_truthy
       end
 
       it "is true for a decorated derived instance" do
         decorator = double(object: Class.new(Product).new)
 
-        expect(Product === decorator).to be_true
+        expect(Product === decorator).to be_truthy
       end
 
       it "is false for a decorated unrelated instance" do
         decorator = double(object: Model.new)
 
-        expect(Product === decorator).to be_false
+        expect(Product === decorator).to be_falsey
       end
     end
 

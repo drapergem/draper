@@ -222,19 +222,19 @@ module Draper
       it "returns truthy when .object_class is set" do
         Decorator.stub(:object_class).and_return(Model)
 
-        expect(Decorator.object_class?).to be_true
+        expect(Decorator.object_class?).to be_truthy
       end
 
       it "returns false when .object_class is not inferrable" do
         Decorator.stub(:object_class).and_raise(UninferrableSourceError.new(Decorator))
 
-        expect(Decorator.object_class?).to be_false
+        expect(Decorator.object_class?).to be_falsey
       end
 
       it "is aliased to .source_class?" do
         Decorator.stub(:object_class).and_return(Model)
 
-        expect(Decorator.source_class?).to be_true
+        expect(Decorator.source_class?).to be_truthy
       end
     end
 
@@ -514,7 +514,7 @@ module Draper
         other = double(object: Model.new)
 
         object.should_receive(:==).with(other).and_return(true)
-        expect(decorator == other).to be_true
+        expect(decorator == other).to be_truthy
       end
 
       it "is false when object #== is false" do
@@ -523,7 +523,7 @@ module Draper
         other = double(object: Model.new)
 
         object.should_receive(:==).with(other).and_return(false)
-        expect(decorator == other).to be_false
+        expect(decorator == other).to be_falsey
       end
 
     end
@@ -533,14 +533,14 @@ module Draper
         decorator = Decorator.new(Model.new)
         decorator.stub(:==).with(:anything).and_return(true)
 
-        expect(decorator === :anything).to be_true
+        expect(decorator === :anything).to be_truthy
       end
 
       it "is false when #== is false" do
         decorator = Decorator.new(Model.new)
         decorator.stub(:==).with(:anything).and_return(false)
 
-        expect(decorator === :anything).to be_false
+        expect(decorator === :anything).to be_falsey
       end
     end
 
@@ -659,14 +659,14 @@ module Draper
             Decorator.class_eval{private; def hello_world; end}
             decorator = Decorator.new(Model.new)
 
-            expect(decorator.respond_to?(:hello_world, true)).to be_true
+            expect(decorator.respond_to?(:hello_world, true)).to be_truthy
           end
 
           it "returns false for the object's private methods" do
             object = Class.new{private; def hello_world; end}.new
             decorator = Decorator.new(object)
 
-            expect(decorator.respond_to?(:hello_world, true)).to be_false
+            expect(decorator.respond_to?(:hello_world, true)).to be_falsey
           end
         end
       end
@@ -722,27 +722,27 @@ module Draper
       it "pretends to be a kind of the source class" do
         decorator = Decorator.new(Model.new)
 
-        expect(decorator.kind_of?(Model)).to be_true
-        expect(decorator.is_a?(Model)).to be_true
+        expect(decorator.kind_of?(Model)).to be_truthy
+        expect(decorator.is_a?(Model)).to be_truthy
       end
 
       it "is still a kind of its own class" do
         decorator = Decorator.new(Model.new)
 
-        expect(decorator.kind_of?(Decorator)).to be_true
-        expect(decorator.is_a?(Decorator)).to be_true
+        expect(decorator.kind_of?(Decorator)).to be_truthy
+        expect(decorator.is_a?(Decorator)).to be_truthy
       end
 
       it "pretends to be an instance of the source class" do
         decorator = Decorator.new(Model.new)
 
-        expect(decorator.instance_of?(Model)).to be_true
+        expect(decorator.instance_of?(Model)).to be_truthy
       end
 
       it "is still an instance of its own class" do
         decorator = Decorator.new(Model.new)
 
-        expect(decorator.instance_of?(Decorator)).to be_true
+        expect(decorator.instance_of?(Decorator)).to be_truthy
       end
     end
 
