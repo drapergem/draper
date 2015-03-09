@@ -29,7 +29,7 @@ module Draper
 
       describe ":context option" do
         it "defaults to the identity function" do
-          Factory.should_receive(:new).with do |options|
+          Factory.should_receive(:new) do |options|
             options[:context].call(:anything) == :anything
           end
           DecoratedAssociation.new(double, :association, {})

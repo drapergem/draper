@@ -73,7 +73,7 @@ module Draper
           decorated = OtherDecorator.new(Decorator.new(Model.new))
 
           warning_message = nil
-          Object.any_instance.stub(:warn) {|message| warning_message = message }
+          Object.any_instance.stub(:warn) { |instance, message| warning_message = message }
 
           expect{Decorator.new(decorated)}.to change{warning_message}
           expect(warning_message).to start_with "Reapplying Draper::Decorator"
