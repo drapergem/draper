@@ -4,7 +4,7 @@ shared_examples_for "a decoratable model" do
       described_class.create
       decorated = described_class.limit(1).decorate
 
-      expect(decorated).to have(1).items
+      expect(decorated.size).to eq(1)
       expect(decorated).to be_decorated
     end
   end
@@ -18,7 +18,7 @@ shared_examples_for "a decoratable model" do
       other = described_class.first
 
       expect(one).not_to be other
-      expect(one == other.decorate).to be_true
+      expect(one == other.decorate).to be_truthy
     end
   end
 end

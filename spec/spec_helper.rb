@@ -8,6 +8,9 @@ RSpec.configure do |config|
   config.treat_symbols_as_metadata_keys_with_true_values = true
   config.expect_with(:rspec) {|c| c.syntax = :expect}
   config.order = :random
+  config.mock_with :rspec do |mocks|
+    mocks.yield_receiver_to_any_instance_implementation_blocks = true
+  end
 end
 
 class Model; include Draper::Decoratable; end

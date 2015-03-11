@@ -168,7 +168,7 @@ module Draper
           decorator = CollectionDecorator.new(object)
           other = ProductsDecorator.new(object)
 
-          expect(decorator == other).to be_true
+          expect(decorator == other).to be_truthy
         end
       end
 
@@ -177,7 +177,7 @@ module Draper
           decorator = CollectionDecorator.new([Product.new, Product.new])
           other = ProductsDecorator.new([Product.new, Product.new])
 
-          expect(decorator == other).to be_false
+          expect(decorator == other).to be_falsey
         end
       end
 
@@ -187,7 +187,7 @@ module Draper
           decorator = CollectionDecorator.new(object)
           other = object.dup
 
-          expect(decorator == other).to be_true
+          expect(decorator == other).to be_truthy
         end
       end
 
@@ -196,7 +196,7 @@ module Draper
           decorator = CollectionDecorator.new([Product.new, Product.new])
           other = [Product.new, Product.new]
 
-          expect(decorator == other).to be_false
+          expect(decorator == other).to be_falsey
         end
       end
 
@@ -207,7 +207,7 @@ module Draper
           other = object.dup
 
           decorator << Product.new.decorate
-          expect(decorator == other).to be_false
+          expect(decorator == other).to be_falsey
         end
       end
     end

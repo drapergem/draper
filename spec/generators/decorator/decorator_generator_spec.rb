@@ -40,9 +40,8 @@ describe Rails::Generators::DecoratorGenerator do
 
       context "with an ApplicationDecorator" do
         before do
-          Object.any_instance.stub(:require).with("application_decorator").and_return do
-            stub_const "ApplicationDecorator", Class.new
-          end
+          Object.any_instance.stub(:require).with("application_decorator").and_return (
+            stub_const "ApplicationDecorator", Class.new)
         end
 
         before { run_generator %w(YourModel) }
