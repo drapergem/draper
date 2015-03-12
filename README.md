@@ -254,13 +254,13 @@ method, or by passing the `:with` option to the constructor.
 
 Some pagination gems add methods to `ActiveRecord::Relation`. For example,
 [Kaminari](https://github.com/amatsuda/kaminari)'s `paginate` helper method
-requires the collection to implement `current_page`, `total_pages`, and
-`limit_value`. To expose these on a collection decorator, you can delegate to
+requires the collection to implement `current_page`, `total_pages`,
+`limit_value`, `prev_page` and `next_page`. To expose these on a collection decorator, you can delegate to
 the `object`:
 
 ```ruby
 class PaginatingDecorator < Draper::CollectionDecorator
-  delegate :current_page, :total_pages, :limit_value
+  delegate :current_page, :total_pages, :limit_value, :prev_page, :next_page
 end
 ```
 
