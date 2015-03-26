@@ -45,7 +45,9 @@ module Draper
 
     initializer "draper.setup_active_model_serializers" do |app|
       ActiveSupport.on_load :active_model_serializers do
-        Draper::CollectionDecorator.send :include, ActiveModel::ArraySerializerSupport
+        if defined?(ActiveModel::ArraySerializerSupport)
+          Draper::CollectionDecorator.send :include, ActiveModel::ArraySerializerSupport
+        end
       end
     end
 
