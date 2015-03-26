@@ -4,22 +4,11 @@ services:
   - mongodb
 
 rvm:
-  - 1.9.3
-  - 2.1.0
-  - jruby-19mode
-  - rbx-2
-  - ruby-head
-  - jruby-head
+  - 2.1.5
+  - 2.2.1
 
 env:
-  - "RAILS_VERSION=4.0"
   - "RAILS_VERSION=3.2"
-  - "RAILS_VERSION=3.1"
-  - "RAILS_VERSION=3.0"
+  - "RAILS_VERSION=4.0"
   - "RAILS_VERSION=4.1"
-
-matrix:
-  allow_failures:
-    - env: "RAILS_VERSION=4.1"
-    - rvm: ruby-head
-    - rvm: jruby-head
+  - "RAILS_VERSION=4.2"
