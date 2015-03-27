@@ -15,7 +15,7 @@ namespace :test do
   end
 end
 
-if Rake::Task.task_defined?('test:run')
+if Rails.version.to_f < 4.2 && Rake::Task.task_defined?('test:run')
   Rake::Task['test:run'].enhance do
     Rake::Task['test:decorators'].invoke
   end

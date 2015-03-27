@@ -84,7 +84,7 @@ module Draper
       end
 
       def collection?
-        object.respond_to?(:first)
+        object.respond_to?(:first) && !object.is_a?(Struct)
       end
 
       def decoratable?

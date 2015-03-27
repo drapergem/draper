@@ -18,7 +18,7 @@ module Draper
         view_context = double
         helper_proxy = HelperProxy.new(view_context)
 
-        view_context.stub(:foo).and_return{|arg| arg}
+        view_context.stub(:foo) { |arg| arg }
         expect(helper_proxy.foo(:passed)).to be :passed
       end
 
@@ -26,7 +26,7 @@ module Draper
         view_context = double
         helper_proxy = HelperProxy.new(view_context)
 
-        view_context.stub(:foo).and_return{|&block| block.call}
+        view_context.stub(:foo) { |&block| block.call }
         expect(helper_proxy.foo{:yielded}).to be :yielded
       end
 
@@ -43,7 +43,7 @@ module Draper
       it "allows #method to be called on the view context" do
         helper_proxy = HelperProxy.new(double(foo: "bar"))
 
-        expect(helper_proxy.respond_to?(:foo)).to be_true
+        expect(helper_proxy.respond_to?(:foo)).to be_truthy
       end
     end
 
@@ -52,7 +52,7 @@ module Draper
         view_context = double
         helper_proxy = HelperProxy.new(view_context)
 
-        view_context.stub(:capture).and_return{|*args, &block| [*args, block.call] }
+        allow(view_context).to receive(:capture) { |*args, &block| [*args, block.call] }
         expect(helper_proxy.capture(:first_arg, :second_arg){:yielded}).to \
           be_eql [:first_arg, :second_arg, :yielded]
       end

@@ -40,9 +40,9 @@ describe Rails::Generators::DecoratorGenerator do
 
       context "with an ApplicationDecorator" do
         before do
-          Object.any_instance.stub(:require).with("application_decorator").and_return do
+          allow_any_instance_of(Object).to receive(:require).with("application_decorator").and_return(
             stub_const "ApplicationDecorator", Class.new
-          end
+          )
         end
 
         before { run_generator %w(YourModel) }
@@ -89,43 +89,4 @@ describe Rails::Generators::DecoratorGenerator do
       end
     end
   end
-
-  context "with -t=mini_test" do
-    describe "the generated test" do
-      subject { file("test/decorators/your_model_decorator_test.rb") }
-
-      describe "naming" do
-        before { run_generator %w(YourModel -t=mini_test) }
-
-        it { should contain "class YourModelDecoratorTest < Draper::TestCase" }
-      end
-
-      describe "namespacing" do
-        subject { file("test/decorators/namespace/your_model_decorator_test.rb") }
-        before { run_generator %w(Namespace::YourModel -t=mini_test) }
-
-        it { should contain "class Namespace::YourModelDecoratorTest < Draper::TestCase" }
-      end
-    end
-  end
-
-  context "with -t=mini_test --spec" do
-    describe "the generated test" do
-      subject { file("test/decorators/your_model_decorator_test.rb") }
-
-      describe "naming" do
-        before { run_generator %w(YourModel -t=mini_test --spec) }
-
-        it { should contain "describe YourModelDecorator" }
-      end
-
-      describe "namespacing" do
-        subject { file("test/decorators/namespace/your_model_decorator_test.rb") }
-        before { run_generator %w(Namespace::YourModel -t=mini_test --spec) }
-
-        it { should contain "describe Namespace::YourModelDecorator" }
-      end
-    end
-  end
-
 end

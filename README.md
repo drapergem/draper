@@ -2,6 +2,7 @@
 
 [![TravisCI Build Status](https://travis-ci.org/drapergem/draper.svg?branch=master)](http://travis-ci.org/drapergem/draper)
 [![Code Climate](https://codeclimate.com/github/drapergem/draper.png)](https://codeclimate.com/github/drapergem/draper)
+[![Inline docs](http://inch-ci.org/github/drapergem/draper.png?branch=master)](http://inch-ci.org/github/drapergem/draper)
 
 Draper adds an object-oriented layer of presentation logic to your Rails
 application.
@@ -260,7 +261,7 @@ the `object`:
 
 ```ruby
 class PaginatingDecorator < Draper::CollectionDecorator
-  delegate :current_page, :total_pages, :limit_value
+  delegate :current_page, :total_pages, :limit_value, :entry_name, :total_count, :offset_value, :last_page?
 end
 ```
 
