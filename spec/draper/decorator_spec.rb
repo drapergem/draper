@@ -190,6 +190,7 @@ module Draper
         end
 
         it "raises an UninferrableSourceError for a decorator without a model" do
+          skip
           expect{OtherDecorator.object_class}.to raise_error UninferrableSourceError
         end
 
