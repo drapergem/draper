@@ -52,7 +52,7 @@ module Draper
         view_context = double
         helper_proxy = HelperProxy.new(view_context)
 
-        view_context.stub(:capture) { |*args, &block| [*args, block.call] }
+        allow(view_context).to receive(:capture) { |*args, &block| [*args, block.call] }
         expect(helper_proxy.capture(:first_arg, :second_arg){:yielded}).to \
           be_eql [:first_arg, :second_arg, :yielded]
       end

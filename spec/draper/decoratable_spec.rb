@@ -162,7 +162,7 @@ module Draper
 
       context "for ActiveModel classes" do
         it "infers the decorator from the model name" do
-          Product.stub(:model_name).and_return("Other")
+          allow(Product).to receive(:model_name){"Other"}
 
           expect(Product.decorator_class).to be OtherDecorator
         end

@@ -99,7 +99,7 @@ module Draper
         options = {foo: "bar"}
         worker = Factory::Worker.new(double, object)
         decorator = ->(*){}
-        worker.stub decorator: decorator
+        allow(worker).to receive(:decorator){ decorator }        
 
         decorator.should_receive(:call).with(object, options).and_return(:decorated)
         expect(worker.call(options)).to be :decorated
@@ -227,8 +227,8 @@ module Draper
             it "returns the .decorate_collection method from the object's decorator" do
               object = []
               decorator_class = Class.new(Decorator)
-              object.stub decorator_class: decorator_class
-              object.stub decorate: nil
+              allow(object).to receive(:decorator_class){ decorator_class }
+              allow(object).to receive(:decorate){ nil }
               worker = Factory::Worker.new(nil, object)
 
               decorator_class.should_receive(:decorate_collection).with(object, foo: "bar", with: nil).and_return(:decorated)
