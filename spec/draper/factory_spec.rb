@@ -190,6 +190,17 @@ module Draper
             end
           end
         end
+
+        context "when the object is a struct" do
+          it "returns a singular decorator" do
+            object = Struct.new(:stuff).new("things")
+
+            decorator_class = Class.new(Decorator)
+            worker = Factory::Worker.new(decorator_class, object)
+
+            expect(worker.decorator).to eq decorator_class.method(:decorate)
+          end
+        end
       end
 
       context "for a collection object" do
