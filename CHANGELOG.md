@@ -1,5 +1,12 @@
 # Draper Changelog
 
+## 2.1.0 - 2015-03-26
+
+* Cleared most issues and merged a few PRs
+* Improved behavior when decorating structs
+* Improved how equality is handled
+* Minor improvements to the README
+
 ## 2.0.0 - 2015-03-26
 
 Working to breathe new life into the project by shedding baggage.
