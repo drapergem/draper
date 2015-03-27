@@ -1,5 +1,20 @@
 # Draper Changelog
 
+## 2.0.0 - 2015-03-26
+
+Working to breathe new life into the project by shedding baggage.
+
+* Rails 3.2 support dropped
+* Ruby 1.9.3 and 2.0 support dropped
+* Add support for Rails 4.2 and Ruby 2.2
+* Rewrite tests to get over RSpec deprecations
+* Get RSpec up to 3.2
+* Try to un-screw the challenges of ActiveModelSerializers
+
+Due to the breakages of dropping legacy support, we've bumped the major version. From here,
+development effort will likely focus on a version 3.0 that removes features and simplifies
+usage of the library.
+
 ## 1.3.0 - 2013-10-26
 
 [30 commits by 11 authors](https://github.com/drapergem/draper/compare/v1.2.1...v1.3.0)
