@@ -21,11 +21,11 @@ module HaveTextMatcher
       @subject.has_css?(@css || "*", text: @text)
     end
 
-    def failure_message_for_should
+    def failure_message
       "expected to find #{@text.inspect} #{within}"
     end
 
-    def failure_message_for_should_not
+    def failure_message_when_negated
       "expected not to find #{@text.inspect} #{within}"
     end
 
