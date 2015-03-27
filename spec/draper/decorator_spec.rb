@@ -531,7 +531,7 @@ module Draper
     describe "#===" do
       it "is true when #== is true" do
         decorator = Decorator.new(Model.new)
-        decorator.stub(:==).with(:anything).and_return(true)
+        allow(decorator).to receive(:==) { true }
 
         expect(decorator === :anything).to be_truthy
       end
@@ -549,14 +549,14 @@ module Draper
         first = Decorator.new('foo')
         second = Decorator.new('foo')
 
-        expect(first.eql? second).to be_true
+        expect(first.eql? second).to be
       end
 
       it "is false when #eql? is false" do
         first = Decorator.new('foo')
         second = Decorator.new('bar')
 
-        expect(first.eql? second).to be_false
+        expect(first.eql? second).to_not be
       end
     end
 
@@ -566,7 +566,7 @@ module Draper
         first = Decorator.new(object)
         second = Decorator.new(object)
 
-        expect(first.hash == second.hash).to be_true
+        expect(first.hash == second.hash).to be
       end
     end
 
