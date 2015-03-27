@@ -526,7 +526,6 @@ module Draper
         object.should_receive(:==).with(other).and_return(false)
         expect(decorator == other).to be_falsey
       end
-
     end
 
     describe "#===" do
@@ -542,6 +541,32 @@ module Draper
         decorator.stub(:==).with(:anything).and_return(false)
 
         expect(decorator === :anything).to be_falsey
+      end
+    end
+
+    describe "#eql?" do
+      it "is true when #eql? is true" do
+        first = Decorator.new('foo')
+        second = Decorator.new('foo')
+
+        expect(first.eql? second).to be_true
+      end
+
+      it "is false when #eql? is false" do
+        first = Decorator.new('foo')
+        second = Decorator.new('bar')
+
+        expect(first.eql? second).to be_false
+      end
+    end
+
+    describe "#hash" do
+      it "is consistent for equal objects" do
+        object = Model.new
+        first = Decorator.new(object)
+        second = Decorator.new(object)
+
+        expect(first.hash == second.hash).to be_true
       end
     end
 
@@ -757,5 +782,35 @@ module Draper
       end
     end
 
+    describe "Enumerable hash and equality functionality" do
+      describe "#uniq" do
+        it "removes duplicate objects with same decorator" do
+          object = Model.new
+          array = [Decorator.new(object), Decorator.new(object)]
+
+          expect(array.uniq.count).to eq(1)
+        end
+
+        it "separates different objects with identical decorators" do
+          array = [Decorator.new('foo'), Decorator.new('bar')]
+
+          expect(array.uniq.count).to eq(2)
+        end
+
+        it "separates identical objects with different decorators" do
+          object = Model.new
+          array = [Decorator.new(object), OtherDecorator.new(object)]
+
+          expect(array.uniq.count).to eq(2)
+        end
+
+        it "distinguishes between an objects and its decorated version" do
+          object = Model.new
+          array = [Decorator.new(object), object]
+
+          expect(array.uniq.count).to eq(2)
+        end
+      end
+    end
   end
 end

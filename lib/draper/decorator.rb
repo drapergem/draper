@@ -173,6 +173,21 @@ module Draper
       Draper::Decoratable::Equality.test(object, other)
     end
 
+    # Delegates equality to :== as expected
+    #
+    # @return [Boolean]
+    def eql?(other)
+      self == other
+    end
+
+    # Returns a unique hash for a decorated object based on
+    # the decorator class and the object being decorated.
+    # 
+    # @return [Fixnum]
+    def hash
+      self.class.hash ^ object.hash
+    end
+
     # Checks if `self.kind_of?(klass)` or `object.kind_of?(klass)`
     #
     # @param [Class] klass
