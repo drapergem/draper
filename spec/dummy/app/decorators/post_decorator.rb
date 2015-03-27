@@ -53,4 +53,8 @@ class PostDecorator < Draper::Decorator
   def updated_at
     :overridden
   end
+
+  def persisted?
+    true
+  end
 end
