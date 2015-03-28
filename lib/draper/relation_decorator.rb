@@ -62,7 +62,8 @@ module Draper
     end
 
     def handle_result(result)
-      if defined?(ActiveRecord) && result.is_a?(ActiveRecord::Relation)
+      if (defined?(ActiveRecord) && result.is_a?(ActiveRecord::Relation)) ||
+        (defined?(Mongoid) && result.is_a?(Mongoid::Criteria))
         return self.class.decorate(result, context: context)
       elsif result.is_a?(Array)
         return Decorator.collection_decorator_class.new(result, context: context)
