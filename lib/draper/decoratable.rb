@@ -49,15 +49,15 @@ module Draper
 
     module ClassMethods
 
-      # Decorates a collection of objects. Used at the end of a scope chain.
+      # Decorates an ActiveRecord relation. Used at any point of the scope chain.
       #
       # @example
-      #   Product.popular.decorate
+      #   Product.popular.decorate.page(2)
       # @param [Hash] options
-      #   see {Decorator.decorate_collection}.
+      #   see {Decorator.decorate_relation}.
       def decorate(options = {})
-        collection = Rails::VERSION::MAJOR >= 4 ? all : scoped
-        decorator_class.decorate_collection(collection, options.reverse_merge(with: nil))
+        relation = Rails::VERSION::MAJOR >= 4 ? all : scoped
+        decorator_class.decorate_relation(relation, options.reverse_merge(with: nil))
       end
 
       def decorator_class?
