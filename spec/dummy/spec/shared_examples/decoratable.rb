@@ -3,11 +3,11 @@ shared_examples_for "a decoratable model" do
     it "applies a relation decorator to a scope" do
       described_class.create
       decorated = described_class.limit(1).decorate
-      
+
       expect(decorated.size).to eq(1)
       expect(decorated).to be_decorated
 
-      expect(decorated.to_a).to have(1).items
+      expect(decorated.to_a.size).to eq(1)
       expect(decorated.to_a).to be_decorated
 
       expect(decorated.first).to be_decorated
