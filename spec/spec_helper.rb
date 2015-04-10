@@ -12,7 +12,7 @@ RSpec.configure do |config|
   end
 end
 
-class Model; include Draper::Decoratable; end
+class Model; end
 
 class Product < Model; end
 class SpecialProduct < Product; end
