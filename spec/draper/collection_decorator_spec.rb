@@ -116,30 +116,6 @@ module Draper
       end
     end
 
-    describe "#find" do
-      context "with a block" do
-        it "decorates Enumerable#find" do
-          decorator = CollectionDecorator.new([], :with => NullDecorator)
-
-          decorator.decorated_collection.should_receive(:find).and_return(:delegated)
-          expect(decorator.find{|p| p.title == "title"}).to be :delegated
-        end
-      end
-
-      context "without a block" do
-        it "decorates object.find" do
-          object = []
-          found = double(decorate: :decorated)
-          decorator = CollectionDecorator.new(object, :with => NullDecorator)
-
-          object.should_receive(:find).and_return(found)
-          ActiveSupport::Deprecation.silence do
-            expect(decorator.find(1)).to be :decorated
-          end
-        end
-      end
-    end
-
     describe "#to_ary" do
       # required for `render @collection` in Rails
       it "delegates to the decorated collection" do
@@ -202,7 +178,7 @@ module Draper
           decorator = CollectionDecorator.new(object, :with => ProductDecorator)
           other = object.dup
 
-          decorator << Product.new.decorate
+          decorator << ProductDecorator.new(Product.new)
           expect(decorator == other).to be_falsey
         end
       end
@@ -214,14 +190,6 @@ module Draper
           decorator = CollectionDecorator.new(["a", "b", "c"], with: ProductDecorator)
 
           expect(decorator.to_s).to eq '#<Draper::CollectionDecorator of ProductDecorator for ["a", "b", "c"]>'
-        end
-      end
-
-      context "when :with option was not given" do
-        it "returns a string representation of the collection decorator" do
-          decorator = CollectionDecorator.new(["a", "b", "c"], :with => NullDecorator)
-
-          expect(decorator.to_s).to eq '#<Draper::CollectionDecorator of inferred decorators for ["a", "b", "c"]>'
         end
       end
 
