@@ -1,4 +1,4 @@
-require 'draper/decoratable/equality'
+require 'draper/equality'
 
 module Draper
   # Provides shortcuts to decorate objects directly, so you can do
@@ -9,7 +9,7 @@ module Draper
   # plain old Ruby objects, you can include it manually.
   module Decoratable
     extend ActiveSupport::Concern
-    include Draper::Decoratable::Equality
+    include Draper::Equality
 
     # Decorates the object using the inferred {#decorator_class}.
     # @param [Hash] options

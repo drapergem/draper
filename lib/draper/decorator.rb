@@ -170,7 +170,7 @@ module Draper
     #
     # @return [Boolean]
     def ==(other)
-      Draper::Decoratable::Equality.test(object, other)
+      Draper::Equality.test(object, other)
     end
 
     # Delegates equality to :== as expected

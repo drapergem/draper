@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'support/shared_examples/decoratable_equality'
+require 'support/shared_examples/equality'
 
 module Draper
   describe Decoratable do
