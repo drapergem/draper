@@ -3,8 +3,6 @@ require 'support/shared_examples/view_helpers'
 
 module Draper
   describe CollectionDecorator do
-    class NullDecorator < Draper::Decorator
-    end
 
     it_behaves_like "view helpers", CollectionDecorator.new([], :with => NullDecorator)
 

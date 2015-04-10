@@ -35,14 +35,6 @@ module Draper
       end
     end
 
-    initializer "draper.setup_orm" do |app|
-      [:active_record, :mongoid].each do |orm|
-        ActiveSupport.on_load orm do
-          Draper.setup_orm self
-        end
-      end
-    end
-
     initializer "draper.setup_active_model_serializers" do |app|
       ActiveSupport.on_load :active_model_serializers do
         if defined?(ActiveModel::ArraySerializerSupport)

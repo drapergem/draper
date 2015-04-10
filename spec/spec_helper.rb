@@ -18,6 +18,7 @@ class Product < Model; end
 class SpecialProduct < Product; end
 class Other < Model; end
 class ProductDecorator < Draper::Decorator; end
+class NullDecorator < Draper::Decorator; end
 class ProductsDecorator < Draper::CollectionDecorator; end
 
 class ProductPresenter < Draper::Decorator; end

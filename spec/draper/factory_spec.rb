@@ -17,14 +17,14 @@ module Draper
     describe "#decorate" do
       context "when object is nil" do
         it "returns nil" do
-          factory = Factory.new
+          factory = Factory.new(:with => NullDecorator)
 
           expect(factory.decorate(nil)).to be_nil
         end
       end
 
       it "calls a worker" do
-        factory = Factory.new
+        factory = Factory.new(:with => NullDecorator)
         worker = ->(*){ :decorated }
 
         Factory::Worker.should_receive(:new).and_return(worker)
@@ -32,7 +32,7 @@ module Draper
       end
 
       it "passes the object to the worker" do
-        factory = Factory.new
+        factory = Factory.new(:with => NullDecorator)
         object = double
 
         Factory::Worker.should_receive(:new).with(anything(), object).and_return(->(*){})
@@ -49,17 +49,8 @@ module Draper
         end
       end
 
-      context "when the :with option was omitted" do
-        it "passes nil to the worker" do
-          factory = Factory.new
-
-          Factory::Worker.should_receive(:new).with(nil, anything()).and_return(->(*){})
-          factory.decorate(double)
-        end
-      end
-
       it "passes options to the call" do
-        factory = Factory.new
+        factory = Factory.new(:with => NullDecorator)
         worker = ->(*){}
         Factory::Worker.stub new: worker
         options = {foo: "bar"}
@@ -70,7 +61,7 @@ module Draper
 
       context "when the :context option was given" do
         it "sets the passed context" do
-          factory = Factory.new(context: {foo: "bar"})
+          factory = Factory.new(context: {foo: "bar"}, with: NullDecorator)
           worker = ->(*){}
           Factory::Worker.stub new: worker
 
@@ -79,7 +70,7 @@ module Draper
         end
 
         it "is overridden by explicitly-specified context" do
-          factory = Factory.new(context: {foo: "bar"})
+          factory = Factory.new(context: {foo: "bar"}, with: NullDecorator)
           worker = ->(*){}
           Factory::Worker.stub new: worker
 

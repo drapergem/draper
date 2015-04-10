@@ -18,7 +18,8 @@ module Draper
 
     describe ".decorates_assigned" do
       it "adds helper methods" do
-        controller_class.decorates_assigned :article, :author
+        controller_class.decorates_assigned :article, :with => NullDecorator
+        controller_class.decorates_assigned :author, :with => NullDecorator
 
         expect(controller_class.instance_methods).to include :article
         expect(controller_class.instance_methods).to include :author

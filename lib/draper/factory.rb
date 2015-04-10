@@ -11,7 +11,12 @@ module Draper
     #   will be used as the context.
     def initialize(options = {})
       options.assert_valid_keys(:with, :context)
+
+      unless options[:with]
+        raise ArgumentError.new("Must specify the decorator to use for individual elements using `with:`")
+      end
       @decorator_class = options.delete(:with)
+
       @default_options = options
     end
 
