@@ -28,6 +28,11 @@ module Draper
     #   user-defined methods, and passed to each item's decorator.
     def initialize(object, options = {})
       options.assert_valid_keys(:with, :context)
+      
+      unless options[:with]
+        raise ArgumentError.new("Must specify the decorator to use for individual elements using `with:`")
+      end
+
       @object = object
       @decorator_class = options[:with]
       @context = options.fetch(:context, {})
