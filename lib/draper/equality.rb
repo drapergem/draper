@@ -11,7 +11,6 @@ module Draper
     #
     # @return [Boolean]
     def self.test(object, other)
-      return object == other if object.is_a?(Decoratable)
       object == other || test_for_decorator(object, other)
     end
 
