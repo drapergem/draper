@@ -16,7 +16,7 @@ module Draper
     attr_accessor :context
 
     array_methods = Array.instance_methods - Object.instance_methods
-    delegate :==, :as_json, *array_methods, to: :decorated_collection
+    delegate :==, :as_json, :in_groups_of, *array_methods, to: :decorated_collection
 
     # @param [Enumerable] object
     #   collection to decorate.

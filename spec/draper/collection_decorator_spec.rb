@@ -154,11 +154,17 @@ module Draper
       end
     end
 
-    it "delegates array methods to the decorated collection" do
-      decorator = CollectionDecorator.new([])
+    describe "array methods" do
+      subject(:decorator) { CollectionDecorator.new([]) }
 
-      decorator.decorated_collection.should_receive(:[]).with(42).and_return(:delegated)
-      expect(decorator[42]).to be :delegated
+      it "delegates array methods to the decorated collection" do
+        decorator.decorated_collection.should_receive(:[]).with(42).and_return(:delegated)
+        expect(decorator[42]).to be :delegated
+      end
+
+      it { is_expected.to respond_to(:as_json) }
+
+      it { is_expected.to respond_to(:in_groups_of) }
     end
 
     describe "#==" do
