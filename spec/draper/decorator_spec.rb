@@ -228,13 +228,11 @@ module Draper
 
       it "returns false when .object_class is not inferrable" do
         allow(Decorator).to receive(:object_class).and_raise(UninferrableSourceError.new(Decorator))
-
         expect(Decorator.object_class?).to be_falsey
       end
 
       it "is aliased to .source_class?" do
         allow(Decorator).to receive(:object_class).and_return(Model)
-
         expect(Decorator.source_class?).to be_truthy
       end
     end
@@ -488,7 +486,6 @@ module Draper
     describe ".model_name" do
       it "delegates to the source class" do
         allow(Decorator).to receive(:object_class) { double(model_name: :delegated) }
-
         expect(Decorator.model_name).to be :delegated
       end
     end

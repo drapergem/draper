@@ -132,7 +132,6 @@ module Draper
       it "calls #decorate_collection on .decorator_class" do
         scoped = [Product.new]
         allow(Product).to receive(scoping_method).and_return(scoped)
-
         expect(Product.decorator_class).to receive(:decorate_collection).with(scoped, with: nil).and_return(:decorated_collection)
         expect(Product.decorate).to be :decorated_collection
       end

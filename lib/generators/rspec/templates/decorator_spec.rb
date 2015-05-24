@@ -5,5 +5,4 @@
 <% end %>
 
 RSpec.describe <%= class_name %>Decorator, type: :decorator do
-
 end

@@ -246,6 +246,5 @@ module Draper
         end
       end
     end
-
   end
 end
