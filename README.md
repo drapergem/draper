@@ -110,13 +110,10 @@ Decorators are the ideal place to:
 Add Draper to your Gemfile:
 
 ```ruby
-gem 'draper', '~> 1.3'
+gem 'draper', '~> 2.1.0'
 ```
 
 And run `bundle install` within your app's directory.
-
-If you're upgrading from a 0.x release, the major changes are outlined [in the
-wiki](https://github.com/drapergem/draper/wiki/Upgrading-to-1.0).
 
 ## Writing Decorators
 
