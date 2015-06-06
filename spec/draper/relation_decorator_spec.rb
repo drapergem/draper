@@ -68,6 +68,26 @@ module Draper
       expect(proxy.some_scope.some_scope.some_scope).to be_decorated
     end
 
+    it 'supports converting the scope to an array of decorated objects' do
+      module ActiveRecord
+        class Relation
+          include Draper::Decoratable
+          def some_scope; self ;end
+
+          def to_a
+            [Product.new]
+          end
+        end
+      end
+
+      klass = Product
+      klass.class_eval { def self.some_scope ; ActiveRecord::Relation.new ; end }
+      proxy = RelationDecorator.new(klass)
+      expect(proxy.some_scope.to_ary).to be_a(Array)
+      expect(proxy.some_scope.to_ary.first).to be_instance_of(klass)
+      expect(proxy.some_scope.to_ary.first).to be_decorated
+    end
+
     describe '#decorated?' do
       it 'returns true' do
         klass = Product

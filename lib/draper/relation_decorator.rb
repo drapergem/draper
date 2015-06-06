@@ -31,6 +31,10 @@ module Draper
       alias_method :decorate, :new
     end
 
+    def to_ary
+      to_a
+    end
+
     def to_s
       "#<#{self.class.name} of #{decorator_class || "inferred decorators"} for #{relation.inspect}>"
     end
