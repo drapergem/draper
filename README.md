@@ -260,10 +260,12 @@ requires the collection to implement `current_page`, `total_pages`, and
 the `object`:
 
 ```ruby
-class PaginatingDecorator < Draper::CollectionDecorator
+class Draper::CollectionDecorator
   delegate :current_page, :total_pages, :limit_value, :entry_name, :total_count, :offset_value, :last_page?
 end
 ```
+
+You should add this file to the `config/initializers` folder.
 
 The `delegate` method used here is the same as that added by [Active
 Support](http://api.rubyonrails.org/classes/Module.html#method-i-delegate),
