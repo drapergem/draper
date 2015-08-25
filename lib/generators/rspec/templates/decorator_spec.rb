@@ -4,6 +4,6 @@
   require 'spec_helper'
 <% end %>
 
-describe <%= class_name %>Decorator, type: :decorator do
+RSpec.describe <%= class_name %>Decorator, type: :decorator do
   
 end
