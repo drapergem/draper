@@ -82,9 +82,7 @@ module Draper
 
         it "decorates anyway" do
           decorated = OtherDecorator.new(Decorator.new(Model.new))
-
           allow_any_instance_of(Object).to receive(:warn)
-          # Object.any_instance.stub(:warn)
           redecorated = Decorator.decorate(decorated)
 
           expect(redecorated.object).to be decorated
@@ -104,10 +102,7 @@ module Draper
 
     describe ".decorate_collection" do
       describe "options validation" do
-        before do
-          allow(CollectionDecorator).to receive(:new)
-        end
-        # before { CollectionDecorator.stub(:new) }
+        before { allow(CollectionDecorator).to receive(:new) }
 
         it "does not raise error on valid options" do
           valid_options = {with: OtherDecorator, context: {}}
@@ -124,7 +119,6 @@ module Draper
           object = [Model.new]
 
           expect(CollectionDecorator).to receive(:new).with(object, with: Decorator)
-          # CollectionDecorator.should_receive(:new).with(object, with: Decorator)
           Decorator.decorate_collection(object)
         end
 
@@ -155,7 +149,6 @@ module Draper
       context "when a NameError is thrown" do
         it "re-raises that error" do
           allow_any_instance_of(String).to receive(:constantize) { Draper::DecoratedEnumerableProxy }
-          # String.any_instance.stub(:constantize) { Draper::DecoratedEnumerableProxy }
           expect{ProductDecorator.decorate_collection([])}.to raise_error NameError, /Draper::DecoratedEnumerableProxy/
         end
       end
@@ -216,7 +209,6 @@ module Draper
         context "when an unrelated NameError is thrown" do
           it "re-raises that error" do
             allow_any_instance_of(String).to receive(:constantize) { SomethingThatDoesntExist }
-            # String.any_instance.stub(:constantize) { SomethingThatDoesntExist }
             expect{ProductDecorator.object_class}.to raise_error NameError, /SomethingThatDoesntExist/
           end
         end
@@ -230,21 +222,18 @@ module Draper
     describe ".object_class?" do
       it "returns truthy when .object_class is set" do
         allow(Decorator).to receive(:object_class).and_return(Model)
-        # Decorator.stub(:object_class).and_return(Model)
 
         expect(Decorator.object_class?).to be_truthy
       end
 
       it "returns false when .object_class is not inferrable" do
         allow(Decorator).to receive(:object_class).and_raise(UninferrableSourceError.new(Decorator))
-        # Decorator.stub(:object_class).and_raise(UninferrableSourceError.new(Decorator))
 
         expect(Decorator.object_class?).to be_falsey
       end
 
       it "is aliased to .source_class?" do
         allow(Decorator).to receive(:object_class).and_return(Model)
-        # Decorator.stub(:object_class).and_return(Model)
 
         expect(Decorator.source_class?).to be_truthy
       end
@@ -254,10 +243,7 @@ module Draper
       protect_class Decorator
 
       describe "options validation" do
-        before do
-          allow(DecoratedAssociation).to receive(:new).and_return(->{})
-        end
-
+        before { allow(DecoratedAssociation).to receive(:new).and_return(->{}) }
 
         it "does not raise error on valid options" do
           valid_options = {with: Class, scope: :sorted, context: {}}
@@ -276,7 +262,6 @@ module Draper
           decorator = Decorator.new(Model.new)
 
           expect(DecoratedAssociation).to receive(:new).with(decorator, :children, options).and_return(->{})
-          # DecoratedAssociation.should_receive(:new).with(decorator, :children, options).and_return(->{})
           decorator.children
         end
 
@@ -285,7 +270,6 @@ module Draper
           decorator = Decorator.new(Model.new)
 
           expect(DecoratedAssociation).to receive(:new).once.and_return(->{})
-          # DecoratedAssociation.should_receive(:new).once.and_return(->{})
           decorator.children
           decorator.children
         end
@@ -297,7 +281,6 @@ module Draper
           allow(DecoratedAssociation).to receive(:new).and_return(decorated_association)
 
           expect(decorated_association).to receive(:call).and_return(:decorated)
-          # decorated_association.should_receive(:call).and_return(:decorated)
           expect(decorator.children).to be :decorated
         end
       end
@@ -309,8 +292,6 @@ module Draper
       it "decorates each of the associations" do
         expect(Decorator).to receive(:decorates_association).with(:friends, {})
         expect(Decorator).to receive(:decorates_association).with(:enemies, {})
-        # Decorator.should_receive(:decorates_association).with(:friends, {})
-        # Decorator.should_receive(:decorates_association).with(:enemies, {})
         Decorator.decorates_associations :friends, :enemies
       end
 
@@ -319,8 +300,6 @@ module Draper
 
         expect(Decorator).to receive(:decorates_association).with(:friends, options)
         expect(Decorator).to receive(:decorates_association).with(:enemies, options)
-        # Decorator.should_receive(:decorates_association).with(:friends, options)
-        # Decorator.should_receive(:decorates_association).with(:enemies, options)
         Decorator.decorates_associations :friends, :enemies, options
       end
     end
@@ -502,8 +481,6 @@ module Draper
       it "returns only the object's attributes that are implemented by the decorator" do
         decorator = Decorator.new(double(attributes: {foo: "bar", baz: "qux"}))
         allow(decorator).to receive(:foo)
-        # decorator.stub(:foo)
-
         expect(decorator.attributes).to eq({foo: "bar"})
       end
     end
@@ -511,7 +488,6 @@ module Draper
     describe ".model_name" do
       it "delegates to the source class" do
         allow(Decorator).to receive(:object_class) { double(model_name: :delegated) }
-        # Decorator.stub object_class: double(model_name: :delegated)
 
         expect(Decorator.model_name).to be :delegated
       end
@@ -562,7 +538,6 @@ module Draper
       it "is false when #== is false" do
         decorator = Decorator.new(Model.new)
         allow(decorator).to receive(:==).with(:anything).and_return(false)
-        # decorator.stub(:==).with(:anything).and_return(false)
 
         expect(decorator === :anything).to be_falsey
       end
@@ -645,7 +620,6 @@ module Draper
         it "delegates already-delegated methods" do
           object = Class.new{ delegate :bar, to: :foo }.new
           allow(object).to receive(:foo) { double(bar: :delegated) }
-          # object.stub foo: double(bar: :delegated)
           decorator = Decorator.new(object)
 
           expect(decorator.bar).to be :delegated
@@ -678,7 +652,6 @@ module Draper
           it "delegates methods that exist on the source class" do
             object_class = Class.new
             allow(object_class).to receive(:hello_world).and_return(:delegated)
-            # object_class.stub hello_world: :delegated
             allow(Decorator).to receive(:object_class).and_return(object_class)
 
             expect(Decorator.hello_world).to be :delegated
@@ -686,8 +659,6 @@ module Draper
 
           it "does not delegate methods that do not exist on the source class" do
             allow(Decorator).to receive(:object_class) { Class.new }
-            # Decorator.stub object_class: Class.new
-
             expect{Decorator.hello_world}.to raise_error NoMethodError
           end
         end
@@ -765,7 +736,6 @@ module Draper
       describe ".respond_to_missing?" do
         it "allows .method to be called on delegated class methods" do
           allow(Decorator).to receive(:object_class) { double(hello_world: :delegated) }
-          # Decorator.stub object_class: double(hello_world: :delegated)
 
           expect(Decorator.method(:hello_world)).not_to be_nil
         end

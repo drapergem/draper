@@ -4,12 +4,10 @@ RSpec.shared_examples_for "view helpers" do |subject|
   describe "#helpers" do
     it "returns the current view context" do
       allow(Draper::ViewContext).to receive(:current) { :current_view_context }
-      # Draper::ViewContext.stub current: :current_view_context
       expect(subject.helpers).to be :current_view_context
     end
 
     it "is aliased to #h" do
-      # Draper::ViewContext.stub current: :current_view_context
       allow(Draper::ViewContext).to receive(:current) { :current_view_context }
       expect(subject.h).to be :current_view_context
     end
@@ -37,13 +35,11 @@ RSpec.shared_examples_for "view helpers" do |subject|
   describe ".helpers" do
     it "returns the current view context" do
       allow(Draper::ViewContext).to receive(:current) { :current_view_context }
-      # Draper::ViewContext.stub current: :current_view_context
       expect(subject.class.helpers).to be :current_view_context
     end
 
     it "is aliased to .h" do
       allow(Draper::ViewContext).to receive(:current) { :current_view_context }
-      # Draper::ViewContext.stub current: :current_view_context
       expect(subject.class.h).to be :current_view_context
     end
   end

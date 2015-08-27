@@ -15,7 +15,6 @@ module Draper
         it "returns the controller's view context" do
           view_context = fake_view_context
           allow(ViewContext).to receive(:controller) { fake_controller(view_context) }
-          # ViewContext.stub controller: fake_controller(view_context)
           strategy = ViewContext::BuildStrategy::Full.new
 
           expect(strategy.call).to be view_context

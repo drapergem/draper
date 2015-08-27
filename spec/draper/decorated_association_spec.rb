@@ -17,14 +17,12 @@ module Draper
         options = {with: Decorator, context: {foo: "bar"}}
 
         expect(Factory).to receive(:new).with(options)
-        # Factory.should_receive(:new).with(options)
         DecoratedAssociation.new(double, :association, options)
       end
 
       describe ":with option" do
         it "defaults to nil" do
           expect(Factory).to receive(:new).with(with: nil, context: anything())
-          # Factory.should_receive(:new).with(with: nil, context: anything())
           DecoratedAssociation.new(double, :association, {})
         end
       end
@@ -61,7 +59,7 @@ module Draper
         decorated_association = DecoratedAssociation.new(owner, :association, {})
         decorated = double
 
-        allow(factory).to receive(:decorate).once.and_return(decorated)
+        expect(factory).to receive(:decorate).once.and_return(decorated)
         expect(decorated_association.call).to be decorated
         expect(decorated_association.call).to be decorated
       end

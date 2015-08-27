@@ -27,7 +27,7 @@ module Draper
         factory = Factory.new
         worker = ->(*){ :decorated }
 
-        allow(Factory::Worker).to receive(:new).and_return(worker)
+        expect(Factory::Worker).to receive(:new).and_return(worker)
         expect(factory.decorate(double)).to be :decorated
       end
 
@@ -35,7 +35,7 @@ module Draper
         factory = Factory.new
         object = double
 
-        allow(Factory::Worker).to receive(:new).with(anything(), object).and_return(->(*){})
+        expect(Factory::Worker).to receive(:new).with(anything(), object).and_return(->(*){})
         factory.decorate(object)
       end
 
@@ -44,7 +44,7 @@ module Draper
           decorator_class = double
           factory = Factory.new(with: decorator_class)
 
-          allow(Factory::Worker).to receive(:new).with(decorator_class, anything).and_return(->(*){})
+          expect(Factory::Worker).to receive(:new).with(decorator_class, anything()).and_return(->(*){})
           factory.decorate(double)
         end
       end
@@ -53,7 +53,7 @@ module Draper
         it "passes nil to the worker" do
           factory = Factory.new
 
-          allow(Factory::Worker).to receive(:new).with(nil, anything()).and_return(->(*){})
+          expect(Factory::Worker).to receive(:new).with(nil, anything()).and_return(->(*){})
           factory.decorate(double)
         end
       end
@@ -101,7 +101,7 @@ module Draper
         decorator = ->(*){}
         allow(worker).to receive(:decorator){ decorator }
 
-        allow(decorator).to receive(:call).with(object, options).and_return(:decorated)
+        expect(decorator).to receive(:call).with(object, options).and_return(:decorated)
         expect(worker.call(options)).to be :decorated
       end
 
@@ -176,7 +176,7 @@ module Draper
               options = {foo: "bar"}
               worker = Factory::Worker.new(nil, object)
 
-              allow(object).to receive(:decorate).with(options).and_return(:decorated)
+              expect(object).to receive(:decorate).with(options).and_return(:decorated)
               expect(worker.decorator.call(object, options)).to be :decorated
             end
           end
@@ -231,7 +231,7 @@ module Draper
               allow(object).to receive(:decorate){ nil }
               worker = Factory::Worker.new(nil, object)
 
-              allow(decorator_class).to receive(:decorate_collection).with(object, foo: "bar", with: nil).and_return(:decorated)
+              expect(decorator_class).to receive(:decorate_collection).with(object, foo: "bar", with: nil).and_return(:decorated)
               expect(worker.decorator.call(object, foo: "bar")).to be :decorated
             end
           end

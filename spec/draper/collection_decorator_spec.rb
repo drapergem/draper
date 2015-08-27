@@ -63,7 +63,7 @@ module Draper
         it "does not trigger decoration" do
           decorator = CollectionDecorator.new([])
 
-          expect(decorator).to_not receive(:decorated_collection)
+          expect(decorator).not_to receive(:decorated_collection)
           decorator.context = {other: "context"}
         end
 

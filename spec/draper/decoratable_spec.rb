@@ -23,8 +23,6 @@ module Draper
       it "uses the #decorator_class" do
         product = Product.new
         allow(product).to receive(:decorator_class) { OtherDecorator }
-        # product.stub decorator_class: OtherDecorator
-
         expect(product.decorate).to be_an_instance_of OtherDecorator
       end
     end
@@ -134,7 +132,6 @@ module Draper
       it "calls #decorate_collection on .decorator_class" do
         scoped = [Product.new]
         allow(Product).to receive(scoping_method).and_return(scoped)
-        # Product.stub scoping_method => scoped
 
         expect(Product.decorator_class).to receive(:decorate_collection).with(scoped, with: nil).and_return(:decorated_collection)
         expect(Product.decorate).to be :decorated_collection

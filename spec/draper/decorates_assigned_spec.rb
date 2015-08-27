@@ -29,7 +29,6 @@ module Draper
 
       it "creates a factory" do
         expect(Factory).to receive(:new).once
-        # Factory.should_receive(:new).once
         controller_class.decorates_assigned :article, :author
       end
 
@@ -50,7 +49,7 @@ module Draper
           controller = controller_class.new
           controller.instance_variable_set "@article", object
 
-          allow(factory).to receive(:decorate).with(object, context_args: controller).and_return(:decorated)
+          expect(factory).to receive(:decorate).with(object, context_args: controller).and_return(:decorated)
           expect(controller.article).to be :decorated
         end
 

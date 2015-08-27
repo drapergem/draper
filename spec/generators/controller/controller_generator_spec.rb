@@ -17,7 +17,7 @@ RSpec.describe Rails::Generators::ControllerGenerator do
     describe "naming" do
       before { run_generator %w(YourModels) }
 
-      it { should contain "class YourModelDecorator" }
+      it { is_expected.to contain "class YourModelDecorator" }
     end
   end
 end
