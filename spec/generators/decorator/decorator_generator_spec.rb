@@ -1,9 +1,9 @@
 require 'spec_helper'
-require 'rails'
+require_relative '../../dummy/spec/rails_helper'
 require 'ammeter/init'
 require 'generators/rails/decorator_generator'
 
-describe Rails::Generators::DecoratorGenerator do
+RSpec.describe Rails::Generators::DecoratorGenerator do
   destination File.expand_path("../tmp", __FILE__)
 
   before { prepare_destination }
@@ -72,6 +72,9 @@ describe Rails::Generators::DecoratorGenerator do
   end
 
   context "with -t=test_unit" do
+    before do
+      allow(Rails::Generators).to receive(:require).with("rails/generators/rails/test_unit/test_unit_generators")
+    end
     describe "the generated test" do
       subject { file("test/decorators/your_model_decorator_test.rb") }
 
