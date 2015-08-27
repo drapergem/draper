@@ -15,27 +15,27 @@ RSpec.describe Rails::Generators::DecoratorGenerator do
     describe "naming" do
       before { run_generator %w(YourModel) }
 
-      it { should contain "class YourModelDecorator" }
+      it { is_expected.to contain "class YourModelDecorator" }
     end
 
     describe "namespacing" do
       subject { file("app/decorators/namespace/your_model_decorator.rb") }
       before { run_generator %w(Namespace::YourModel) }
 
-      it { should contain "class Namespace::YourModelDecorator" }
+      it { is_expected.to contain "class Namespace::YourModelDecorator" }
     end
 
     describe "inheritance" do
       context "by default" do
         before { run_generator %w(YourModel) }
 
-        it { should contain "class YourModelDecorator < Draper::Decorator" }
+        it { is_expected.to contain "class YourModelDecorator < Draper::Decorator" }
       end
 
       context "with the --parent option" do
         before { run_generator %w(YourModel --parent=FooDecorator) }
 
-        it { should contain "class YourModelDecorator < FooDecorator" }
+        it { is_expected.to contain "class YourModelDecorator < FooDecorator" }
       end
 
       context "with an ApplicationDecorator" do
@@ -47,7 +47,7 @@ RSpec.describe Rails::Generators::DecoratorGenerator do
 
         before { run_generator %w(YourModel) }
 
-        it { should contain "class YourModelDecorator < ApplicationDecorator" }
+        it { is_expected.to contain "class YourModelDecorator < ApplicationDecorator" }
       end
     end
   end
@@ -59,36 +59,33 @@ RSpec.describe Rails::Generators::DecoratorGenerator do
       describe "naming" do
         before { run_generator %w(YourModel -t=rspec) }
 
-        it { should contain "describe YourModelDecorator" }
+        it { is_expected.to contain "describe YourModelDecorator" }
       end
 
       describe "namespacing" do
         subject { file("spec/decorators/namespace/your_model_decorator_spec.rb") }
         before { run_generator %w(Namespace::YourModel -t=rspec) }
 
-        it { should contain "describe Namespace::YourModelDecorator" }
+        it { is_expected.to contain "describe Namespace::YourModelDecorator" }
       end
     end
   end
 
   context "with -t=test_unit" do
-    before do
-      allow(Rails::Generators).to receive(:require).with("rails/generators/rails/test_unit/test_unit_generators")
-    end
     describe "the generated test" do
       subject { file("test/decorators/your_model_decorator_test.rb") }
 
       describe "naming" do
         before { run_generator %w(YourModel -t=test_unit) }
 
-        it { should contain "class YourModelDecoratorTest < Draper::TestCase" }
+        it { is_expected.to contain "class YourModelDecoratorTest < Draper::TestCase" }
       end
 
       describe "namespacing" do
         subject { file("test/decorators/namespace/your_model_decorator_test.rb") }
         before { run_generator %w(Namespace::YourModel -t=test_unit) }
 
-        it { should contain "class Namespace::YourModelDecoratorTest < Draper::TestCase" }
+        it { is_expected.to contain "class Namespace::YourModelDecoratorTest < Draper::TestCase" }
       end
     end
   end
