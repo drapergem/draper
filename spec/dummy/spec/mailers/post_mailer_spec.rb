@@ -1,6 +1,6 @@
-require 'spec_helper'
+require_relative '../rails_helper'
 
-describe PostMailer do
+RSpec.describe PostMailer do
   describe "#decorated_email" do
     let(:email_body) { Capybara.string(email.body.to_s) }
     let(:email) { PostMailer.decorated_email(post).deliver }
