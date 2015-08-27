@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 module Draper
-  describe DecoratedAssociation do
+  RSpec.describe DecoratedAssociation do
 
     describe "#initialize" do
       it "accepts valid options" do
@@ -16,20 +16,22 @@ module Draper
       it "creates a factory" do
         options = {with: Decorator, context: {foo: "bar"}}
 
-        Factory.should_receive(:new).with(options)
+        expect(Factory).to receive(:new).with(options)
+        # Factory.should_receive(:new).with(options)
         DecoratedAssociation.new(double, :association, options)
       end
 
       describe ":with option" do
         it "defaults to nil" do
-          Factory.should_receive(:new).with(with: nil, context: anything())
+          expect(Factory).to receive(:new).with(with: nil, context: anything())
+          # Factory.should_receive(:new).with(with: nil, context: anything())
           DecoratedAssociation.new(double, :association, {})
         end
       end
 
       describe ":context option" do
         it "defaults to the identity function" do
-          Factory.should_receive(:new) do |options|
+          expect(Factory).to receive(:new) do |options|
             options[:context].call(:anything) == :anything
           end
           DecoratedAssociation.new(double, :association, {})
@@ -40,7 +42,7 @@ module Draper
     describe "#call" do
       it "calls the factory" do
         factory = double
-        Factory.stub new: factory
+        allow(Factory).to receive(:new).and_return(factory)
         associated = double
         owner_context = {foo: "bar"}
         object = double(association: associated)
@@ -48,18 +50,18 @@ module Draper
         decorated_association = DecoratedAssociation.new(owner, :association, {})
         decorated = double
 
-        factory.should_receive(:decorate).with(associated, context_args: owner_context).and_return(decorated)
+        expect(factory).to receive(:decorate).with(associated, context_args: owner_context).and_return(decorated)
         expect(decorated_association.call).to be decorated
       end
 
       it "memoizes" do
         factory = double
-        Factory.stub new: factory
+        allow(Factory).to receive(:new).and_return(factory)
         owner = double(object: double(association: double), context: {})
         decorated_association = DecoratedAssociation.new(owner, :association, {})
         decorated = double
 
-        factory.should_receive(:decorate).once.and_return(decorated)
+        allow(factory).to receive(:decorate).once.and_return(decorated)
         expect(decorated_association.call).to be decorated
         expect(decorated_association.call).to be decorated
       end
@@ -67,14 +69,14 @@ module Draper
       context "when the :scope option was given" do
         it "applies the scope before decoration" do
           factory = double
-          Factory.stub new: factory
+          allow(Factory).to receive(:new).and_return(factory)
           scoped = double
           object = double(association: double(applied_scope: scoped))
           owner = double(object: object, context: {})
           decorated_association = DecoratedAssociation.new(owner, :association, scope: :applied_scope)
           decorated = double
 
-          factory.should_receive(:decorate).with(scoped, anything()).and_return(decorated)
+          expect(factory).to receive(:decorate).with(scoped, anything()).and_return(decorated)
           expect(decorated_association.call).to be decorated
         end
       end

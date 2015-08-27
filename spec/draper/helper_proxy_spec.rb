@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 module Draper
-  describe HelperProxy do
+  RSpec.describe HelperProxy do
     describe "#initialize" do
       it "sets the view context" do
         view_context = double
@@ -18,7 +18,8 @@ module Draper
         view_context = double
         helper_proxy = HelperProxy.new(view_context)
 
-        view_context.stub(:foo) { |arg| arg }
+        allow(view_context).to receive(:foo) { |arg| arg }
+        # view_context.stub(:foo) { |arg| arg }
         expect(helper_proxy.foo(:passed)).to be :passed
       end
 
@@ -26,7 +27,8 @@ module Draper
         view_context = double
         helper_proxy = HelperProxy.new(view_context)
 
-        view_context.stub(:foo) { |&block| block.call }
+        allow(view_context).to receive(:foo) { |&block| block.call }
+        # view_context.stub(:foo) { |&block| block.call }
         expect(helper_proxy.foo{:yielded}).to be :yielded
       end
 

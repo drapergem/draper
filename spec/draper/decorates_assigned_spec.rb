@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 module Draper
-  describe DecoratesAssigned do
+  RSpec.describe DecoratesAssigned do
     let(:controller_class) do
       Class.new do
         extend DecoratesAssigned
@@ -28,14 +28,15 @@ module Draper
       end
 
       it "creates a factory" do
-        Factory.should_receive(:new).once
+        expect(Factory).to receive(:new).once
+        # Factory.should_receive(:new).once
         controller_class.decorates_assigned :article, :author
       end
 
       it "passes options to the factory" do
         options = {foo: "bar"}
 
-        Factory.should_receive(:new).with(options)
+        expect(Factory).to receive(:new).with(options)
         controller_class.decorates_assigned :article, :author, options
       end
 
@@ -43,29 +44,28 @@ module Draper
         it "decorates the instance variable" do
           object = double
           factory = double
-          Factory.stub new: factory
+          allow(Factory).to receive(:new).and_return(factory)
 
           controller_class.decorates_assigned :article
           controller = controller_class.new
           controller.instance_variable_set "@article", object
 
-          factory.should_receive(:decorate).with(object, context_args: controller).and_return(:decorated)
+          allow(factory).to receive(:decorate).with(object, context_args: controller).and_return(:decorated)
           expect(controller.article).to be :decorated
         end
 
         it "memoizes" do
           factory = double
-          Factory.stub new: factory
+          allow(Factory).to receive(:new).and_return(factory)
 
           controller_class.decorates_assigned :article
           controller = controller_class.new
 
-          factory.should_receive(:decorate).once
+          expect(factory).to receive(:decorate).once
           controller.article
           controller.article
         end
       end
     end
-
   end
 end

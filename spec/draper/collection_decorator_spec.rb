@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'support/shared_examples/view_helpers'
 
 module Draper
-  describe CollectionDecorator do
+  RSpec.describe CollectionDecorator do
     it_behaves_like "view helpers", CollectionDecorator.new([])
 
     describe "#initialize" do
@@ -63,7 +63,7 @@ module Draper
         it "does not trigger decoration" do
           decorator = CollectionDecorator.new([])
 
-          decorator.should_not_receive(:decorated_collection)
+          expect(decorator).to_not receive(:decorated_collection)
           decorator.context = {other: "context"}
         end
 
@@ -110,12 +110,12 @@ module Draper
       protect_class ProductsDecorator
 
       it "defaults the :to option to :object" do
-        Object.should_receive(:delegate).with(:foo, :bar, to: :object)
+        expect(Object).to receive(:delegate).with(:foo, :bar, to: :object)
         ProductsDecorator.delegate :foo, :bar
       end
 
       it "does not overwrite the :to option if supplied" do
-        Object.should_receive(:delegate).with(:foo, :bar, to: :baz)
+        expect(Object).to receive(:delegate).with(:foo, :bar, to: :baz)
         ProductsDecorator.delegate :foo, :bar, to: :baz
       end
     end
@@ -125,7 +125,7 @@ module Draper
         it "decorates Enumerable#find" do
           decorator = CollectionDecorator.new([])
 
-          decorator.decorated_collection.should_receive(:find).and_return(:delegated)
+          expect(decorator.decorated_collection).to receive(:find).and_return(:delegated)
           expect(decorator.find{|p| p.title == "title"}).to be :delegated
         end
       end
@@ -136,7 +136,7 @@ module Draper
           found = double(decorate: :decorated)
           decorator = CollectionDecorator.new(object)
 
-          object.should_receive(:find).and_return(found)
+          expect(object).to receive(:find).and_return(found)
           ActiveSupport::Deprecation.silence do
             expect(decorator.find(1)).to be :decorated
           end
@@ -149,7 +149,7 @@ module Draper
       it "delegates to the decorated collection" do
         decorator = CollectionDecorator.new([])
 
-        decorator.decorated_collection.should_receive(:to_ary).and_return(:delegated)
+        expect(decorator.decorated_collection).to receive(:to_ary).and_return(:delegated)
         expect(decorator.to_ary).to be :delegated
       end
     end
@@ -157,7 +157,7 @@ module Draper
     it "delegates array methods to the decorated collection" do
       decorator = CollectionDecorator.new([])
 
-      decorator.decorated_collection.should_receive(:[]).with(42).and_return(:delegated)
+      expect(decorator.decorated_collection).to receive(:[]).with(42).and_return(:delegated)
       expect(decorator[42]).to be :delegated
     end
 
@@ -267,14 +267,14 @@ module Draper
     describe '#kind_of?' do
       it 'asks the kind of its decorated collection' do
         decorator = ProductsDecorator.new([])
-        decorator.decorated_collection.should_receive(:kind_of?).with(Array).and_return("true")
+        expect(decorator.decorated_collection).to receive(:kind_of?).with(Array).and_return("true")
         expect(decorator.kind_of?(Array)).to eq "true"
       end
 
       context 'when asking the underlying collection returns false' do
         it 'asks the CollectionDecorator instance itself' do
           decorator = ProductsDecorator.new([])
-          decorator.decorated_collection.stub(:kind_of?).with(::Draper::CollectionDecorator).and_return(false)
+          allow(decorator.decorated_collection).to receive(:kind_of?).with(::Draper::CollectionDecorator).and_return(false)
           expect(decorator.kind_of?(::Draper::CollectionDecorator)).to be true
         end
       end
