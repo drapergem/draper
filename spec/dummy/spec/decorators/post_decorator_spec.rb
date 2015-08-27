@@ -1,6 +1,6 @@
-require 'spec_helper'
+require_relative '../rails_helper'
 
-describe PostDecorator do
+RSpec.describe PostDecorator do
   let(:decorator) { PostDecorator.new(object) }
   let(:object) { Post.create }
 

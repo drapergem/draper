@@ -10,7 +10,7 @@ RSpec.configure do |config|
   end
 
   config.mock_with :rspec do |mocks|
-    # mocks.verify_partial_doubles = true
+    mocks.verify_partial_doubles = true
     mocks.yield_receiver_to_any_instance_implementation_blocks = true
   end
 
