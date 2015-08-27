@@ -23,7 +23,9 @@ require 'rspec/rails'
 
 # Checks for pending migrations before tests are run.
 # If you are not using ActiveRecord, you can remove this line.
-ActiveRecord::Migration.maintain_test_schema!
+unless ENV['RAILS_VERSION'] == '4.0'
+  ActiveRecord::Migration.maintain_test_schema!
+end
 
 RSpec.configure do |config|
   config.fixture_path = "#{::Rails.root}/spec/fixtures"
