@@ -17,3 +17,5 @@ spec/dummy/db/*.sqlite3
 .ruby-version*
 .ruby-gemset*
 .rake_tasks
+rspec_errors.txt
+rspec_results.html
