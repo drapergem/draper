@@ -1,5 +1,6 @@
 require 'spec_helper'
-require_relative '../../dummy/spec/rails_helper'
+require 'rspec/rails'
+# require_relative '../../dummy/spec/rails_helper'
 require 'ammeter/init'
 require 'generators/rails/decorator_generator'
 
