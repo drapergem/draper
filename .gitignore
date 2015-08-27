@@ -19,3 +19,5 @@ spec/dummy/db/*.sqlite3
 .rake_tasks
 rspec_errors.txt
 rspec_results.html
+bin/
+bin/
