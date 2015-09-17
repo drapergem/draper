@@ -1,4 +1,5 @@
-<% if RSpec::Core::Version::STRING.match(/\A3\.[^10]/) %>
+<% require 'rspec/version' %>
+<% if RSpec::Version::STRING.match(/\A3\.[^10]/) %>
   require 'rails_helper'
 <% else %>
   require 'spec_helper'
