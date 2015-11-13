@@ -42,6 +42,23 @@ module Draper
       @decorated_collection ||= object.map{|item| decorate_item(item)}
     end
 
+    # Optimization to prevent unnecessary iteration (useful for larger collections).
+    # Iterates over the collection, decorating objects as it goes. If the decorated collection is
+    # already set, iterate over it instead.
+    def each(&block)
+      if @decorated_collection
+        @decorated_collection.each(&block)
+      else
+        @decorated_collection = []
+        object.each do |item|
+          decorated_item = decorate_item(item)
+          @decorated_collection << decorated_item
+
+          block.call(decorated_item)
+        end
+      end
+    end
+
     # Delegated to the decorated collection when using the block form
     # (`Enumerable#find`) or to the decorator class if not
     # (`ActiveRecord::FinderMethods#find`)
