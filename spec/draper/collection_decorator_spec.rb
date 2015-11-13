@@ -320,7 +320,19 @@ module Draper
 
         expect(decorated_collection).to receive(:each)
 
-        decorator.each {}
+        decorator.each
+      end
+    end
+
+    describe "Enumerable methods" do
+      it "doesn't delegate Enumerable methods to its decorated collection" do
+        decorated_collection = double(:decorated_collection)
+        decorator = CollectionDecorator.new([])
+        decorator.instance_variable_set(:@decorated_collection, decorated_collection)
+
+        expect(decorated_collection).to_not receive(:map)
+
+        decorator.map
       end
     end
 
