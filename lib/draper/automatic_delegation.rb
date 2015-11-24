@@ -7,7 +7,11 @@ module Draper
       return super unless delegatable?(method)
 
       self.class.delegate method
-      send(method, *args, &block)
+      send(method, *args, &block).tap do
+        self.class.class_eval do
+          remove_method method
+        end
+      end
     end
 
     # Checks if the decorator responds to an instance method, or is able to

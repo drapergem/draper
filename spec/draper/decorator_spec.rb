@@ -596,14 +596,6 @@ module Draper
           expect(decorator.hello_world).to be :delegated
         end
 
-        it "adds delegated methods to the decorator when they are used" do
-          decorator = Decorator.new(double(hello_world: :delegated))
-
-          expect(decorator.methods).not_to include :hello_world
-          decorator.hello_world
-          expect(decorator.methods).to include :hello_world
-        end
-
         it "passes blocks to delegated methods" do
           object = Model.new
           object.stub(:hello_world) { |*args, &block| block.call }
@@ -678,6 +670,15 @@ module Draper
           decorator = Decorator.new(double(hello_world: :delegated))
 
           expect(decorator).to respond_to :hello_world
+        end
+
+        it "does not incorrectly return true just because it returned true for another object that defined that method" do
+          decorator = Decorator.new(double(hello_world: :delegated))
+          expect(decorator).to respond_to :hello_world
+          decorator.hello_world
+
+          decorator = Decorator.new(double)
+          expect(decorator).to_not respond_to :hello_world
         end
 
         context "with include_private" do
