@@ -40,7 +40,7 @@ module Draper
     describe "#call" do
       it "calls the factory" do
         factory = double
-        Factory.stub new: factory
+        allow(Factory).to receive_messages(new: factory)
         associated = double
         owner_context = {foo: "bar"}
         object = double(association: associated)
@@ -54,7 +54,8 @@ module Draper
 
       it "memoizes" do
         factory = double
-        Factory.stub new: factory
+        allow(Factory).to receive_messages(new: factory)
+        
         owner = double(object: double(association: double), context: {})
         decorated_association = DecoratedAssociation.new(owner, :association, {})
         decorated = double
@@ -67,7 +68,8 @@ module Draper
       context "when the :scope option was given" do
         it "applies the scope before decoration" do
           factory = double
-          Factory.stub new: factory
+          allow(Factory).to receive_messages(new: factory)
+
           scoped = double
           object = double(association: double(applied_scope: scoped))
           owner = double(object: object, context: {})

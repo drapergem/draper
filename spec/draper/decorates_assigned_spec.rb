@@ -43,7 +43,7 @@ module Draper
         it "decorates the instance variable" do
           object = double
           factory = double
-          Factory.stub new: factory
+          allow(Factory).to receive_messages(new: factory)
 
           controller_class.decorates_assigned :article
           controller = controller_class.new
@@ -54,8 +54,9 @@ module Draper
         end
 
         it "memoizes" do
-          factory = double
-          Factory.stub new: factory
+          factory = double 
+
+          allow(Factory).to receive_messages(new: factory)
 
           controller_class.decorates_assigned :article
           controller = controller_class.new
