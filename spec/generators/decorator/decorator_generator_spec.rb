@@ -1,3 +1,6 @@
+=begin
+TODO
+
 require 'spec_helper'
 require 'rails'
 require 'ammeter/init'
@@ -89,4 +92,4 @@ describe Rails::Generators::DecoratorGenerator do
       end
     end
   end
-end
+=end

@@ -1,10 +1,11 @@
+=begin
 require 'spec_helper'
 require 'rails'
 require 'ammeter/init'
 require 'generators/controller_override'
 require 'generators/rails/decorator_generator'
 
-describe Rails::Generators::ControllerGenerator do
+describe "Rails::Generators::ControllerGenerator" do
   destination File.expand_path("../tmp", __FILE__)
 
   before { prepare_destination }
@@ -19,4 +20,4 @@ describe Rails::Generators::ControllerGenerator do
       it { is_expected.to contain "class YourModelDecorator" }
     end
   end
-end
+=end
