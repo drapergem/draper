@@ -69,6 +69,11 @@ module Draper
       @object_class ||= inferred_object_class
     end
 
+    def selected_decorators
+      chain = object.respond_to?(:selected_decorators) ? object.selected_decorators : []
+      chain << self.class
+    end
+
     # Checks whether this decorator class has a corresponding {object_class}.
     def self.object_class?
       object_class
