@@ -640,6 +640,17 @@ module Draper
           expect{decorator.hello_world}.to raise_error NoMethodError
           expect(decorator.methods).not_to include :hello_world
         end
+
+        it "allows calling `super`" do
+          decorator = Class.new(Decorator) do
+            def hello_world
+              super and "overriden hello world"
+            end
+          end.new(double(hello_world: "hello world"))
+
+          expect(decorator.hello_world).to eq "overriden hello world"
+          expect(decorator.hello_world).to eq "overriden hello world"
+        end
       end
 
       context ".method_missing" do
