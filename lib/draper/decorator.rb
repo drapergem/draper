@@ -232,6 +232,13 @@ module Draper
       object.attributes.select {|attribute, _| respond_to?(attribute) }
     end
 
+    # @return [Decorator] a deep_dup of self, decorating a deep_dup of the object
+    def deep_dup
+      self.dup.tap do |dupe|
+        dupe.object = object.deep_dup
+      end
+    end
+
     # ActiveModel compatibility
     delegate :to_param, :to_partial_path
 
@@ -246,6 +253,10 @@ module Draper
       raise if name && !error.missing_name?(name)
       Draper::CollectionDecorator
     end
+
+    protected
+
+    attr_writer :object
 
     private
 
