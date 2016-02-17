@@ -1,6 +1,5 @@
 require 'spec_helper'
-require 'rails'
-require 'ammeter/init'
+require 'support/generator_support'
 require 'generators/rails/decorator_generator'
 
 describe Rails::Generators::DecoratorGenerator do
