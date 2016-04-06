@@ -25,8 +25,9 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency 'ammeter'
   s.add_development_dependency 'rake', '>= 0.9.2'
-  s.add_development_dependency 'rspec-rails', '~> 3.2'
-  s.add_development_dependency 'minitest-rails', '>= 1.0'
+  # TODO: change to 3.5.0 version when it'll be released
+  s.add_development_dependency 'rspec-rails', '3.5.0.beta3'
+  s.add_development_dependency 'minitest-rails', '>= 2.2.0'
   s.add_development_dependency 'capybara'
   s.add_development_dependency 'active_model_serializers'
 end
