@@ -6,8 +6,10 @@ services:
 rvm:
   - 2.1.5
   - 2.2.1
+  - 2.3.0
 
 env:
   - "RAILS_VERSION=4.0"
   - "RAILS_VERSION=4.1"
   - "RAILS_VERSION=4.2"
+  - "RAILS_VERSION=5.0"
