@@ -13,3 +13,10 @@ env:
   - "RAILS_VERSION=4.1"
   - "RAILS_VERSION=4.2"
   - "RAILS_VERSION=5.0"
+
+matrix:
+   exclude:
+     - env: "RAILS_VERSION=5.0"
+       rvm: 2.1.5
+     - env: "RAILS_VERSION=5.0"
+       rvm: 2.2.1
