@@ -1,4 +1,4 @@
-gem 'rails', '< 5.1'
+gem 'rails', '5.0.0.beta3'
 gem 'railties', '5.0.0.beta3'
 gem 'mongoid', '~> 5.1'
 gem 'devise', '~> 3.4'
