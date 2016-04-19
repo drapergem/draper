@@ -32,8 +32,8 @@ module Draper
       include Draper::ViewContext
       extend  Draper::HelperSupport
       extend  Draper::DecoratesAssigned
-
-      before_filter :activate_draper
+      
+      public_send(respond_to?(:before_action) ? :before_action : :before_filter, :activate_draper)
     end
   end
 
