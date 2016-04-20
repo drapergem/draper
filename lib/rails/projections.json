@@ -1,0 +1,12 @@
+{
+  "app/decorators/*_decorator.rb": {
+    "command": "decorator",
+    "related": "app/models/{}.rb",
+    "affinity": "model",
+    "template": [
+      "class {camelcase|capitalize|colons}Decorator < Draper::Decorator",
+      "end"
+    ],
+    "keywords": "delegate_all decorates_association object h"
+  }
+}
