@@ -604,6 +604,14 @@ module Draper
           expect(decorator.methods).to include :hello_world
         end
 
+        it "allows decorator to decorate different classes of objects" do
+          decorator_1 = Decorator.new(double)
+          decorator_2 = Decorator.new(double(hello_world: :delegated))
+
+          decorator_2.hello_world
+          expect(decorator_1.methods).not_to include :hello_world
+        end
+
         it "passes blocks to delegated methods" do
           object = Model.new
           object.stub(:hello_world) { |*args, &block| block.call }
