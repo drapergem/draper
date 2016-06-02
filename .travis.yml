@@ -3,6 +3,9 @@ language: ruby
 services:
   - mongodb
 
+before_install:
+  - gem update bundler
+
 rvm:
   - 2.1.5
   - 2.2.1
