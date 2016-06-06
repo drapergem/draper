@@ -6,7 +6,7 @@ module Draper
     def method_missing(method, *args, &block)
       return super unless delegatable?(method)
 
-      self.class.delegate method
+      self.singleton_class.delegate method
       send(method, *args, &block)
     end
 
