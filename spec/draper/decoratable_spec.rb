@@ -22,7 +22,7 @@ module Draper
 
       it "uses the #decorator_class" do
         product = Product.new
-        product.stub decorator_class: OtherDecorator
+        allow(product).to receive_messages decorator_class: OtherDecorator
 
         expect(product.decorate).to be_an_instance_of OtherDecorator
       end
@@ -70,7 +70,7 @@ module Draper
       it "delegates to .decorator_class" do
         product = Product.new
 
-        Product.should_receive(:decorator_class).and_return(:some_decorator)
+        expect(Product).to receive(:decorator_class).and_return(:some_decorator)
         expect(product.decorator_class).to be :some_decorator
       end
     end
@@ -83,14 +83,14 @@ module Draper
       it "is true when #== is true" do
         product = Product.new
 
-        product.should_receive(:==).and_return(true)
+        expect(product).to receive(:==).and_return(true)
         expect(product === :anything).to be_truthy
       end
 
       it "is false when #== is false" do
         product = Product.new
 
-        product.should_receive(:==).and_return(false)
+        expect(product).to receive(:==).and_return(false)
         expect(product === :anything).to be_falsey
       end
     end
@@ -132,17 +132,17 @@ module Draper
 
       it "calls #decorate_collection on .decorator_class" do
         scoped = [Product.new]
-        Product.stub scoping_method => scoped
+        allow(Product).to receive_messages scoping_method => scoped
 
-        Product.decorator_class.should_receive(:decorate_collection).with(scoped, with: nil).and_return(:decorated_collection)
+        expect(Product.decorator_class).to receive(:decorate_collection).with(scoped, with: nil).and_return(:decorated_collection)
         expect(Product.decorate).to be :decorated_collection
       end
 
       it "accepts options" do
         options = {with: ProductDecorator, context: {some: "context"}}
-        Product.stub scoping_method => []
+        allow(Product).to receive_messages scoping_method => []
 
-        Product.decorator_class.should_receive(:decorate_collection).with([], options)
+        expect(Product.decorator_class).to receive(:decorate_collection).with([], options)
         Product.decorate(options)
       end
     end
@@ -177,7 +177,7 @@ module Draper
 
         context "for ActiveModel classes" do
           it "infers the decorator from the model name" do
-            Namespaced::Product.stub(:model_name).and_return("Namespaced::Other")
+            allow(Namespaced::Product).to receive(:model_name).and_return("Namespaced::Other")
 
             expect(Namespaced::Product.decorator_class).to be Namespaced::OtherDecorator
           end
@@ -192,7 +192,7 @@ module Draper
 
       context "when an unrelated NameError is thrown" do
         it "re-raises that error" do
-          String.any_instance.stub(:constantize) { Draper::Base }
+          allow_any_instance_of(String).to receive(:constantize) { Draper::Base }
           expect{Product.decorator_class}.to raise_error NameError, /Draper::Base/
         end
       end

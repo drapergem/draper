@@ -14,7 +14,7 @@ module Draper
       context "when a current controller is set" do
         it "returns the controller's view context" do
           view_context = fake_view_context
-          ViewContext.stub controller: fake_controller(view_context)
+          allow(ViewContext).to receive_messages controller: fake_controller(view_context)
           strategy = ViewContext::BuildStrategy::Full.new
 
           expect(strategy.call).to be view_context
@@ -33,7 +33,7 @@ module Draper
 
       it "adds a request if one is not defined" do
         controller = Class.new(ActionController::Base).new
-        ViewContext.stub controller: controller
+        allow(ViewContext).to receive_messages controller: controller
         strategy = ViewContext::BuildStrategy::Full.new
 
         expect(controller.request).to be_nil
@@ -47,7 +47,7 @@ module Draper
       end
 
       it "adds methods to the view context from the constructor block" do
-        ViewContext.stub controller: fake_controller
+        allow(ViewContext).to receive(:controller).and_return(fake_controller)
         strategy = ViewContext::BuildStrategy::Full.new do
           def a_helper_method; end
         end
@@ -57,7 +57,7 @@ module Draper
 
       it "includes modules into the view context from the constructor block" do
         view_context = Object.new
-        ViewContext.stub controller: fake_controller(view_context)
+        allow(ViewContext).to receive(:controller).and_return(fake_controller(view_context))
         helpers = Module.new do
           def a_helper_method; end
         end

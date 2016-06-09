@@ -8,12 +8,12 @@ module Draper
       end
 
       it "proxies methods to #helpers" do
-        decorator.helpers.stub(:foo) { |arg| arg }
+        allow(decorator.helpers).to receive(:foo) { |arg| arg }
         expect(decorator.foo(:passed)).to be :passed
       end
 
       it "passes blocks" do
-        decorator.helpers.stub(:foo) { |&block| block.call }
+        allow(decorator.helpers).to receive(:foo) { |&block| block.call }
         expect(decorator.foo{:yielded}).to be :yielded
       end
     end
