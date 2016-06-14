@@ -564,6 +564,8 @@ end
 
 This is only necessary when proxying class methods.
 
+Once this association between the decorator and the model is set up, you can call `SomeModel.decorator_class` to access class methods defined in the decorator. If necessary, you can check if your model is decorated with `SomeModel.decorator_class?`.
+
 ### Making Models Decoratable
 
 Models get their `decorate` method from the `Draper::Decoratable` module, which
