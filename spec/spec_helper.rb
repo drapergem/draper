@@ -19,7 +19,7 @@ class SpecialProduct < Product; end
 class Other < Model; end
 class ProductDecorator < Draper::Decorator; end
 class ProductsDecorator < Draper::CollectionDecorator; end
-
+class ProductsRelationDecorator < Draper::RelationDecorator; end
 class ProductPresenter < Draper::Decorator; end
 
 class OtherDecorator < Draper::Decorator; end

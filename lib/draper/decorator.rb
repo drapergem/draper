@@ -145,6 +145,23 @@ module Draper
       collection_decorator_class.new(object, options.reverse_merge(with: self))
     end
 
+    # Decorates an ActiveRecord relation. The class of the relation decorator
+    # is inferred from the decorator class if possible (e.g. `ProductDecorator`
+    # maps to `ProductsDecorator`), but otherwise defaults to
+    # {Draper::RelationDecorator}.
+    #
+    # @param [ActiveRecord::Relation] relation
+    #   relation to decorate.
+    # @option options [Class, nil] :with (self)
+    #   the decorator class used to decorate each item. When `nil`, it is
+    #   inferred from each item.
+    # @option options [Hash] :context
+    #   extra data to be stored in the collection decorator.
+    def self.decorate_relation(relation, options = {})
+      options.assert_valid_keys(:with, :context)
+      relation_decorator_class.new(relation, options.reverse_merge(with: self))
+    end
+
     # @return [Array<Class>] the list of decorators that have been applied to
     #   the object.
     def applied_decorators
@@ -245,6 +262,15 @@ module Draper
     rescue NameError => error
       raise if name && !error.missing_name?(name)
       Draper::CollectionDecorator
+    end
+
+    # @return [Class] the class created by {decorate_relation}.
+    def self.relation_decorator_class
+      name = collection_decorator_name
+      name.constantize
+    rescue NameError => error
+      raise if name && !error.missing_name?(name)
+      Draper::RelationDecorator
     end
 
     private
