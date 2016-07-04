@@ -564,15 +564,15 @@ end
 
 This is only necessary when proxying class methods.
 
-Once this association between the decorator and the model is set up, you can call `SomeModel.decorator_class` to access class methods defined in the decorator. If necessary, you can check if your model is decorated with `SomeModel.decorator_class?`.
+Once this association between the decorator and the model is set up, you can call
+`SomeModel.decorator_class` to access class methods defined in the decorator.
+If necessary, you can check if your model is decorated with `SomeModel.decorator_class?`.
 
 ### Making Models Decoratable
 
 Models get their `decorate` method from the `Draper::Decoratable` module, which
 is included in `ActiveRecord::Base` and `Mongoid::Document` by default. If
-you're [using another
-ORM](https://github.com/drapergem/draper/wiki/Using-other-ORMs) (including
-versions of Mongoid prior to 3.0), or want to decorate plain old Ruby objects,
+you're using another ORM, or want to decorate plain old Ruby objects,
 you can include this module manually.
 
 ## Contributors
@@ -587,3 +587,4 @@ great community of open source
 * Steve Klabnik (steve@jumpstartlab.com)
 * Vasiliy Ermolovich
 * Andrew Haines
+* Sean Linsley

@@ -38,13 +38,7 @@ module Draper
 
         def controller
           (Draper::ViewContext.controller || ApplicationController.new).tap do |controller|
-            if defined?(ActionController::TestRequest)
-              controller.request ||= if ActionController::TestRequest.respond_to?(:create)
-                ActionController::TestRequest.create
-              else
-                ActionController::TestRequest.new
-              end
-            end
+            controller.request ||= ActionController::TestRequest.create
           end
         end
       end

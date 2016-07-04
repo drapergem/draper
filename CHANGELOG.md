@@ -1,5 +1,10 @@
 # Draper Changelog
 
+## 3.0.0 - 2016-07-XX
+
+* Dropped support for Rails < 5
+* Dropped support for Ruby < 2.2
+
 ## 2.1.0 - 2015-03-26
 
 * Cleared most issues and merged a few PRs
