@@ -1,0 +1,5 @@
+gem 'rails', '5.0.0.beta3'
+gem 'railties', '5.0.0.beta3'
+gem 'mongoid', git: 'https://github.com/estolfo/mongoid.git', branch: 'MONGOID-4218-rails-5'
+gem 'devise', '~> 3.4'
+gem 'minitest-rails', github: 'pschambacher/minitest-rails', branch: 'pschambacher/rails5.0'

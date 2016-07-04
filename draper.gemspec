@@ -21,11 +21,13 @@ Gem::Specification.new do |s|
   s.add_dependency 'actionpack', '>= 3.0'
   s.add_dependency 'request_store', '~> 1.0'
   s.add_dependency 'activemodel', '>= 3.0'
+  s.add_dependency 'activemodel-serializers-xml', '>= 1.0' if Draper::VERSION > '2.1.0'
 
   s.add_development_dependency 'ammeter'
   s.add_development_dependency 'rake', '>= 0.9.2'
-  s.add_development_dependency 'rspec-rails', '~> 3.2'
-  s.add_development_dependency 'minitest-rails', '>= 1.0'
+  # TODO: change to 3.5.0 version when it'll be released
+  s.add_development_dependency 'rspec-rails', '3.5.0.beta3'
+  s.add_development_dependency 'minitest-rails', '>= 2.2.0'
   s.add_development_dependency 'capybara'
   s.add_development_dependency 'active_model_serializers'
 end
