@@ -1,53 +1,116 @@
 development:
-  # Configure available database sessions. (required)
-  sessions:
-    # Defines the default session. (required)
+  # Configure available database clients. (required)
+  clients:
+    # Defines the default client. (required)
     default:
       # Defines the name of the default database that Mongoid can connect to.
       # (required).
       database: dummy_development
-      # Provides the hosts the default session can connect to. Must be an array
+      # Provides the hosts the default client can connect to. Must be an array
       # of host:port pairs. (required)
       hosts:
         - localhost:27017
       options:
-        # Change whether the session persists in safe mode by default.
-        # (default: false)
-        # safe: false
+        # Change the default write concern. (default = { w: 1 })
+        # write:
+        #   w: 1
 
-        # Change the default consistency model to :eventual or :strong.
-        # :eventual will send reads to secondaries, :strong sends everything
-        # to master. (default: :eventual)
-        # consistency: :eventual
+        # Change the default read preference. Valid options for mode are: :secondary,
+        # :secondary_preferred, :primary, :primary_preferred, :nearest
+        # (default: primary)
+        # read:
+        #   mode: :secondary_preferred
+        #   tag_sets:
+        #     - use: web
 
-        # How many times Moped should attempt to retry an operation after
-        # failure. (default: 30)
-        # max_retries: 30
+        # The name of the user for authentication.
+        # user: 'user'
 
-        # The time in seconds that Moped should wait before retrying an
-        # operation on failure. (default: 1)
-        # retry_interval: 1
+        # The password of the user for authentication.
+        # password: 'password'
+
+        # The user's database roles.
+        # roles:
+        #   - 'dbOwner'
+
+        # Change the default authentication mechanism. Valid options are: :scram,
+        # :mongodb_cr, :mongodb_x509, and :plain. (default on 3.0 is :scram, default
+        # on 2.4 and 2.6 is :plain)
+        # auth_mech: :scram
+
+        # The database or source to authenticate the user against. (default: admin)
+        # auth_source: admin
+
+        # Force a the driver cluster to behave in a certain manner instead of auto-
+        # discovering. Can be one of: :direct, :replica_set, :sharded. Set to :direct
+        # when connecting to hidden members of a replica set.
+        # connect: :direct
+
+        # Changes the default time in seconds the server monitors refresh their status
+        # via ismaster commands. (default: 10)
+        # heartbeat_frequency: 10
+
+        # The time in seconds for selecting servers for a near read preference. (default: 5)
+        # local_threshold: 5
+
+        # The timeout in seconds for selecting a server for an operation. (default: 30)
+        # server_selection_timeout: 30
+
+        # The maximum number of connections in the connection pool. (default: 5)
+        # max_pool_size: 5
+
+        # The minimum number of connections in the connection pool. (default: 1)
+        # min_pool_size: 1
+
+        # The time to wait, in seconds, in the connection pool for a connection
+        # to be checked in before timing out. (default: 5)
+        # wait_queue_timeout: 5
+
+        # The time to wait to establish a connection before timing out, in seconds.
+        # (default: 5)
+        # connect_timeout: 5
+
+        # The timeout to wait to execute operations on a socket before raising an error.
+        # (default: 5)
+        # socket_timeout: 5
+
+        # The name of the replica set to connect to. Servers provided as seeds that do
+        # not belong to this replica set will be ignored.
+        # replica_set: name
+
+        # Whether to connect to the servers via ssl. (default: false)
+        # ssl: true
+
+        # The certificate file used to identify the connection against MongoDB.
+        # ssl_cert: /path/to/my.cert
+
+        # The private keyfile used to identify the connection against MongoDB.
+        # Note that even if the key is stored in the same file as the certificate,
+        # both need to be explicitly specified.
+        # ssl_key: /path/to/my.key
+
+        # A passphrase for the private key.
+        # ssl_key_pass_phrase: password
+
+        # Whether or not to do peer certification validation. (default: true)
+        # ssl_verify: true
+
+        # The file containing a set of concatenated certification authority certifications
+        # used to validate certs passed from the other end of the connection.
+        # ssl_ca_cert: /path/to/ca.cert
+
+
   # Configure Mongoid specific options. (optional)
   options:
-    # Configuration for whether or not to allow access to fields that do
-    # not have a field definition on the model. (default: true)
-    # allow_dynamic_fields: true
-
-    # Enable the identity map, needed for eager loading. (default: false)
-    # identity_map_enabled: false
-
     # Includes the root model name in json serialization. (default: false)
     # include_root_in_json: false
 
-    # Include the _type field in serializaion. (default: false)
+    # Include the _type field in serialization. (default: false)
     # include_type_for_serialization: false
 
     # Preload all models in development, needed when models use
     # inheritance. (default: false)
     # preload_models: false
-
-    # Protect id and type from mass assignment. (default: true)
-    # protect_sensitive_fields: true
 
     # Raise an error when performing a #find and the document is not found.
     # (default: true)
@@ -57,23 +120,23 @@ development:
     # existing method. (default: false)
     # scope_overwrite_exception: false
 
-    # Skip the database version check, used when connecting to a db without
-    # admin access. (default: false)
-    # skip_version_check: false
-
-    # User Active Support's time zone in conversions. (default: true)
+    # Use Active Support's time zone in conversions. (default: true)
     # use_activesupport_time_zone: true
 
     # Ensure all times are UTC in the app side. (default: false)
     # use_utc: false
+
+    # Set the Mongoid and Ruby driver log levels when not in a Rails
+    # environment. The Mongoid logger will be set to the Rails logger
+    # otherwise.(default: :info)
+    # log_level: :info
 test:
-  sessions:
+  clients:
     default:
       database: dummy_test
       hosts:
         - localhost:27017
       options:
-        # In the test environment we lower the retries and retry interval to
-        # low amounts for fast failures.
-        max_retries: 1
-        retry_interval: 0
+        read:
+          mode: :primary
+        max_pool_size: 1
