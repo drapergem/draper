@@ -7,6 +7,9 @@ rvm:
   - 2.1.5
   - 2.2.1
 
+before_install:
+ - gem update bundler
+
 env:
   - "RAILS_VERSION=4.0"
   - "RAILS_VERSION=4.1"
