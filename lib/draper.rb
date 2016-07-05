@@ -33,7 +33,13 @@ module Draper
       extend  Draper::HelperSupport
       extend  Draper::DecoratesAssigned
 
-      before_filter :activate_draper
+      # before_filter is deprecated in Rails 5 and will be removed in Rails 5.1
+      # Use before_action instead.
+      if respond_to? :before_action
+        before_action :activate_draper
+      else
+        before_filter :activate_draper
+      end
     end
   end
 
