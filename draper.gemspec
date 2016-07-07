@@ -22,10 +22,10 @@ Gem::Specification.new do |s|
   s.add_dependency 'request_store', '~> 1.0'
   s.add_dependency 'activemodel', '>= 3.0'
 
-  s.add_development_dependency 'ammeter'
+  s.add_development_dependency 'ammeter', '~> 1.1'
   s.add_development_dependency 'rake', '>= 0.9.2'
-  s.add_development_dependency 'rspec-rails', '~> 3.2'
-  s.add_development_dependency 'minitest-rails', '>= 1.0'
-  s.add_development_dependency 'capybara'
+  s.add_development_dependency 'rspec-rails', '~> 3.2.1'
+  s.add_development_dependency 'minitest-rails', '~> 1.0.0'
+  s.add_development_dependency 'capybara', '~> 2.5.0'
   s.add_development_dependency 'active_model_serializers'
 end
