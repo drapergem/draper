@@ -1,8 +1,8 @@
 # Draper: View Models for Rails
 
 [![TravisCI Build Status](https://travis-ci.org/drapergem/draper.svg?branch=master)](http://travis-ci.org/drapergem/draper)
-[![Code Climate](https://codeclimate.com/github/drapergem/draper.png)](https://codeclimate.com/github/drapergem/draper)
-[![Inline docs](http://inch-ci.org/github/drapergem/draper.png?branch=master)](http://inch-ci.org/github/drapergem/draper)
+[![Code Climate](https://codeclimate.com/github/drapergem/draper.svg)](https://codeclimate.com/github/drapergem/draper)
+[![Inline docs](http://inch-ci.org/github/drapergem/draper.svg?branch=master)](http://inch-ci.org/github/drapergem/draper)
 
 Draper adds an object-oriented layer of presentation logic to your Rails
 application.
