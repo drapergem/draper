@@ -392,6 +392,15 @@ In your `Spork.prefork` block of `spec_helper.rb`, add this:
 require 'draper/test/rspec_integration'
 ```
 
+#### Custom Draper Controller ViewContext
+If running tests in an engine setting with a controller other than "ApplicationController," set a custom controller in `spec_helper.rb`
+
+```ruby
+config.before(:each, type: :decorator) do |example|
+  Draper::ViewContext.controller = ExampleEngine::CustomRootController.new
+end
+```
+
 ### Isolated Tests
 
 In tests, Draper needs to build a view context to access helper methods. By
