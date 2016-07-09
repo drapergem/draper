@@ -276,6 +276,19 @@ omitted.
 delegate :current_page, :per_page, :offset, :total_entries, :total_pages
 ```
 
+If needed, you can then set the collection_decorator_class of your CustomDecorator as follows:
+```ruby
+class ArticleDecorator < Draper::Decorator
+  def self.collection_decorator_class
+    PaginatingDecorator
+  end
+end
+
+ArticleDecorator.decorate_collection(@articles.paginate)
+# => Collection decorated by PaginatingDecorator
+# => Members decorated by ArticleDecorator
+```
+
 ### Decorating Associated Objects
 
 You can automatically decorate associated models when the primary model is
