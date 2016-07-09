@@ -16,20 +16,20 @@ module Draper
       it "creates a factory" do
         options = {with: Decorator, context: {foo: "bar"}}
 
-        Factory.should_receive(:new).with(options)
+        expect(Factory).to receive(:new).with(options)
         DecoratedAssociation.new(double, :association, options)
       end
 
       describe ":with option" do
         it "defaults to nil" do
-          Factory.should_receive(:new).with(with: nil, context: anything())
+          expect(Factory).to receive(:new).with(with: nil, context: anything())
           DecoratedAssociation.new(double, :association, {})
         end
       end
 
       describe ":context option" do
         it "defaults to the identity function" do
-          Factory.should_receive(:new) do |options|
+          expect(Factory).to receive(:new) do |options|
             options[:context].call(:anything) == :anything
           end
           DecoratedAssociation.new(double, :association, {})
@@ -48,7 +48,7 @@ module Draper
         decorated_association = DecoratedAssociation.new(owner, :association, {})
         decorated = double
 
-        factory.should_receive(:decorate).with(associated, context_args: owner_context).and_return(decorated)
+        expect(factory).to receive(:decorate).with(associated, context_args: owner_context).and_return(decorated)
         expect(decorated_association.call).to be decorated
       end
 
@@ -59,7 +59,7 @@ module Draper
         decorated_association = DecoratedAssociation.new(owner, :association, {})
         decorated = double
 
-        factory.should_receive(:decorate).once.and_return(decorated)
+        expect(factory).to receive(:decorate).once.and_return(decorated)
         expect(decorated_association.call).to be decorated
         expect(decorated_association.call).to be decorated
       end
@@ -74,7 +74,7 @@ module Draper
           decorated_association = DecoratedAssociation.new(owner, :association, scope: :applied_scope)
           decorated = double
 
-          factory.should_receive(:decorate).with(scoped, anything()).and_return(decorated)
+          expect(factory).to receive(:decorate).with(scoped, anything()).and_return(decorated)
           expect(decorated_association.call).to be decorated
         end
       end
