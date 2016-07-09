@@ -203,6 +203,12 @@ module Draper
       super || object.instance_of?(klass)
     end
 
+    if defined?(ActiveModel) && defined?(ActiveModel::Serializer)
+      def serializer_class
+        ActiveModel::Serializer.serializer_for(object)
+      end
+    end
+
     if RUBY_VERSION < "2.0"
       # nasty hack to stop 1.9.x using the delegated `to_s` in `inspect`
       alias_method :_to_s, :to_s
