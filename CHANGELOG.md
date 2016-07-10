@@ -1,6 +1,6 @@
 # Draper Changelog
 
-## 3.0.0 - 2016-07-XX
+## 3.0.0.pre1 - 2016-07-10
 
 * Added support for Rails 5, dropped 4.0 - 4.2
   * Ruby >= 2.2 is required, matching Rails 5
