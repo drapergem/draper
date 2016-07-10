@@ -203,18 +203,6 @@ module Draper
       super || object.instance_of?(klass)
     end
 
-    if RUBY_VERSION < "2.0"
-      # nasty hack to stop 1.9.x using the delegated `to_s` in `inspect`
-      alias_method :_to_s, :to_s
-
-      def inspect
-        ivars = instance_variables.map do |name|
-          "#{name}=#{instance_variable_get(name).inspect}"
-        end
-        _to_s.insert(-2, " #{ivars.join(", ")}")
-      end
-    end
-
     delegate :to_s
 
     # In case object is nil

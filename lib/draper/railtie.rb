@@ -43,14 +43,6 @@ module Draper
       end
     end
 
-    initializer "draper.setup_active_model_serializers" do |app|
-      ActiveSupport.on_load :active_model_serializers do
-        if defined?(ActiveModel::ArraySerializerSupport)
-          Draper::CollectionDecorator.send :include, ActiveModel::ArraySerializerSupport
-        end
-      end
-    end
-
     initializer "draper.minitest-rails_integration" do |app|
       ActiveSupport.on_load :minitest do
         require "draper/test/minitest_integration"

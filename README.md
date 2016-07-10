@@ -1,8 +1,8 @@
 # Draper: View Models for Rails
 
 [![TravisCI Build Status](https://travis-ci.org/drapergem/draper.svg?branch=master)](http://travis-ci.org/drapergem/draper)
-[![Code Climate](https://codeclimate.com/github/drapergem/draper.png)](https://codeclimate.com/github/drapergem/draper)
-[![Inline docs](http://inch-ci.org/github/drapergem/draper.png?branch=master)](http://inch-ci.org/github/drapergem/draper)
+[![Code Climate](https://codeclimate.com/github/drapergem/draper.svg)](https://codeclimate.com/github/drapergem/draper)
+[![Inline docs](http://inch-ci.org/github/drapergem/draper.svg?branch=master)](http://inch-ci.org/github/drapergem/draper)
 
 Draper adds an object-oriented layer of presentation logic to your Rails
 application.
@@ -586,15 +586,15 @@ end
 
 This is only necessary when proxying class methods.
 
-Once this association between the decorator and the model is set up, you can call `SomeModel.decorator_class` to access class methods defined in the decorator. If necessary, you can check if your model is decorated with `SomeModel.decorator_class?`.
+Once this association between the decorator and the model is set up, you can call
+`SomeModel.decorator_class` to access class methods defined in the decorator.
+If necessary, you can check if your model is decorated with `SomeModel.decorator_class?`.
 
 ### Making Models Decoratable
 
 Models get their `decorate` method from the `Draper::Decoratable` module, which
 is included in `ActiveRecord::Base` and `Mongoid::Document` by default. If
-you're [using another
-ORM](https://github.com/drapergem/draper/wiki/Using-other-ORMs) (including
-versions of Mongoid prior to 3.0), or want to decorate plain old Ruby objects,
+you're using another ORM, or want to decorate plain old Ruby objects,
 you can include this module manually.
 
 ## Contributors
@@ -603,7 +603,11 @@ Draper was conceived by Jeff Casimir and heavily refined by Steve Klabnik and a
 great community of open source
 [contributors](https://github.com/drapergem/draper/contributors).
 
-### Core Team
+### Current maintainers
+
+* Sean Linsley
+
+### Historical maintainers
 
 * Jeff Casimir (jeff@jumpstartlab.com)
 * Steve Klabnik (steve@jumpstartlab.com)
