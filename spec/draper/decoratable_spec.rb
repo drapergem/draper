@@ -128,11 +128,9 @@ module Draper
     end
 
     describe ".decorate" do
-      let(:scoping_method) { Rails::VERSION::MAJOR >= 4 ? :all : :scoped }
-
       it "calls #decorate_collection on .decorator_class" do
         scoped = [Product.new]
-        allow(Product).to receive_messages scoping_method => scoped
+        allow(Product).to receive(:all).and_return(scoped)
 
         expect(Product.decorator_class).to receive(:decorate_collection).with(scoped, with: nil).and_return(:decorated_collection)
         expect(Product.decorate).to be :decorated_collection
@@ -140,7 +138,7 @@ module Draper
 
       it "accepts options" do
         options = {with: ProductDecorator, context: {some: "context"}}
-        allow(Product).to receive_messages scoping_method => []
+        allow(Product).to receive(:all).and_return([])
 
         expect(Product.decorator_class).to receive(:decorate_collection).with([], options)
         Product.decorate(options)

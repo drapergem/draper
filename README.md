@@ -1,8 +1,8 @@
 # Draper: View Models for Rails
 
 [![TravisCI Build Status](https://travis-ci.org/drapergem/draper.svg?branch=master)](http://travis-ci.org/drapergem/draper)
-[![Code Climate](https://codeclimate.com/github/drapergem/draper.png)](https://codeclimate.com/github/drapergem/draper)
-[![Inline docs](http://inch-ci.org/github/drapergem/draper.png?branch=master)](http://inch-ci.org/github/drapergem/draper)
+[![Code Climate](https://codeclimate.com/github/drapergem/draper.svg)](https://codeclimate.com/github/drapergem/draper)
+[![Inline docs](http://inch-ci.org/github/drapergem/draper.svg?branch=master)](http://inch-ci.org/github/drapergem/draper)
 
 Draper adds an object-oriented layer of presentation logic to your Rails
 application.
@@ -110,7 +110,7 @@ Decorators are the ideal place to:
 Add Draper to your Gemfile:
 
 ```ruby
-gem 'draper', '~> 1.3'
+gem 'draper'
 ```
 
 And run `bundle install` within your app's directory.
@@ -276,6 +276,19 @@ omitted.
 delegate :current_page, :per_page, :offset, :total_entries, :total_pages
 ```
 
+If needed, you can then set the collection_decorator_class of your CustomDecorator as follows:
+```ruby
+class ArticleDecorator < Draper::Decorator
+  def self.collection_decorator_class
+    PaginatingDecorator
+  end
+end
+
+ArticleDecorator.decorate_collection(@articles.paginate)
+# => Collection decorated by PaginatingDecorator
+# => Members decorated by ArticleDecorator
+```
+
 ### Decorating Associated Objects
 
 You can automatically decorate associated models when the primary model is
@@ -377,6 +390,15 @@ In your `Spork.prefork` block of `spec_helper.rb`, add this:
 
 ```ruby
 require 'draper/test/rspec_integration'
+```
+
+#### Custom Draper Controller ViewContext
+If running tests in an engine setting with a controller other than "ApplicationController," set a custom controller in `spec_helper.rb`
+
+```ruby
+config.before(:each, type: :decorator) do |example|
+  Draper::ViewContext.controller = ExampleEngine::CustomRootController.new
+end
 ```
 
 ### Isolated Tests
@@ -564,13 +586,15 @@ end
 
 This is only necessary when proxying class methods.
 
+Once this association between the decorator and the model is set up, you can call
+`SomeModel.decorator_class` to access class methods defined in the decorator.
+If necessary, you can check if your model is decorated with `SomeModel.decorator_class?`.
+
 ### Making Models Decoratable
 
 Models get their `decorate` method from the `Draper::Decoratable` module, which
 is included in `ActiveRecord::Base` and `Mongoid::Document` by default. If
-you're [using another
-ORM](https://github.com/drapergem/draper/wiki/Using-other-ORMs) (including
-versions of Mongoid prior to 3.0), or want to decorate plain old Ruby objects,
+you're using another ORM, or want to decorate plain old Ruby objects,
 you can include this module manually.
 
 ## Contributors
@@ -579,7 +603,11 @@ Draper was conceived by Jeff Casimir and heavily refined by Steve Klabnik and a
 great community of open source
 [contributors](https://github.com/drapergem/draper/contributors).
 
-### Core Team
+### Current maintainers
+
+* Sean Linsley
+
+### Historical maintainers
 
 * Jeff Casimir (jeff@jumpstartlab.com)
 * Steve Klabnik (steve@jumpstartlab.com)

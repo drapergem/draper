@@ -14,7 +14,7 @@ describe "A decorator test" do
 end
 
 describe "A controller test" do
-  tests Class.new(ActionController::Base)
+  subject{ Class.new(ActionController::Base) }
 
   it_does_not_leak_view_context
 end
