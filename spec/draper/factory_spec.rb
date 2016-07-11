@@ -27,7 +27,7 @@ module Draper
         factory = Factory.new
         worker = ->(*){ :decorated }
 
-        Factory::Worker.should_receive(:new).and_return(worker)
+        expect(Factory::Worker).to receive(:new).and_return(worker)
         expect(factory.decorate(double)).to be :decorated
       end
 
@@ -35,7 +35,7 @@ module Draper
         factory = Factory.new
         object = double
 
-        Factory::Worker.should_receive(:new).with(anything(), object).and_return(->(*){})
+        expect(Factory::Worker).to receive(:new).with(anything(), object).and_return(->(*){})
         factory.decorate(object)
       end
 
@@ -44,7 +44,7 @@ module Draper
           decorator_class = double
           factory = Factory.new(with: decorator_class)
 
-          Factory::Worker.should_receive(:new).with(decorator_class, anything()).and_return(->(*){})
+          expect(Factory::Worker).to receive(:new).with(decorator_class, anything()).and_return(->(*){})
           factory.decorate(double)
         end
       end
@@ -53,7 +53,7 @@ module Draper
         it "passes nil to the worker" do
           factory = Factory.new
 
-          Factory::Worker.should_receive(:new).with(nil, anything()).and_return(->(*){})
+          expect(Factory::Worker).to receive(:new).with(nil, anything()).and_return(->(*){})
           factory.decorate(double)
         end
       end
@@ -61,10 +61,10 @@ module Draper
       it "passes options to the call" do
         factory = Factory.new
         worker = ->(*){}
-        Factory::Worker.stub new: worker
+        allow(Factory::Worker).to receive(:new).and_return(worker)
         options = {foo: "bar"}
 
-        worker.should_receive(:call).with(options)
+        allow(worker).to receive(:call).with(options)
         factory.decorate(double, options)
       end
 
@@ -72,18 +72,18 @@ module Draper
         it "sets the passed context" do
           factory = Factory.new(context: {foo: "bar"})
           worker = ->(*){}
-          Factory::Worker.stub new: worker
+          allow(Factory::Worker).to receive_messages new: worker
 
-          worker.should_receive(:call).with(baz: "qux", context: {foo: "bar"})
+          expect(worker).to receive(:call).with(baz: "qux", context: {foo: "bar"})
           factory.decorate(double, {baz: "qux"})
         end
 
         it "is overridden by explicitly-specified context" do
           factory = Factory.new(context: {foo: "bar"})
           worker = ->(*){}
-          Factory::Worker.stub new: worker
+          allow(Factory::Worker).to receive_messages new: worker
 
-          worker.should_receive(:call).with(context: {baz: "qux"})
+          expect(worker).to receive(:call).with(context: {baz: "qux"})
           factory.decorate(double, context: {baz: "qux"})
         end
       end
@@ -99,9 +99,9 @@ module Draper
         options = {foo: "bar"}
         worker = Factory::Worker.new(double, object)
         decorator = ->(*){}
-        allow(worker).to receive(:decorator){ decorator }        
+        allow(worker).to receive(:decorator){ decorator }
 
-        decorator.should_receive(:call).with(object, options).and_return(:decorated)
+        allow(decorator).to receive(:call).with(object, options).and_return(:decorated)
         expect(worker.call(options)).to be :decorated
       end
 
@@ -109,29 +109,29 @@ module Draper
         it "calls it" do
           worker = Factory::Worker.new(double, double)
           decorator = ->(*){}
-          worker.stub decorator: decorator
+          allow(worker).to receive_messages decorator: decorator
           context = {foo: "bar"}
 
-          decorator.should_receive(:call).with(anything(), context: context)
+          expect(decorator).to receive(:call).with(anything(), context: context)
           worker.call(context: ->{ context })
         end
 
         it "receives arguments from the :context_args option" do
           worker = Factory::Worker.new(double, double)
-          worker.stub decorator: ->(*){}
+          allow(worker).to receive_messages decorator: ->(*){}
           context = ->{}
 
-          context.should_receive(:call).with(:foo, :bar)
+          expect(context).to receive(:call).with(:foo, :bar)
           worker.call(context: context, context_args: [:foo, :bar])
         end
 
         it "wraps non-arrays passed to :context_args" do
           worker = Factory::Worker.new(double, double)
-          worker.stub decorator: ->(*){}
+          allow(worker).to receive_messages decorator: ->(*){}
           context = ->{}
           hash = {foo: "bar"}
 
-          context.should_receive(:call).with(hash)
+          expect(context).to receive(:call).with(hash)
           worker.call(context: context, context_args: hash)
         end
       end
@@ -140,10 +140,10 @@ module Draper
         it "doesn't call it" do
           worker = Factory::Worker.new(double, double)
           decorator = ->(*){}
-          worker.stub decorator: decorator
+          allow(worker).to receive_messages decorator: decorator
           context = {foo: "bar"}
 
-          decorator.should_receive(:call).with(anything(), context: context)
+          expect(decorator).to receive(:call).with(anything(), context: context)
           worker.call(context: context)
         end
       end
@@ -151,9 +151,9 @@ module Draper
       it "does not pass the :context_args option to the decorator" do
         worker = Factory::Worker.new(double, double)
         decorator = ->(*){}
-        worker.stub decorator: decorator
+        allow(worker).to receive_messages decorator: decorator
 
-        decorator.should_receive(:call).with(anything(), foo: "bar")
+        expect(decorator).to receive(:call).with(anything(), foo: "bar")
         worker.call(foo: "bar", context_args: [])
       end
     end
@@ -176,7 +176,7 @@ module Draper
               options = {foo: "bar"}
               worker = Factory::Worker.new(nil, object)
 
-              object.should_receive(:decorate).with(options).and_return(:decorated)
+              expect(object).to receive(:decorate).with(options).and_return(:decorated)
               expect(worker.decorator.call(object, options)).to be :decorated
             end
           end
@@ -231,7 +231,7 @@ module Draper
               allow(object).to receive(:decorate){ nil }
               worker = Factory::Worker.new(nil, object)
 
-              decorator_class.should_receive(:decorate_collection).with(object, foo: "bar", with: nil).and_return(:decorated)
+              expect(decorator_class).to receive(:decorate_collection).with(object, foo: "bar", with: nil).and_return(:decorated)
               expect(worker.decorator.call(object, foo: "bar")).to be :decorated
             end
           end

@@ -7,20 +7,20 @@ module Draper
 
     describe ".find" do
       it "proxies to the model class" do
-        Product.should_receive(:find).with(1)
+        expect(Product).to receive(:find).with(1)
         ProductDecorator.find(1)
       end
 
       it "decorates the result" do
         found = Product.new
-        Product.stub(:find).and_return(found)
+        allow(Product).to receive(:find).and_return(found)
         decorator = ProductDecorator.find(1)
         expect(decorator).to be_a ProductDecorator
         expect(decorator.object).to be found
       end
 
       it "passes context to the decorator" do
-        Product.stub(:find)
+        allow(Product).to receive(:find)
         context = {some: "context"}
         decorator = ProductDecorator.find(1, context: context)
 
@@ -30,40 +30,40 @@ module Draper
 
     describe ".find_by_(x)" do
       it "proxies to the model class" do
-        Product.should_receive(:find_by_name).with("apples")
+        expect(Product).to receive(:find_by_name).with("apples")
         ProductDecorator.find_by_name("apples")
       end
 
       it "decorates the result" do
         found = Product.new
-        Product.stub(:find_by_name).and_return(found)
+        allow(Product).to receive(:find_by_name).and_return(found)
         decorator = ProductDecorator.find_by_name("apples")
         expect(decorator).to be_a ProductDecorator
         expect(decorator.object).to be found
       end
 
       it "proxies complex ProductDecorators" do
-        Product.should_receive(:find_by_name_and_size).with("apples", "large")
+        expect(Product).to receive(:find_by_name_and_size).with("apples", "large")
         ProductDecorator.find_by_name_and_size("apples", "large")
       end
 
       it "proxies find_last_by_(x) ProductDecorators" do
-        Product.should_receive(:find_last_by_name_and_size).with("apples", "large")
+        expect(Product).to receive(:find_last_by_name_and_size).with("apples", "large")
         ProductDecorator.find_last_by_name_and_size("apples", "large")
       end
 
       it "proxies find_or_initialize_by_(x) ProductDecorators" do
-        Product.should_receive(:find_or_initialize_by_name_and_size).with("apples", "large")
+        expect(Product).to receive(:find_or_initialize_by_name_and_size).with("apples", "large")
         ProductDecorator.find_or_initialize_by_name_and_size("apples", "large")
       end
 
       it "proxies find_or_create_by_(x) ProductDecorators" do
-        Product.should_receive(:find_or_create_by_name_and_size).with("apples", "large")
+        expect(Product).to receive(:find_or_create_by_name_and_size).with("apples", "large")
         ProductDecorator.find_or_create_by_name_and_size("apples", "large")
       end
 
       it "passes context to the decorator" do
-        Product.stub(:find_by_name_and_size)
+        allow(Product).to receive(:find_by_name_and_size)
         context = {some: "context"}
         decorator = ProductDecorator.find_by_name_and_size("apples", "large", context: context)
 
@@ -73,13 +73,13 @@ module Draper
 
     describe ".find_all_by_" do
       it "proxies to the model class" do
-        Product.should_receive(:find_all_by_name_and_size).with("apples", "large").and_return([])
+        expect(Product).to receive(:find_all_by_name_and_size).with("apples", "large").and_return([])
         ProductDecorator.find_all_by_name_and_size("apples", "large")
       end
 
       it "decorates the result" do
         found = [Product.new, Product.new]
-        Product.stub(:find_all_by_name).and_return(found)
+        allow(Product).to receive(:find_all_by_name).and_return(found)
         decorator = ProductDecorator.find_all_by_name("apples")
 
         expect(decorator).to be_a Draper::CollectionDecorator
@@ -88,7 +88,7 @@ module Draper
       end
 
       it "passes context to the decorator" do
-        Product.stub(:find_all_by_name)
+        allow(Product).to receive(:find_all_by_name)
         context = {some: "context"}
         decorator = ProductDecorator.find_all_by_name("apples", context: context)
 
@@ -99,7 +99,7 @@ module Draper
     describe ".all" do
       it "returns a decorated collection" do
         found = [Product.new, Product.new]
-        Product.stub all: found
+        allow(Product).to receive_messages all: found
         decorator = ProductDecorator.all
 
         expect(decorator).to be_a Draper::CollectionDecorator
@@ -108,7 +108,7 @@ module Draper
       end
 
       it "passes context to the decorator" do
-        Product.stub(:all)
+        allow(Product).to receive(:all)
         context = {some: "context"}
         decorator = ProductDecorator.all(context: context)
 
@@ -118,20 +118,20 @@ module Draper
 
     describe ".first" do
       it "proxies to the model class" do
-        Product.should_receive(:first)
+        expect(Product).to receive(:first)
         ProductDecorator.first
       end
 
       it "decorates the result" do
         first = Product.new
-        Product.stub(:first).and_return(first)
+        allow(Product).to receive(:first).and_return(first)
         decorator = ProductDecorator.first
         expect(decorator).to be_a ProductDecorator
         expect(decorator.object).to be first
       end
 
       it "passes context to the decorator" do
-        Product.stub(:first)
+        allow(Product).to receive(:first)
         context = {some: "context"}
         decorator = ProductDecorator.first(context: context)
 
@@ -141,20 +141,20 @@ module Draper
 
     describe ".last" do
       it "proxies to the model class" do
-        Product.should_receive(:last)
+        expect(Product).to receive(:last)
         ProductDecorator.last
       end
 
       it "decorates the result" do
         last = Product.new
-        Product.stub(:last).and_return(last)
+        allow(Product).to receive(:last).and_return(last)
         decorator = ProductDecorator.last
         expect(decorator).to be_a ProductDecorator
         expect(decorator.object).to be last
       end
 
       it "passes context to the decorator" do
-        Product.stub(:last)
+        allow(Product).to receive(:last)
         context = {some: "context"}
         decorator = ProductDecorator.last(context: context)
 
