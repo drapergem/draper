@@ -213,10 +213,6 @@ module Draper
           end
         end
       end
-
-      it "is aliased to .source_class" do
-        expect(ProductDecorator.source_class).to be Product
-      end
     end
 
     describe ".object_class?" do
@@ -230,12 +226,6 @@ module Draper
         allow(Decorator).to receive(:object_class).and_raise(UninferrableSourceError.new(Decorator))
 
         expect(Decorator.object_class?).to be_falsey
-      end
-
-      it "is aliased to .source_class?" do
-        allow(Decorator).to receive(:object_class).and_return(Model)
-
-        expect(Decorator.source_class?).to be_truthy
       end
     end
 
@@ -337,7 +327,6 @@ module Draper
 
         expect(decorator.object).to be object
         expect(decorator.model).to be object
-        expect(decorator.to_source).to be object
       end
 
       it "is aliased to #model" do
@@ -345,20 +334,6 @@ module Draper
         decorator = Decorator.new(object)
 
         expect(decorator.model).to be object
-      end
-
-      it "is aliased to #source" do
-        object = Model.new
-        decorator = Decorator.new(object)
-
-        expect(decorator.source).to be object
-      end
-
-      it "is aliased to #to_source" do
-        object = Model.new
-        decorator = Decorator.new(object)
-
-        expect(decorator.to_source).to be object
       end
     end
 

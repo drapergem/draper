@@ -10,8 +10,6 @@ module Draper
     # @return the object being decorated.
     attr_reader :object
     alias_method :model, :object
-    alias_method :source, :object # TODO: deprecate this
-    alias_method :to_source, :object # TODO: deprecate this
 
     # @return [Hash] extra data to be used in user-defined methods.
     attr_accessor :context
@@ -74,11 +72,6 @@ module Draper
       object_class
     rescue Draper::UninferrableSourceError
       false
-    end
-
-    class << self # TODO deprecate this
-      alias_method :source_class, :object_class
-      alias_method :source_class?, :object_class?
     end
 
     # Automatically decorates ActiveRecord finder methods, so that you can use
