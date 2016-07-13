@@ -2,11 +2,7 @@ module Draper
   # Provides access to helper methods - both Rails built-in helpers, and those
   # defined in your application.
   class HelperProxy
-
-    # @overload initialize(view_context)
-    def initialize(view_context = nil)
-      view_context ||= current_view_context # backwards compatibility
-
+    def initialize(view_context)
       @view_context = view_context
     end
 
@@ -34,11 +30,6 @@ module Draper
       define_method name do |*args, &block|
         view_context.send(name, *args, &block)
       end
-    end
-
-    def current_view_context
-      ActiveSupport::Deprecation.warn("wrong number of arguments (0 for 1) passed to Draper::HelperProxy.new", caller[1..-1])
-      Draper::ViewContext.current.view_context
     end
   end
 end

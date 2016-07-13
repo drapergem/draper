@@ -121,26 +121,11 @@ module Draper
     end
 
     describe "#find" do
-      context "with a block" do
-        it "decorates Enumerable#find" do
-          decorator = CollectionDecorator.new([])
+      it "decorates Enumerable#find" do
+        decorator = CollectionDecorator.new([])
 
-          expect(decorator.decorated_collection).to receive(:find).and_return(:delegated)
-          expect(decorator.find{|p| p.title == "title"}).to be :delegated
-        end
-      end
-
-      context "without a block" do
-        it "decorates object.find" do
-          object = []
-          found = double(decorate: :decorated)
-          decorator = CollectionDecorator.new(object)
-
-          expect(object).to receive(:find).and_return(found)
-          ActiveSupport::Deprecation.silence do
-            expect(decorator.find(1)).to be :decorated
-          end
-        end
+        expect(decorator.decorated_collection).to receive(:find).and_return(:delegated)
+        expect(decorator.find{|p| p.title == "title"}).to be :delegated
       end
     end
 

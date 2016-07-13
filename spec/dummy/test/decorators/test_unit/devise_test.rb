@@ -51,14 +51,5 @@ if defined?(Devise)
 
       assert helper.current_user.nil?
     end
-
-    def test_backwards_compatibility
-      user = Object.new
-      ActiveSupport::Deprecation.silence do
-        sign_in user
-      end
-
-      assert_same user, helper.current_user
-    end
   end
 end
