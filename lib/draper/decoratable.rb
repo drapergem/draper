@@ -77,7 +77,7 @@ module Draper
         if superclass.respond_to?(:decorator_class)
           superclass.decorator_class
         else
-          raise unless error.missing_name?(decorator_name)
+          raise unless error.missing_name?(decorator_name) || error.missing_name?("Object::#{decorator_name}")
           raise Draper::UninferrableDecoratorError.new(self)
         end
       end
