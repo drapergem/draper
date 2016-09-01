@@ -1,4 +1,5 @@
 require 'rails_helper'
 
-describe <%= class_name %>Decorator do
+RSpec.describe <%= class_name %>Decorator, type: :decorator do
+  pending "add some examples to (or delete) #{__FILE__}"
 end
