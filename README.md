@@ -118,6 +118,18 @@ And run `bundle install` within your app's directory.
 If you're upgrading from a 0.x release, the major changes are outlined [in the
 wiki](https://github.com/drapergem/draper/wiki/Upgrading-to-1.0).
 
+### Rails 5 API-only compatibility
+
+Draper expects your `ApplicationController` to include `ActionView::Rendering`.  However, Rails 5 API-only applications (created with `rails new --api`) don't by default.  However, including `ActionView::Rendering` in ApplicatonController also breaks `render :json`.  Therefore, you use an alternate controller by adding the following to your `application.rb`:
+
+```ruby
+draper__view_context = ::Draper::ViewContext
+def draper__view_context.controller
+  Class.new(ApplicationController) { include ActionView::Rendering }.new
+end
+
+```
+
 ## Writing Decorators
 
 Decorators inherit from `Draper::Decorator`, live in your `app/decorators`
