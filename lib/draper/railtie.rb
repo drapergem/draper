@@ -51,7 +51,7 @@ module Draper
 
     console do
       require 'action_controller/test_case'
-      controller = ApplicationController.new
+      controller = (Draper::ViewContext.controller || ApplicationController.new)
       controller.view_context if controller.respond_to? :view_context
       Draper::ViewContext.build
     end
