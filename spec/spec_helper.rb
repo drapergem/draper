@@ -1,3 +1,9 @@
+require 'simplecov'
+SimpleCov.start do
+  add_filter 'spec'
+  add_group 'Draper', 'lib/draper'
+end
+
 require 'bundler/setup'
 require 'draper'
 require 'action_controller'
