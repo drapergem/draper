@@ -125,6 +125,18 @@ module Draper
 
         expect(Product === decorator).to be_falsey
       end
+
+      it "is false for a class instance requiring arguments to `object` method" do
+        class ArgsObject; def object(_foo); Product.new end; end
+
+        expect(Product === ArgsObject.new).to be_falsey
+      end
+
+      it "is true for a class instance requiring variable arguments to `object` method" do
+        class VarArgsObject; def object(*_foo); Product.new; end; end
+
+        expect(Product === VarArgsObject.new).to be_truthy
+      end
     end
 
     describe ".decorate" do
