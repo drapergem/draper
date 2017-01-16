@@ -55,9 +55,11 @@ module Draper
     end
   end
 
-  class UninferrableSourceError < NameError
+  class UninferrableObjectError < NameError
     def initialize(klass)
-      super("Could not infer a source for #{klass}.")
+      super("Could not infer an object for #{klass}.")
     end
   end
+
+  UninferrableSourceError = UninferrableObjectError # TODO: deprecate this
 end
