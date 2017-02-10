@@ -3,6 +3,19 @@ require 'request_store'
 
 module Draper
   module ViewContext
+
+    # Default controller for view context
+    #
+    # @return [Class]
+    def self.default_controller
+      (@@default_controller ||= "ApplicationController").constantize
+    end
+
+    # Set default controller for view context
+    def self.default_controller=(controller)
+      @@default_controller = controller
+    end
+
     # Hooks into a controller or mailer to save the view context in {current}.
     def view_context
       super.tap do |context|
