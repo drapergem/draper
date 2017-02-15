@@ -51,7 +51,7 @@ module Draper
 
     console do
       require 'action_controller/test_case'
-      ApplicationController.new.view_context
+      Draper::ViewContext.default_controller.new.view_context
       Draper::ViewContext.build
     end
 
