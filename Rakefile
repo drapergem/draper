@@ -16,8 +16,7 @@ desc "Run all specs"
 task "spec" => "spec:all"
 
 namespace "spec" do
-  # TODOD: add back "generators"
-  task "all" => ["draper", "integration"]
+  task "all" => ["draper", "generators", "integration"]
 
   def spec_task(name)
     desc "Run #{name} specs"
