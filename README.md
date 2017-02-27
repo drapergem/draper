@@ -107,13 +107,20 @@ Decorators are the ideal place to:
 
 ## Installation
 
-Add Draper to your Gemfile:
+Add Draper to your Gemfile. If you're using `Rails 5`, use the `3.0.0` version
+pre-release
+
+```ruby
+  gem 'draper', '3.0.0.pre1'
+```
+
+Otherwise, use the latest released version
 
 ```ruby
 gem 'draper'
 ```
 
-And run `bundle install` within your app's directory.
+After that, run `bundle install` within your app's directory.
 
 If you're upgrading from a 0.x release, the major changes are outlined [in the
 wiki](https://github.com/drapergem/draper/wiki/Upgrading-to-1.0).
