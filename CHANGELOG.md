@@ -2,6 +2,10 @@
 
 * Fixed a bug where helpers were used inside a decorator and this decorator was used outside of controller context
 
+## 3.0.0 - 2017-03-24
+
+* Added support for Rails 5.1
+
 ## 3.0.0.pre1 - 2016-07-10
 
 * Added support for Rails 5, dropped 4.0 - 4.2
