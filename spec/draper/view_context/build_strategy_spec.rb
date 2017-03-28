@@ -39,7 +39,7 @@ module Draper
         expect(controller.request).to be_nil
         strategy.call
         expect(controller.request).to be_an ActionController::TestRequest
-        expect(controller.params).to eq({})
+        expect(controller.params.to_h).to eq({})
 
         # sanity checks
         expect(controller.view_context.request).to be controller.request
