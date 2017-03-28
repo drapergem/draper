@@ -1,10 +1,13 @@
 # Draper Changelog
 
-* Fixed a bug where helpers were used inside a decorator and this decorator was used outside of controller context
+## 3.0.0 - 2017
 
-## 3.0.0 - 2017-03-24
+### Breaking Changes
+* Rename UninferrableSourceError to UninferrableObjectError [#768](https://github.com/drapergem/draper/pull/768/files)
 
+### Other Changes
 * Added support for Rails 5.1
+* Fixed a bug where helpers were used inside a decorator and this decorator was used outside of controller context
 
 ## 3.0.0.pre1 - 2016-07-10
 
