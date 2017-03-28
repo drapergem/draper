@@ -91,7 +91,7 @@ module Draper
 
     # @deprecated Use {controller=} instead.
     def self.current_controller=(controller)
-      ActiveSupport::Deprecation.warn("Draper::ViewContext.current_controller= is deprecated (use controller instead)", caller)
+      ActiveSupport::Deprecation.warn("Draper::ViewContext.current_controller= is deprecated (use controller= instead)", caller)
       self.controller = controller
     end
 
