@@ -60,6 +60,4 @@ module Draper
       super("Could not infer an object for #{klass}.")
     end
   end
-
-  UninferrableSourceError = UninferrableObjectError # TODO: deprecate this
 end

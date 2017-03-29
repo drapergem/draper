@@ -185,10 +185,6 @@ module Draper
           expect{Decorator.object_class}.to raise_error UninferrableObjectError
         end
 
-        it "supports UninferrableSourceError alias for a backward compatibility" do
-          expect{Decorator.object_class}.to raise_error UninferrableSourceError
-        end
-
         it "raises an UninferrableObjectError for anonymous decorators" do
           expect{Class.new(Decorator).object_class}.to raise_error UninferrableObjectError
         end
