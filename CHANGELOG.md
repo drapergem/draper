@@ -7,6 +7,9 @@
 * Added support for Rails 5, dropped 4.0 - 4.2
   * Ruby >= 2.2 is required, matching Rails 5
 * Dropped support for ActiveModelSerializers 0.8
+* Removed deprecated methods
+* Removed methods that should have been deprecated:
+  * `source`, `to_source`, `source_class`, and `source_class?`
 
 ## 2.1.0 - 2015-03-26
 

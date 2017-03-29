@@ -1,13 +1,7 @@
 module Draper
   module DeviseHelper
     def sign_in(resource_or_scope, resource = nil)
-      scope = begin
-        Devise::Mapping.find_scope!(resource_or_scope)
-      rescue RuntimeError => e
-        # Draper 1.0 didn't require the mapping to exist
-        ActiveSupport::Deprecation.warn("#{e.message}.\nUse `sign_in :user, mock_user` instead.", caller)
-        :user
-      end
+      scope = Devise::Mapping.find_scope!(resource_or_scope)
 
       _stub_current_scope scope, resource || resource_or_scope
     end

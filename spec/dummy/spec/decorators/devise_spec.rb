@@ -51,14 +51,5 @@ if defined?(Devise)
 
       expect(helper.current_user).to be_nil
     end
-
-    it "is backwards-compatible" do
-      user = double("User")
-      ActiveSupport::Deprecation.silence do
-        sign_in user
-      end
-
-      expect(helper.current_user).to be user
-    end
   end
 end

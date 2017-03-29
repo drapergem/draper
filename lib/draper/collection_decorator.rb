@@ -42,17 +42,7 @@ module Draper
       @decorated_collection ||= object.map{|item| decorate_item(item)}
     end
 
-    # Delegated to the decorated collection when using the block form
-    # (`Enumerable#find`) or to the decorator class if not
-    # (`ActiveRecord::FinderMethods#find`)
-    def find(*args, &block)
-      if block_given?
-        decorated_collection.find(*args, &block)
-      else
-        ActiveSupport::Deprecation.warn("Using ActiveRecord's `find` on a CollectionDecorator is deprecated. Call `find` on a model, and then decorate the result", caller)
-        decorate_item(object.find(*args))
-      end
-    end
+    delegate :find, to: :decorated_collection
 
     def to_s
       "#<#{self.class.name} of #{decorator_class || "inferred decorators"} for #{object.inspect}>"
