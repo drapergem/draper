@@ -27,6 +27,18 @@ require 'draper/decorates_assigned'
 require 'draper/railtie' if defined?(Rails)
 
 module Draper
+  def self.configure
+    yield self
+  end
+
+  def self.default_controller
+    @default_controller ||= ApplicationController
+  end
+
+  def self.default_controller=(controller)
+    @default_controller = controller
+  end
+
   def self.setup_action_controller(base)
     base.class_eval do
       include Draper::ViewContext
