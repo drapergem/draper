@@ -70,7 +70,7 @@ module Draper
     # Checks whether this decorator class has a corresponding {object_class}.
     def self.object_class?
       object_class
-    rescue Draper::UninferrableSourceError
+    rescue Draper::UninferrableObjectError
       false
     end
 
@@ -249,7 +249,7 @@ module Draper
       name.constantize
     rescue NameError => error
       raise if name && !error.missing_name?(name)
-      raise Draper::UninferrableSourceError.new(self)
+      raise Draper::UninferrableObjectError.new(self)
     end
 
     def self.collection_decorator_name

@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'rails'
+require 'dummy/config/environment'
 require 'ammeter/init'
 require 'generators/rails/decorator_generator'
 
@@ -40,6 +40,7 @@ describe Rails::Generators::DecoratorGenerator do
 
       context "with an ApplicationDecorator" do
         before do
+          allow_any_instance_of(Object).to receive(:require)
           allow_any_instance_of(Object).to receive(:require).with("application_decorator").and_return(
             stub_const "ApplicationDecorator", Class.new
           )

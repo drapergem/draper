@@ -182,6 +182,15 @@ module Draper
         end
       end
 
+      context "when the decorator contains name error" do
+        it "throws an NameError" do
+          # We imitate ActiveSupport::Autoload behavior here in order to cause lazy NameError exception raising
+          allow_any_instance_of(Module).to receive(:const_missing) { Class.new { any_nonexisting_method_name } }
+
+          expect{Model.decorator_class}.to raise_error { |error| expect(error).to be_an_instance_of(NameError) }
+        end
+      end
+
       context "when the decorator can't be inferred" do
         it "throws an UninferrableDecoratorError" do
           expect{Model.decorator_class}.to raise_error UninferrableDecoratorError

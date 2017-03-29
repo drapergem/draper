@@ -38,8 +38,16 @@ module Draper
 
         def controller
           (Draper::ViewContext.controller || ApplicationController.new).tap do |controller|
-            controller.request ||= ActionController::TestRequest.create
+            controller.request ||= new_test_request controller if defined?(ActionController::TestRequest)
           end
+        end
+
+        def new_test_request(controller)
+          is_above_rails_5_1 ? ActionController::TestRequest.create(controller) : ActionController::TestRequest.create
+        end
+
+        def is_above_rails_5_1
+          ActionController::TestRequest.method(:create).parameters.first == [:req, :controller_class]
         end
       end
 
