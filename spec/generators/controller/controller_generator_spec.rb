@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'rails'
+require 'dummy/config/environment'
 require 'ammeter/init'
 require 'generators/controller_override'
 require 'generators/rails/decorator_generator'

@@ -181,21 +181,25 @@ module Draper
       protect_class Namespaced::ProductDecorator
 
       context "when not set by .decorates" do
-        it "raises an UninferrableSourceError for a so-named 'Decorator'" do
+        it "raises an UninferrableObjectError for a so-named 'Decorator'" do
+          expect{Decorator.object_class}.to raise_error UninferrableObjectError
+        end
+
+        it "supports UninferrableSourceError alias for a backward compatibility" do
           expect{Decorator.object_class}.to raise_error UninferrableSourceError
         end
 
-        it "raises an UninferrableSourceError for anonymous decorators" do
-          expect{Class.new(Decorator).object_class}.to raise_error UninferrableSourceError
+        it "raises an UninferrableObjectError for anonymous decorators" do
+          expect{Class.new(Decorator).object_class}.to raise_error UninferrableObjectError
         end
 
-        it "raises an UninferrableSourceError for a decorator without a model" do
+        it "raises an UninferrableObjectError for a decorator without a model" do
           skip
-          expect{OtherDecorator.object_class}.to raise_error UninferrableSourceError
+          expect{OtherDecorator.object_class}.to raise_error UninferrableObjectError
         end
 
-        it "raises an UninferrableSourceError for other naming conventions" do
-          expect{ProductPresenter.object_class}.to raise_error UninferrableSourceError
+        it "raises an UninferrableObjectError for other naming conventions" do
+          expect{ProductPresenter.object_class}.to raise_error UninferrableObjectError
         end
 
         it "infers the source for '<Model>Decorator'" do
@@ -227,7 +231,7 @@ module Draper
       end
 
       it "returns false when .object_class is not inferrable" do
-        allow(Decorator).to receive(:object_class).and_raise(UninferrableSourceError.new(Decorator))
+        allow(Decorator).to receive(:object_class).and_raise(UninferrableObjectError.new(Decorator))
 
         expect(Decorator.object_class?).to be_falsey
       end
