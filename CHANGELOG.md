@@ -3,11 +3,14 @@
 ## 3.0.0 - 2017
 
 ### Breaking Changes
-* Rename UninferrableSourceError to UninferrableObjectError [#768](https://github.com/drapergem/draper/pull/768/files)
+* Rename UninferrableSourceError to UninferrableObjectError [#768](https://github.com/drapergem/draper/pull/768)
+* Remove conflicting source aliases: `source`, `to_source`, `source_class` and `source_class?` [#786](https://github.com/drapergem/draper/pull/786)
 
 ### Other Changes
 * Added support for Rails 5.1
+* Added support for Rails runner [#739](https://github.com/drapergem/draper/pull/739)
 * Fixed a bug where helpers were used inside a decorator and this decorator was used outside of controller context
+* Removed previously deprecated functionality [#785](https://github.com/drapergem/draper/pull/785)
 
 ## 3.0.0.pre1 - 2016-07-10
 
