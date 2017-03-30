@@ -23,11 +23,10 @@ module Draper
 
       context "when a current controller is not set" do
         it "uses ApplicationController" do
-          view_context = fake_view_context
-          stub_const "ApplicationController", double(new: fake_controller(view_context))
-          strategy = ViewContext::BuildStrategy::Full.new
-
-          expect(strategy.call).to be view_context
+          expect(Draper::ViewContext.controller).to be_nil
+          view_context = ViewContext::BuildStrategy::Full.new.call
+          expect(view_context.controller).to eq Draper::ViewContext.controller
+          expect(view_context.controller).to be_an ApplicationController
         end
       end
 
