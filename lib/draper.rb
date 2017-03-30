@@ -9,6 +9,7 @@ require 'active_support/core_ext/hash/reverse_merge'
 require 'active_support/core_ext/name_error'
 
 require 'draper/version'
+require 'draper/configuration'
 require 'draper/view_helpers'
 require 'draper/delegation'
 require 'draper/automatic_delegation'
@@ -27,17 +28,7 @@ require 'draper/decorates_assigned'
 require 'draper/railtie' if defined?(Rails)
 
 module Draper
-  def self.configure
-    yield self
-  end
-
-  def self.default_controller
-    @default_controller ||= ApplicationController
-  end
-
-  def self.default_controller=(controller)
-    @default_controller = controller
-  end
+  extend Draper::Configuration
 
   def self.setup_action_controller(base)
     base.class_eval do
