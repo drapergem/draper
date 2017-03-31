@@ -86,7 +86,7 @@ module Draper
       #
       # @return [Boolean]
       def ===(other)
-        super || (other.respond_to?(:object) && super(other.object))
+        super || (other.is_a?(Draper::Decorator) && super(other.object))
       end
 
     end
