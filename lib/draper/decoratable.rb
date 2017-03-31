@@ -86,7 +86,11 @@ module Draper
       #
       # @return [Boolean]
       def ===(other)
-        super || (other.respond_to?(:object) && super(other.object))
+        super || (
+          other.respond_to?(:object) &&
+            [-1, 0].include?(other.method(:object).arity) &&
+            super(other.object)
+        )
       end
 
     end
