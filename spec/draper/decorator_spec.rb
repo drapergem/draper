@@ -571,12 +571,16 @@ module Draper
           expect(decorator.hello_world).to be :delegated
         end
 
-        it "adds delegated methods to the decorator when they are used" do
-          decorator = Decorator.new(double(hello_world: :delegated))
+        it "allows calling `super`" do
+          decorator_class = Class.new(Decorator) do
+            def hello_world
+              super and "overriden hello world"
+            end
+          end
+          decorator = decorator_class.new(double(hello_world: "hello world"))
 
-          expect(decorator.methods).not_to include :hello_world
-          decorator.hello_world
-          expect(decorator.methods).to include :hello_world
+          expect(decorator.hello_world).to eq "overriden hello world"
+          expect(decorator.hello_world).to eq "overriden hello world"
         end
 
         it "allows decorator to decorate different classes of objects" do

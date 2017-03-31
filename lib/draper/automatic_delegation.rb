@@ -6,8 +6,7 @@ module Draper
     def method_missing(method, *args, &block)
       return super unless delegatable?(method)
 
-      self.singleton_class.delegate method
-      send(method, *args, &block)
+      object.send(method, *args, &block)
     end
 
     # Checks if the decorator responds to an instance method, or is able to
