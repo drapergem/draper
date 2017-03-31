@@ -6,6 +6,9 @@
 * Rename UninferrableSourceError to UninferrableObjectError [#768](https://github.com/drapergem/draper/pull/768)
 * Remove conflicting source aliases: `source`, `to_source`, `source_class` and `source_class?` [#786](https://github.com/drapergem/draper/pull/786)
 
+### New Features
+* Draper configuration with ability to customize the controller Draper uses [#788](https://github.com/drapergem/draper/pull/788)
+
 ### Other Changes
 * Added support for Rails 5.1
 * Added support for Rails runner [#739](https://github.com/drapergem/draper/pull/739)
