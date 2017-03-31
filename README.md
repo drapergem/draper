@@ -368,6 +368,18 @@ you'll have access to an ArticleDecorator object instead. In your controller you
 can continue to use the `@article` instance variable to manipulate the model -
 for example, `@article.comments.build` to add a new blank comment for a form.
 
+## Configuration
+Draper works out the box well, but also provides a hook for you to configure its 
+default functionality. For example, Draper assumes you have a base `ApplicationController`.
+If your base controller is named something different (e.g. `BaseController`),
+you can tell Draper to use it by adding the following to an initializer:
+
+```ruby
+Draper.configure do |config|
+  config.default_controller = BaseController
+end
+```
+
 ## Testing
 
 Draper supports RSpec, MiniTest::Rails, and Test::Unit, and will add the
