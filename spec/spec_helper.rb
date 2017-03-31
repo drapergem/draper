@@ -19,8 +19,6 @@ class Other < Model; end
 class ProductDecorator < Draper::Decorator; end
 class ProductsDecorator < Draper::CollectionDecorator; end
 
-class ProductPresenter < Draper::Decorator; end
-
 class OtherDecorator < Draper::Decorator; end
 
 module Namespaced
