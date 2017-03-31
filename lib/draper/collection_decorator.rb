@@ -15,6 +15,9 @@ module Draper
     #   to each item's decorator.
     attr_accessor :context
 
+    # @return the collection being decorated.
+    attr_reader :object
+
     array_methods = Array.instance_methods - Object.instance_methods
     delegate :==, :as_json, *array_methods, to: :decorated_collection
 
