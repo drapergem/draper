@@ -21,3 +21,4 @@ Outline steps to test your changes.
 
 ## References
 * [GitHub Issue ####](https://github.com/drapergem/draper/issues/####)
+* [GitHub Pull Request ####](https://github.com/drapergem/draper/pull/####)
