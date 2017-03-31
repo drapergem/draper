@@ -190,10 +190,12 @@ module Draper
         end
 
         it "raises an UninferrableObjectError for a decorator without a model" do
-          expect{OtherDecorator.object_class}.to raise_error UninferrableObjectError
+          SomeDecorator = Class.new(Draper::Decorator)
+          expect{SomeDecorator.object_class}.to raise_error UninferrableObjectError
         end
 
         it "raises an UninferrableObjectError for other naming conventions" do
+          ProductPresenter = Class.new(Draper::Decorator)
           expect{ProductPresenter.object_class}.to raise_error UninferrableObjectError
         end
 
