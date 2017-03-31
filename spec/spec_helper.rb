@@ -15,7 +15,6 @@ class Model; include Draper::Decoratable; end
 
 class Product < Model; end
 class SpecialProduct < Product; end
-class Other < Model; end
 class ProductDecorator < Draper::Decorator; end
 class ProductsDecorator < Draper::CollectionDecorator; end
 
