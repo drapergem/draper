@@ -8,12 +8,13 @@
 
 ### New Features
 * Draper configuration with ability to customize the controller Draper uses [#788](https://github.com/drapergem/draper/pull/788)
+* Added support for Rails runner [#739](https://github.com/drapergem/draper/pull/739)
 
 ### Other Changes
-* Added support for Rails 5.1
-* Added support for Rails runner [#739](https://github.com/drapergem/draper/pull/739)
-* Fixed a bug where helpers were used inside a decorator and this decorator was used outside of controller context
 * Removed previously deprecated functionality [#785](https://github.com/drapergem/draper/pull/785)
+* Only delegate === if other is an instance of a class that inherits from `Decorator` [#720](https://github.com/drapergem/draper/pull/720)
+* Fixed issues in order to support Rails 5.1
+* Fixed a bug where helpers were used inside a decorator and this decorator was used outside of controller context
 
 ## 3.0.0.pre1 - 2016-07-10
 
