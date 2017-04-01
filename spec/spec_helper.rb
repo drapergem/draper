@@ -19,8 +19,6 @@ class Other < Model; end
 class ProductDecorator < Draper::Decorator; end
 class ProductsDecorator < Draper::CollectionDecorator; end
 
-class ProductPresenter < Draper::Decorator; end
-
 class OtherDecorator < Draper::Decorator; end
 
 module Namespaced
@@ -29,6 +27,9 @@ module Namespaced
 
   class OtherDecorator < Draper::Decorator; end
 end
+
+ApplicationController = Class.new(ActionController::Base)
+CustomController = Class.new(ActionController::Base)
 
 # After each example, revert changes made to the class
 def protect_class(klass)

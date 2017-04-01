@@ -58,7 +58,7 @@ describe PostDecorator do
     expect(xml).to have_css "post > updated-at", text: "overridden"
   end
 
-  it "uses a test view context from ApplicationController" do
-    expect(Draper::ViewContext.current.controller).to be_an ApplicationController
+  it "uses a test view context from BaseController" do
+    expect(Draper::ViewContext.current.controller).to be_an BaseController
   end
 end

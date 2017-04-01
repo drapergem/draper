@@ -13,12 +13,12 @@ describe "A decorator test" do
   it_does_not_leak_view_context
 end
 
-describe "A controller test" do
-  subject{ Class.new(ActionController::Base) }
+describe "A controller decorator test" do
+  subject { Class.new(ActionController::Base) }
 
   it_does_not_leak_view_context
 end
 
-describe "A mailer test" do
+describe "A mailer decorator test" do
   it_does_not_leak_view_context
 end

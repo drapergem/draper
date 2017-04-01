@@ -37,7 +37,8 @@ module Draper
         attr_reader :block
 
         def controller
-          (Draper::ViewContext.controller || ApplicationController.new).tap do |controller|
+          Draper::ViewContext.controller ||= Draper.default_controller.new
+          Draper::ViewContext.controller.tap do |controller|
             controller.request ||= new_test_request controller if defined?(ActionController::TestRequest)
           end
         end
