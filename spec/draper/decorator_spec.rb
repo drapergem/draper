@@ -586,7 +586,6 @@ module Draper
           end
 
           decorator = child_decorator_class.new(double(hello_world: 'object#hello_world'))
-
           expect(decorator.hello_world).to eq 'parent#hello_world'
         end
 
@@ -596,8 +595,8 @@ module Draper
               super
             end
           end
-          decorator = decorator_class.new(double(hello_world: 'object#hello_world'))
 
+          decorator = decorator_class.new(double(hello_world: 'object#hello_world'))
           expect(decorator.hello_world).to eq 'object#hello_world'
         end
 
