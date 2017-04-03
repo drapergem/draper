@@ -496,7 +496,10 @@ end
 
 When your decorator calls `delegate_all`, any method called on the decorator not
 defined in the decorator itself will be delegated to the decorated object. This
-is a very permissive interface.
+includes calling `super` from within the decorator. A call to `super` from within
+the decorator will first try to call the method on the parent decorator class. If
+the method does not exist on the parent decorator class, it will then try to call
+the method on the decorated `object`. This is a very permissive interface.
 
 If you want to strictly control which methods are called within views, you can
 choose to only delegate certain methods from the decorator to the source model:
