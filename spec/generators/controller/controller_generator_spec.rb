@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'dummy/config/environment'
 require 'ammeter/init'
 require 'generators/controller_override'
-require 'generators/rails/decorator_generator'
+require 'generators/draper/decorator_generator'
 
 describe Rails::Generators::ControllerGenerator do
   destination File.expand_path("../tmp", __FILE__)

@@ -1,6 +1,6 @@
-module Rails
+module Draper
   module Generators
-    class InstallGenerator < NamedBase
+    class InstallGenerator < Rails::Generators::NamedBase
       source_root File.expand_path('../templates', __FILE__)
 
       desc 'Creates an ApplicationDecorator, if none exists.'

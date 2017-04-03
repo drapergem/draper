@@ -1,6 +1,6 @@
-module Rails
+module Draper
   module Generators
-    class DecoratorGenerator < NamedBase
+    class DecoratorGenerator < Rails::Generators::NamedBase
       source_root File.expand_path("../templates", __FILE__)
       check_class_collision suffix: "Decorator"
 
