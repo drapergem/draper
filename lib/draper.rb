@@ -11,6 +11,7 @@ require 'active_support/core_ext/name_error'
 require 'draper/version'
 require 'draper/configuration'
 require 'draper/view_helpers'
+require 'draper/compatibility/api_only'
 require 'draper/delegation'
 require 'draper/automatic_delegation'
 require 'draper/finders'
@@ -32,6 +33,7 @@ module Draper
 
   def self.setup_action_controller(base)
     base.class_eval do
+      include Draper::Compatibility::ApiOnly if base == ActionController::API
       include Draper::ViewContext
       extend  Draper::HelperSupport
       extend  Draper::DecoratesAssigned
