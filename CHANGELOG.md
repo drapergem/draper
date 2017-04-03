@@ -8,7 +8,9 @@
 
 ### New Features
 * Draper configuration with ability to customize the controller Draper uses [#788](https://github.com/drapergem/draper/pull/788)
+* Added support for Rails 5 API-only applications [#793](https://github.com/drapergem/draper/pull/793)
 * Added support for Rails runner [#739](https://github.com/drapergem/draper/pull/739)
+
 
 ### Other Changes
 * Removed previously deprecated functionality [#785](https://github.com/drapergem/draper/pull/785)
