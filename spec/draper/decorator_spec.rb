@@ -572,16 +572,44 @@ module Draper
           expect(decorator.hello_world).to be :delegated
         end
 
-        it "allows calling `super`" do
-          decorator_class = Class.new(Decorator) do
+        it 'delegates `super` to parent class first' do
+          parent_decorator_class = Class.new(Decorator) do
             def hello_world
-              super and "overriden hello world"
+              "parent#hello_world"
             end
           end
-          decorator = decorator_class.new(double(hello_world: "hello world"))
 
-          expect(decorator.hello_world).to eq "overriden hello world"
-          expect(decorator.hello_world).to eq "overriden hello world"
+          child_decorator_class = Class.new(parent_decorator_class) do
+            def hello_world
+              super
+            end
+          end
+
+          decorator = child_decorator_class.new(double(hello_world: 'object#hello_world'))
+
+          expect(decorator.hello_world).to eq 'parent#hello_world'
+        end
+
+        it 'delegates `super` to object if method does not exist on parent class' do
+          decorator_class = Class.new(Decorator) do
+            def hello_world
+              super
+            end
+          end
+          decorator = decorator_class.new(double(hello_world: 'object#hello_world'))
+
+          expect(decorator.hello_world).to eq 'object#hello_world'
+        end
+
+        it 'raises `NoMethodError` when `super` is called on for method that does not exist' do
+          decorator_class = Class.new(Decorator) do
+            def hello_world
+              super
+            end
+          end
+
+          decorator = decorator_class.new(double)
+          expect{decorator.hello_world}.to raise_error NoMethodError
         end
 
         it "allows decorator to decorate different classes of objects" do

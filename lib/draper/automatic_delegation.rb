@@ -2,7 +2,10 @@ module Draper
   module AutomaticDelegation
     extend ActiveSupport::Concern
 
-    # Delegates missing instance methods to the source object.
+    # Delegates missing instance methods to the source object. Note: This will delegate `super`
+    # method calls to `object` as well. Calling `super` will first try to call the method on
+    # the parent decorator class. If no method exists on the parent class, it will then try
+    # to call the method on the `object`.
     def method_missing(method, *args, &block)
       return super unless delegatable?(method)
 
