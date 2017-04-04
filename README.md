@@ -139,6 +139,13 @@ end
 
 ### Generators
 
+To create an `ApplicationDecorator`...
+
+```
+rails generate draper:install
+```
+
+
 When you have Draper installed and generate a controller...
 
 ```
@@ -150,7 +157,7 @@ rails generate resource Article
 But if the `Article` model already exists, you can run...
 
 ```
-rails generate decorator Article
+rails generate draper:decorator Article
 ```
 
 ...to create the `ArticleDecorator`.
