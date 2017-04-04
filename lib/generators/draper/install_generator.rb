@@ -6,13 +6,9 @@ module Draper
       desc 'Creates an ApplicationDecorator, if none exists.'
 
       def create_application_decorator
-        file = 'app/decorators/application_decorator.rb'
-
-        if File.exist? file
-          say 'ApplicationDecorator found. Skipping...'
-        else
-          copy_file 'install.rb', file
-        end
+        file = 'application_decorator.rb'
+        path = "app/decorators/#{file}"
+        copy_file file, path
       end
     end
   end
