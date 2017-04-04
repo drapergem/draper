@@ -24,7 +24,7 @@ class OtherDecorator < Draper::Decorator; end
 module Namespaced
   class Product < Model; end
   class ProductDecorator < Draper::Decorator; end
-
+  ProductsDecorator = Class.new(Draper::CollectionDecorator)
   class OtherDecorator < Draper::Decorator; end
 end
 
