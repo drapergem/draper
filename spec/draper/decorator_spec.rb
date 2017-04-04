@@ -223,6 +223,21 @@ module Draper
       end
     end
 
+    describe '.collection_decorator_class' do
+      it 'defaults to CollectionDecorator' do
+        allow_any_instance_of(String).to receive(:constantize) { SomethingThatDoesntExist }
+        expect(ProductDecorator.collection_decorator_class).to be Draper::CollectionDecorator
+      end
+
+      it 'infers collection decorator based on name' do
+        expect(ProductDecorator.collection_decorator_class).to be ProductsDecorator
+      end
+
+      it 'infers collection decorator base on name for namespeced model' do
+        expect(Namespaced::ProductDecorator.collection_decorator_class).to be Namespaced::ProductsDecorator
+      end
+    end
+
     describe ".decorates_association" do
       protect_class Decorator
 
