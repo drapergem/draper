@@ -53,6 +53,50 @@ describe Rails::Generators::DecoratorGenerator do
     end
   end
 
+  describe "the generated decorator" do
+    subject { file("app/decorators/your_models_decorator.rb") }
+
+    describe "naming" do
+      before { run_generator %w(YourModel --collection) }
+
+      it { should contain "class YourModelsDecorator" }
+    end
+
+    describe "namespacing" do
+      subject { file("app/decorators/namespace/your_models_decorator.rb") }
+      before { run_generator %w(Namespace::YourModel --collection) }
+
+      it { should contain "class Namespace::YourModelsDecorator" }
+    end
+
+    describe "inheritance" do
+      context "by default" do
+        before { run_generator %w(YourModel --collection) }
+
+        it { should contain "class YourModelsDecorator < Draper::CollectionDecorator" }
+      end
+
+      context "with the --parent option" do
+        before { run_generator %w(YourModel --collection --collection_parent=FooDecorator) }
+
+        it { should contain "class YourModelsDecorator < FooDecorator" }
+      end
+
+      context "with a CollectionDecorator" do
+        before do
+          Object.any_instance.stub(:require).with("application_decorator").and_raise(LoadError)
+          Object.any_instance.stub(:require).with("collection_decorator").and_return do
+            stub_const "CollectionDecorator", Class.new
+          end
+        end
+
+        before { run_generator %w(YourModel --collection) }
+
+        it { should contain "class YourModelsDecorator < CollectionDecorator" }
+      end
+    end
+  end
+
   context "with -t=rspec" do
     describe "the generated spec" do
       subject { file("spec/decorators/your_model_decorator_spec.rb") }
