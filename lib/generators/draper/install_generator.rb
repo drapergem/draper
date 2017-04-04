@@ -11,7 +11,7 @@ module Draper
         if File.exist? file
           say 'ApplicationDecorator found. Skipping...'
         else
-          template 'install.rb', file
+          copy_file 'install.rb', file
         end
       end
     end
