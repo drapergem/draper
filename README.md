@@ -162,6 +162,8 @@ rails generate draper:decorator Article
 
 ...to create the `ArticleDecorator`.
 
+Generated decorators will inherit from `Draper::Decorator` unless an `ApplicationDecorator` exists.
+
 ### Accessing Helpers
 
 Normal Rails helpers are still useful for lots of tasks. Both Rails' provided
