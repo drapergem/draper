@@ -223,8 +223,7 @@ module Draper
     def self.collection_decorator_class
       name = collection_decorator_name
       name.constantize
-    rescue NameError => error
-      raise if name && !name.include?(error.missing_name)
+    rescue NameError
       Draper::CollectionDecorator
     end
 

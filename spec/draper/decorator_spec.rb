@@ -145,13 +145,6 @@ module Draper
           ProductDecorator.decorate_collection([], options)
         end
       end
-
-      context "when a NameError is thrown" do
-        it "re-raises that error" do
-          allow_any_instance_of(String).to receive(:constantize) { Draper::DecoratedEnumerableProxy }
-          expect{ProductDecorator.decorate_collection([])}.to raise_error NameError, /Draper::DecoratedEnumerableProxy/
-        end
-      end
     end
 
     describe ".decorates" do
