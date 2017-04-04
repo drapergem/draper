@@ -7,8 +7,7 @@ module Draper
 
       def create_application_decorator
         file = 'application_decorator.rb'
-        path = "app/decorators/#{file}"
-        copy_file file, path
+        copy_file file, "app/decorators/#{file}"
       end
     end
   end
