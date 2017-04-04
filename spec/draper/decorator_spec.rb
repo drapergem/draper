@@ -145,13 +145,6 @@ module Draper
           ProductDecorator.decorate_collection([], options)
         end
       end
-
-      context "when a NameError is thrown" do
-        it "re-raises that error" do
-          allow_any_instance_of(String).to receive(:constantize) { Draper::DecoratedEnumerableProxy }
-          expect{ProductDecorator.decorate_collection([])}.to raise_error NameError, /Draper::DecoratedEnumerableProxy/
-        end
-      end
     end
 
     describe ".decorates" do
@@ -227,6 +220,21 @@ module Draper
         allow(Decorator).to receive(:object_class).and_raise(UninferrableObjectError.new(Decorator))
 
         expect(Decorator.object_class?).to be_falsey
+      end
+    end
+
+    describe '.collection_decorator_class' do
+      it 'defaults to CollectionDecorator' do
+        allow_any_instance_of(String).to receive(:constantize) { SomethingThatDoesntExist }
+        expect(ProductDecorator.collection_decorator_class).to be Draper::CollectionDecorator
+      end
+
+      it 'infers collection decorator based on name' do
+        expect(ProductDecorator.collection_decorator_class).to be ProductsDecorator
+      end
+
+      it 'infers collection decorator base on name for namespeced model' do
+        expect(Namespaced::ProductDecorator.collection_decorator_class).to be Namespaced::ProductsDecorator
       end
     end
 
