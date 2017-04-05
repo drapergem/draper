@@ -12,10 +12,8 @@ describe Draper::Generators::InstallGenerator do
   describe 'the application decorator' do
     subject { file('app/decorators/application_decorator.rb') }
 
-    describe 'naming' do
-      before { run_generator %w(YourModels) }
+    before { run_generator }
 
-      it { is_expected.to contain 'class ApplicationDecorator' }
-    end
+    it { is_expected.to contain 'class ApplicationDecorator' }
   end
 end
