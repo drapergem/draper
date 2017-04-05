@@ -162,7 +162,7 @@ rails generate decorator Article
 
 ...to create the `ArticleDecorator`.
 
-Generated decorators will inherit from `Draper::Decorator` unless `app/decorators/application_decorator.rb` exists.
+Generated decorators will inherit from `Draper::Decorator` unless an `ApplicationDecorator` exists.
 
 ### Accessing Helpers
 
