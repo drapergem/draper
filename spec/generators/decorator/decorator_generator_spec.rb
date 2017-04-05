@@ -1,9 +1,9 @@
 require 'spec_helper'
 require 'dummy/config/environment'
 require 'ammeter/init'
-require 'generators/draper/decorator_generator'
+require 'generators/rails/decorator_generator'
 
-describe Draper::Generators::DecoratorGenerator do
+describe Rails::Generators::DecoratorGenerator do
   destination File.expand_path("../tmp", __FILE__)
 
   before { prepare_destination }
