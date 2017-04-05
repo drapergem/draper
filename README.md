@@ -139,12 +139,11 @@ end
 
 ### Generators
 
-To create an `ApplicationDecorator`...
+To create an `ApplicationDecorator` that all generated decorators inherit from, run...
 
 ```
 rails generate draper:install
 ```
-
 
 When you have Draper installed and generate a controller...
 
@@ -161,8 +160,6 @@ rails generate decorator Article
 ```
 
 ...to create the `ArticleDecorator`.
-
-Generated decorators will inherit from `Draper::Decorator` unless an `ApplicationDecorator` exists.
 
 ### Accessing Helpers
 
