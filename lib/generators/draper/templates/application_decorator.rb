@@ -1,7 +1,7 @@
 class ApplicationDecorator < Draper::Decorator
   delegate_all
 
-  # Set methods for all decorated objects.
+  # Define methods for all decorated objects.
   # Helpers are accessed through `helpers` (aka `h`). For example:
   #
   #   def percent_amount
