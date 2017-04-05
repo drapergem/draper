@@ -7,6 +7,7 @@
 * Remove conflicting source aliases: `source`, `to_source`, `source_class` and `source_class?` [#786](https://github.com/drapergem/draper/pull/786)
 
 ### New Features
+* Generator for creating `ApplicationDecorator` that other decorators inherit from [#796](https://github.com/drapergem/draper/pull/796)
 * Draper configuration with ability to customize the controller Draper uses [#788](https://github.com/drapergem/draper/pull/788)
 * Added support for Rails 5 API-only applications [#793](https://github.com/drapergem/draper/pull/793)
 * Added support for Rails runner [#739](https://github.com/drapergem/draper/pull/739)
