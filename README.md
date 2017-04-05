@@ -139,6 +139,12 @@ end
 
 ### Generators
 
+To create an `ApplicationDecorator` that all generated decorators inherit from, run...
+
+```
+rails generate draper:install
+```
+
 When you have Draper installed and generate a controller...
 
 ```
