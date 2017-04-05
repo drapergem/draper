@@ -157,7 +157,7 @@ rails generate resource Article
 But if the `Article` model already exists, you can run...
 
 ```
-rails generate draper:decorator Article
+rails generate decorator Article
 ```
 
 ...to create the `ArticleDecorator`.
