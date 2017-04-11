@@ -1,8 +1,8 @@
 # Draper: View Models for Rails
 
 [![TravisCI Build Status](https://travis-ci.org/drapergem/draper.svg?branch=master)](http://travis-ci.org/drapergem/draper)
-[![Code Climate](https://codeclimate.com/github/drapergem/draper.png)](https://codeclimate.com/github/drapergem/draper)
-[![Inline docs](http://inch-ci.org/github/drapergem/draper.png?branch=master)](http://inch-ci.org/github/drapergem/draper)
+[![Code Climate](https://codeclimate.com/github/drapergem/draper.svg)](https://codeclimate.com/github/drapergem/draper)
+[![Inline docs](http://inch-ci.org/github/drapergem/draper.svg?branch=master)](http://inch-ci.org/github/drapergem/draper)
 
 Draper adds an object-oriented layer of presentation logic to your Rails
 application.
@@ -48,7 +48,7 @@ end
 But it makes you a little uncomfortable. `publication_status` lives in a
 nebulous namespace spread across all controllers and view. Down the road, you
 might want to display the publication status of a `Book`. And, of course, your
-design calls for a slighly different formatting to the date for a `Book`.
+design calls for a slightly different formatting to the date for a `Book`.
 
 Now your helper method can either switch based on the input class type (poor
 Ruby style), or you break it out into two methods, `book_publication_status` and
@@ -107,13 +107,20 @@ Decorators are the ideal place to:
 
 ## Installation
 
-Add Draper to your Gemfile:
+Add Draper to your Gemfile. If you're using `Rails 5`, use the `3.0.0` version
+pre-release
 
 ```ruby
-gem 'draper', '~> 1.3'
+  gem 'draper', '3.0.0.pre1'
 ```
 
-And run `bundle install` within your app's directory.
+Otherwise, use the latest released version
+
+```ruby
+gem 'draper'
+```
+
+After that, run `bundle install` within your app's directory.
 
 If you're upgrading from a 0.x release, the major changes are outlined [in the
 wiki](https://github.com/drapergem/draper/wiki/Upgrading-to-1.0).
@@ -131,6 +138,12 @@ end
 ```
 
 ### Generators
+
+To create an `ApplicationDecorator` that all generated decorators inherit from, run...
+
+```
+rails generate draper:install
+```
 
 When you have Draper installed and generate a controller...
 
@@ -276,6 +289,19 @@ omitted.
 delegate :current_page, :per_page, :offset, :total_entries, :total_pages
 ```
 
+If needed, you can then set the collection_decorator_class of your CustomDecorator as follows:
+```ruby
+class ArticleDecorator < Draper::Decorator
+  def self.collection_decorator_class
+    PaginatingDecorator
+  end
+end
+
+ArticleDecorator.decorate_collection(@articles.paginate)
+# => Collection decorated by PaginatingDecorator
+# => Members decorated by ArticleDecorator
+```
+
 ### Decorating Associated Objects
 
 You can automatically decorate associated models when the primary model is
@@ -348,6 +374,18 @@ you'll have access to an ArticleDecorator object instead. In your controller you
 can continue to use the `@article` instance variable to manipulate the model -
 for example, `@article.comments.build` to add a new blank comment for a form.
 
+## Configuration
+Draper works out the box well, but also provides a hook for you to configure its 
+default functionality. For example, Draper assumes you have a base `ApplicationController`.
+If your base controller is named something different (e.g. `BaseController`),
+you can tell Draper to use it by adding the following to an initializer:
+
+```ruby
+Draper.configure do |config|
+  config.default_controller = BaseController
+end
+```
+
 ## Testing
 
 Draper supports RSpec, MiniTest::Rails, and Test::Unit, and will add the
@@ -377,6 +415,15 @@ In your `Spork.prefork` block of `spec_helper.rb`, add this:
 
 ```ruby
 require 'draper/test/rspec_integration'
+```
+
+#### Custom Draper Controller ViewContext
+If running tests in an engine setting with a controller other than "ApplicationController," set a custom controller in `spec_helper.rb`
+
+```ruby
+config.before(:each, type: :decorator) do |example|
+  Draper::ViewContext.controller = ExampleEngine::CustomRootController.new
+end
 ```
 
 ### Isolated Tests
@@ -455,7 +502,10 @@ end
 
 When your decorator calls `delegate_all`, any method called on the decorator not
 defined in the decorator itself will be delegated to the decorated object. This
-is a very permissive interface.
+includes calling `super` from within the decorator. A call to `super` from within
+the decorator will first try to call the method on the parent decorator class. If
+the method does not exist on the parent decorator class, it will then try to call
+the method on the decorated `object`. This is a very permissive interface.
 
 If you want to strictly control which methods are called within views, you can
 choose to only delegate certain methods from the decorator to the source model:
@@ -564,13 +614,15 @@ end
 
 This is only necessary when proxying class methods.
 
+Once this association between the decorator and the model is set up, you can call
+`SomeModel.decorator_class` to access class methods defined in the decorator.
+If necessary, you can check if your model is decorated with `SomeModel.decorator_class?`.
+
 ### Making Models Decoratable
 
 Models get their `decorate` method from the `Draper::Decoratable` module, which
 is included in `ActiveRecord::Base` and `Mongoid::Document` by default. If
-you're [using another
-ORM](https://github.com/drapergem/draper/wiki/Using-other-ORMs) (including
-versions of Mongoid prior to 3.0), or want to decorate plain old Ruby objects,
+you're using another ORM, or want to decorate plain old Ruby objects,
 you can include this module manually.
 
 ## Contributors
@@ -579,7 +631,11 @@ Draper was conceived by Jeff Casimir and heavily refined by Steve Klabnik and a
 great community of open source
 [contributors](https://github.com/drapergem/draper/contributors).
 
-### Core Team
+### Current maintainers
+
+* Sean Linsley
+
+### Historical maintainers
 
 * Jeff Casimir (jeff@jumpstartlab.com)
 * Steve Klabnik (steve@jumpstartlab.com)

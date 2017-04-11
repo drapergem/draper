@@ -14,7 +14,7 @@ class DecoratorTest < Draper::TestCase
 end
 
 class ControllerTest < ActionController::TestCase
-  tests Class.new(ActionController::Base)
+  subject{ Class.new(ActionController::Base) }
 
   it_does_not_leak_view_context
 end

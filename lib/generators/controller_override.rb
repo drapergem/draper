@@ -5,13 +5,13 @@ require "rails/generators/rails/scaffold_controller/scaffold_controller_generato
 module Rails
   module Generators
     class ControllerGenerator
-      hook_for :decorator, default: true do |generator|
+      hook_for :decorator, type: :boolean, default: true do |generator|
         invoke generator, [name.singularize]
       end
     end
 
     class ScaffoldControllerGenerator
-      hook_for :decorator, default: true
+      hook_for :decorator, type: :boolean, default: true
     end
   end
 end

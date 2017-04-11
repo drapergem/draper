@@ -9,7 +9,9 @@ require 'active_support/core_ext/hash/reverse_merge'
 require 'active_support/core_ext/name_error'
 
 require 'draper/version'
+require 'draper/configuration'
 require 'draper/view_helpers'
+require 'draper/compatibility/api_only'
 require 'draper/delegation'
 require 'draper/automatic_delegation'
 require 'draper/finders'
@@ -27,13 +29,16 @@ require 'draper/decorates_assigned'
 require 'draper/railtie' if defined?(Rails)
 
 module Draper
+  extend Draper::Configuration
+
   def self.setup_action_controller(base)
     base.class_eval do
+      include Draper::Compatibility::ApiOnly if base == ActionController::API
       include Draper::ViewContext
       extend  Draper::HelperSupport
       extend  Draper::DecoratesAssigned
 
-      before_filter :activate_draper
+      before_action :activate_draper
     end
   end
 
@@ -55,9 +60,9 @@ module Draper
     end
   end
 
-  class UninferrableSourceError < NameError
+  class UninferrableObjectError < NameError
     def initialize(klass)
-      super("Could not infer a source for #{klass}.")
+      super("Could not infer an object for #{klass}.")
     end
   end
 end

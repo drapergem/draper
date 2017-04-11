@@ -1,4 +1,4 @@
-class PostsController < ApplicationController
+class PostsController < BaseController
   decorates_assigned :post
 
   def show

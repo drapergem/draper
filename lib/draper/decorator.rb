@@ -10,8 +10,6 @@ module Draper
     # @return the object being decorated.
     attr_reader :object
     alias_method :model, :object
-    alias_method :source, :object # TODO: deprecate this
-    alias_method :to_source, :object # TODO: deprecate this
 
     # @return [Hash] extra data to be used in user-defined methods.
     attr_accessor :context
@@ -72,13 +70,8 @@ module Draper
     # Checks whether this decorator class has a corresponding {object_class}.
     def self.object_class?
       object_class
-    rescue Draper::UninferrableSourceError
+    rescue Draper::UninferrableObjectError
       false
-    end
-
-    class << self # TODO deprecate this
-      alias_method :source_class, :object_class
-      alias_method :source_class?, :object_class?
     end
 
     # Automatically decorates ActiveRecord finder methods, so that you can use
@@ -182,7 +175,7 @@ module Draper
 
     # Returns a unique hash for a decorated object based on
     # the decorator class and the object being decorated.
-    # 
+    #
     # @return [Fixnum]
     def hash
       self.class.hash ^ object.hash
@@ -201,18 +194,6 @@ module Draper
     # @param [Class] klass
     def instance_of?(klass)
       super || object.instance_of?(klass)
-    end
-
-    if RUBY_VERSION < "2.0"
-      # nasty hack to stop 1.9.x using the delegated `to_s` in `inspect`
-      alias_method :_to_s, :to_s
-
-      def inspect
-        ivars = instance_variables.map do |name|
-          "#{name}=#{instance_variable_get(name).inspect}"
-        end
-        _to_s.insert(-2, " #{ivars.join(", ")}")
-      end
     end
 
     delegate :to_s
@@ -242,8 +223,7 @@ module Draper
     def self.collection_decorator_class
       name = collection_decorator_name
       name.constantize
-    rescue NameError => error
-      raise if name && !error.missing_name?(name)
+    rescue NameError
       Draper::CollectionDecorator
     end
 
@@ -268,7 +248,7 @@ module Draper
       name.constantize
     rescue NameError => error
       raise if name && !error.missing_name?(name)
-      raise Draper::UninferrableSourceError.new(self)
+      raise Draper::UninferrableObjectError.new(self)
     end
 
     def self.collection_decorator_name

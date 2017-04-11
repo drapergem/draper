@@ -56,8 +56,7 @@ module Draper
       # @param [Hash] options
       #   see {Decorator.decorate_collection}.
       def decorate(options = {})
-        collection = Rails::VERSION::MAJOR >= 4 ? all : scoped
-        decorator_class.decorate_collection(collection, options.reverse_merge(with: nil))
+        decorator_class.decorate_collection(all, options.reverse_merge(with: nil))
       end
 
       def decorator_class?
@@ -75,10 +74,10 @@ module Draper
         decorator_name = "#{prefix}Decorator"
         decorator_name.constantize
       rescue NameError => error
+        raise unless error.missing_name?(decorator_name)
         if superclass.respond_to?(:decorator_class)
           superclass.decorator_class
         else
-          raise unless error.missing_name?(decorator_name)
           raise Draper::UninferrableDecoratorError.new(self)
         end
       end
@@ -87,7 +86,7 @@ module Draper
       #
       # @return [Boolean]
       def ===(other)
-        super || (other.respond_to?(:object) && super(other.object))
+        super || (other.is_a?(Draper::Decorator) && super(other.object))
       end
 
     end

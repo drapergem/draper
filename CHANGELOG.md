@@ -1,5 +1,13 @@
 # Draper Changelog
 
+* Fixed a bug where helpers were used inside a decorator and this decorator was used outside of controller context
+
+## 3.0.0.pre1 - 2016-07-10
+
+* Added support for Rails 5, dropped 4.0 - 4.2
+  * Ruby >= 2.2 is required, matching Rails 5
+* Dropped support for ActiveModelSerializers 0.8
+
 ## 2.1.0 - 2015-03-26
 
 * Cleared most issues and merged a few PRs
