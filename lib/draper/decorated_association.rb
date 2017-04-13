@@ -11,7 +11,7 @@ module Draper
       @scope = options[:scope]
 
       decorator_class = options[:with]
-      context = options.fetch(:context, ->(context){ context })
+      context = options.fetch(:context, ->(context = nil){ context })
       @factory = Draper::Factory.new(with: decorator_class, context: context)
     end
 
