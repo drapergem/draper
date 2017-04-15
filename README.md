@@ -371,8 +371,8 @@ helper_method :article
 
 This means that you can just replace `@article` with `article` in your views and
 you'll have access to an ArticleDecorator object instead. In your controller you
-can continue to use the `@article` instance variable to manipulate the model -
-for example, `@article.comments.build` to add a new blank comment for a form.
+can continue to use the `article` to manipulate the model -
+for example, `article.comments.build` to add a new blank comment for a form.
 
 ## Configuration
 Draper works out the box well, but also provides a hook for you to configure its 
