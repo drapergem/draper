@@ -605,7 +605,7 @@ great community of open source
 
 ### Current maintainers
 
-* Sean Linsley
+* Cliff Braton (cliff.braton@gmail.com)
 
 ### Historical maintainers
 
@@ -613,3 +613,4 @@ great community of open source
 * Steve Klabnik (steve@jumpstartlab.com)
 * Vasiliy Ermolovich
 * Andrew Haines
+* Sean Linsley
