@@ -32,6 +32,34 @@ module Draper
         ViewContext.controller = :stored_controller
         expect(store[:current_controller]).to be :stored_controller
       end
+
+      it "cleans context when controller changes" do
+        store = {
+          current_controller: :stored_controller,
+          current_view_context: :stored_view_context
+        }
+
+        allow(RequestStore).to receive_messages store: store
+
+        ViewContext.controller = :other_stored_controller
+
+        expect(store).to include(current_controller: :other_stored_controller)
+        expect(store).not_to include(:current_view_context)
+      end
+
+      it "doesn't clean context when controller is the same" do
+        store = {
+          current_controller: :stored_controller,
+          current_view_context: :stored_view_context
+        }
+
+        allow(RequestStore).to receive_messages store: store
+
+        ViewContext.controller = :stored_controller
+
+        expect(store).to include(current_controller: :stored_controller)
+        expect(store).to include(current_view_context: :stored_view_context)
+      end
     end
 
     describe ".current" do
