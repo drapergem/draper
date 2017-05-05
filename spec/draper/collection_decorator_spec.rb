@@ -288,38 +288,5 @@ module Draper
       end
     end
 
-    describe "#each" do
-      it "iterates over the collection, decorating as it goes" do
-        collection = [Product.new]
-        decorator = CollectionDecorator.new(collection)
-
-        expect(collection).to_not receive(:map)
-        decorator.each { |product| product.decorated? }
-        expect(decorator.instance_variable_get(:@decorated_collection)[0]).to be_decorated
-      end
-
-      it "uses decorated_collection if already set" do
-        decorated_collection = double(:decorated_collection)
-        decorator = CollectionDecorator.new([])
-        decorator.instance_variable_set(:@decorated_collection, decorated_collection)
-
-        expect(decorated_collection).to receive(:each)
-
-        decorator.each
-      end
-    end
-
-    describe "Enumerable methods" do
-      it "doesn't delegate Enumerable methods to its decorated collection" do
-        decorated_collection = double(:decorated_collection)
-        decorator = CollectionDecorator.new([])
-        decorator.instance_variable_set(:@decorated_collection, decorated_collection)
-
-        expect(decorated_collection).to_not receive(:map)
-
-        decorator.map
-      end
-    end
-
   end
 end
