@@ -15,7 +15,7 @@ module Draper
     #   to each item's decorator.
     attr_accessor :context
 
-    array_methods = Array.instance_methods - Object.instance_methods - Enumerable.instance_methods
+    array_methods = Array.instance_methods - Object.instance_methods
     delegate :==, :as_json, *array_methods, to: :decorated_collection
 
     # @param [Enumerable] object
@@ -40,23 +40,6 @@ module Draper
     # @return [Array] the decorated items.
     def decorated_collection
       @decorated_collection ||= object.map{|item| decorate_item(item)}
-    end
-
-    # Optimization to prevent unnecessary iteration (useful for larger collections).
-    # Iterates over the collection, decorating objects as it goes. If the decorated collection is
-    # already set, iterate over it instead.
-    def each(&block)
-      if @decorated_collection
-        @decorated_collection.each(&block)
-      else
-        @decorated_collection = []
-        object.each do |item|
-          decorated_item = decorate_item(item)
-          @decorated_collection << decorated_item
-
-          block.call(decorated_item)
-        end
-      end
     end
 
     delegate :find, to: :decorated_collection
