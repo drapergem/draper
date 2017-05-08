@@ -13,4 +13,4 @@ RSpec::Core::RakeTask.new :fast_spec do |t|
   t.pattern = "fast_spec/**/*_spec.rb"
 end
 
-task :default => [:test, :spec, :fast_spec]
+task default: [:test, :spec, :fast_spec]
