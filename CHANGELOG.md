@@ -1,5 +1,23 @@
 # Draper Changelog
 
+## 3.0.0 - 2017
+
+### Breaking Changes
+* Rename UninferrableSourceError to UninferrableObjectError [#768](https://github.com/drapergem/draper/pull/768)
+* Remove conflicting source aliases: `source`, `to_source`, `source_class` and `source_class?` [#786](https://github.com/drapergem/draper/pull/786)
+
+### New Features
+* Generator for creating `ApplicationDecorator` that other decorators inherit from [#796](https://github.com/drapergem/draper/pull/796)
+* Draper configuration with ability to customize the controller Draper uses [#788](https://github.com/drapergem/draper/pull/788)
+* Added support for Rails 5 API-only applications [#793](https://github.com/drapergem/draper/pull/793)
+* Added support for Rails runner [#739](https://github.com/drapergem/draper/pull/739)
+
+### Other Changes
+* Clear view context when the controller changes [#799](https://github.com/drapergem/draper/pull/799)
+* Removed previously deprecated functionality [#785](https://github.com/drapergem/draper/pull/785)
+* Only delegate === if other is an instance of a class that inherits from `Decorator` [#720](https://github.com/drapergem/draper/pull/720)
+* Always default to `CollectionDecorator` when `NameError` is raised [#795](https://github.com/drapergem/draper/pull/795)
+* Fixed issues in order to support Rails 5.1
 * Fixed a bug where helpers were used inside a decorator and this decorator was used outside of controller context
 
 ## 3.0.0.pre1 - 2016-07-10

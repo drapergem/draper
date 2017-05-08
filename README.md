@@ -107,17 +107,10 @@ Decorators are the ideal place to:
 
 ## Installation
 
-Add Draper to your Gemfile. If you're using `Rails 5`, use the `3.0.0` version
-pre-release
+As of version 3.0.0, Draper is only compatible with Rails 5 / Ruby 2.2 and later. Add Draper to your Gemfile.
 
 ```ruby
-  gem 'draper', '3.0.0.pre1'
-```
-
-Otherwise, use the latest released version
-
-```ruby
-gem 'draper'
+  gem 'draper'
 ```
 
 After that, run `bundle install` within your app's directory.
@@ -633,7 +626,7 @@ great community of open source
 
 ### Current maintainers
 
-* Sean Linsley
+* Cliff Braton (cliff.braton@gmail.com)
 
 ### Historical maintainers
 
@@ -641,3 +634,4 @@ great community of open source
 * Steve Klabnik (steve@jumpstartlab.com)
 * Vasiliy Ermolovich
 * Andrew Haines
+* Sean Linsley
