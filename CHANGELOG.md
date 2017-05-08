@@ -13,12 +13,12 @@
 * Added support for Rails runner [#739](https://github.com/drapergem/draper/pull/739)
 
 ### Other Changes
+* Clear view context when the controller changes [#799](https://github.com/drapergem/draper/pull/799)
 * Removed previously deprecated functionality [#785](https://github.com/drapergem/draper/pull/785)
 * Only delegate === if other is an instance of a class that inherits from `Decorator` [#720](https://github.com/drapergem/draper/pull/720)
 * Always default to `CollectionDecorator` when `NameError` is raised [#795](https://github.com/drapergem/draper/pull/795)
 * Fixed issues in order to support Rails 5.1
 * Fixed a bug where helpers were used inside a decorator and this decorator was used outside of controller context
-* Optimize CollectionDecorator Enumerable behavior and performance [#707](https://github.com/drapergem/draper/pull/707)
 
 ## 3.0.0.pre1 - 2016-07-10
 
