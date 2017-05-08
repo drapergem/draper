@@ -20,8 +20,10 @@ module Draper
       RequestStore.store[:current_controller]
     end
 
-    # Sets the current controller.
+    # Sets the current controller. Clears view context when we are setting
+    # different controller.
     def self.controller=(controller)
+      clear! if RequestStore.store[:current_controller] != controller
       RequestStore.store[:current_controller] = controller
     end
 
