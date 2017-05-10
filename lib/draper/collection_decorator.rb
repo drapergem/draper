@@ -45,7 +45,7 @@ module Draper
     delegate :find, to: :decorated_collection
 
     def to_s
-      "#<#{self.class.name} of #{decorator_class || "inferred decorators"} for #{object.inspect}>"
+      "#<#{self.class.name} of #{decorator_class || 'inferred decorators'} for #{object.inspect}>"
     end
 
     def context=(value)

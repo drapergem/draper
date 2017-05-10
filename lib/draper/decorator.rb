@@ -240,7 +240,7 @@ module Draper
 
     def self.object_class_name
       raise NameError if name.nil? || name.demodulize !~ /.+Decorator$/
-      name.chomp("Decorator")
+      name.chomp('Decorator')
     end
 
     def self.inferred_object_class
