@@ -3,32 +3,32 @@ require 'support/shared_examples/view_helpers'
 
 module Draper
   describe CollectionDecorator do
-    it_behaves_like "view helpers", CollectionDecorator.new([])
+    it_behaves_like 'view helpers', CollectionDecorator.new([])
 
-    describe "#initialize" do
-      describe "options validation" do
+    describe '#initialize' do
+      describe 'options validation' do
 
-        it "does not raise error on valid options" do
+        it 'does not raise error on valid options' do
           valid_options = {with: Decorator, context: {}}
           expect{CollectionDecorator.new([], valid_options)}.not_to raise_error
         end
 
-        it "raises error on invalid options" do
-          expect{CollectionDecorator.new([], foo: "bar")}.to raise_error ArgumentError, /Unknown key/
+        it 'raises error on invalid options' do
+          expect{CollectionDecorator.new([], foo: 'bar')}.to raise_error ArgumentError, /Unknown key/
         end
       end
     end
 
-    context "with context" do
-      it "stores the context itself" do
-        context = {some: "context"}
+    context 'with context' do
+      it 'stores the context itself' do
+        context = {some: 'context'}
         decorator = CollectionDecorator.new([], context: context)
 
         expect(decorator.context).to be context
       end
 
-      it "passes context to the individual decorators" do
-        context = {some: "context"}
+      it 'passes context to the individual decorators' do
+        context = {some: 'context'}
         decorator = CollectionDecorator.new([Product.new, Product.new], context: context)
 
         decorator.each do |item|
@@ -37,20 +37,20 @@ module Draper
       end
     end
 
-    describe "#context=" do
-      it "updates the stored context" do
-        decorator = CollectionDecorator.new([], context: {some: "context"})
-        new_context = {other: "context"}
+    describe '#context=' do
+      it 'updates the stored context' do
+        decorator = CollectionDecorator.new([], context: {some: 'context'})
+        new_context = {other: 'context'}
 
         decorator.context = new_context
         expect(decorator.context).to be new_context
       end
 
-      context "when the collection is already decorated" do
+      context 'when the collection is already decorated' do
         it "updates the items' context" do
-          decorator = CollectionDecorator.new([Product.new, Product.new], context: {some: "context"})
+          decorator = CollectionDecorator.new([Product.new, Product.new], context: {some: 'context'})
           decorator.decorated_collection # trigger decoration
-          new_context = {other: "context"}
+          new_context = {other: 'context'}
 
           decorator.context = new_context
           decorator.each do |item|
@@ -59,17 +59,17 @@ module Draper
         end
       end
 
-      context "when the collection has not yet been decorated" do
-        it "does not trigger decoration" do
+      context 'when the collection has not yet been decorated' do
+        it 'does not trigger decoration' do
           decorator = CollectionDecorator.new([])
 
           expect(decorator).not_to receive(:decorated_collection)
-          decorator.context = {other: "context"}
+          decorator.context = {other: 'context'}
         end
 
-        it "sets context after decoration is triggered" do
-          decorator = CollectionDecorator.new([Product.new, Product.new], context: {some: "context"})
-          new_context = {other: "context"}
+        it 'sets context after decoration is triggered' do
+          decorator = CollectionDecorator.new([Product.new, Product.new], context: {some: 'context'})
+          new_context = {other: 'context'}
 
           decorator.context = new_context
           decorator.each do |item|
@@ -79,7 +79,7 @@ module Draper
       end
     end
 
-    describe "item decoration" do
+    describe 'item decoration' do
       it "sets decorated items' source models" do
         collection = [Product.new, Product.new]
         decorator = CollectionDecorator.new(collection)
@@ -89,16 +89,16 @@ module Draper
         end
       end
 
-      context "when the :with option was given" do
-        it "uses the :with option" do
+      context 'when the :with option was given' do
+        it 'uses the :with option' do
           decorator = CollectionDecorator.new([Product.new], with: OtherDecorator).first
 
           expect(decorator).to be_decorated_with OtherDecorator
         end
       end
 
-      context "when the :with option was not given" do
-        it "infers the item decorator from each item" do
+      context 'when the :with option was not given' do
+        it 'infers the item decorator from each item' do
           decorator = CollectionDecorator.new([double(decorate: :inferred_decorator)]).first
 
           expect(decorator).to be :inferred_decorator
@@ -106,22 +106,22 @@ module Draper
       end
     end
 
-    describe ".delegate" do
+    describe '.delegate' do
       protect_class ProductsDecorator
 
-      it "defaults the :to option to :object" do
+      it 'defaults the :to option to :object' do
         expect(Object).to receive(:delegate).with(:foo, :bar, to: :object)
         ProductsDecorator.delegate :foo, :bar
       end
 
-      it "does not overwrite the :to option if supplied" do
+      it 'does not overwrite the :to option if supplied' do
         expect(Object).to receive(:delegate).with(:foo, :bar, to: :baz)
         ProductsDecorator.delegate :foo, :bar, to: :baz
       end
     end
 
-    describe "#find" do
-      it "decorates Enumerable#find" do
+    describe '#find' do
+      it 'decorates Enumerable#find' do
         decorator = CollectionDecorator.new([])
 
         expect(decorator.decorated_collection).to receive(:find).and_return(:delegated)
@@ -129,9 +129,9 @@ module Draper
       end
     end
 
-    describe "#to_ary" do
+    describe '#to_ary' do
       # required for `render @collection` in Rails
-      it "delegates to the decorated collection" do
+      it 'delegates to the decorated collection' do
         decorator = CollectionDecorator.new([])
 
         expect(decorator.decorated_collection).to receive(:to_ary).and_return(:delegated)
@@ -139,16 +139,16 @@ module Draper
       end
     end
 
-    it "delegates array methods to the decorated collection" do
+    it 'delegates array methods to the decorated collection' do
       decorator = CollectionDecorator.new([])
 
       allow(decorator).to receive_message_chain(:decorated_collection, :[]).with(42).and_return(:delegated)
       expect(decorator[42]).to be :delegated
     end
 
-    describe "#==" do
-      context "when comparing to a collection decorator with the same object" do
-        it "returns true" do
+    describe '#==' do
+      context 'when comparing to a collection decorator with the same object' do
+        it 'returns true' do
           object = [Product.new, Product.new]
           decorator = CollectionDecorator.new(object)
           other = ProductsDecorator.new(object)
@@ -157,8 +157,8 @@ module Draper
         end
       end
 
-      context "when comparing to a collection decorator with a different object" do
-        it "returns false" do
+      context 'when comparing to a collection decorator with a different object' do
+        it 'returns false' do
           decorator = CollectionDecorator.new([Product.new, Product.new])
           other = ProductsDecorator.new([Product.new, Product.new])
 
@@ -166,8 +166,8 @@ module Draper
         end
       end
 
-      context "when comparing to a collection of the same items" do
-        it "returns true" do
+      context 'when comparing to a collection of the same items' do
+        it 'returns true' do
           object = [Product.new, Product.new]
           decorator = CollectionDecorator.new(object)
           other = object.dup
@@ -176,8 +176,8 @@ module Draper
         end
       end
 
-      context "when comparing to a collection of different items" do
-        it "returns false" do
+      context 'when comparing to a collection of different items' do
+        it 'returns false' do
           decorator = CollectionDecorator.new([Product.new, Product.new])
           other = [Product.new, Product.new]
 
@@ -185,8 +185,8 @@ module Draper
         end
       end
 
-      context "when the decorated collection has been modified" do
-        it "is no longer equal to the object" do
+      context 'when the decorated collection has been modified' do
+        it 'is no longer equal to the object' do
           object = [Product.new, Product.new]
           decorator = CollectionDecorator.new(object)
           other = object.dup
@@ -197,25 +197,25 @@ module Draper
       end
     end
 
-    describe "#to_s" do
-      context "when :with option was given" do
-        it "returns a string representation of the collection decorator" do
-          decorator = CollectionDecorator.new(["a", "b", "c"], with: ProductDecorator)
+    describe '#to_s' do
+      context 'when :with option was given' do
+        it 'returns a string representation of the collection decorator' do
+          decorator = CollectionDecorator.new(['a', 'b', 'c'], with: ProductDecorator)
 
           expect(decorator.to_s).to eq '#<Draper::CollectionDecorator of ProductDecorator for ["a", "b", "c"]>'
         end
       end
 
-      context "when :with option was not given" do
-        it "returns a string representation of the collection decorator" do
-          decorator = CollectionDecorator.new(["a", "b", "c"])
+      context 'when :with option was not given' do
+        it 'returns a string representation of the collection decorator' do
+          decorator = CollectionDecorator.new(['a', 'b', 'c'])
 
           expect(decorator.to_s).to eq '#<Draper::CollectionDecorator of inferred decorators for ["a", "b", "c"]>'
         end
       end
 
-      context "for a custom subclass" do
-        it "uses the custom class name" do
+      context 'for a custom subclass' do
+        it 'uses the custom class name' do
           decorator = ProductsDecorator.new([])
 
           expect(decorator.to_s).to match /ProductsDecorator/
@@ -252,8 +252,8 @@ module Draper
     describe '#kind_of?' do
       it 'asks the kind of its decorated collection' do
         decorator = ProductsDecorator.new([])
-        expect(decorator.decorated_collection).to receive(:kind_of?).with(Array).and_return("true")
-        expect(decorator.kind_of?(Array)).to eq "true"
+        expect(decorator.decorated_collection).to receive(:kind_of?).with(Array).and_return('true')
+        expect(decorator.kind_of?(Array)).to eq 'true'
       end
 
       context 'when asking the underlying collection returns false' do
@@ -272,8 +272,8 @@ module Draper
       end
     end
 
-    describe "#replace" do
-      it "replaces the decorated collection" do
+    describe '#replace' do
+      it 'replaces the decorated collection' do
         decorator = CollectionDecorator.new([Product.new])
         replacement = [:foo, :bar]
 
@@ -281,7 +281,7 @@ module Draper
         expect(decorator).to match_array replacement
       end
 
-      it "returns itself" do
+      it 'returns itself' do
         decorator = CollectionDecorator.new([Product.new])
 
         expect(decorator.replace([:foo, :bar])).to be decorator

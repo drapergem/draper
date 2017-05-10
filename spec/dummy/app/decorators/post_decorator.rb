@@ -8,9 +8,9 @@ class PostDecorator < Draper::Decorator
 
   def posted_date
     if created_at.to_date == DateTime.now.utc.to_date
-      "Today"
+      'Today'
     else
-      "Not Today"
+      'Not Today'
     end
   end
 
@@ -35,11 +35,11 @@ class PostDecorator < Draper::Decorator
   end
 
   def truncated
-    h.truncate("Once upon a time in a world far far away", length: 17, separator: ' ')
+    h.truncate('Once upon a time in a world far far away', length: 17, separator: ' ')
   end
 
   def html_escaped
-    h.html_escape("<script>danger</script>")
+    h.html_escape('<script>danger</script>')
   end
 
   def hello_world

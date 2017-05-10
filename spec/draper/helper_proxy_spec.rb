@@ -2,8 +2,8 @@ require 'spec_helper'
 
 module Draper
   describe HelperProxy do
-    describe "#initialize" do
-      it "sets the view context" do
+    describe '#initialize' do
+      it 'sets the view context' do
         view_context = double
         helper_proxy = HelperProxy.new(view_context)
 
@@ -11,10 +11,10 @@ module Draper
       end
     end
 
-    describe "#method_missing" do
+    describe '#method_missing' do
       protect_class HelperProxy
 
-      it "proxies methods to the view context" do
+      it 'proxies methods to the view context' do
         view_context = double
         helper_proxy = HelperProxy.new(view_context)
 
@@ -22,7 +22,7 @@ module Draper
         expect(helper_proxy.foo(:passed)).to be :passed
       end
 
-      it "passes blocks" do
+      it 'passes blocks' do
         view_context = double
         helper_proxy = HelperProxy.new(view_context)
 
@@ -30,8 +30,8 @@ module Draper
         expect(helper_proxy.foo{:yielded}).to be :yielded
       end
 
-      it "defines the method for better performance" do
-        helper_proxy = HelperProxy.new(double(foo: "bar"))
+      it 'defines the method for better performance' do
+        helper_proxy = HelperProxy.new(double(foo: 'bar'))
 
         expect(HelperProxy.instance_methods).not_to include :foo
         helper_proxy.foo
@@ -39,16 +39,16 @@ module Draper
       end
     end
 
-    describe "#respond_to_missing?" do
-      it "allows #method to be called on the view context" do
-        helper_proxy = HelperProxy.new(double(foo: "bar"))
+    describe '#respond_to_missing?' do
+      it 'allows #method to be called on the view context' do
+        helper_proxy = HelperProxy.new(double(foo: 'bar'))
 
         expect(helper_proxy.respond_to?(:foo)).to be_truthy
       end
     end
 
-    describe "proxying methods which are overriding" do
-      it "proxies :capture" do
+    describe 'proxying methods which are overriding' do
+      it 'proxies :capture' do
         view_context = double
         helper_proxy = HelperProxy.new(view_context)
 

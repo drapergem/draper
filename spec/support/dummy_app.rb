@@ -7,7 +7,7 @@ require 'net/http'
 class DummyApp
 
   def initialize(environment)
-    raise ArgumentError, "Environment must be development or production" unless ["development", "production"].include?(environment.to_s)
+    raise ArgumentError, 'Environment must be development or production' unless ['development', 'production'].include?(environment.to_s)
     @environment = environment
   end
 
@@ -49,8 +49,8 @@ class DummyApp
 
         yield
 
-        Process.kill("KILL", out.pid)
-        File.delete("tmp/pids/server.pid")
+        Process.kill('KILL', out.pid)
+        File.delete('tmp/pids/server.pid')
       end
     end
   end
@@ -58,11 +58,11 @@ class DummyApp
   private
 
   def root
-    File.expand_path("../../dummy", __FILE__)
+    File.expand_path('../../dummy', __FILE__)
   end
 
   def localhost
-    "127.0.0.1"
+    '127.0.0.1'
   end
 
   def port

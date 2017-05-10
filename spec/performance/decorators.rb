@@ -2,7 +2,7 @@ require "./performance/models"
 class ProductDecorator < Draper::Decorator
 
   def awesome_title
-    "Awesome Title"
+    'Awesome Title'
   end
 
   # Original #method_missing
@@ -23,7 +23,7 @@ end
 class FastProductDecorator < Draper::Decorator
 
   def awesome_title
-    "Awesome Title"
+    'Awesome Title'
   end
 
   # Modified #method_missing

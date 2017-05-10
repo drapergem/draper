@@ -2,23 +2,23 @@ require 'minitest_helper'
 
 def it_does_not_leak_view_context
   2.times do
-    it "has an independent view context" do
+    it 'has an independent view context' do
       refute_equal :leaked, Draper::ViewContext.current
       Draper::ViewContext.current = :leaked
     end
   end
 end
 
-describe "A decorator test" do
+describe 'A decorator test' do
   it_does_not_leak_view_context
 end
 
-describe "A controller decorator test" do
+describe 'A controller decorator test' do
   subject { Class.new(ActionController::Base) }
 
   it_does_not_leak_view_context
 end
 
-describe "A mailer decorator test" do
+describe 'A mailer decorator test' do
   it_does_not_leak_view_context
 end

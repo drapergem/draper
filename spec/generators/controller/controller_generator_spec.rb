@@ -10,13 +10,13 @@ describe Rails::Generators::ControllerGenerator do
   before { prepare_destination }
   after(:all) { FileUtils.rm_rf destination_root }
 
-  describe "the generated decorator" do
-    subject { file("app/decorators/your_model_decorator.rb") }
+  describe 'the generated decorator' do
+    subject { file('app/decorators/your_model_decorator.rb') }
 
-    describe "naming" do
+    describe 'naming' do
       before { run_generator %w(YourModels) }
 
-      it { is_expected.to contain "class YourModelDecorator" }
+      it { is_expected.to contain 'class YourModelDecorator' }
     end
   end
 end

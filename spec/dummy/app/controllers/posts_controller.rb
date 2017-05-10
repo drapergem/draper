@@ -14,7 +14,7 @@ class PostsController < BaseController
   private
 
   def goodnight_moon
-    "Goodnight, moon!"
+    'Goodnight, moon!'
   end
   helper_method :goodnight_moon
 end

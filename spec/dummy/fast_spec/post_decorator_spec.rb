@@ -11,11 +11,11 @@ describe PostDecorator do
   let(:decorator) { PostDecorator.new(object) }
   let(:object) { Post.new(42) }
 
-  it "can use built-in helpers" do
-    expect(decorator.truncated).to eq "Once upon a..."
+  it 'can use built-in helpers' do
+    expect(decorator.truncated).to eq 'Once upon a...'
   end
 
-  it "can use built-in private helpers" do
+  it 'can use built-in private helpers' do
     expect(decorator.html_escaped).to eq "&lt;script&gt;danger&lt;/script&gt;"
   end
 

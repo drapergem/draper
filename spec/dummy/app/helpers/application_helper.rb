@@ -1,5 +1,5 @@
 module ApplicationHelper
   def hello_world
-    "Hello, world!"
+    'Hello, world!'
   end
 end
