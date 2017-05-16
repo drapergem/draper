@@ -26,6 +26,11 @@ module Draper
 
         expect(product.decorate).to be_an_instance_of OtherDecorator
       end
+
+      it "is memoized" do
+        product = Product.new
+        expect(product.decorate).to eq product.decorate
+      end
     end
 
     describe "#applied_decorators" do
