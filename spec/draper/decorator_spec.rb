@@ -470,6 +470,18 @@ module Draper
       end
     end
 
+    describe "#deep_dup" do
+      it "returns a deep_dup of the decorator and a deep_dup of its object" do
+        obj       = double
+        duped_obj = double
+        decorator = Decorator.new(obj)
+
+        expect(obj).to receive(:deep_dup).and_return(duped_obj)
+        duped_decorator = decorator.deep_dup
+        expect(duped_decorator.object).to eq(duped_obj)
+      end
+    end
+
     describe ".model_name" do
       it "delegates to the object class" do
         allow(Decorator).to receive(:object_class).and_return(double(model_name: :delegated))
