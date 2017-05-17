@@ -82,6 +82,10 @@ module Draper
         object.respond_to?(:decorate)
       end
 
+      def selectable?
+        object.respond_to?(:select)
+      end
+
       def update_context(options)
         args = options.delete(:context_args)
         options[:context] = options[:context].call(*Array.wrap(args)) if options[:context].respond_to?(:call)
