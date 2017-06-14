@@ -7,7 +7,7 @@ module MiniTest
         File.expand_path('../templates', __FILE__)
       end
 
-      class_option :spec, type: :boolean, default: false, desc: "Use MiniTest::Spec DSL"
+      class_option :spec, type: :boolean, default: false, desc: 'Use MiniTest::Spec DSL'
 
       check_class_collision suffix: 'DecoratorTest'
 
