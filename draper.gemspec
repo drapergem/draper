@@ -1,19 +1,19 @@
-require File.join(__dir__, "lib", "draper", "version")
+require File.join(__dir__, 'lib', 'draper', 'version')
 
 Gem::Specification.new do |s|
-  s.name        = "draper"
+  s.name        = 'draper'
   s.version     = Draper::VERSION
-  s.authors     = ["Jeff Casimir", "Steve Klabnik"]
-  s.email       = ["jeff@casimircreative.com", "steve@steveklabnik.com"]
-  s.homepage    = "http://github.com/drapergem/draper"
-  s.summary     = "View Models for Rails"
-  s.description = "Draper adds an object-oriented layer of presentation logic to your Rails apps."
-  s.license     = "MIT"
+  s.authors     = ['Jeff Casimir', 'Steve Klabnik']
+  s.email       = ['jeff@casimircreative.com', 'steve@steveklabnik.com']
+  s.homepage    = 'http://github.com/drapergem/draper'
+  s.summary     = 'View Models for Rails'
+  s.description = 'Draper adds an object-oriented layer of presentation logic to your Rails apps.'
+  s.license     = 'MIT'
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
-  s.require_paths = ["lib"]
+  s.require_paths = ['lib']
 
   s.required_ruby_version = '>= 2.2.2'
 
