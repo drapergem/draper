@@ -1,4 +1,5 @@
-require "./performance/models"
+require './performance/models'
+
 class ProductDecorator < Draper::Decorator
 
   def awesome_title
