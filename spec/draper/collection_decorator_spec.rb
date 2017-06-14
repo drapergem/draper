@@ -125,7 +125,7 @@ module Draper
         decorator = CollectionDecorator.new([])
 
         expect(decorator.decorated_collection).to receive(:find).and_return(:delegated)
-        expect(decorator.find{|p| p.title == "title"}).to be :delegated
+        expect(decorator.find{|p| p.title == 'title'}).to be :delegated
       end
     end
 
@@ -241,7 +241,7 @@ module Draper
     end
 
     describe '#decorated_with?' do
-      it "checks if a decorator has been applied to a collection" do
+      it 'checks if a decorator has been applied to a collection' do
         decorator = ProductsDecorator.new([Product.new])
 
         expect(decorator).to be_decorated_with ProductsDecorator
