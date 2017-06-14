@@ -30,7 +30,7 @@ class DummyApp
       IO.popen("bundle exec rails s -e #{@environment} -p #{port} 2>&1") do |out|
         start   = Time.now
         started = false
-        output  = ""
+        output  = ''
         timeout = 60.0
 
         while !started && !out.eof? && Time.now - start <= timeout
@@ -76,7 +76,7 @@ class DummyApp
 
   def read_output(stream)
     read = IO.select([stream], [], [stream], 0.1)
-    output = ""
+    output = ''
     loop { output << stream.read_nonblock(1024) } if read
     output
   rescue Errno::EAGAIN, Errno::EWOULDBLOCK, EOFError
