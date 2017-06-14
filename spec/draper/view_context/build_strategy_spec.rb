@@ -30,7 +30,7 @@ module Draper
         end
       end
 
-      it "adds a request if one is not defined" do
+      it 'adds a request if one is not defined' do
         controller = Class.new(ActionController::Base).new
         allow(ViewContext).to receive_messages controller: controller
         strategy = ViewContext::BuildStrategy::Full.new
