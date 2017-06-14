@@ -5,7 +5,7 @@ require 'generators/controller_override'
 require 'generators/rails/decorator_generator'
 
 describe Rails::Generators::ControllerGenerator do
-  destination File.expand_path("../tmp", __FILE__)
+  destination File.expand_path('../tmp', __FILE__)
 
   before { prepare_destination }
   after(:all) { FileUtils.rm_rf destination_root }
