@@ -91,7 +91,7 @@ module Draper
     end
 
     describe '#context=' do
-      it "modifies the context" do
+      it 'modifies the context' do
         decorator = Decorator.new(Model.new, context: {some: 'context'})
         new_context = {other: 'context'}
 
@@ -427,7 +427,7 @@ module Draper
     end
 
     describe '#to_s' do
-      it "delegates to the object" do
+      it 'delegates to the object' do
         decorator = Decorator.new(double(to_s: :delegated))
 
         expect(decorator.to_s).to be :delegated
@@ -704,7 +704,7 @@ module Draper
         end
 
         context 'with include_private' do
-          it "returns true for its own private methods" do
+          it 'returns true for its own private methods' do
             Decorator.class_eval{private; def hello_world; end}
             decorator = Decorator.new(Model.new)
 
