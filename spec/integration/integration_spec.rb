@@ -2,10 +2,10 @@ require 'spec_helper'
 require 'support/dummy_app'
 require 'support/matchers/have_text'
 
-app = DummyApp.new(ENV["RAILS_ENV"])
+app = DummyApp.new(ENV['RAILS_ENV'])
 spec_types = {
-  view: ["/posts/1", "PostsController"],
-  mailer: ["/posts/1/mail", "PostMailer"]
+  view: ['/posts/1', 'PostsController'],
+  mailer: ['/posts/1/mail', 'PostMailer']
 }
 
 app.start_server do
