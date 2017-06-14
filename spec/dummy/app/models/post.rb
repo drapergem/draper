@@ -1,3 +1,3 @@
-class Post < ActiveRecord::Base
+class Post < ApplicationRecord
   # attr_accessible :title, :body
 end
