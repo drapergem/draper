@@ -4,7 +4,7 @@ module MiniTest
   module Generators
     class DecoratorGenerator < Base
       def self.source_root
-        File.expand_path('../templates', __FILE__)
+        File.expand_path("templates", __dir__)
       end
 
       class_option :spec, type: :boolean, default: false, desc: "Use MiniTest::Spec DSL"
