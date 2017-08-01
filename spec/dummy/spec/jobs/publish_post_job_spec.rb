@@ -1,5 +1,5 @@
 RSpec.describe PublishPostJob, type: :job do
-  let(:post) { Post.first.decorate }
+  let(:post) { Post.create.decorate }
 
   subject(:job) { described_class.perform_later(post) }
   
