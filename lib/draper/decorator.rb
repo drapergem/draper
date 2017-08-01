@@ -1,6 +1,7 @@
 module Draper
   class Decorator
     include Draper::ViewHelpers
+    include Draper::Compatibility::GlobalID if defined?(GlobalID)
     extend Draper::Delegation
 
     include ActiveModel::Serialization
