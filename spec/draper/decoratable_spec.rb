@@ -205,8 +205,20 @@ module Draper
 
       context "when an unrelated NameError is thrown" do
         it "re-raises that error" do
-          allow_any_instance_of(String).to receive(:constantize) { Draper::Base }
+          # Not related to safe_constantize behavior, we just want to raise a NameError inside the function
+          allow_any_instance_of(String).to receive(:safe_constantize) { Draper::Base }
           expect{Product.decorator_class}.to raise_error NameError, /Draper::Base/
+        end
+      end
+
+      context "when an anonymous class is given" do
+        it "infers the decorator from a superclass" do
+          anonymous_class = Class.new(Product) do
+            def self.name
+              to_s
+            end
+          end
+          expect(anonymous_class.decorator_class).to be ProductDecorator
         end
       end
     end
