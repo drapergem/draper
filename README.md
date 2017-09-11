@@ -618,6 +618,15 @@ is included in `ActiveRecord::Base` and `Mongoid::Document` by default. If
 you're using another ORM, or want to decorate plain old Ruby objects,
 you can include this module manually.
 
+### Active Job Integration
+
+[Active Job](http://edgeguides.rubyonrails.org/active_job_basics.html) allows you to pass ActiveRecord 
+objects to background tasks directly and performs the necessary serialization and deserialization. In
+order to do this, arguments to a background job must implement [Global ID](https://github.com/rails/globalid).
+Decorated objects implement Global ID by delegating to the object they are decorating. This means
+you can pass decorated objects to background jobs, however, the object won't be decorated when it is
+deserialized.
+
 ## Contributors
 
 Draper was conceived by Jeff Casimir and heavily refined by Steve Klabnik and a
