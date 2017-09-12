@@ -225,7 +225,7 @@ module Draper
 
     describe '.collection_decorator_class' do
       it 'defaults to CollectionDecorator' do
-        allow_any_instance_of(String).to receive(:constantize) { SomethingThatDoesntExist }
+        allow_any_instance_of(String).to receive(:safe_constantize) { nil }
         expect(ProductDecorator.collection_decorator_class).to be Draper::CollectionDecorator
       end
 

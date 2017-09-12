@@ -222,7 +222,9 @@ module Draper
     # @return [Class] the class created by {decorate_collection}.
     def self.collection_decorator_class
       name = collection_decorator_name
-      name.constantize
+      name_constant = name.safe_constantize
+
+      name_constant || Draper::CollectionDecorator
     rescue NameError
       Draper::CollectionDecorator
     end
@@ -245,7 +247,10 @@ module Draper
 
     def self.inferred_object_class
       name = object_class_name
-      name.constantize
+      name_constant = name.safe_constantize
+      raise Draper::UninferrableObjectError.new(self) if name_constant.nil?
+
+      name_constant
     rescue NameError => error
       raise if name && !error.missing_name?(name)
       raise Draper::UninferrableObjectError.new(self)
