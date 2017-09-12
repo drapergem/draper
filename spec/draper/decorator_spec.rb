@@ -202,7 +202,8 @@ module Draper
 
         context "when an unrelated NameError is thrown" do
           it "re-raises that error" do
-            allow_any_instance_of(String).to receive(:constantize) { SomethingThatDoesntExist }
+            # Not related to safe_constantize behavior, we just want to raise a NameError inside the function
+            allow_any_instance_of(String).to receive(:safe_constantize) { SomethingThatDoesntExist }
             expect{ProductDecorator.object_class}.to raise_error NameError, /SomethingThatDoesntExist/
           end
         end
