@@ -225,9 +225,9 @@ module Draper
     # @return [Class] the class created by {decorate_collection}.
     def self.collection_decorator_class
       name = collection_decorator_name
-      name.constantize
-    rescue NameError
-      Draper::CollectionDecorator
+      name_constant = name && name.safe_constantize
+
+      name_constant || Draper::CollectionDecorator
     end
 
     private
@@ -242,22 +242,23 @@ module Draper
     end
 
     def self.object_class_name
-      raise NameError if name.nil? || name.demodulize !~ /.+Decorator$/
+      return nil if name.nil? || name.demodulize !~ /.+Decorator$/
       name.chomp("Decorator")
     end
 
     def self.inferred_object_class
       name = object_class_name
-      name.constantize
-    rescue NameError => error
-      raise if name && !error.missing_name?(name)
+      name_constant = name && name.safe_constantize
+      return name_constant unless name_constant.nil?
+
       raise Draper::UninferrableObjectError.new(self)
     end
 
     def self.collection_decorator_name
-      plural = object_class_name.pluralize
-      raise NameError if plural == object_class_name
-      "#{plural}Decorator"
+      singular = object_class_name
+      plural = singular && singular.pluralize
+
+      "#{plural}Decorator" unless plural == singular
     end
 
     def handle_multiple_decoration(options)
