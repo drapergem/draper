@@ -246,16 +246,16 @@ module Draper
     def self.inferred_object_class
       name = object_class_name
       name_constant = name && name.safe_constantize
-      raise Draper::UninferrableObjectError.new(self) if name_constant.nil?
+      return name_constant unless name_constant.nil?
 
-      name_constant
+      raise Draper::UninferrableObjectError.new(self)
     end
 
     def self.collection_decorator_name
       singular = object_class_name
       plural = singular && singular.pluralize
 
-      plural == singular ? nil : "#{plural}Decorator"
+      "#{plural}Decorator" unless plural == singular
     end
 
     def handle_multiple_decoration(options)
