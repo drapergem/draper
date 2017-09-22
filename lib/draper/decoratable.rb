@@ -69,17 +69,27 @@ module Draper
       # `Product` maps to `ProductDecorator`).
       #
       # @return [Class] the inferred decorator class.
+      # @raise [Draper::UninferrableDecoratorError] if decorator can not be inferred.
       def decorator_class
-        prefix = respond_to?(:model_name) ? model_name : name
-        decorator_name = "#{prefix}Decorator"
-        decorator_name_constant = decorator_name.safe_constantize
-        return decorator_name_constant unless decorator_name_constant.nil?
+        current = self
+        decorator_name_constant = nil
 
-        if superclass.respond_to?(:decorator_class)
-          superclass.decorator_class
-        else
+        while !decorator_name_constant && current do
+          prefix = current.respond_to?(:model_name) ? current.model_name : current.name
+          decorator_name = "#{prefix}Decorator"
+          decorator_name_constant = decorator_name.safe_constantize
+          if !decorator_name_constant && current.superclass.respond_to?(:decorator_class)
+            current = current.superclass
+          else
+            current = nil
+          end
+        end
+
+        if !decorator_name_constant
           raise Draper::UninferrableDecoratorError.new(self)
         end
+
+        decorator_name_constant
       end
 
       # Compares with possibly-decorated objects.
