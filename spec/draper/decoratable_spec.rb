@@ -73,6 +73,16 @@ module Draper
         expect(Product).to receive(:decorator_class).and_return(:some_decorator)
         expect(product.decorator_class).to be :some_decorator
       end
+
+      it "specifies the class that #decorator_class was first called on (superclass)" do
+        person = Person.new
+        expect { person.decorator_class }.to raise_error(Draper::UninferrableDecoratorError, 'Could not infer a decorator for Person.')
+      end
+
+      it "specifies the class that #decorator_class was first called on (subclass)" do
+        child = Child.new
+        expect { child.decorator_class }.to raise_error(Draper::UninferrableDecoratorError, 'Could not infer a decorator for Child.')
+      end
     end
 
     describe "#==" do
