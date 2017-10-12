@@ -1,5 +1,9 @@
 # Draper Changelog
 
+## 3.0.1
+* Let `decorator_class` infer anonymous class decorator from superclass [#820](https://github.com/drapergem/draper/pull/820)
+* When inferring decorator fails, show original class instead of `ActiveRecord::Base` [#821](https://github.com/drapergem/draper/pull/821)
+
 ## 3.0.0 - 2017
 
 ### Breaking Changes
