@@ -29,12 +29,12 @@ module Draper
     # @return [Decorator, CollectionDecorator] the decorated object.
     def decorate(object, options = {})
       return nil if object.nil?
-      Worker.new(decorator_class, object, @namespace).call(options.reverse_merge(default_options))
+      Worker.new(decorator_class, object, namespace).call(options.reverse_merge(default_options))
     end
 
     private
 
-    attr_reader :decorator_class, :default_options
+    attr_reader :decorator_class, :namespace, :default_options
 
     # @private
     class Worker
@@ -58,13 +58,13 @@ module Draper
 
       private
 
-      attr_reader :decorator_class, :object
+      attr_reader :decorator_class, :object, :namespace
 
       def object_decorator
         if collection?
-          ->(object, options) { object.decorator_class(namespace: @namespace).decorate_collection(object, options.reverse_merge(with: nil))}
+          ->(object, options) { object.decorator_class(namespace: namespace).decorate_collection(object, options.reverse_merge(with: nil))}
         else
-          ->(object, options) { object.decorate(options.merge(namespace: @namespace)) }
+          ->(object, options) { object.decorate(options.merge(namespace: namespace)) }
         end
       end
 

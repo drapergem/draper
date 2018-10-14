@@ -2,7 +2,7 @@ module Draper
   # @private
   class DecoratedAssociation
     def initialize(owner, association, options)
-      options.assert_valid_keys(:with, :scope, :context)
+      options.assert_valid_keys(:with, :scope, :context, :namespace)
 
       @owner = owner
       @association = association
@@ -11,7 +11,8 @@ module Draper
 
       decorator_class = options[:with]
       context = options.fetch(:context, ->(context){ context })
-      @factory = Draper::Factory.new(with: decorator_class, context: context, namespace: owner.namespace)
+      namespace = options[:namespace] || owner.namespace
+      @factory = Draper::Factory.new(with: decorator_class, context: context, namespace: namespace)
     end
 
     def call

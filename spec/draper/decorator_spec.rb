@@ -105,7 +105,7 @@ module Draper
         before { allow(CollectionDecorator).to receive(:new) }
 
         it "does not raise error on valid options" do
-          valid_options = {with: OtherDecorator, context: {}}
+          valid_options = {with: OtherDecorator, context: {}, namespace: nil}
           expect{Decorator.decorate_collection([], valid_options)}.not_to raise_error
         end
 
@@ -197,7 +197,7 @@ module Draper
         end
 
         it "infers the object class for namespaced decorators" do
-          expect(Namespaced::ProductDecorator.object_class).to be Namespaced::Product
+          expect(Namespaced::ProductDecorator.object_class).to be Product
         end
 
         context "when an unrelated NameError is thrown" do
