@@ -50,7 +50,7 @@ nebulous namespace spread across all controllers and view. Down the road, you
 might want to display the publication status of a `Book`. And, of course, your
 design calls for a slightly different formatting to the date for a `Book`.
 
-Now your helper method can either switch based on the input class type (poor
+Now your helper method can either be switch based on the input class type (poor
 Ruby style), or you break it out into two methods, `book_publication_status` and
 `article_publication_status`. And keep adding methods for each publication
 type...to the global helper namespace. And you'll have to remember all the names. Ick.
