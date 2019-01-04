@@ -3,9 +3,9 @@ module Draper
 
   class TestCase < ::ActiveSupport::TestCase
     module ViewContextTeardown
-      def teardown
-        super
+      def before_setup
         Draper::ViewContext.clear!
+        super
       end
     end
 
