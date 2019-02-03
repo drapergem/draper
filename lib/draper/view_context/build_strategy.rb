@@ -2,7 +2,6 @@ module Draper
   module ViewContext
     # @private
     module BuildStrategy
-
       def self.new(name, &block)
         const_get(name.to_s.camelize).new(&block)
       end
@@ -51,7 +50,6 @@ module Draper
           ActionController::TestRequest.method(:create).parameters.first == [:req, :controller_class]
         end
       end
-
     end
   end
 end

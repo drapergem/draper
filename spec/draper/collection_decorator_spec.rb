@@ -7,7 +7,6 @@ module Draper
 
     describe "#initialize" do
       describe "options validation" do
-
         it "does not raise error on valid options" do
           valid_options = {with: Decorator, context: {}}
           expect{CollectionDecorator.new([], valid_options)}.not_to raise_error
@@ -287,6 +286,5 @@ module Draper
         expect(decorator.replace([:foo, :bar])).to be decorator
       end
     end
-
   end
 end

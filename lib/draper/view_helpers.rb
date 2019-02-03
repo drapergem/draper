@@ -5,7 +5,6 @@ module Draper
     extend ActiveSupport::Concern
 
     module ClassMethods
-
       # Access the helpers proxy to call built-in and user-defined
       # Rails helpers from a class context.
       #
@@ -14,7 +13,6 @@ module Draper
         Draper::ViewContext.current
       end
       alias_method :h, :helpers
-
     end
 
     # Access the helpers proxy to call built-in and user-defined
@@ -32,6 +30,5 @@ module Draper
       helpers.localize(*args)
     end
     alias_method :l, :localize
-
   end
 end

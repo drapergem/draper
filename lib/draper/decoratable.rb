@@ -48,7 +48,6 @@ module Draper
     end
 
     module ClassMethods
-
       # Decorates a collection of objects. Used at the end of a scope chain.
       #
       # @example

@@ -2,7 +2,6 @@ module Draper
   # Provides access to helper methods - both Rails built-in helpers, and those
   # defined in your application.
   class HelperProxy
-
     # @overload initialize(view_context)
     def initialize(view_context)
       @view_context = view_context
