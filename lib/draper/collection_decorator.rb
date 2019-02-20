@@ -2,6 +2,7 @@ module Draper
   class CollectionDecorator
     include Enumerable
     include Draper::ViewHelpers
+    include Draper::QueryMethods
     extend Draper::Delegation
 
     # @return the collection being decorated.

@@ -11,5 +11,13 @@ module Draper
     def default_controller=(controller)
       @@default_controller = controller
     end
+
+    def default_query_methods_strategy
+      @@default_query_methods_strategy ||= :active_record
+    end
+
+    def default_query_methods_strategy=(strategy)
+      @@default_query_methods_strategy = strategy
+    end
   end
 end
