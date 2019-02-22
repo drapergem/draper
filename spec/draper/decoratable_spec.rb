@@ -10,7 +10,7 @@ module Draper
 
         expect(decorator).to be_a ProductDecorator
         expect(decorator.object).to be product
-     end
+      end
 
       it "accepts context" do
         context = {some: "context"}
