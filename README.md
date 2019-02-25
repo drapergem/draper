@@ -326,6 +326,17 @@ your `ArticleDecorator` and they'll return decorated objects:
 @article = ArticleDecorator.find(params[:id])
 ```
 
+### Decorated Query Methods
+By default, Draper will decorate all [QueryMethods](https://api.rubyonrails.org/classes/ActiveRecord/QueryMethods.html)
+of ActiveRecord.
+If you're using another ORM, in order to support it, you can tell Draper to use a custom strategy:
+
+```ruby
+Draper.configure do |config|
+  config.default_query_methods_strategy = :mongoid
+end
+```
+
 ### When to Decorate Objects
 
 Decorators are supposed to behave very much like the models they decorate, and
