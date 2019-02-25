@@ -3,7 +3,6 @@ module Draper
   # do not have to extend this module directly; it is extended by
   # {Decorator.decorates_finders}.
   module Finders
-
     def find(id, options = {})
       decorate(object_class.find(id), options)
     end

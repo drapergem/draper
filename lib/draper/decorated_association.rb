@@ -1,7 +1,6 @@
 module Draper
   # @private
   class DecoratedAssociation
-
     def initialize(owner, association, options)
       options.assert_valid_keys(:with, :scope, :context)
 
@@ -30,6 +29,5 @@ module Draper
 
       @decorated = factory.decorate(associated, context_args: owner.context)
     end
-
   end
 end
