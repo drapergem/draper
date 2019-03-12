@@ -474,6 +474,20 @@ preferred stubbing technique (this example uses RSpec's `stub` method):
 helpers.stub(users_path: '/users')
 ```
 
+### View context leakage
+As mentioned before, Draper needs to build a view context to access helper methods. In MiniTest, the view context is
+cleared during `before_setup` preventing any view context leakage. In RSpec, the view context is cleared before each
+`decorator`, `controller`, and `mailer` spec. However, if you use decorators in other types of specs
+(e.g. `job`), you may still experience the view context leaking from the previous spec. To solve this, add the
+following to your `spec_helper` for each type of spec you are experiencing the leakage:
+
+```ruby
+config.before(:each, type: :type) { Draper::ViewContext.clear! }
+```
+
+Note: The `:type` above is just a placeholder. Replace `:type` with the type of spec you are experiencing
+the leakage from.
+
 ## Advanced usage
 
 ### Shared Decorator Methods
