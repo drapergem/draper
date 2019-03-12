@@ -485,7 +485,7 @@ following to your `spec_helper` for each type of spec you are experiencing the l
 config.before(:each, type: :type) { Draper::ViewContext.clear! }
 ```
 
-Note: The `:type` above is just a placeholder. Replace `:type` with the type of spec you are experiencing
+_Note_: The `:type` above is just a placeholder. Replace `:type` with the type of spec you are experiencing
 the leakage from.
 
 ## Advanced usage
