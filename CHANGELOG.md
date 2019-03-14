@@ -1,5 +1,10 @@
 # Draper Changelog
 
+## 3.1.0
+* Rails 6 support [#841](https://github.com/drapergem/draper/pull/841)
+* Include ORM query methods in `CollectionDecorator` (e.g. `includes`) [#845](https://github.com/drapergem/draper/pull/845)
+* Document the fix for view context leaking in specs [#847](https://github.com/drapergem/draper/pull/847)
+
 ## 3.0.1
 * Let `decorator_class` infer anonymous class decorator from superclass [#820](https://github.com/drapergem/draper/pull/820)
 * When inferring decorator fails, show original class instead of `ActiveRecord::Base` [#821](https://github.com/drapergem/draper/pull/821)
