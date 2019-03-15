@@ -664,6 +664,26 @@ module Draper
           expect{decorator.hello_world}.to raise_error NoMethodError
           expect(decorator.methods).not_to include :hello_world
         end
+
+        context 'When decorator overrides a public method defined on the object with a private' do
+          let(:decorator_class) do
+            Class.new(Decorator) do
+              private
+
+              def hello_world
+                'hello world'
+              end
+            end
+          end
+
+          let(:object) { Class.new{ def hello_world; end }.new }
+
+          it 'does not delegate the public method defined on the object' do
+            decorator = decorator_class.new(object)
+
+            expect{ decorator.hello_world }.to raise_error NoMethodError
+          end
+        end
       end
 
       context ".method_missing" do
