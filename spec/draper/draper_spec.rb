@@ -1,5 +1,6 @@
 require 'spec_helper'
 require 'support/shared_examples/view_helpers'
+SimpleCov.command_name 'test:unit'
 
 module Draper
   describe Draper do
