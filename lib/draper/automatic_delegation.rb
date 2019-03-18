@@ -20,6 +20,8 @@ module Draper
 
     # @private
     def delegatable?(method)
+      return if private_methods.include?(method)
+
       object.respond_to?(method)
     end
 
