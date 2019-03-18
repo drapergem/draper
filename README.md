@@ -2,6 +2,7 @@
 
 [![TravisCI Build Status](https://travis-ci.org/drapergem/draper.svg?branch=master)](http://travis-ci.org/drapergem/draper)
 [![Code Climate](https://codeclimate.com/github/drapergem/draper.svg)](https://codeclimate.com/github/drapergem/draper)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/0d40c43951d516bf6985/test_coverage)](https://codeclimate.com/github/drapergem/draper/test_coverage)
 [![Inline docs](http://inch-ci.org/github/drapergem/draper.svg?branch=master)](http://inch-ci.org/github/drapergem/draper)
 
 Draper adds an object-oriented layer of presentation logic to your Rails
