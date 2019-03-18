@@ -1,6 +1,7 @@
 require 'spec_helper'
 require 'support/dummy_app'
 require 'support/matchers/have_text'
+SimpleCov.command_name 'test:integration'
 
 app = DummyApp.new(ENV["RAILS_ENV"])
 spec_types = {
