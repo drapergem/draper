@@ -5,12 +5,13 @@ Post = Struct.new(:id) { }
 
 module Draper
   describe QueryMethods do
+    let(:fake_strategy) { instance_double(QueryMethods::LoadStrategy::ActiveRecord) }
+
+    before { allow(QueryMethods::LoadStrategy).to receive(:new).and_return(fake_strategy) }
+
     describe '#method_missing' do
       let(:collection) { [ Post.new, Post.new ] }
       let(:collection_decorator) { PostDecorator.decorate_collection(collection) }
-      let(:fake_strategy) { instance_double(QueryMethods::LoadStrategy::ActiveRecord) }
-
-      before { allow(QueryMethods::LoadStrategy).to receive(:new).and_return(fake_strategy) }
 
       context 'when strategy allows collection to call the method' do
         let(:results) { spy(:results) }
@@ -33,6 +34,29 @@ module Draper
         it 'raises NoMethodError' do
           expect { collection_decorator.some_query_method }.to raise_exception(NoMethodError)
         end
+      end
+    end
+
+    describe "#respond_to?" do
+      let(:collection) { [ Post.new, Post.new ] }
+      let(:collection_decorator) { PostDecorator.decorate_collection(collection) }
+
+      subject { collection_decorator.respond_to?(:some_query_method) }
+
+      context 'when strategy allows collection to call the method' do
+        before do
+          allow(fake_strategy).to receive(:allowed?).with(:some_query_method).and_return(true)
+        end
+
+        it { is_expected.to eq(true) }
+      end
+
+      context 'when strategy does not allow collection to call the method' do
+        before do
+          allow(fake_strategy).to receive(:allowed?).with(:some_query_method).and_return(false)
+        end
+
+        it { is_expected.to eq(false) }
       end
     end
   end
