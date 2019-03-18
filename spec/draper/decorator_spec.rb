@@ -676,7 +676,7 @@ module Draper
             end
           end
 
-          let(:object) { Class.new{ def hello_world; end }.new }
+          let(:object) { Class.new { def hello_world; end }.new }
 
           it 'does not delegate the public method defined on the object' do
             decorator = decorator_class.new(object)
