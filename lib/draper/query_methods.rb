@@ -9,6 +9,10 @@ module Draper
       object.send(method, *args, &block).decorate
     end
 
+    def respond_to_missing?(method, include_private = false)
+      strategy.allowed?(method) || super
+    end
+
     private
 
     # Configures the strategy used to proxy the query methods, which defaults to `:active_record`.
