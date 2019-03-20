@@ -21,7 +21,7 @@ module Draper
       end
 
       include Draper::ViewHelpers::ClassMethods
-      alias :helper, :helpers
+      alias :helper :helpers
     end
 
     include Behavior
