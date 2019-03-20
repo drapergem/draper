@@ -1,4 +1,4 @@
-class PostsController < ApplicationController
+class PostsController < BaseController
   decorates_assigned :post
 
   def show
@@ -8,7 +8,7 @@ class PostsController < ApplicationController
   def mail
     post = Post.find(params[:id])
     email = PostMailer.decorated_email(post).deliver
-    render text: email.body
+    render html: email.body.to_s.html_safe
   end
 
   private

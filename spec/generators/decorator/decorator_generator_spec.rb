@@ -1,10 +1,9 @@
 require 'spec_helper'
-require 'rspec/rails'
-# require_relative '../../dummy/spec/rails_helper'
+require 'dummy/config/environment'
 require 'ammeter/init'
 require 'generators/rails/decorator_generator'
 
-RSpec.describe Rails::Generators::DecoratorGenerator do
+describe Rails::Generators::DecoratorGenerator do
   destination File.expand_path("../tmp", __FILE__)
 
   before { prepare_destination }
@@ -41,6 +40,7 @@ RSpec.describe Rails::Generators::DecoratorGenerator do
 
       context "with an ApplicationDecorator" do
         before do
+          allow_any_instance_of(Object).to receive(:require)
           allow_any_instance_of(Object).to receive(:require).with("application_decorator").and_return(
             stub_const "ApplicationDecorator", Class.new
           )

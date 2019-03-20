@@ -1,6 +1,9 @@
+require 'draper/compatibility/global_id'
+
 module Draper
   class Decorator
     include Draper::ViewHelpers
+    include Draper::Compatibility::GlobalID if defined?(GlobalID)
     extend Draper::Delegation
 
     include ActiveModel::Serialization
@@ -10,8 +13,6 @@ module Draper
     # @return the object being decorated.
     attr_reader :object
     alias_method :model, :object
-    alias_method :source, :object # TODO: deprecate this
-    alias_method :to_source, :object # TODO: deprecate this
 
     # @return [Hash] extra data to be used in user-defined methods.
     attr_accessor :context
@@ -72,13 +73,8 @@ module Draper
     # Checks whether this decorator class has a corresponding {object_class}.
     def self.object_class?
       object_class
-    rescue Draper::UninferrableSourceError
+    rescue Draper::UninferrableObjectError
       false
-    end
-
-    class << self # TODO deprecate this
-      alias_method :source_class, :object_class
-      alias_method :source_class?, :object_class?
     end
 
     # Automatically decorates ActiveRecord finder methods, so that you can use
@@ -182,7 +178,7 @@ module Draper
 
     # Returns a unique hash for a decorated object based on
     # the decorator class and the object being decorated.
-    # 
+    #
     # @return [Fixnum]
     def hash
       self.class.hash ^ object.hash
@@ -201,18 +197,6 @@ module Draper
     # @param [Class] klass
     def instance_of?(klass)
       super || object.instance_of?(klass)
-    end
-
-    if RUBY_VERSION < "2.0"
-      # nasty hack to stop 1.9.x using the delegated `to_s` in `inspect`
-      alias_method :_to_s, :to_s
-
-      def inspect
-        ivars = instance_variables.map do |name|
-          "#{name}=#{instance_variable_get(name).inspect}"
-        end
-        _to_s.insert(-2, " #{ivars.join(", ")}")
-      end
     end
 
     delegate :to_s
@@ -241,10 +225,9 @@ module Draper
     # @return [Class] the class created by {decorate_collection}.
     def self.collection_decorator_class
       name = collection_decorator_name
-      name.constantize
-    rescue NameError => error
-      raise if name && !error.missing_name?(name)
-      Draper::CollectionDecorator
+      name_constant = name && name.safe_constantize
+
+      name_constant || Draper::CollectionDecorator
     end
 
     private
@@ -259,22 +242,23 @@ module Draper
     end
 
     def self.object_class_name
-      raise NameError if name.nil? || name.demodulize !~ /.+Decorator$/
+      return nil if name.nil? || name.demodulize !~ /.+Decorator$/
       name.chomp("Decorator")
     end
 
     def self.inferred_object_class
       name = object_class_name
-      name.constantize
-    rescue NameError => error
-      raise if name && !error.missing_name?(name)
-      raise Draper::UninferrableSourceError.new(self)
+      name_constant = name && name.safe_constantize
+      return name_constant unless name_constant.nil?
+
+      raise Draper::UninferrableObjectError.new(self)
     end
 
     def self.collection_decorator_name
-      plural = object_class_name.pluralize
-      raise NameError if plural == object_class_name
-      "#{plural}Decorator"
+      singular = object_class_name
+      plural = singular && singular.pluralize
+
+      "#{plural}Decorator" unless plural == singular
     end
 
     def handle_multiple_decoration(options)

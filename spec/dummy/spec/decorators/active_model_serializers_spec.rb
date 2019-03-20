@@ -2,15 +2,11 @@ require_relative '../rails_helper'
 
 RSpec.describe Draper::CollectionDecorator do
   describe "#active_model_serializer" do
-    it "returns ActiveModel::ArraySerializer" do
-      collection_decorator = Draper::CollectionDecorator.new([])
-      if defined?(ActiveModel::ArraySerializerSupport)
-        collection_serializer = collection_decorator.active_model_serializer
-      else
-        collection_serializer = ActiveModel::Serializer.serializer_for(collection_decorator)
-      end
+    it "returns ActiveModel::Serializer::CollectionSerializer" do
+      collection_decorator  = Draper::CollectionDecorator.new([])
+      collection_serializer = ActiveModel::Serializer.serializer_for(collection_decorator)
 
-      expect(collection_serializer).to be ActiveModel::ArraySerializer
+      expect(collection_serializer).to be ActiveModel::Serializer::CollectionSerializer
     end
   end
 end

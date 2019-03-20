@@ -1,6 +1,12 @@
+require 'simplecov'
+SimpleCov.start do
+  add_filter 'spec'
+  add_group 'Draper', 'lib/draper'
+  add_group 'Generators', 'lib/generators'
+end
+
 require 'bundler/setup'
 require 'draper'
-require 'rails/version'
 require 'action_controller'
 require 'action_controller/test_case'
 
@@ -32,19 +38,22 @@ class Model; include Draper::Decoratable; end
 class Product < Model; end
 class SpecialProduct < Product; end
 class Other < Model; end
+class Person < Model; end
+class Child < Person; end
 class ProductDecorator < Draper::Decorator; end
 class ProductsDecorator < Draper::CollectionDecorator; end
-
-class ProductPresenter < Draper::Decorator; end
 
 class OtherDecorator < Draper::Decorator; end
 
 module Namespaced
   class Product < Model; end
   class ProductDecorator < Draper::Decorator; end
-
+  ProductsDecorator = Class.new(Draper::CollectionDecorator)
   class OtherDecorator < Draper::Decorator; end
 end
+
+ApplicationController = Class.new(ActionController::Base)
+CustomController = Class.new(ActionController::Base)
 
 # After each example, revert changes made to the class
 def protect_class(klass)

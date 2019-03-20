@@ -1,5 +1,41 @@
 # Draper Changelog
 
+## 3.1.0
+* Rails 6 support [#841](https://github.com/drapergem/draper/pull/841)
+* Include ORM query methods in `CollectionDecorator` (e.g. `includes`) [#845](https://github.com/drapergem/draper/pull/845)
+* Document the fix for view context leaking in specs [#847](https://github.com/drapergem/draper/pull/847)
+
+## 3.0.1
+* Let `decorator_class` infer anonymous class decorator from superclass [#820](https://github.com/drapergem/draper/pull/820)
+* When inferring decorator fails, show original class instead of `ActiveRecord::Base` [#821](https://github.com/drapergem/draper/pull/821)
+* ActiveJob compatibility and documentation [#817](https://github.com/drapergem/draper/pull/817)
+
+## 3.0.0 - 2017
+
+### Breaking Changes
+* Rename UninferrableSourceError to UninferrableObjectError [#768](https://github.com/drapergem/draper/pull/768)
+* Remove conflicting source aliases: `source`, `to_source`, `source_class` and `source_class?` [#786](https://github.com/drapergem/draper/pull/786)
+
+### New Features
+* Generator for creating `ApplicationDecorator` that other decorators inherit from [#796](https://github.com/drapergem/draper/pull/796)
+* Draper configuration with ability to customize the controller Draper uses [#788](https://github.com/drapergem/draper/pull/788)
+* Added support for Rails 5 API-only applications [#793](https://github.com/drapergem/draper/pull/793)
+* Added support for Rails runner [#739](https://github.com/drapergem/draper/pull/739)
+
+### Other Changes
+* Clear view context when the controller changes [#799](https://github.com/drapergem/draper/pull/799)
+* Removed previously deprecated functionality [#785](https://github.com/drapergem/draper/pull/785)
+* Only delegate === if other is an instance of a class that inherits from `Decorator` [#720](https://github.com/drapergem/draper/pull/720)
+* Always default to `CollectionDecorator` when `NameError` is raised [#795](https://github.com/drapergem/draper/pull/795)
+* Fixed issues in order to support Rails 5.1
+* Fixed a bug where helpers were used inside a decorator and this decorator was used outside of controller context
+
+## 3.0.0.pre1 - 2016-07-10
+
+* Added support for Rails 5, dropped 4.0 - 4.2
+  * Ruby >= 2.2 is required, matching Rails 5
+* Dropped support for ActiveModelSerializers 0.8
+
 ## 2.1.0 - 2015-03-26
 
 * Cleared most issues and merged a few PRs

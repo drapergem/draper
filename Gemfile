@@ -3,20 +3,13 @@ source "https://rubygems.org"
 gemspec
 
 platforms :ruby do
-  gem "sqlite3"
+  gem 'sqlite3', '~> 1.3.6'
 end
 
 platforms :jruby do
-  gem "minitest", ">= 3.0"
-  gem "activerecord-jdbcsqlite3-adapter", ">= 1.3.0.beta2"
+  gem "minitest"
+  gem "activerecord-jdbcsqlite3-adapter"
 end
 
-group :development, :test do
-  gem 'guard-rspec', require: false
-  gem 'ruby_gntp'
-  gem 'colorize'
-end
-
-version = ENV["RAILS_VERSION"] || "4.1"
-
-eval_gemfile File.expand_path("../gemfiles/#{version}.gemfile", __FILE__)
+gem "rails", "~> 5.0"
+gem "mongoid", github: "mongodb/mongoid"

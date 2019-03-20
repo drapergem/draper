@@ -18,7 +18,7 @@ module Draper
 
     describe ".controller" do
       it "returns the stored controller from RequestStore" do
-        allow(RequestStore).to receive(:store) { { current_controller: :stored_controller } }
+        allow(RequestStore).to receive_messages store: {current_controller: :stored_controller}
 
         expect(ViewContext.controller).to be :stored_controller
       end
@@ -27,24 +27,52 @@ module Draper
     describe ".controller=" do
       it "stores a controller in RequestStore" do
         store = {}
-        allow(RequestStore).to receive(:store).and_return(store)
+        allow(RequestStore).to receive_messages store: store
 
         ViewContext.controller = :stored_controller
         expect(store[:current_controller]).to be :stored_controller
+      end
+
+      it "cleans context when controller changes" do
+        store = {
+          current_controller: :stored_controller,
+          current_view_context: :stored_view_context
+        }
+
+        allow(RequestStore).to receive_messages store: store
+
+        ViewContext.controller = :other_stored_controller
+
+        expect(store).to include(current_controller: :other_stored_controller)
+        expect(store).not_to include(:current_view_context)
+      end
+
+      it "doesn't clean context when controller is the same" do
+        store = {
+          current_controller: :stored_controller,
+          current_view_context: :stored_view_context
+        }
+
+        allow(RequestStore).to receive_messages store: store
+
+        ViewContext.controller = :stored_controller
+
+        expect(store).to include(current_controller: :stored_controller)
+        expect(store).to include(current_view_context: :stored_view_context)
       end
     end
 
     describe ".current" do
       it "returns the stored view context from RequestStore" do
-        allow(RequestStore).to receive(:store) { { current_view_context: :stored_view_context } }
+        allow(RequestStore).to receive_messages store: {current_view_context: :stored_view_context}
 
         expect(ViewContext.current).to be :stored_view_context
       end
 
       context "when no view context is stored" do
         it "builds a view context" do
-          allow(RequestStore).to receive(:store).and_return({})
-          allow(ViewContext).to receive(:build_strategy).and_return( ->{ :new_view_context })
+          allow(RequestStore).to receive_messages store: {}
+          allow(ViewContext).to receive_messages build_strategy: ->{ :new_view_context }
           allow(HelperProxy).to receive(:new).with(:new_view_context).and_return(:new_helper_proxy)
 
           expect(ViewContext.current).to be :new_helper_proxy
@@ -52,8 +80,8 @@ module Draper
 
         it "stores the built view context" do
           store = {}
-          allow(RequestStore).to receive(:store).and_return(store)
-          allow(ViewContext).to receive(:build_strategy).and_return( ->{ :new_view_context })
+          allow(RequestStore).to receive_messages store: store
+          allow(ViewContext).to receive_messages build_strategy: ->{ :new_view_context }
           allow(HelperProxy).to receive(:new).with(:new_view_context).and_return(:new_helper_proxy)
 
           ViewContext.current
@@ -65,7 +93,7 @@ module Draper
     describe ".current=" do
       it "stores a helper proxy for the view context in RequestStore" do
         store = {}
-        allow(RequestStore).to receive(:store).and_return(store)
+        allow(RequestStore).to receive_messages store: store
         allow(HelperProxy).to receive(:new).with(:stored_view_context).and_return(:stored_helper_proxy)
 
         ViewContext.current = :stored_view_context
@@ -76,7 +104,7 @@ module Draper
     describe ".clear!" do
       it "clears the stored controller and view controller" do
         store = {current_controller: :stored_controller, current_view_context: :stored_view_context}
-        allow(RequestStore).to receive(:store).and_return(store)
+        allow(RequestStore).to receive_messages store: store
 
         ViewContext.clear!
         expect(store).not_to have_key :current_controller
@@ -86,7 +114,7 @@ module Draper
 
     describe ".build" do
       it "returns a new view context using the build strategy" do
-        allow(ViewContext).to receive(:build_strategy).and_return( ->{ :new_view_context })
+        allow(ViewContext).to receive_messages build_strategy: ->{ :new_view_context }
 
         expect(ViewContext.build).to be :new_view_context
       end
@@ -94,7 +122,7 @@ module Draper
 
     describe ".build!" do
       it "returns a helper proxy for the new view context" do
-        allow(ViewContext).to receive(:build_strategy).and_return( ->{ :new_view_context })
+        allow(ViewContext).to receive_messages build_strategy: ->{ :new_view_context }
         allow(HelperProxy).to receive(:new).with(:new_view_context).and_return(:new_helper_proxy)
 
         expect(ViewContext.build!).to be :new_helper_proxy
@@ -102,8 +130,8 @@ module Draper
 
       it "stores the helper proxy" do
         store = {}
-        allow(RequestStore).to receive(:store) { store }
-        allow(ViewContext).to receive(:build_strategy).and_return( ->{ :new_view_context })
+        allow(RequestStore).to receive_messages store: store
+        allow(ViewContext).to receive_messages build_strategy: ->{ :new_view_context }
         allow(HelperProxy).to receive(:new).with(:new_view_context).and_return(:new_helper_proxy)
 
         ViewContext.build!

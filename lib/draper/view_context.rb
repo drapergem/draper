@@ -20,8 +20,10 @@ module Draper
       RequestStore.store[:current_controller]
     end
 
-    # Sets the current controller.
+    # Sets the current controller. Clears view context when we are setting
+    # different controller.
     def self.controller=(controller)
+      clear! if RequestStore.store[:current_controller] != controller
       RequestStore.store[:current_controller] = controller
     end
 
@@ -81,24 +83,6 @@ module Draper
     # @private
     def self.build_strategy
       @build_strategy ||= Draper::ViewContext::BuildStrategy.new(:full)
-    end
-
-    # @deprecated Use {controller} instead.
-    def self.current_controller
-      ActiveSupport::Deprecation.warn("Draper::ViewContext.current_controller is deprecated (use controller instead)", caller)
-      self.controller || ApplicationController.new
-    end
-
-    # @deprecated Use {controller=} instead.
-    def self.current_controller=(controller)
-      ActiveSupport::Deprecation.warn("Draper::ViewContext.current_controller= is deprecated (use controller instead)", caller)
-      self.controller = controller
-    end
-
-    # @deprecated Use {build} instead.
-    def self.build_view_context
-      ActiveSupport::Deprecation.warn("Draper::ViewContext.build_view_context is deprecated (use build instead)", caller)
-      build
     end
   end
 end

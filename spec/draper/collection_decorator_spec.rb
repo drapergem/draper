@@ -7,7 +7,6 @@ module Draper
 
     describe "#initialize" do
       describe "options validation" do
-
         it "does not raise error on valid options" do
           valid_options = {with: Decorator, context: {}}
           expect{CollectionDecorator.new([], valid_options)}.not_to raise_error
@@ -121,26 +120,11 @@ module Draper
     end
 
     describe "#find" do
-      context "with a block" do
-        it "decorates Enumerable#find" do
-          decorator = CollectionDecorator.new([])
+      it "decorates Enumerable#find" do
+        decorator = CollectionDecorator.new([])
 
-          expect(decorator.decorated_collection).to receive(:find).and_return(:delegated)
-          expect(decorator.find{|p| p.title == "title"}).to be :delegated
-        end
-      end
-
-      context "without a block" do
-        it "decorates object.find" do
-          object = []
-          found = double(decorate: :decorated)
-          decorator = CollectionDecorator.new(object)
-
-          expect(object).to receive(:find).and_return(found)
-          ActiveSupport::Deprecation.silence do
-            expect(decorator.find(1)).to be :decorated
-          end
-        end
+        expect(decorator.decorated_collection).to receive(:find).and_return(:delegated)
+        expect(decorator.find{|p| p.title == "title"}).to be :delegated
       end
     end
 
@@ -157,7 +141,7 @@ module Draper
     it "delegates array methods to the decorated collection" do
       decorator = CollectionDecorator.new([])
 
-      expect(decorator.decorated_collection).to receive(:[]).with(42).and_return(:delegated)
+      allow(decorator.decorated_collection).to receive(:[]).with(42).and_return(:delegated)
       expect(decorator[42]).to be :delegated
     end
 
@@ -302,6 +286,5 @@ module Draper
         expect(decorator.replace([:foo, :bar])).to be decorator
       end
     end
-
   end
 end

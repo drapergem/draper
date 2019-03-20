@@ -1,11 +1,11 @@
 require 'spec_helper'
-require_relative '../../dummy/spec/rails_helper'
-require 'rails'
+require 'dummy/config/environment'
 require 'ammeter/init'
 require 'generators/controller_override'
 require 'generators/rails/decorator_generator'
+SimpleCov.command_name 'test:generator'
 
-RSpec.describe Rails::Generators::ControllerGenerator do
+describe Rails::Generators::ControllerGenerator do
   destination File.expand_path("../tmp", __FILE__)
 
   before { prepare_destination }

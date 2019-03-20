@@ -14,7 +14,7 @@ module Draper
       context "when a current controller is set" do
         it "returns the controller's view context" do
           view_context = fake_view_context
-          allow(ViewContext).to receive(:controller) { fake_controller(view_context) }
+          allow(ViewContext).to receive_messages controller: fake_controller(view_context)
           strategy = ViewContext::BuildStrategy::Full.new
 
           expect(strategy.call).to be view_context
@@ -23,31 +23,47 @@ module Draper
 
       context "when a current controller is not set" do
         it "uses ApplicationController" do
-          view_context = fake_view_context
-          stub_const "ApplicationController", double(new: fake_controller(view_context))
-          strategy = ViewContext::BuildStrategy::Full.new
-
-          expect(strategy.call).to be view_context
+          expect(Draper::ViewContext.controller).to be_nil
+          view_context = ViewContext::BuildStrategy::Full.new.call
+          expect(view_context.controller).to eq Draper::ViewContext.controller
+          expect(view_context.controller).to be_an ApplicationController
         end
       end
 
       it "adds a request if one is not defined" do
         controller = Class.new(ActionController::Base).new
-        allow(ViewContext).to receive(:controller) { controller }
+        allow(ViewContext).to receive_messages controller: controller
         strategy = ViewContext::BuildStrategy::Full.new
 
         expect(controller.request).to be_nil
         strategy.call
         expect(controller.request).to be_an ActionController::TestRequest
-        expect(controller.params).to eq({})
+        expect(controller.params).to be_empty
 
         # sanity checks
         expect(controller.view_context.request).to be controller.request
         expect(controller.view_context.params).to be controller.params
       end
 
+      it "compatible with rails 5.1 change on ActionController::TestRequest.create method" do
+        ActionController::TestRequest.class_eval do
+          if ActionController::TestRequest.method(:create).parameters.first == []
+            def create controller_class
+              create
+            end
+          end
+        end
+        controller = Class.new(ActionController::Base).new
+        allow(ViewContext).to receive_messages controller: controller
+        strategy = ViewContext::BuildStrategy::Full.new
+
+        expect(controller.request).to be_nil
+        strategy.call
+        expect(controller.request).to be_an ActionController::TestRequest
+      end
+
       it "adds methods to the view context from the constructor block" do
-        allow(ViewContext).to receive(:controller) { fake_controller }
+        allow(ViewContext).to receive(:controller).and_return(fake_controller)
         strategy = ViewContext::BuildStrategy::Full.new do
           def a_helper_method; end
         end
@@ -57,7 +73,7 @@ module Draper
 
       it "includes modules into the view context from the constructor block" do
         view_context = Object.new
-        allow(ViewContext).to receive(:controller) { fake_controller(view_context) }
+        allow(ViewContext).to receive(:controller).and_return(fake_controller(view_context))
         helpers = Module.new do
           def a_helper_method; end
         end

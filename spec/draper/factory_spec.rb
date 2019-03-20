@@ -1,8 +1,7 @@
 require 'spec_helper'
 
 module Draper
-  RSpec.describe Factory do
-
+  Rspec.describe Factory do
     describe "#initialize" do
       it "accepts valid options" do
         valid_options = {with: Decorator, context: {foo: "bar"}}
@@ -64,7 +63,7 @@ module Draper
         allow(Factory::Worker).to receive(:new).and_return(worker)
         options = {foo: "bar"}
 
-        expect(worker).to receive(:call).with(options)
+        allow(worker).to receive(:call).with(options)
         factory.decorate(double, options)
       end
 
@@ -72,27 +71,25 @@ module Draper
         it "sets the passed context" do
           factory = Factory.new(context: {foo: "bar"})
           worker = ->(*){}
-          allow(Factory::Worker).to receive(:new).and_return(worker)
+          allow(Factory::Worker).to receive_messages new: worker
 
-          expect(worker).to receive(:call).with(baz: 'qux', context: { foo: 'bar' })
+          expect(worker).to receive(:call).with(baz: "qux", context: {foo: "bar"})
           factory.decorate(double, {baz: "qux"})
         end
 
         it "is overridden by explicitly-specified context" do
           factory = Factory.new(context: {foo: "bar"})
           worker = ->(*){}
-          allow(Factory::Worker).to receive(:new) { worker }
+          allow(Factory::Worker).to receive_messages new: worker
 
           expect(worker).to receive(:call).with(context: {baz: "qux"})
           factory.decorate(double, context: {baz: "qux"})
         end
       end
     end
-
   end
 
-  RSpec.describe Factory::Worker do
-
+  Rspec.describe Factory::Worker do
     describe "#call" do
       it "calls the decorator method" do
         object = double
@@ -101,7 +98,7 @@ module Draper
         decorator = ->(*){}
         allow(worker).to receive(:decorator){ decorator }
 
-        expect(decorator).to receive(:call).with(object, options).and_return(:decorated)
+        allow(decorator).to receive(:call).with(object, options).and_return(:decorated)
         expect(worker.call(options)).to be :decorated
       end
 
@@ -109,7 +106,7 @@ module Draper
         it "calls it" do
           worker = Factory::Worker.new(double, double)
           decorator = ->(*){}
-          allow(worker).to receive(:decorator) { decorator }
+          allow(worker).to receive_messages decorator: decorator
           context = {foo: "bar"}
 
           expect(decorator).to receive(:call).with(anything(), context: context)
@@ -118,7 +115,7 @@ module Draper
 
         it "receives arguments from the :context_args option" do
           worker = Factory::Worker.new(double, double)
-          allow(worker).to receive(:decorator) { ->(*){} }
+          allow(worker).to receive_messages decorator: ->(*){}
           context = ->{}
 
           expect(context).to receive(:call).with(:foo, :bar)
@@ -127,7 +124,7 @@ module Draper
 
         it "wraps non-arrays passed to :context_args" do
           worker = Factory::Worker.new(double, double)
-          allow(worker).to receive(:decorator) { ->(*){} }
+          allow(worker).to receive_messages decorator: ->(*){}
           context = ->{}
           hash = {foo: "bar"}
 
@@ -140,7 +137,7 @@ module Draper
         it "doesn't call it" do
           worker = Factory::Worker.new(double, double)
           decorator = ->(*){}
-          allow(worker).to receive(:decorator) { decorator }
+          allow(worker).to receive_messages decorator: decorator
           context = {foo: "bar"}
 
           expect(decorator).to receive(:call).with(anything(), context: context)
@@ -151,7 +148,7 @@ module Draper
       it "does not pass the :context_args option to the decorator" do
         worker = Factory::Worker.new(double, double)
         decorator = ->(*){}
-        allow(worker).to receive(:decorator) { decorator }
+        allow(worker).to receive_messages decorator: decorator
 
         expect(decorator).to receive(:call).with(anything(), foo: "bar")
         worker.call(foo: "bar", context_args: [])

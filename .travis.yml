@@ -1,15 +1,29 @@
+env:
+  global:
+    - CC_TEST_REPORTER_ID=b7ba588af2a540fa96c267b3655a2afe31ea29976dc25905a668dd28d5e88915
+
 language: ruby
+sudo: false
+cache: bundler
 
 services:
   - mongodb
 
 rvm:
-  - 2.1.5
-  - 2.2.1
-  - 2.2.2
-  - 2.2.3
+  - 2.3.5
+  - 2.4.3
+  - 2.5.4
+  - 2.6.2
+  - ruby-head
 
-env:
-  - "RAILS_VERSION=4.0"
-  - "RAILS_VERSION=4.1"
-  - "RAILS_VERSION=4.2"
+matrix:
+  allow_failures:
+    - rvm: ruby-head
+
+before_script:
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+  - ./cc-test-reporter before-build
+
+after_script:
+  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT

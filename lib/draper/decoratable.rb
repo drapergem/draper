@@ -48,7 +48,6 @@ module Draper
     end
 
     module ClassMethods
-
       # Decorates a collection of objects. Used at the end of a scope chain.
       #
       # @example
@@ -56,8 +55,7 @@ module Draper
       # @param [Hash] options
       #   see {Decorator.decorate_collection}.
       def decorate(options = {})
-        collection = Rails::VERSION::MAJOR >= 4 ? all : scoped
-        decorator_class.decorate_collection(collection, options.reverse_merge(with: nil))
+        decorator_class.decorate_collection(all, options.reverse_merge(with: nil))
       end
 
       def decorator_class?
@@ -70,16 +68,16 @@ module Draper
       # `Product` maps to `ProductDecorator`).
       #
       # @return [Class] the inferred decorator class.
-      def decorator_class
+      def decorator_class(called_on = self)
         prefix = respond_to?(:model_name) ? model_name : name
         decorator_name = "#{prefix}Decorator"
-        decorator_name.constantize
-      rescue NameError => error
+        decorator_name_constant = decorator_name.safe_constantize
+        return decorator_name_constant unless decorator_name_constant.nil?
+
         if superclass.respond_to?(:decorator_class)
-          superclass.decorator_class
+          superclass.decorator_class(called_on)
         else
-          raise unless error.missing_name?(decorator_name)
-          raise Draper::UninferrableDecoratorError.new(self)
+          raise Draper::UninferrableDecoratorError.new(called_on)
         end
       end
 
@@ -87,7 +85,7 @@ module Draper
       #
       # @return [Boolean]
       def ===(other)
-        super || (other.respond_to?(:object) && super(other.object))
+        super || (other.is_a?(Draper::Decorator) && super(other.object))
       end
 
     end

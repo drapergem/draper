@@ -99,7 +99,7 @@ module Draper
     describe ".all" do
       it "returns a decorated collection" do
         found = [Product.new, Product.new]
-        allow(Product).to receive(:all).and_return(found)
+        allow(Product).to receive_messages all: found
         decorator = ProductDecorator.all
 
         expect(decorator).to be_a Draper::CollectionDecorator

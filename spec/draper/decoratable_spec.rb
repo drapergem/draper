@@ -11,7 +11,7 @@ module Draper
 
         expect(decorator).to be_a ProductDecorator
         expect(decorator.object).to be product
-     end
+      end
 
       it "accepts context" do
         context = {some: "context"}
@@ -22,7 +22,8 @@ module Draper
 
       it "uses the #decorator_class" do
         product = Product.new
-        allow(product).to receive(:decorator_class) { OtherDecorator }
+        allow(product).to receive_messages decorator_class: OtherDecorator
+
         expect(product.decorate).to be_an_instance_of OtherDecorator
       end
     end
@@ -72,6 +73,16 @@ module Draper
         expect(Product).to receive(:decorator_class).and_return(:some_decorator)
         expect(product.decorator_class).to be :some_decorator
       end
+
+      it "specifies the class that #decorator_class was first called on (superclass)" do
+        person = Person.new
+        expect { person.decorator_class }.to raise_error(Draper::UninferrableDecoratorError, 'Could not infer a decorator for Person.')
+      end
+
+      it "specifies the class that #decorator_class was first called on (subclass)" do
+        child = Child.new
+        expect { child.decorator_class }.to raise_error(Draper::UninferrableDecoratorError, 'Could not infer a decorator for Child.')
+      end
     end
 
     describe "#==" do
@@ -108,37 +119,42 @@ module Draper
       end
 
       it "is true for a decorated instance" do
-        decorator = double(object: Product.new)
+        decorator = Product.new.decorate
 
         expect(Product === decorator).to be_truthy
       end
 
       it "is true for a decorated derived instance" do
-        decorator = double(object: Class.new(Product).new)
+        decorator = Class.new(Product).new.decorate
 
         expect(Product === decorator).to be_truthy
       end
 
       it "is false for a decorated unrelated instance" do
-        decorator = double(object: Model.new)
+        decorator = Other.new.decorate
+
+        expect(Product === decorator).to be_falsey
+      end
+
+      it "is false for a non-decorator which happens to respond to object" do
+        decorator = double(object: Product.new)
 
         expect(Product === decorator).to be_falsey
       end
     end
 
     describe ".decorate" do
-      let(:scoping_method) { Rails::VERSION::MAJOR >= 4 ? :all : :scoped }
-
       it "calls #decorate_collection on .decorator_class" do
         scoped = [Product.new]
-        allow(Product).to receive(scoping_method).and_return(scoped)
+        allow(Product).to receive(:all).and_return(scoped)
+
         expect(Product.decorator_class).to receive(:decorate_collection).with(scoped, with: nil).and_return(:decorated_collection)
         expect(Product.decorate).to be :decorated_collection
       end
 
       it "accepts options" do
         options = {with: ProductDecorator, context: {some: "context"}}
-        allow(Product).to receive(scoping_method).and_return([])
+        allow(Product).to receive(:all).and_return([])
 
         expect(Product.decorator_class).to receive(:decorate_collection).with([], options)
         Product.decorate(options)
@@ -182,6 +198,15 @@ module Draper
         end
       end
 
+      context "when the decorator contains name error" do
+        it "throws an NameError" do
+          # We imitate ActiveSupport::Autoload behavior here in order to cause lazy NameError exception raising
+          allow_any_instance_of(Module).to receive(:const_missing) { Class.new { any_nonexisting_method_name } }
+
+          expect{Model.decorator_class}.to raise_error { |error| expect(error).to be_an_instance_of(NameError) }
+        end
+      end
+
       context "when the decorator can't be inferred" do
         it "throws an UninferrableDecoratorError" do
           expect{Model.decorator_class}.to raise_error UninferrableDecoratorError
@@ -190,8 +215,20 @@ module Draper
 
       context "when an unrelated NameError is thrown" do
         it "re-raises that error" do
-          allow_any_instance_of(String).to receive(:constantize) { Draper::Base }
+          # Not related to safe_constantize behavior, we just want to raise a NameError inside the function
+          allow_any_instance_of(String).to receive(:safe_constantize) { Draper::Base }
           expect{Product.decorator_class}.to raise_error NameError, /Draper::Base/
+        end
+      end
+
+      context "when an anonymous class is given" do
+        it "infers the decorator from a superclass" do
+          anonymous_class = Class.new(Product) do
+            def self.name
+              to_s
+            end
+          end
+          expect(anonymous_class.decorator_class).to be ProductDecorator
         end
       end
     end
