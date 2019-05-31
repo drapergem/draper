@@ -35,7 +35,7 @@ module Draper
     end
 
     class << self
-      alias_method :decorate, :new
+      alias :decorate :new
     end
 
     # @return [Array] the decorated items.
@@ -59,11 +59,12 @@ module Draper
       true
     end
 
-    alias_method :decorated_with?, :instance_of?
+    alias :decorated_with? :instance_of?
 
     def kind_of?(klass)
       decorated_collection.kind_of?(klass) || super
     end
+
     alias_method :is_a?, :kind_of?
 
     def replace(other)
