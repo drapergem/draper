@@ -380,7 +380,7 @@ can continue to use the `@article` instance variable to manipulate the model -
 for example, `@article.comments.build` to add a new blank comment for a form.
 
 ## Configuration
-Draper works out the box well, but also provides a hook for you to configure its 
+Draper works out the box well, but also provides a hook for you to configure its
 default functionality. For example, Draper assumes you have a base `ApplicationController`.
 If your base controller is named something different (e.g. `BaseController`),
 you can tell Draper to use it by adding the following to an initializer:
@@ -469,10 +469,13 @@ end
 ```
 
 Then you can stub the specific route helper functions you need using your
-preferred stubbing technique (this example uses RSpec's `stub` method):
+preferred stubbing technique. This examples uses Rspec currently recommended API
+available in RSpec 3.6+
 
 ```ruby
-helpers.stub(users_path: '/users')
+without_partial_double_verification do
+  allow(helpers).to receive(:users_path).and_return('/users')
+end
 ```
 
 ### View context leakage
@@ -646,7 +649,7 @@ you can include this module manually.
 
 ### Active Job Integration
 
-[Active Job](http://edgeguides.rubyonrails.org/active_job_basics.html) allows you to pass ActiveRecord 
+[Active Job](http://edgeguides.rubyonrails.org/active_job_basics.html) allows you to pass ActiveRecord
 objects to background tasks directly and performs the necessary serialization and deserialization. In
 order to do this, arguments to a background job must implement [Global ID](https://github.com/rails/globalid).
 Decorated objects implement Global ID by delegating to the object they are decorating. This means
