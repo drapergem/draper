@@ -47,7 +47,6 @@ module Draper
     end
 
     def initialize_view_context
-      require 'action_controller/test_case'
       Draper.default_controller.new.view_context
       Draper::ViewContext.build
     end
