@@ -6,7 +6,7 @@ module Draper
     def method_missing(method, *args, &block)
       return super unless strategy.allowed? method
 
-      object.send(method, *args, &block).decorate
+      object.send(method, *args, &block).decorate(with: decorator_class, context: context)
     end
 
     def respond_to_missing?(method, include_private = false)
