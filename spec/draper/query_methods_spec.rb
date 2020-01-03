@@ -11,7 +11,8 @@ module Draper
 
     describe '#method_missing' do
       let(:collection) { [ Post.new, Post.new ] }
-      let(:collection_decorator) { PostDecorator.decorate_collection(collection) }
+      let(:collection_context) { { user: 'foo' } }
+      let(:collection_decorator) { PostDecorator.decorate_collection(collection, context: collection_context) }
 
       context 'when strategy allows collection to call the method' do
         let(:results) { spy(:results) }
@@ -25,6 +26,12 @@ module Draper
           collection_decorator.some_query_method
 
           expect(results).to have_received(:decorate)
+        end
+
+        it 'calls the method on the collection and keeps the decoration options' do
+          collection_decorator.some_query_method
+
+          expect(results).to have_received(:decorate).with({ context: collection_context, with: PostDecorator })
         end
       end
 
