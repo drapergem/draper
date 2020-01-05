@@ -3,7 +3,11 @@ source "https://rubygems.org"
 gemspec
 
 platforms :ruby do
-  gem 'sqlite3'
+  if RUBY_VERSION >= "2.5.0"
+    gem 'sqlite3'
+  else
+    gem 'sqlite3', '~> 1.3.6'
+  end
 end
 
 platforms :jruby do
@@ -11,5 +15,9 @@ platforms :jruby do
   gem "activerecord-jdbcsqlite3-adapter"
 end
 
-gem "rails", "~> 6.0"
+if RUBY_VERSION >= "2.5.0"
+  gem "rails", "~> 6.0"
+else
+  gem "rails", "~> 5.0"
+end
 gem "mongoid", github: "mongodb/mongoid"
