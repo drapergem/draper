@@ -12,7 +12,7 @@ module Draper
         end
 
         def call
-          view_context_class.new
+          view_context_class.respond_to?(:empty) ? view_context_class.empty : view_context_class.new
         end
 
         private
