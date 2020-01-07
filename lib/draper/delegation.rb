@@ -7,7 +7,7 @@ module Draper
     #   @return [void]
     def delegate(*methods)
       options = methods.extract_options!
-      super *methods, options.reverse_merge(to: :object)
+      super(*methods, **options.reverse_merge(to: :object))
     end
   end
 end
