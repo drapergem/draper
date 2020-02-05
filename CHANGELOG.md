@@ -3,7 +3,7 @@
 ## 4.0.0 - 2020-02-05
 
 ### Breaking Changes
-* Drop support for Ruby < 2.4 [#852](https://github.com/drapergem/draper/pull/852)
+* Drop support for Ruby < 2.4 [#852](https://github.com/drapergem/draper/pull/852), [#872](https://github.com/drapergem/draper/pull/872)
 * Don't delegate public methods overridden by a private method in the decorator [#849](https://github.com/drapergem/draper/pull/849)
 
 ### Fixes
@@ -15,10 +15,10 @@
 ### Other Changes
 * Add SimpleCov for code coverage analysis [#851](https://github.com/drapergem/draper/pull/851)
 * Update RSpec syntax in the README [#855](https://github.com/drapergem/draper/pull/855)
-* Update continuous integration configuration [#861](https://github.com/drapergem/draper/pull/861), [#862](https://github.com/drapergem/draper/pull/862), [#863](https://github.com/drapergem/draper/pull/863)
+* Update continuous integration configuration [#861](https://github.com/drapergem/draper/pull/861), [#862](https://github.com/drapergem/draper/pull/862), [#863](https://github.com/drapergem/draper/pull/863), [#872](https://github.com/drapergem/draper/pull/872)
 
 ## 3.1.0
-* Rails 6 support [#841](https://github.com/drapergem/draper/pull/841), [#866](https://github.com/drapergem/draper/pull/866)
+* Rails 6 support [#841](https://github.com/drapergem/draper/pull/841)
 * Include ORM query methods in `CollectionDecorator` (e.g. `includes`) [#845](https://github.com/drapergem/draper/pull/845)
 * Document the fix for view context leaking in specs [#847](https://github.com/drapergem/draper/pull/847)
 
