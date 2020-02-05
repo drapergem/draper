@@ -108,7 +108,7 @@ Decorators are the ideal place to:
 
 ## Installation
 
-As of version 3.0.0, Draper is only compatible with Rails 5 / Ruby 2.2 and later. Add Draper to your Gemfile.
+As of version 4.0.0, Draper only officially supports Rails 5.2 / Ruby 2.4 and later. Add Draper to your Gemfile.
 
 ```ruby
   gem 'draper'
