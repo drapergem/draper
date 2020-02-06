@@ -2,7 +2,6 @@ module Draper
   class CollectionDecorator
     include Enumerable
     include Draper::ViewHelpers
-    include Draper::QueryMethods
     extend Draper::Delegation
 
     # @return the collection being decorated.
@@ -72,6 +71,17 @@ module Draper
       self
     end
 
+    # Proxies missing query methods to the source class if the strategy allows.
+    def method_missing(method, *args, &block)
+      return super unless strategy.allowed? method
+
+      object.send(method, *args, &block).decorate(with: decorator_class, context: context)
+    end
+
+    def respond_to_missing?(method, include_private = false)
+      strategy.allowed?(method) || super
+    end
+
     protected
 
     # Decorates the given item.
@@ -87,6 +97,11 @@ module Draper
       else
         ->(item, options) { item.decorate(options) }
       end
+    end
+
+    # Configures the strategy used to proxy the query methods, which defaults to `:active_record`.
+    def strategy
+      @strategy ||= LoadStrategy.new(Draper.default_query_methods_strategy)
     end
   end
 end
