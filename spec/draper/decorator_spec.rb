@@ -684,6 +684,18 @@ module Draper
             expect{ decorator.hello_world }.to raise_error NoMethodError
           end
         end
+
+        context 'when delegated method has the same name as private method defined on another object' do
+          let(:decorator_class) { Class.new(Decorator) }
+          let(:object) { Class.new { def print; end }.new }
+
+          it 'delegates the public method defined on the object' do
+            decorator = decorator_class.new(object)
+
+            # `print` private method is defined on `Object`
+            expect{ decorator.print }.not_to raise_error NoMethodError
+          end
+        end
       end
 
       context ".method_missing" do
