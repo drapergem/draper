@@ -14,9 +14,9 @@ module Draper
       extend ActiveSupport::Concern
 
       included do
-        alias_method :previous_render_to_body, :render_to_body
+        alias :previous_render_to_body :render_to_body
         include ActionView::Rendering
-        alias_method :render_to_body, :previous_render_to_body
+        alias :render_to_body :previous_render_to_body
       end
     end
   end
