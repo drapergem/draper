@@ -1,5 +1,13 @@
 # Draper Changelog
 
+## 4.0.1 - 2020-03-25
+
+### Fixes
+* Check only object's private methods when preventing delegation [#875](https://github.com/drapergem/draper/pull/875)
+
+### Other Changes
+* Use `alias` over `alias_method` [#877](https://github.com/drapergem/draper/pull/877)
+
 ## 4.0.0 - 2020-02-05
 
 ### Breaking Changes
