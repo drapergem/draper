@@ -217,7 +217,7 @@ module Draper
         it "uses the custom class name" do
           decorator = ProductsDecorator.new([])
 
-          expect(decorator.to_s).to match /ProductsDecorator/
+          expect(decorator.to_s).to match(/ProductsDecorator/)
         end
       end
     end
