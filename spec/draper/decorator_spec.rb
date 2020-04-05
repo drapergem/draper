@@ -439,7 +439,7 @@ module Draper
       it "returns a detailed description of the decorator" do
         decorator = ProductDecorator.new(double)
 
-        expect(decorator.inspect).to match /#<ProductDecorator:0x\h+ .+>/
+        expect(decorator.inspect).to match(/#<ProductDecorator:0x\h+ .+>/)
       end
 
       it "includes the object" do
