@@ -21,6 +21,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'request_store', '>= 1.0'
   s.add_dependency 'activemodel', '>= 5.0'
   s.add_dependency 'activemodel-serializers-xml', '>= 1.0'
+  s.add_dependency 'ruby2_keywords'
 
   s.add_development_dependency 'ammeter'
   s.add_development_dependency 'rake'
