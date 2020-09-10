@@ -43,11 +43,11 @@ module Draper
         end
 
         def new_test_request(controller)
-          is_above_rails_5_1 ? ActionController::TestRequest.create(controller) : ActionController::TestRequest.create
-        end
-
-        def is_above_rails_5_1
-          ActionController::TestRequest.method(:create).parameters.first == [:req, :controller_class]
+          if ActionController::TestRequest.method(:create).parameters.first.any?
+            ActionController::TestRequest.create(controller)
+          else
+            ActionController::TestRequest.create
+          end
         end
       end
     end
