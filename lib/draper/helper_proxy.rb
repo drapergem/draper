@@ -10,7 +10,7 @@ module Draper
     # Sends helper methods to the view context.
     ruby2_keywords def method_missing(method, *args, &block)
       self.class.define_proxy method
-      send(method, *args, &block)
+      view_context.send(method, *args, &block)
     end
 
     # Checks if the context responds to an instance method, or is able to
