@@ -1,0 +1,47 @@
+---
+name: CI
+
+on:
+  - push
+  - pull_request
+
+jobs:
+  rspec:
+    runs-on: ubuntu-20.04
+    strategy:
+      fail-fast: false
+      matrix:
+        ruby:
+          - '2.7'
+          - '2.6'
+          - '2.5'
+          - '2.4'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+
+      - name: Setup Ruby cache
+        uses: actions/cache@v2
+        with:
+          path: vendor/bundle
+          key: ${{ runner.os }}-gems-${{ matrix.ruby }}-${{ hashFiles('**/Gemfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-gems-${{ matrix.ruby }}-
+
+      - name: Bundle
+        run: |
+          gem install bundler
+          bundle config path vendor/bundle
+          bundle install --jobs 4 --retry 3
+
+      - name: RSpec & publish code coverage
+        uses: paambaati/codeclimate-action@v2.7.5
+        env:
+          CC_TEST_REPORTER_ID: b7ba588af2a540fa96c267b3655a2afe31ea29976dc25905a668dd28d5e88915
+        with:
+          coverageCommand: bin/rake
