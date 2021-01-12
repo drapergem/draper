@@ -22,6 +22,20 @@ module Draper
         expect(helper_proxy.foo(:passed)).to be :passed
       end
 
+      it "proxies methods with keyword arguments to the view context" do
+        view_context = double
+
+        # It seems we can't stub a method using `allow` with keyword
+        # arguments, so we just define it directly
+        def view_context.foo(bar:)
+          bar
+        end
+
+        helper_proxy = HelperProxy.new(view_context)
+
+        expect(helper_proxy.foo(bar: "baz")).to eq "baz"
+      end
+
       it "passes blocks" do
         view_context = double
         helper_proxy = HelperProxy.new(view_context)
