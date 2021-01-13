@@ -40,7 +40,7 @@ describe Rails::Generators::DecoratorGenerator do
 
       context "with an ApplicationDecorator" do
         before do
-          allow_any_instance_of(Object).to receive(:require)
+          allow_any_instance_of(Object).to receive(:require).and_call_original
           allow_any_instance_of(Object).to receive(:require).with("application_decorator").and_return(
             stub_const "ApplicationDecorator", Class.new
           )
