@@ -30,4 +30,6 @@ Dummy::Application.configure do
   config.eager_load = false
 
   config.active_job.queue_adapter = :test
+
+  config.active_storage.service = :test
 end
