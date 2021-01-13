@@ -16,6 +16,13 @@ jobs:
           - '2.6'
           - '2.5'
           - '2.4'
+
+    services:
+      mongodb:
+        image: mongo
+        ports:
+          - 27017:27017
+
     steps:
       - name: Checkout
         uses: actions/checkout@v2
