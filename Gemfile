@@ -17,6 +17,7 @@ end
 
 if RUBY_VERSION >= "2.5.0"
   gem "rails", "~> 6.0"
+  gem 'webrick'
 else
   gem "rails", "~> 5.0"
 end
