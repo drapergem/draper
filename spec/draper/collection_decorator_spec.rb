@@ -60,10 +60,11 @@ module Draper
 
       context "when the collection has not yet been decorated" do
         it "does not trigger decoration" do
-          decorator = CollectionDecorator.new([])
+          decorated = CollectionDecorator.new([]).tap(&:to_a)
+          undecorated = CollectionDecorator.new([])
 
-          expect(decorator).not_to receive(:decorated_collection)
-          decorator.context = {other: "context"}
+          expect(decorated.instance_variable_defined?(:@decorated_collection)).to be_truthy
+          expect(undecorated.instance_variable_defined?(:@decorated_collection)).to be_falsy
         end
 
         it "sets context after decoration is triggered" do
