@@ -693,7 +693,7 @@ module Draper
             decorator = decorator_class.new(object)
 
             # `print` private method is defined on `Object`
-            expect{ decorator.print }.not_to raise_error NoMethodError
+            expect{ decorator.print }.not_to raise_error
           end
         end
       end
