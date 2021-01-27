@@ -76,7 +76,7 @@ module Draper
 
     # Decorates the given item.
     def decorate_item(item)
-      item_decorator.call(item, context: context)
+      item_decorator.call(item, { context: context })
     end
 
     private
