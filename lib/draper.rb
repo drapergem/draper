@@ -8,6 +8,8 @@ require 'active_support/core_ext/hash/keys'
 require 'active_support/core_ext/hash/reverse_merge'
 require 'active_support/core_ext/name_error'
 
+require 'ruby2_keywords'
+
 require 'draper/version'
 require 'draper/configuration'
 require 'draper/view_helpers'
