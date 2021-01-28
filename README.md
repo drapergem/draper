@@ -131,6 +131,15 @@ class ArticleDecorator < Draper::Decorator
 end
 ```
 
+Namespaced models live in namespaced subdirectories:
+
+```ruby
+# app/decorators/help/article_decorator.rb
+class Help::ArticleDecorator < Draper::Decorator
+# ...
+end
+```
+
 ### Generators
 
 To create an `ApplicationDecorator` that all generated decorators inherit from, run...
