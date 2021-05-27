@@ -1,5 +1,16 @@
 # Draper Changelog
 
+## 4.0.2 - 2021-05-27
+
+### Fixes
+* Fix kwargs usage for Ruby 3 compatibility [#885](https://github.com/drapergem/draper/pull/885)
+* Fix ruby warnings for "ambiguous first argument" [#881](https://github.com/drapergem/draper/pull/881)
+* Fix rake warnings in CI [#897](https://github.com/drapergem/draper/pull/897)
+* Fix decoration spec [#895](https://github.com/drapergem/draper/pull/895)
+
+### Other Changes
+* Migration from Travis CI to GitHub Actions [#893](https://github.com/drapergem/draper/pull/893), [#896](https://github.com/drapergem/draper/pull/896), [#903](https://github.com/drapergem/draper/pull/903)
+
 ## 4.0.1 - 2020-03-25
 
 ### Fixes
