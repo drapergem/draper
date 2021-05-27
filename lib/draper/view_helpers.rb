@@ -28,8 +28,8 @@ module Draper
 
     # Alias for `helpers.localize`, since localize is something that's used
     # quite often. Further aliased to `l` for convenience.
-    ruby2_keywords def localize(object, **options)
-      helpers.localize(object, **options)
+    ruby2_keywords def localize(*args)
+      helpers.localize(*args)
     end
 
     alias :l :localize
