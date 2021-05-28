@@ -16,6 +16,10 @@ module Draper
     #   to each item's decorator.
     attr_accessor :context
 
+    # @return [String, nil] decorator namespace to be used to instantiate decorator, and passed
+    #   to each item's decorator.
+    attr_accessor :namespace
+
     array_methods = Array.instance_methods - Object.instance_methods
     delegate :==, :as_json, *array_methods, to: :decorated_collection
 
@@ -27,11 +31,14 @@ module Draper
     # @option options [Hash] :context ({})
     #   extra data to be stored in the collection decorator and used in
     #   user-defined methods, and passed to each item's decorator.
+    # @option options [String, nil] :namespace (nil)
+    #   decorator namespace
     def initialize(object, options = {})
-      options.assert_valid_keys(:with, :context)
+      options.assert_valid_keys(:with, :context, :namespace)
       @object = object
       @decorator_class = options[:with]
       @context = options.fetch(:context, {})
+      @namespace = options.delete(:namespace)
     end
 
     class << self

@@ -104,7 +104,7 @@ module Draper
     #   context and should return a new context hash for the association.
     # @return [void]
     def self.decorates_association(association, options = {})
-      options.assert_valid_keys(:with, :scope, :context)
+      options.assert_valid_keys(:with, :scope, :context, :namespace)
       define_method(association) do
         decorated_associations[association] ||= Draper::DecoratedAssociation.new(self, association, options)
         decorated_associations[association].call
@@ -138,8 +138,9 @@ module Draper
     # @option options [Hash] :context
     #   extra data to be stored in the collection decorator.
     def self.decorate_collection(object, options = {})
-      options.assert_valid_keys(:with, :context)
-      collection_decorator_class.new(object, options.reverse_merge(with: self))
+      options.assert_valid_keys(:with, :context, :namespace)
+      options[:with] ||= self
+      collection_decorator_class.new(object, options)
     end
 
     # @return [Array<Class>] the list of decorators that have been applied to
@@ -218,6 +219,10 @@ module Draper
       object.attributes.select {|attribute, _| respond_to?(attribute) }
     end
 
+    def namespace
+      self.class.to_s.deconstantize.presence
+    end
+
     # ActiveModel compatibility
     delegate :to_param, :to_partial_path
 
@@ -250,6 +255,7 @@ module Draper
 
     def self.inferred_object_class
       name = object_class_name
+      name = name.split('::').last unless name.nil?
       name_constant = name&.safe_constantize
       return name_constant unless name_constant.nil?
 
