@@ -139,7 +139,8 @@ module Draper
     #   extra data to be stored in the collection decorator.
     def self.decorate_collection(object, options = {})
       options.assert_valid_keys(:with, :context)
-      collection_decorator_class.new(object, options.reverse_merge(with: self))
+      options[:with] ||= self
+      collection_decorator_class.new(object, options)
     end
 
     # @return [Array<Class>] the list of decorators that have been applied to
@@ -216,6 +217,10 @@ module Draper
     # implemented by the decorator.
     def attributes
       object.attributes.select {|attribute, _| respond_to?(attribute) }
+    end
+
+    def namespace
+      self.class.to_s.deconstantize.presence
     end
 
     # ActiveModel compatibility
