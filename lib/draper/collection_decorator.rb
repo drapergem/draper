@@ -32,6 +32,7 @@ module Draper
       @object = object
       @decorator_class = options[:with]
       @context = options.fetch(:context, {})
+      @decorated_collection = nil
     end
 
     class << self
