@@ -1,6 +1,6 @@
-require 'spec_helper'
+require_relative '../rails_helper'
 
-describe "A decorator spec" do
+RSpec.describe "A decorator spec" do
   it "can access helpers through `helper`" do
     expect(helper.content_tag(:p, "Help!")).to eq "<p>Help!</p>"
   end

@@ -1,4 +1,9 @@
-require 'rails_helper'
+<% require 'rspec/version' %>
+<% if RSpec::Version::STRING.match(/\A3\.[^10]/) %>
+  require 'rails_helper'
+<% else %>
+  require 'spec_helper'
+<% end %>
 
-RSpec.describe <%= class_name %>Decorator do
+RSpec.describe <%= class_name %>Decorator, type: :decorator do
 end

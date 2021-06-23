@@ -1,7 +1,7 @@
-require 'spec_helper'
+require_relative '../rails_helper'
 
 if defined?(Devise)
-  describe "A decorator spec" do
+  RSpec.describe "A decorator spec" do
     it "can sign in a real user" do
       user = User.new
       sign_in user

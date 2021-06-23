@@ -1,4 +1,4 @@
-require 'spec_helper'
+require_relative '../rails_helper'
 
 def it_does_not_leak_view_context
   2.times do
@@ -9,14 +9,14 @@ def it_does_not_leak_view_context
   end
 end
 
-describe "A decorator spec", type: :decorator do
+RSpec.describe "A decorator spec", type: :decorator do
   it_does_not_leak_view_context
 end
 
-describe "A controller spec", type: :controller do
+RSpec.describe "A controller spec", type: :controller do
   it_does_not_leak_view_context
 end
 
-describe "A mailer spec", type: :mailer do
+RSpec.describe "A mailer spec", type: :mailer do
   it_does_not_leak_view_context
 end

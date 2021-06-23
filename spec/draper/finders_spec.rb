@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 module Draper
-  describe Finders do
+  RSpec.describe Finders do
     protect_class ProductDecorator
     before { ProductDecorator.decorates_finders }
 

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Draper, '.undecorate' do
+RSpec.describe Draper, '.undecorate' do
   it 'undecorates a decorated object' do
     object = Model.new
     decorator = Draper::Decorator.new(object)
