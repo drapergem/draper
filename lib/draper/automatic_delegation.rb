@@ -18,11 +18,21 @@ module Draper
       super || delegatable?(method)
     end
 
-    # @private
-    def delegatable?(method)
-      return if private_methods(false).include?(method)
+    # The inherit argument for `private_method_defined?` is supported since Ruby 2.6.
+    if RUBY_VERSION >= "2.6"
+      # @private
+      def delegatable?(method)
+        return if self.class.private_method_defined?(method, false)
 
-      object.respond_to?(method)
+        object.respond_to?(method)
+      end
+    else
+      # @private
+      def delegatable?(method)
+        return if private_methods(false).include?(method)
+
+        object.respond_to?(method)
+      end
     end
 
     module ClassMethods
