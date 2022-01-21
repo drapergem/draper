@@ -63,8 +63,8 @@ module Draper
           decorated = CollectionDecorator.new([]).tap(&:to_a)
           undecorated = CollectionDecorator.new([])
 
-          expect(decorated.instance_variable_defined?(:@decorated_collection)).to be_truthy
-          expect(undecorated.instance_variable_defined?(:@decorated_collection)).to be_falsy
+          expect(decorated.instance_variable_get(:@decorated_collection)).not_to be_nil
+          expect(undecorated.instance_variable_get(:@decorated_collection)).to be_nil
         end
 
         it "sets context after decoration is triggered" do
