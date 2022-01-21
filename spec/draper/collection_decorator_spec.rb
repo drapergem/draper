@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'support/shared_examples/view_helpers'
 
 module Draper
-  describe CollectionDecorator do
+  RSpec.describe CollectionDecorator do
     it_behaves_like "view helpers", CollectionDecorator.new([])
 
     describe "#initialize" do
@@ -142,7 +142,7 @@ module Draper
     it "delegates array methods to the decorated collection" do
       decorator = CollectionDecorator.new([])
 
-      allow(decorator).to receive_message_chain(:decorated_collection, :[]).with(42).and_return(:delegated)
+      allow(decorator.decorated_collection).to receive(:[]).with(42).and_return(:delegated)
       expect(decorator[42]).to be :delegated
     end
 

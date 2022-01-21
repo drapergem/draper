@@ -2,7 +2,8 @@ require 'spec_helper'
 require 'support/shared_examples/decoratable_equality'
 
 module Draper
-  describe Decoratable do
+  RSpec.describe Decoratable do
+
     describe "#decorate" do
       it "returns a decorator for self" do
         product = Product.new

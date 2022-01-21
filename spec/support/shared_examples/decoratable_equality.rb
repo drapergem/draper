@@ -1,4 +1,6 @@
-shared_examples_for "decoration-aware #==" do |subject|
+require 'spec_helper'
+
+RSpec.shared_examples_for "decoration-aware #==" do |subject|
   it "is true for itself" do
     expect(subject == subject).to be_truthy
   end

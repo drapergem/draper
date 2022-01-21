@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 module Draper
-  describe DecoratedAssociation do
+  Rspec.describe DecoratedAssociation do
     describe "#initialize" do
       it "accepts valid options" do
         valid_options = {with: Decorator, scope: :foo, context: {}}

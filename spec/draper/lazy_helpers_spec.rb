@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 module Draper
-  describe LazyHelpers do
+  RSpec.describe LazyHelpers do
     describe "#method_missing" do
       let(:decorator) do
         Struct.new(:helpers){include Draper::LazyHelpers}.new(double)
