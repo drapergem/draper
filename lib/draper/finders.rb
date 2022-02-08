@@ -20,7 +20,7 @@ module Draper
     end
 
     # Decorates dynamic finder methods (`find_all_by_` and friends).
-    def method_missing(method, *args, &block)
+    ruby2_keywords def method_missing(method, *args, &block)
       return super unless method =~ /^find_(all_|last_|or_(initialize_|create_))?by_/
 
       result = object_class.send(method, *args, &block)
