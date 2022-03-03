@@ -27,3 +27,9 @@ if RUBY_VERSION >= "2.5.0"
 else
   gem "mongoid", "~> 7.2"
 end
+
+if RUBY_VERSION >= "3.1.0"
+  gem "net-imap"
+  gem "net-pop"
+  gem "net-smtp"
+end
