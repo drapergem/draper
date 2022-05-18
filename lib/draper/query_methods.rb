@@ -10,7 +10,7 @@ module Draper
     end
 
     def respond_to_missing?(method, include_private = false)
-      strategy.allowed?(method) || super
+      object.respond_to?(method) && strategy.allowed?(method) || super
     end
 
     private
