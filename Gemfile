@@ -22,7 +22,7 @@ else
   gem "rails", "~> 5.0"
 end
 
-if RUBY_VERSION >= "2.5.0"
+if RUBY_VERSION >= "2.6.0"
   gem "mongoid", github: "mongodb/mongoid"
 else
   gem "mongoid", "~> 7.2"
