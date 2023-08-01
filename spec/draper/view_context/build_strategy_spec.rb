@@ -37,29 +37,12 @@ module Draper
 
         expect(controller.request).to be_nil
         strategy.call
-        expect(controller.request).to be_an ActionController::TestRequest
+        expect(controller.request).to be_an ActionDispatch::TestRequest
         expect(controller.params).to be_empty
 
         # sanity checks
         expect(controller.view_context.request).to be controller.request
         expect(controller.view_context.params).to be controller.params
-      end
-
-      it "compatible with rails 5.1 change on ActionController::TestRequest.create method" do
-        ActionController::TestRequest.class_eval do
-          if ActionController::TestRequest.method(:create).parameters.first == []
-            def create controller_class
-              create
-            end
-          end
-        end
-        controller = Class.new(ActionController::Base).new
-        allow(ViewContext).to receive_messages controller: controller
-        strategy = ViewContext::BuildStrategy::Full.new
-
-        expect(controller.request).to be_nil
-        strategy.call
-        expect(controller.request).to be_an ActionController::TestRequest
       end
 
       it "adds methods to the view context from the constructor block" do
