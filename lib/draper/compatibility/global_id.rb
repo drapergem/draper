@@ -5,17 +5,21 @@ module Draper
     # and deserialization. In order to do this, arguments to a background job must implement
     # [Global ID](https://github.com/rails/globalid).
     #
-    # This compatibility patch implements Global ID for decorated objects by delegating to the object
-    # that is decorated. This means you can pass decorated objects to background jobs, but 
-    # the object won't be decorated when it is deserialized. This patch is meant as an intermediate
-    # fix until we can find a way to deserialize the decorated object correctly.
+    # This compatibility patch implements Global ID for decorated objects by defining `.find(id)`
+    # class method that uses the original one and decorates the result.
+    # This means you can pass decorated objects to background jobs and they will be decorated when
+    # deserialized.
     module GlobalID
       extend ActiveSupport::Concern
 
       included do
         include ::GlobalID::Identification
+      end
 
-        delegate :to_global_id, :to_signed_global_id, to: :object
+      class_methods do
+        def find(*args)
+          object_class.find(*args).decorate
+        end
       end
     end
   end
