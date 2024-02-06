@@ -61,4 +61,13 @@ describe PostDecorator do
   it "uses a test view context from BaseController" do
     expect(Draper::ViewContext.current.controller).to be_an BaseController
   end
+
+  describe 'Global ID' do
+    it { expect(GlobalID::Locator.locate decorator.to_gid).to eq decorator }
+    it { expect(GlobalID::Locator.locate decorator.to_gid).to be_decorated }
+    it { expect(GlobalID::Locator.locate object.to_gid).not_to be_decorated }
+    it { expect(GlobalID::Locator.locate_signed decorator.to_sgid).to eq decorator }
+    it { expect(GlobalID::Locator.locate_signed decorator.to_sgid).to be_decorated }
+    it { expect(GlobalID::Locator.locate_signed object.to_sgid).not_to be_decorated }
+  end
 end
