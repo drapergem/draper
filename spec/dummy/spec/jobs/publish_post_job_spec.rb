@@ -4,6 +4,8 @@ RSpec.describe PublishPostJob, type: :job do
   subject(:job) { described_class.perform_later(post) }
 
   it 'queues the job' do
-    expect { job }.to have_enqueued_job(described_class).with(post.object)
+    expect { job }.to have_enqueued_job(described_class).with { |post|
+      expect(post).to be_decorated
+    }
   end
 end
