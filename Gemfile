@@ -15,6 +15,11 @@ platforms :jruby do
   gem "activerecord-jdbcsqlite3-adapter"
 end
 
+if RUBY_VERSION >= "2.6.0"
+  gem "turbo-rails"
+  gem "redis", "~> 4.0"
+end
+
 if RUBY_VERSION >= "2.5.0"
   gem "rails", "~> 6.0"
   gem 'webrick'
