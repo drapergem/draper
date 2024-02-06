@@ -9,6 +9,7 @@ require 'rails/all'
 require 'draper'
 attempt_require 'mongoid'
 attempt_require 'devise'
+attempt_require 'turbo-rails'
 require 'active_model_serializers'
 
 module Dummy

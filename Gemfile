@@ -18,6 +18,7 @@ end
 if RUBY_VERSION >= "2.5.0"
   gem "rails", "~> 6.0"
   gem 'webrick'
+  gem "turbo-rails" if RUBY_VERSION >= "2.6.0"
 else
   gem "rails", "~> 5.0"
 end
