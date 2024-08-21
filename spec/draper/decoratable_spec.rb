@@ -147,7 +147,7 @@ module Draper
         scoped = [Product.new]
         allow(Product).to receive(:all).and_return(scoped)
 
-        expect(Product.decorator_class).to receive(:decorate_collection).with(scoped, with: nil).and_return(:decorated_collection)
+        expect(Product.decorator_class).to receive(:decorate_collection).with(scoped, {with: nil}).and_return(:decorated_collection)
         expect(Product.decorate).to be :decorated_collection
       end
 
