@@ -41,7 +41,7 @@ jobs:
           bundler-cache: true
 
       - name: RSpec & publish code coverage
-        uses: paambaati/codeclimate-action@v3.2.0
+        uses: paambaati/codeclimate-action@v8
         env:
           CC_TEST_REPORTER_ID: b7ba588af2a540fa96c267b3655a2afe31ea29976dc25905a668dd28d5e88915
         with:
