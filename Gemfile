@@ -4,7 +4,7 @@ gemspec
 
 platforms :ruby do
   if RUBY_VERSION >= "2.5.0"
-    gem 'sqlite3'
+    gem 'sqlite3', '~> 1.4'
   else
     gem 'sqlite3', '~> 1.3.6'
   end
