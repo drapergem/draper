@@ -131,6 +131,17 @@ class ArticleDecorator < Draper::Decorator
 end
 ```
 
+
+To decorate a model in a namespace e.g. `Admin::Catalogue` place the decorator under the
+directory `app/decorators/admin` in the same way you would with views and models.
+
+```ruby
+# app/decorators/admin/catalogue_decorator.rb
+class Admin::CatalogueDecorator < Draper::Decorator
+# ...
+end
+```
+
 ### Generators
 
 To create an `ApplicationDecorator` that all generated decorators inherit from, run...
