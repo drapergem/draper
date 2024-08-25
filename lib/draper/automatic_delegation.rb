@@ -6,7 +6,7 @@ module Draper
     # method calls to `object` as well. Calling `super` will first try to call the method on
     # the parent decorator class. If no method exists on the parent class, it will then try
     # to call the method on the `object`.
-    def method_missing(method, *args, &block)
+    ruby2_keywords def method_missing(method, *args, &block)
       return super unless delegatable?(method)
 
       object.send(method, *args, &block)
@@ -27,7 +27,7 @@ module Draper
 
     module ClassMethods
       # Proxies missing class methods to the source class.
-      def method_missing(method, *args, &block)
+      ruby2_keywords def method_missing(method, *args, &block)
         return super unless delegatable?(method)
 
         object_class.send(method, *args, &block)

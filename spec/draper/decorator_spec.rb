@@ -118,7 +118,7 @@ module Draper
         it "creates a CollectionDecorator using itself for each item" do
           object = [Model.new]
 
-          expect(CollectionDecorator).to receive(:new).with(object, with: Decorator)
+          expect(CollectionDecorator).to receive(:new).with(object, {with: Decorator})
           Decorator.decorate_collection(object)
         end
 
@@ -134,7 +134,7 @@ module Draper
         it "creates a custom collection decorator using itself for each item" do
           object = [Model.new]
 
-          expect(ProductsDecorator).to receive(:new).with(object, with: ProductDecorator)
+          expect(ProductsDecorator).to receive(:new).with(object, {with: ProductDecorator})
           ProductDecorator.decorate_collection(object)
         end
 
@@ -439,7 +439,7 @@ module Draper
       it "returns a detailed description of the decorator" do
         decorator = ProductDecorator.new(double)
 
-        expect(decorator.inspect).to match /#<ProductDecorator:0x\h+ .+>/
+        expect(decorator.inspect).to match(/#<ProductDecorator:0x\h+ .+>/)
       end
 
       it "includes the object" do
@@ -693,7 +693,7 @@ module Draper
             decorator = decorator_class.new(object)
 
             # `print` private method is defined on `Object`
-            expect{ decorator.print }.not_to raise_error NoMethodError
+            expect{ decorator.print }.not_to raise_error
           end
         end
       end
