@@ -166,6 +166,15 @@ rails generate decorator Article
 
 ...to create the `ArticleDecorator`.
 
+If you don't want Rails to generate decorator files when generating a new controller,
+you can add the following configuration to your `config/application.rb` file:
+
+```ruby
+config.generators do |g|
+  g.decorator false
+end
+```
+
 ### Accessing Helpers
 
 Normal Rails helpers are still useful for lots of tasks. Both Rails' provided
