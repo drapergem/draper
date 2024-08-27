@@ -73,17 +73,17 @@ module Draper
           worker = ->(*){}
           allow(Factory::Worker).to receive_messages new: worker
 
-          expect(worker).to receive(:call).with(baz: "qux", context: {foo: "bar"})
+          expect(worker).to receive(:call).with({baz: "qux", context: {foo: "bar"}})
           factory.decorate(double, {baz: "qux"})
         end
 
         it "is overridden by explicitly-specified context" do
-          factory = Factory.new(context: {foo: "bar"})
+          factory = Factory.new({context: {foo: "bar"}})
           worker = ->(*){}
           allow(Factory::Worker).to receive_messages new: worker
 
-          expect(worker).to receive(:call).with(context: {baz: "qux"})
-          factory.decorate(double, context: {baz: "qux"})
+          expect(worker).to receive(:call).with({context: {baz: "qux"}})
+          factory.decorate(double, {context: {baz: "qux"}})
         end
       end
     end
@@ -109,7 +109,7 @@ module Draper
           allow(worker).to receive_messages decorator: decorator
           context = {foo: "bar"}
 
-          expect(decorator).to receive(:call).with(anything(), context: context)
+          expect(decorator).to receive(:call).with(anything(), {context: context})
           worker.call(context: ->{ context })
         end
 
@@ -140,7 +140,7 @@ module Draper
           allow(worker).to receive_messages decorator: decorator
           context = {foo: "bar"}
 
-          expect(decorator).to receive(:call).with(anything(), context: context)
+          expect(decorator).to receive(:call).with(anything(), {context: context})
           worker.call(context: context)
         end
       end
@@ -150,7 +150,7 @@ module Draper
         decorator = ->(*){}
         allow(worker).to receive_messages decorator: decorator
 
-        expect(decorator).to receive(:call).with(anything(), foo: "bar")
+        expect(decorator).to receive(:call).with(anything(), {foo: "bar"})
         worker.call(foo: "bar", context_args: [])
       end
     end
@@ -228,7 +228,7 @@ module Draper
               allow(object).to receive(:decorate){ nil }
               worker = Factory::Worker.new(nil, object)
 
-              expect(decorator_class).to receive(:decorate_collection).with(object, foo: "bar", with: nil).and_return(:decorated)
+              expect(decorator_class).to receive(:decorate_collection).with(object, {foo: "bar", with: nil}).and_return(:decorated)
               expect(worker.decorator.call(object, foo: "bar")).to be :decorated
             end
           end

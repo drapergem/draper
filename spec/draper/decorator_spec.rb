@@ -118,7 +118,7 @@ module Draper
         it "creates a CollectionDecorator using itself for each item" do
           object = [Model.new]
 
-          expect(CollectionDecorator).to receive(:new).with(object, with: Decorator)
+          expect(CollectionDecorator).to receive(:new).with(object, {with: Decorator})
           Decorator.decorate_collection(object)
         end
 
@@ -134,7 +134,7 @@ module Draper
         it "creates a custom collection decorator using itself for each item" do
           object = [Model.new]
 
-          expect(ProductsDecorator).to receive(:new).with(object, with: ProductDecorator)
+          expect(ProductsDecorator).to receive(:new).with(object, {with: ProductDecorator})
           ProductDecorator.decorate_collection(object)
         end
 
