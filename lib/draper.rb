@@ -51,12 +51,6 @@ module Draper
     end
   end
 
-  def self.setup_orm(base)
-    base.class_eval do
-      include Draper::Decoratable
-    end
-  end
-
   class UninferrableDecoratorError < NameError
     def initialize(klass)
       super("Could not infer a decorator for #{klass}.")
