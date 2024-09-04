@@ -131,6 +131,17 @@ class ArticleDecorator < Draper::Decorator
 end
 ```
 
+
+To decorate a model in a namespace e.g. `Admin::Catalogue` place the decorator under the
+directory `app/decorators/admin` in the same way you would with views and models.
+
+```ruby
+# app/decorators/admin/catalogue_decorator.rb
+class Admin::CatalogueDecorator < Draper::Decorator
+# ...
+end
+```
+
 ### Generators
 
 To create an `ApplicationDecorator` that all generated decorators inherit from, run...
@@ -154,6 +165,15 @@ rails generate decorator Article
 ```
 
 ...to create the `ArticleDecorator`.
+
+If you don't want Rails to generate decorator files when generating a new controller,
+you can add the following configuration to your `config/application.rb` file:
+
+```ruby
+config.generators do |g|
+  g.decorator false
+end
+```
 
 ### Accessing Helpers
 
@@ -652,9 +672,8 @@ you can include this module manually.
 [Active Job](http://edgeguides.rubyonrails.org/active_job_basics.html) allows you to pass ActiveRecord
 objects to background tasks directly and performs the necessary serialization and deserialization. In
 order to do this, arguments to a background job must implement [Global ID](https://github.com/rails/globalid).
-Decorated objects implement Global ID by delegating to the object they are decorating. This means
-you can pass decorated objects to background jobs, however, the object won't be decorated when it is
-deserialized.
+Decorators implement Global ID.
+This means you can pass decorated objects to background jobs, and get them just as decorated when deserialized.
 
 ## Contributors
 

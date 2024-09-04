@@ -6,10 +6,16 @@ RSpec.describe Post do
 
   it { should be_a ApplicationRecord }
 
-  describe '#to_global_id' do
-    let(:post) { Post.create }
-    subject { post.to_global_id }
+  describe 'broadcasts' do
+    let(:modification) { described_class.create! }
 
-    it { is_expected.to eq post.decorate.to_global_id }
-  end
+    it 'passes a decorated object for rendering' do
+      expect do
+        modification
+      end.to have_enqueued_job(Turbo::Streams::ActionBroadcastJob).with { |stream, action:, target:, **rendering|
+        expect(rendering[:locals]).to include :post
+        expect(rendering[:locals][:post]).to be_decorated
+      }
+    end
+  end if defined? Turbo::Broadcastable
 end

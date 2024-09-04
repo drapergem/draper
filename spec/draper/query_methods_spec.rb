@@ -53,14 +53,24 @@ module Draper
       context 'when strategy allows collection to call the method' do
         before do
           allow(fake_strategy).to receive(:allowed?).with(:some_query_method).and_return(true)
+          allow(collection).to receive(:respond_to?).with(:some_query_method).and_return(true)
         end
 
         it { is_expected.to eq(true) }
+
+        context 'and collection does not implement the method' do
+          before do
+            allow(collection).to receive(:respond_to?).with(:some_query_method).and_return(false)
+          end
+
+          it { is_expected.to eq(false) }
+        end
       end
 
       context 'when strategy does not allow collection to call the method' do
         before do
           allow(fake_strategy).to receive(:allowed?).with(:some_query_method).and_return(false)
+          allow(collection).to receive(:respond_to?).with(:some_query_method).and_return(true)
         end
 
         it { is_expected.to eq(false) }
