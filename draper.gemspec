@@ -26,6 +26,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'ammeter'
   s.add_development_dependency 'rake'
   s.add_development_dependency 'rspec-rails'
+  s.add_development_dependency 'rspec-activerecord-expectations', '~> 1.2.0'
   s.add_development_dependency 'minitest-rails'
   s.add_development_dependency 'capybara'
   s.add_development_dependency 'active_model_serializers', '>= 0.10'
