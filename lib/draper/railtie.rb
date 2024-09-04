@@ -33,10 +33,14 @@ module Draper
     end
 
     initializer 'draper.setup_orm' do
-      [:active_record, :mongoid].each do |orm|
-        ActiveSupport.on_load orm do
-          Draper.setup_orm self
-        end
+      ActiveSupport.on_load :active_record do
+        include Draper::Decoratable
+
+        ActiveRecord::Associations::CollectionProxy.include Draper::Decoratable::CollectionProxy
+      end
+
+      ActiveSupport.on_load :mongoid do
+        include Draper::Decoratable
       end
     end
 
