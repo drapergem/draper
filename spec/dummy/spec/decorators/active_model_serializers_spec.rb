@@ -1,6 +1,6 @@
-require 'spec_helper'
+require_relative '../rails_helper'
 
-describe Draper::CollectionDecorator do
+RSpec.describe Draper::CollectionDecorator do
   describe "#active_model_serializer" do
     it "returns ActiveModel::Serializer::CollectionSerializer" do
       collection_decorator  = Draper::CollectionDecorator.new([])

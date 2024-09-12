@@ -1,4 +1,4 @@
-shared_examples_for "a decoratable model" do
+RSpec.shared_examples_for "a decoratable model" do
   describe ".decorate" do
     it "applies a collection decorator to a scope" do
       described_class.create

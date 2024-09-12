@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 module Draper
-  describe ViewContext do
+  RSpec.describe ViewContext do
     describe "#view_context" do
       let(:base) { Class.new { def view_context; :controller_view_context; end } }
       let(:controller) { Class.new(base) { include ViewContext } }

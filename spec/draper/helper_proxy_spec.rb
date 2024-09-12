@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 module Draper
-  describe HelperProxy do
+  RSpec.describe HelperProxy do
     describe "#initialize" do
       it "sets the view context" do
         view_context = double

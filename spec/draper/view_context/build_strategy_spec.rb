@@ -9,7 +9,7 @@ def fake_controller(view_context = fake_view_context)
 end
 
 module Draper
-  describe ViewContext::BuildStrategy::Full do
+  RSpec.describe ViewContext::BuildStrategy::Full do
     describe "#call" do
       context "when a current controller is set" do
         it "returns the controller's view context" do
@@ -69,7 +69,7 @@ module Draper
     end
   end
 
-  describe ViewContext::BuildStrategy::Fast do
+  RSpec.describe ViewContext::BuildStrategy::Fast do
     describe "#call" do
       it "returns an instance of a subclass of ActionView::Base" do
         strategy = ViewContext::BuildStrategy::Fast.new

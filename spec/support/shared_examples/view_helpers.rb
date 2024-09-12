@@ -1,4 +1,6 @@
-shared_examples_for "view helpers" do |subject|
+require 'spec_helper'
+
+RSpec.shared_examples_for "view helpers" do |subject|
   describe "#helpers" do
     it "returns the current view context" do
       allow(Draper::ViewContext).to receive_messages current: :current_view_context
@@ -12,6 +14,13 @@ shared_examples_for "view helpers" do |subject|
   end
 
   describe "#localize" do
+    let(:helpers) { double }
+
+    before :each do
+      allow(subject).to receive(:helpers) { helpers }
+      allow(helpers).to receive(:localize)
+    end
+
     it "delegates to #helpers" do
       allow(subject).to receive(:helpers).and_return(double)
       expect(subject.helpers).to receive(:localize).with(:an_object, some: "parameter")

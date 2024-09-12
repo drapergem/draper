@@ -7,7 +7,7 @@ require 'net/http'
 class DummyApp
 
   def initialize(environment)
-    raise ArgumentError, "Environment must be development or production" unless ["development", "production"].include?(environment.to_s)
+    raise ArgumentError, 'Environment must be development or production' unless ['development', 'production', 'test'].include?(environment.to_s)
     @environment = environment
   end
 

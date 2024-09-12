@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'support/shared_examples/view_helpers'
 
 module Draper
-  describe Decorator do
+  RSpec.describe Decorator do
     it_behaves_like "view helpers", Decorator.new(Model.new)
 
     describe "#initialize" do

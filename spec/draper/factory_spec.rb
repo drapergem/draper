@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 module Draper
-  describe Factory do
+  Rspec.describe Factory do
     describe "#initialize" do
       it "accepts valid options" do
         valid_options = {with: Decorator, context: {foo: "bar"}}
@@ -89,7 +89,7 @@ module Draper
     end
   end
 
-  describe Factory::Worker do
+  Rspec.describe Factory::Worker do
     describe "#call" do
       it "calls the decorator method" do
         object = double

@@ -7,7 +7,7 @@ Draper::ViewContext.test_strategy :fast
 
 Post = Struct.new(:id) { extend ActiveModel::Naming }
 
-describe PostDecorator do
+RSpec.describe PostDecorator do
   let(:decorator) { PostDecorator.new(object) }
   let(:object) { Post.new(42) }
 
@@ -32,6 +32,6 @@ describe PostDecorator do
   end
 
   it "can't be passed implicitly to url_for" do
-    expect{decorator.link}.to raise_error ArgumentError
+    expect{decorator.link}.to raise_error ArgumentError, /url_for/
   end
 end

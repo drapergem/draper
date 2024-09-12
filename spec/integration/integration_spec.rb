@@ -13,7 +13,7 @@ app.start_server do
   spec_types.each do |type, (path, controller)|
     page = app.get(path)
 
-    describe "in a #{type}" do
+    RSpec.describe "in a #{type}" do
       it "runs in the correct environment" do
         expect(page).to have_text(app.environment).in("#environment")
       end
