@@ -683,7 +683,8 @@ great community of open source
 
 ### Current maintainers
 
-* Cliff Braton (cliff.braton@gmail.com)
+* Alexander Senko (Alexander.Senko@gmail.com)
+* Yuji Yaginuma (yuuji.yaginuma@gmail.com)
 
 ### Historical maintainers
 
@@ -692,3 +693,4 @@ great community of open source
 * Vasiliy Ermolovich
 * Andrew Haines
 * Sean Linsley
+* Cliff Braton (cliff.braton@gmail.com)
