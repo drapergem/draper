@@ -61,12 +61,6 @@ module Draper
 
     alias :decorated_with? :instance_of?
 
-    def kind_of?(klass)
-      decorated_collection.kind_of?(klass) || super
-    end
-
-    alias_method :is_a?, :kind_of?
-
     def replace(other)
       decorated_collection.replace(other)
       self

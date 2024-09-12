@@ -33,7 +33,7 @@ module Draper
       options.assert_valid_keys(:context)
       @object = object
       @context = options.fetch(:context, {})
-      handle_multiple_decoration(options) if object.instance_of?(self.class)
+      handle_multiple_decoration(options) if object.is_a?(Draper::Decorator)
     end
 
     class << self
@@ -185,22 +185,6 @@ module Draper
       self.class.hash ^ object.hash
     end
 
-    # Checks if `self.kind_of?(klass)` or `object.kind_of?(klass)`
-    #
-    # @param [Class] klass
-    def kind_of?(klass)
-      super || object.kind_of?(klass)
-    end
-
-    alias :is_a? :kind_of?
-
-    # Checks if `self.instance_of?(klass)` or `object.instance_of?(klass)`
-    #
-    # @param [Class] klass
-    def instance_of?(klass)
-      super || object.instance_of?(klass)
-    end
-
     delegate :to_s
 
     # In case object is nil
@@ -267,7 +251,7 @@ module Draper
       if object.applied_decorators.last == self.class
         @context = object.context unless options.has_key?(:context)
         @object = object.object
-      else
+      elsif object.applied_decorators.include?(self.class)
         warn "Reapplying #{self.class} decorator to target that is already decorated with it. Call stack:\n#{caller(1).join("\n")}"
       end
     end
