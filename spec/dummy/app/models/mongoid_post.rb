@@ -1,5 +1,3 @@
-if defined?(Mongoid)
-  class MongoidPost
-    include Mongoid::Document
-  end
+class MongoidPost
+  include Mongoid::Document if defined? Mongoid
 end

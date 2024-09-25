@@ -1,5 +1,3 @@
-if defined?(Devise)
-  class User
-    extend Devise::Models
-  end
+class User
+  extend Devise::Models if defined? Devise
 end

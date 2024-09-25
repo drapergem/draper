@@ -50,7 +50,7 @@ class DummyApp
         yield
 
         Process.kill("KILL", out.pid)
-        File.delete("tmp/pids/server.pid")
+        File.delete("tmp/pids/server.pid") if File.exist?("tmp/pids/server.pid")
       end
     end
   end
