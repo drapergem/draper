@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe Draper::CollectionDecorator do
   describe "#active_model_serializer" do

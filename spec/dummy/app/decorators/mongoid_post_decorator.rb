@@ -1,4 +1,2 @@
-if defined?(Mongoid)
-  class MongoidPostDecorator < Draper::Decorator
-  end
+class MongoidPostDecorator < Draper::Decorator
 end

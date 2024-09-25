@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe ApplicationRecord do
   it { expect(described_class.superclass).to eq ActiveRecord::Base }
