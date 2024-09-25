@@ -25,12 +25,12 @@ jobs:
           - 3.2
           - 3.1
         rails:
-          - 6.1 # TODO: move to 7.2
+          - 7.2
         include:
           # Edge
           - { ruby: 'head', rails: 'edge', allow-fail: true }
           # Outdated
-          - { ruby: '3.0',  rails: '6.1' } # TODO: move to 7.1
+          - { ruby: '3.0',  rails: '7.1' }
           - { ruby: '2.7',  rails: '6'   } # RSpec AR Expectations support Rails 7.1 since Ruby 3.0
           - { ruby: '2.6',  rails: '6'   }
           - { ruby: '2.5',  rails: '6'   }

@@ -1,5 +1,3 @@
-if defined?(Devise)
-  class Admin
-    extend Devise::Models
-  end
+class Admin
+  extend Devise::Models if defined? Devise
 end

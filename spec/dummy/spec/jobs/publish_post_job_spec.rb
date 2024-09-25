@@ -1,3 +1,5 @@
+require 'rails_helper'
+
 RSpec.describe PublishPostJob, type: :job do
   let(:post) { Post.create.decorate }
 

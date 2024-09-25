@@ -6,7 +6,7 @@ gem 'puma'
 
 platforms :ruby do
   if RUBY_VERSION >= "2.5.0"
-    gem 'sqlite3', '~> 1.4'
+    gem 'sqlite3'
   else
     gem 'sqlite3', '~> 1.3.6'
   end
@@ -17,8 +17,6 @@ platforms :jruby do
   gem "activerecord-jdbcsqlite3-adapter"
 end
 
-gem 'mongoid'
-
 case rails_version = ENV['RAILS_VERSION']
 when nil
   gem 'rails'
@@ -27,6 +25,10 @@ when 'edge'
 else
   gem 'rails', "~> #{rails_version}.0"
 end
+
+gem 'mongoid' unless
+    rails_version == 'edge'
+gem 'active_model_serializers'
 
 case RUBY_VERSION
 when '2.6'...'3.0'
