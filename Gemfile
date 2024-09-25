@@ -2,6 +2,8 @@ source "https://rubygems.org"
 
 gemspec
 
+gem 'puma'
+
 platforms :ruby do
   if RUBY_VERSION >= "2.5.0"
     gem 'sqlite3', '~> 1.4'
@@ -15,32 +17,28 @@ platforms :jruby do
   gem "activerecord-jdbcsqlite3-adapter"
 end
 
-if RUBY_VERSION >= "2.6.0"
-  gem "turbo-rails"
+gem 'mongoid'
+
+case rails_version = ENV['RAILS_VERSION']
+when nil
+  gem 'rails'
+when 'edge'
+  gem 'rails', github: 'rails/rails'
+else
+  gem 'rails', "~> #{rails_version}.0"
+end
+
+case RUBY_VERSION
+when '2.6'...'3.0'
+  gem "turbo-rails", "<= 2.0.7"
   gem "redis", "~> 4.0"
-end
-
-if RUBY_VERSION >= "2.5.0"
-  gem "rails", "~> 6.0"
-  gem 'webrick'
-else
-  gem "rails", "~> 5.0"
-end
-
-if RUBY_VERSION >= "2.7.0"
-  gem "mongoid", github: "mongodb/mongoid"
-elsif RUBY_VERSION >= "2.6.0"
-  gem "mongoid", "~> 8.1"
-else
-  gem "mongoid", "~> 7.2"
-end
-
-if RUBY_VERSION >= "3.1.0"
-  gem "net-imap"
-  gem "net-pop"
-  gem "net-smtp"
+when '3.0'...'4'
+  gem 'turbo-rails'
+  gem 'redis', '~> 4.0'
 end
 
 if RUBY_VERSION < "2.5.0"
+  gem 'rspec-activerecord-expectations', '~> 1.2.0'
+  gem 'simplecov', '0.17.1'
   gem "loofah", "< 2.21.0" # Workaround for `uninitialized constant Nokogiri::HTML4`
 end

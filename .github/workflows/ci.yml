@@ -2,27 +2,42 @@
 name: CI
 
 on:
-  - push
-  - pull_request
+  push:
+    branches:
+      - master
+  pull_request:
 
 permissions:
   contents: read
 
 jobs:
   rspec:
-    runs-on: ubuntu-20.04
+    name: >-
+      rspec (${{ matrix.ruby }})
+
+    runs-on: ubuntu-latest
+
     strategy:
       fail-fast: false
       matrix:
         ruby:
-          - '3.3'
-          - '3.2'
-          - '3.1'
-          - '3.0'
-          - '2.7'
-          - '2.6'
-          - '2.5'
-          - '2.4'
+          - 3.3
+          - 3.2
+          - 3.1
+        rails:
+          - 6.1 # TODO: move to 7.2
+        include:
+          # Edge
+          - { ruby: 'head', rails: 'edge', allow-fail: true }
+          # Outdated
+          - { ruby: '3.0',  rails: '6.1' } # TODO: move to 7.1
+          - { ruby: '2.7',  rails: '6'   } # RSpec AR Expectations support Rails 7.1 since Ruby 3.0
+          - { ruby: '2.6',  rails: '6'   }
+          - { ruby: '2.5',  rails: '6'   }
+          - { ruby: '2.4',  rails: '5'   }
+
+    env:
+      RAILS_VERSION: "${{ matrix.rails }}"
 
     services:
       mongodb:
@@ -31,13 +46,13 @@ jobs:
           - 27017:27017
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
+          rubygems: latest
           bundler-cache: true
 
       - name: RSpec & publish code coverage
@@ -46,3 +61,11 @@ jobs:
           CC_TEST_REPORTER_ID: b7ba588af2a540fa96c267b3655a2afe31ea29976dc25905a668dd28d5e88915
         with:
           coverageCommand: bin/rake
+        continue-on-error: ${{ matrix.allow-fail }}
+        id: test
+
+      - name: >-
+          Test ${{ steps.test.outcome }}
+        run: |
+          echo Ruby  ${{ matrix.ruby  }}
+          echo Rails ${{ matrix.rails }}
