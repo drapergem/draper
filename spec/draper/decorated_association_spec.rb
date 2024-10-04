@@ -15,14 +15,14 @@ module Draper
       it "creates a factory" do
         options = {with: Decorator, context: {foo: "bar"}}
 
-        expect(Factory).to receive(:new).with(options)
-        DecoratedAssociation.new(double, :association, options)
+        expect(Factory).to receive(:new).with(options.merge(namespace: nil))
+        DecoratedAssociation.new(double(namespace: nil), :association, options)
       end
 
       describe ":with option" do
         it "defaults to nil" do
-          expect(Factory).to receive(:new).with(with: nil, context: anything())
-          DecoratedAssociation.new(double, :association, {})
+          expect(Factory).to receive(:new).with(with: nil, context: anything(), namespace: nil)
+          DecoratedAssociation.new(double(namespace: nil), :association, {})
         end
       end
 
@@ -31,7 +31,7 @@ module Draper
           expect(Factory).to receive(:new) do |options|
             options[:context].call(:anything) == :anything
           end
-          DecoratedAssociation.new(double, :association, {})
+          DecoratedAssociation.new(double(namespace: nil), :association, {})
         end
       end
     end
@@ -43,7 +43,7 @@ module Draper
         associated = double
         owner_context = {foo: "bar"}
         object = double(association: associated)
-        owner = double(object: object, context: owner_context)
+        owner = double(object: object, context: owner_context, namespace: nil)
         decorated_association = DecoratedAssociation.new(owner, :association, {})
         decorated = double
 
@@ -54,7 +54,7 @@ module Draper
       it "memoizes" do
         factory = double
         allow(Factory).to receive_messages(new: factory)
-        owner = double(object: double(association: double), context: {})
+        owner = double(object: double(association: double), context: {}, namespace: nil)
         decorated_association = DecoratedAssociation.new(owner, :association, {})
         decorated = double
 
@@ -69,7 +69,7 @@ module Draper
           allow(Factory).to receive_messages(new: factory)
           scoped = double
           object = double(association: double(applied_scope: scoped))
-          owner = double(object: object, context: {})
+          owner = double(object: object, context: {}, namespace: nil)
           decorated_association = DecoratedAssociation.new(owner, :association, scope: :applied_scope)
           decorated = double
 
