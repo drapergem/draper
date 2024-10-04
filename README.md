@@ -1,6 +1,6 @@
 # Draper: View Models for Rails
 
-[![Actions Status](https://github.com/drapergem/draper/workflows/CI/badge.svg?branch=master)](https://github.com/drapergem/draper/actions?query=workflow%3Aci+branch%3Amaster)
+[![Actions Status](https://github.com/drapergem/draper/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/drapergem/draper/actions?query=workflow%3Aci+branch%3Amaster)
 [![Code Climate](https://codeclimate.com/github/drapergem/draper.svg)](https://codeclimate.com/github/drapergem/draper)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/0d40c43951d516bf6985/test_coverage)](https://codeclimate.com/github/drapergem/draper/test_coverage)
 [![Inline docs](http://inch-ci.org/github/drapergem/draper.svg?branch=master)](http://inch-ci.org/github/drapergem/draper)
