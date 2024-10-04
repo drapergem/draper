@@ -1,5 +1,18 @@
 # Draper Changelog
 
+## 4.0.3 - 2024-10-04
+
+Added support for latest Ruby (upto 3.4) and Rails (upto 8) versions.
+
+### Fixes
+* Fix `CollectionDecorator#respond_to?` for non-ORM collections [#920](https://github.com/drapergem/draper/pull/920)
+* Fix issues with using Draper outside of controller scope [#927](https://github.com/drapergem/draper/pull/927)
+* Fix decoration of AR associations [#932](https://github.com/drapergem/draper/pull/932)
+
+### Other Changes
+* Improve performance of delegation via `delegate_all` [#911](https://github.com/drapergem/draper/pull/911)
+* Improve README [#878](https://github.com/drapergem/draper/pull/878), [#922](https://github.com/drapergem/draper/pull/922), [#934](https://github.com/drapergem/draper/pull/934)
+
 ## 4.0.2 - 2021-05-27
 
 ### Fixes
