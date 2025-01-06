@@ -451,7 +451,7 @@ module Draper
       it "includes the context" do
         decorator = Decorator.new(double, context: {foo: "bar"})
 
-        expect(decorator.inspect).to include '@context={:foo=>"bar"}'
+        expect(decorator.inspect).to include "#{@context={:foo=>"bar"}}"
       end
 
       it "includes other instance variables" do
