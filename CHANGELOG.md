@@ -1,6 +1,11 @@
 # Draper Changelog
 
-## 4.0.3 - 2024-10-04
+## 4.0.4 - 2025-01-28
+
+### Fixes
+* Fix a `LoadError` caused by a cherry-pick issue in version 4.0.3
+
+## 4.0.3 - 2025-01-27
 
 Added support for latest Ruby (upto 3.4) and Rails (upto 8) versions.
 

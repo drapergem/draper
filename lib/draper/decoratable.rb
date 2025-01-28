@@ -1,5 +1,4 @@
 require 'draper/decoratable/equality'
-require 'draper/compatibility/broadcastable'
 
 module Draper
   # Provides shortcuts to decorate objects directly, so you can do
@@ -13,10 +12,6 @@ module Draper
     include Draper::Decoratable::Equality
 
     autoload :CollectionProxy, 'draper/decoratable/collection_proxy'
-
-    included do
-      prepend Draper::Compatibility::Broadcastable if defined? Turbo::Broadcastable
-    end
 
     # Decorates the object using the inferred {#decorator_class}.
     # @param [Hash] options
