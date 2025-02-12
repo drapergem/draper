@@ -1,5 +1,10 @@
 # Draper Changelog
 
+## Unreleased
+
+### Fixes
+* Fix decoration of AR relations [#944](https://github.com/drapergem/draper/pull/944)
+
 ## 4.0.4 - 2025-01-28
 
 ### Fixes

@@ -36,7 +36,7 @@ module Draper
       ActiveSupport.on_load :active_record do
         include Draper::Decoratable
 
-        ActiveRecord::Associations::CollectionProxy.include Draper::Decoratable::CollectionProxy
+        ActiveRecord::Relation.include Draper::Decoratable::Relation
       end
 
       ActiveSupport.on_load :mongoid do
