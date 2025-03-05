@@ -5,8 +5,10 @@ gemspec
 gem 'puma'
 
 platforms :ruby do
-  if RUBY_VERSION >= "2.5.0"
+  if RUBY_VERSION >= "3.0.0"
     gem 'sqlite3'
+  elsif RUBY_VERSION >= "2.5.0"
+    gem 'sqlite3', '~> 1.4.0'
   else
     gem 'sqlite3', '~> 1.3.6'
   end
@@ -43,4 +45,8 @@ if RUBY_VERSION < "2.5.0"
   gem 'rspec-activerecord-expectations', '~> 1.2.0'
   gem 'simplecov', '0.17.1'
   gem "loofah", "< 2.21.0" # Workaround for `uninitialized constant Nokogiri::HTML4`
+end
+
+if RUBY_VERSION < "3.0.0"
+  gem "concurrent-ruby", "< 1.3.5"
 end
