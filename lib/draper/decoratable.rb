@@ -12,7 +12,7 @@ module Draper
     extend ActiveSupport::Concern
     include Draper::Decoratable::Equality
 
-    autoload :CollectionProxy, 'draper/decoratable/collection_proxy'
+    autoload :Relation, 'draper/decoratable/relation'
 
     included do
       prepend Draper::Compatibility::Broadcastable if defined? Turbo::Broadcastable
