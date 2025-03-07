@@ -4,90 +4,102 @@ require 'ammeter/init'
 require 'generators/rails/decorator_generator'
 
 describe Rails::Generators::DecoratorGenerator do
-  destination File.expand_path("../tmp", __FILE__)
+  destination Rails.root / 'tmp/generated'
+
+  subject { file path }
+
+  let(:model_name)     { 'YourModel' }
+  let(:decorator_name) { "#{model_name}Decorator" }
+  let(:options)        { {} }
+  let(:args)           { options.map { |k, v| "--#{k.to_s.dasherize}=#{v}" } }
 
   before { prepare_destination }
-  after(:all) { FileUtils.rm_rf destination_root }
+  before { run_generator [model_name, *args] }
 
-  describe "the generated decorator" do
-    subject { file("app/decorators/your_model_decorator.rb") }
+  shared_context :namespaceable do
+    let(:model_name) { 'Namespace::YourModel' }
 
-    describe "naming" do
-      before { run_generator %w(YourModel) }
+    include_examples :naming
+  end
 
-      it { is_expected.to contain "class YourModelDecorator" }
+  describe "decorator class" do
+    let(:path) { "app/decorators/#{decorator_name.underscore}.rb" }
+
+    it { is_expected.to have_correct_syntax }
+
+    shared_examples :naming do
+      it 'is properly named' do
+        is_expected.to exist
+        is_expected.to contain "class #{decorator_name}"
+      end
     end
 
-    describe "namespacing" do
-      subject { file("app/decorators/namespace/your_model_decorator.rb") }
-      before { run_generator %w(Namespace::YourModel) }
-
-      it { is_expected.to contain "class Namespace::YourModelDecorator" }
-    end
+    include_examples :naming
+    it_behaves_like  :namespaceable
 
     describe "inheritance" do
-      context "by default" do
-        before { run_generator %w(YourModel) }
+      let(:parent) { 'Draper::Decorator' }
 
-        it { is_expected.to contain "class YourModelDecorator < Draper::Decorator" }
+      shared_examples :inheritance do
+        it { is_expected.to contain "class #{decorator_name} < #{parent}" }
       end
 
-      context "with the --parent option" do
-        before { run_generator %w(YourModel --parent=FooDecorator) }
+      include_examples :inheritance
 
-        it { is_expected.to contain "class YourModelDecorator < FooDecorator" }
+      context "with --parent" do
+        let(:options) { { parent: 'FooDecorator' } }
+        let(:parent)  { options[:parent] }
+
+        include_examples :inheritance
       end
 
       context "with an ApplicationDecorator" do
-        before do
+        let(:parent) { 'ApplicationDecorator' }
+
+        let :options do # HACK: run before the generator
           allow_any_instance_of(Object).to receive(:require).and_call_original
           allow_any_instance_of(Object).to receive(:require).with("application_decorator").and_return(
             stub_const "ApplicationDecorator", Class.new
           )
+          super()
         end
 
-        before { run_generator %w(YourModel) }
-
-        it { is_expected.to contain "class YourModelDecorator < ApplicationDecorator" }
+        include_examples :inheritance
       end
     end
   end
 
-  context "with -t=rspec" do
-    describe "the generated spec" do
-      subject { file("spec/decorators/your_model_decorator_spec.rb") }
+  describe "spec" do
+    let(:options) { { test_framework: :rspec } }
+    let(:path)    { "spec/decorators/#{decorator_name.underscore}_spec.rb" }
 
-      describe "naming" do
-        before { run_generator %w(YourModel -t=rspec) }
+    it { is_expected.to have_correct_syntax }
 
-        it { is_expected.to contain "describe YourModelDecorator" }
-      end
-
-      describe "namespacing" do
-        subject { file("spec/decorators/namespace/your_model_decorator_spec.rb") }
-        before { run_generator %w(Namespace::YourModel -t=rspec) }
-
-        it { is_expected.to contain "describe Namespace::YourModelDecorator" }
+    shared_examples :naming do
+      it 'is properly named' do
+        is_expected.to exist
+        is_expected.to contain "describe #{decorator_name}"
       end
     end
+
+    include_examples :naming
+    it_behaves_like  :namespaceable
   end
 
-  context "with -t=test_unit" do
-    describe "the generated test" do
-      subject { file("test/decorators/your_model_decorator_test.rb") }
+  describe "test" do
+    let(:options) { { test_framework: :test_unit } }
+    let(:path)    { "test/decorators/#{decorator_name.underscore}_test.rb" }
 
-      describe "naming" do
-        before { run_generator %w(YourModel -t=test_unit) }
+    it { is_expected.to have_correct_syntax }
 
-        it { is_expected.to contain "class YourModelDecoratorTest < Draper::TestCase" }
-      end
-
-      describe "namespacing" do
-        subject { file("test/decorators/namespace/your_model_decorator_test.rb") }
-        before { run_generator %w(Namespace::YourModel -t=test_unit) }
-
-        it { is_expected.to contain "class Namespace::YourModelDecoratorTest < Draper::TestCase" }
+    shared_examples :naming do
+      it 'is properly named' do
+        is_expected.to exist
+        is_expected.to contain "class #{decorator_name}Test < Draper::TestCase"
       end
     end
+
+    include_examples :naming
+    it_behaves_like  :namespaceable
   end
 end
