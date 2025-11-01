@@ -26,6 +26,7 @@ jobs:
           - 3.2
           - 3.1
         rails:
+          - 8.1
           - 8.0
           - 7.2
         include:
@@ -39,6 +40,7 @@ jobs:
           - { ruby: '2.4',  rails: '5'   }
         exclude:
           - { ruby: '3.1',  rails: '8.0'  }
+          - { ruby: '3.1',  rails: '8.1'  }
 
     env:
       RAILS_VERSION: "${{ matrix.rails }}"
