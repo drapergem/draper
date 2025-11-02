@@ -56,7 +56,12 @@ module Draper
       Draper::ViewContext.build
     end
 
-    console { initialize_view_context }
+    console do
+      initialize_view_context
+      if ActiveSupport.gem_version >= Gem::Version.new('8.1.0')
+        ActiveSupport::ExecutionContext.nestable = false
+      end
+    end
 
     runner { initialize_view_context }
 
