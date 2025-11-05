@@ -1,3 +1,3 @@
 module Draper
-  VERSION = '4.1.0-pre'
+  VERSION = '4.0.5'
 end
