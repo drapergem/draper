@@ -28,8 +28,9 @@ else
   gem 'rails', "~> #{rails_version}.0"
 end
 
+# FIXME: Remove the later condition after `mongoid` supports Rails 8.1
 gem 'mongoid' unless
-    rails_version == 'edge'
+  rails_version == 'edge' || rails_version == '8.1'
 gem 'active_model_serializers'
 
 case RUBY_VERSION
@@ -49,4 +50,10 @@ end
 
 if RUBY_VERSION < "3.0.0"
   gem "concurrent-ruby", "< 1.3.5"
+end
+
+# FIXME: Use releases gems after they support Rails 8.1
+if rails_version.to_s >= '8.1'
+  gem 'rspec-activerecord-expectations', github: 'y-yagi/rspec-activerecord-expectations', branch: 'support_rails81'
+  gem 'mongoid', github: 'mongodb/mongoid', ref: 'eac49f0'
 end
