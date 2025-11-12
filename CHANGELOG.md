@@ -1,9 +1,9 @@
 # Draper Changelog
 
-## 4.0.5 - 2025-11-xx
+## 4.0.5 - 2025-11-12
 
 ### Fixes
-* Remove unused files from package  [#945](https://github.com/drapergem/draper/pull/945)
+* Remove unused files from package [#945](https://github.com/drapergem/draper/pull/945)
 * Support Rails 8.1 [#949](https://github.com/drapergem/draper/pull/949)
 
 ## 4.0.4 - 2025-01-28
