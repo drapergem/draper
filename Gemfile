@@ -54,6 +54,5 @@ end
 
 # FIXME: Use releases gems after they support Rails 8.1
 if rails_version.to_s >= '8.1'
-  gem 'rspec-activerecord-expectations', github: 'y-yagi/rspec-activerecord-expectations', branch: 'support_rails81'
   gem 'mongoid', github: 'mongodb/mongoid', ref: 'eac49f0'
 end
