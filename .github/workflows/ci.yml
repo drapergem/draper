@@ -34,9 +34,9 @@ jobs:
           - { ruby: 'head', rails: 'edge', allow-fail: true }
           # Outdated
           - { ruby: '3.0',  rails: '7.1' }
-          - { ruby: '2.7',  rails: '6'   } # RSpec AR Expectations support Rails 7.1 since Ruby 3.0
-          - { ruby: '2.6',  rails: '6'   }
-          - { ruby: '2.5',  rails: '6'   }
+          - { ruby: '2.7',  rails: '6.1' } # RSpec AR Expectations support Rails 7.1 since Ruby 3.0
+          - { ruby: '2.6',  rails: '6.1' }
+          - { ruby: '2.5',  rails: '6.1' }
           - { ruby: '2.4',  rails: '5'   }
         exclude:
           - { ruby: '3.1',  rails: '8.0'  }
