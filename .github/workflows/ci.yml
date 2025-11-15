@@ -12,6 +12,7 @@ permissions:
 
 jobs:
   rspec:
+    timeout-minutes: 10
     name: >-
       rspec (${{ matrix.ruby }})
 
