@@ -1,5 +1,10 @@
 # Draper Changelog
 
+## 4.0.6 - 2025-11-15
+
+### Fixes
+* Revert breaking change from v4.0.5
+
 ## 4.0.5 - 2025-11-12
 
 ### Fixes
