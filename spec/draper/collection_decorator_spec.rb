@@ -249,6 +249,29 @@ module Draper
       end
     end
 
+    describe '#kind_of?' do
+      it 'asks the kind of its decorated collection' do
+        decorator = ProductsDecorator.new([])
+        expect(decorator.decorated_collection).to receive(:kind_of?).with(Array).and_return("true")
+        expect(decorator.kind_of?(Array)).to eq "true"
+      end
+
+      context 'when asking the underlying collection returns false' do
+        it 'asks the CollectionDecorator instance itself' do
+          decorator = ProductsDecorator.new([])
+          allow(decorator.decorated_collection).to receive(:kind_of?).with(::Draper::CollectionDecorator).and_return(false)
+          expect(decorator.kind_of?(::Draper::CollectionDecorator)).to be true
+        end
+      end
+    end
+
+    describe '#is_a?' do
+      it 'aliases to #kind_of?' do
+        decorator = ProductsDecorator.new([])
+        expect(decorator.method(:kind_of?)).to eq decorator.method(:is_a?)
+      end
+    end
+
     describe "#replace" do
       it "replaces the decorated collection" do
         decorator = CollectionDecorator.new([Product.new])

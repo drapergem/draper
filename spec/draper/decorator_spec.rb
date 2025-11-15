@@ -800,6 +800,34 @@ module Draper
       end
     end
 
+    describe "class spoofing" do
+      it "pretends to be a kind of the object class" do
+        decorator = Decorator.new(Model.new)
+
+        expect(decorator.kind_of?(Model)).to be_truthy
+        expect(decorator.is_a?(Model)).to be_truthy
+      end
+
+      it "is still a kind of its own class" do
+        decorator = Decorator.new(Model.new)
+
+        expect(decorator.kind_of?(Decorator)).to be_truthy
+        expect(decorator.is_a?(Decorator)).to be_truthy
+      end
+
+      it "pretends to be an instance of the object class" do
+        decorator = Decorator.new(Model.new)
+
+        expect(decorator.instance_of?(Model)).to be_truthy
+      end
+
+      it "is still an instance of its own class" do
+        decorator = Decorator.new(Model.new)
+
+        expect(decorator.instance_of?(Decorator)).to be_truthy
+      end
+    end
+
     describe ".decorates_finders" do
       protect_class Decorator
 
