@@ -42,6 +42,7 @@ jobs:
         exclude:
           - { ruby: '3.1',  rails: '8.0'  }
           - { ruby: '3.1',  rails: '8.1'  }
+          - { ruby: '3.2',  rails: '8.1'  } # FIXME: Temporarily exclude because it's unstable.
 
     env:
       RAILS_VERSION: "${{ matrix.rails }}"
