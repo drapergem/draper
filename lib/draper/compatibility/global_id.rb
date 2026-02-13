@@ -14,6 +14,9 @@ module Draper
 
       included do
         include ::GlobalID::Identification
+
+        # NOTE: Ensure turbo stream names are generated based on decorated object
+        delegate :to_gid_param, :to_sgid_param, to: :object
       end
 
       class_methods do
