@@ -8,6 +8,26 @@ RSpec.describe Post do
 
   it { should be_a ApplicationRecord }
 
+  describe '#to_gid_param' do
+    let(:post) { Post.create }
+    subject { post.to_gid_param }
+
+    it { is_expected.to eq post.decorate.to_gid_param }
+  end
+
+  describe '#to_sgid_param' do
+    include ActiveSupport::Testing::TimeHelpers
+
+    let(:post) { Post.create }
+    subject { post.to_sgid_param }
+
+    around do |example|
+      freeze_time { example.run }
+    end
+
+    it { is_expected.to eq post.decorate.to_sgid_param }
+  end
+
   describe 'broadcasts' do
     let(:modification) { described_class.create! }
 
