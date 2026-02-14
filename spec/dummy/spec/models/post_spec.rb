@@ -16,8 +16,14 @@ RSpec.describe Post do
   end
 
   describe '#to_sgid_param' do
+    include ActiveSupport::Testing::TimeHelpers
+
     let(:post) { Post.create }
     subject { post.to_sgid_param }
+
+    around do |example|
+      freeze_time { example.run }
+    end
 
     it { is_expected.to eq post.decorate.to_sgid_param }
   end
