@@ -56,3 +56,7 @@ end
 if rails_version.to_s >= '8.1'
   gem 'mongoid', github: 'mongodb/mongoid', ref: 'eac49f0'
 end
+
+if RUBY_VERSION > '4.0.0'
+  gem 'ostruct'
+end
