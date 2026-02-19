@@ -57,6 +57,7 @@ if rails_version.to_s >= '8.1'
   gem 'mongoid', github: 'mongodb/mongoid', ref: 'eac49f0'
 end
 
+# FIXME: Remove after the next mongoid release (will include ostruct dependency)
 if RUBY_VERSION > '4.0.0'
   gem 'ostruct'
 end
