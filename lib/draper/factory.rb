@@ -10,8 +10,9 @@ module Draper
     #   will be called each time {#decorate} is called and its return value
     #   will be used as the context.
     def initialize(options = {})
-      options.assert_valid_keys(:with, :context)
+      options.assert_valid_keys(:with, :context, :namespace)
       @decorator_class = options.delete(:with)
+      @namespace = options.delete(:namespace)
       @default_options = options
     end
 
@@ -28,7 +29,7 @@ module Draper
     # @return [Decorator, CollectionDecorator] the decorated object.
     def decorate(object, options = {})
       return nil if object.nil?
-      Worker.new(decorator_class, object).call(options.reverse_merge(default_options))
+      Worker.new(decorator_class, object, @namespace).call(options.reverse_merge(default_options))
     end
 
     private
@@ -37,9 +38,10 @@ module Draper
 
     # @private
     class Worker
-      def initialize(decorator_class, object)
+      def initialize(decorator_class, object, namespace)
         @decorator_class = decorator_class
         @object = object
+        @namespace = namespace
       end
 
       def call(options)
@@ -60,9 +62,9 @@ module Draper
 
       def object_decorator
         if collection?
-          ->(object, options) { object.decorator_class.decorate_collection(object, options.reverse_merge(with: nil))}
+          ->(object, options) { object.decorator_class(namespace: @namespace).decorate_collection(object, options.reverse_merge(with: nil))}
         else
-          ->(object, options) { object.decorate(options) }
+          ->(object, options) { object.decorate(options.merge(namespace: @namespace)) }
         end
       end
 

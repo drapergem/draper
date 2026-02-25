@@ -471,6 +471,21 @@ module Draper
       end
     end
 
+    describe "#namespace" do
+      it "returns own module nesting" do
+        decorator = Namespaced::ProductDecorator.new(double)
+        expect(decorator.namespace).to eq("Namespaced")
+      end
+
+      context "when class has no nesting" do
+        it "returns nil" do
+          ::TopLevelDecorator = Class.new(Draper::Decorator)
+          decorator = TopLevelDecorator.new(double)
+          expect(decorator.namespace).to eq(nil)
+        end
+      end
+    end
+
     describe ".model_name" do
       it "delegates to the object class" do
         allow(Decorator).to receive(:object_class).and_return(double(model_name: :delegated))
