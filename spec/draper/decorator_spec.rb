@@ -722,6 +722,30 @@ module Draper
         end
       end
 
+      context ".const_missing" do
+        context "without an object class" do
+          it "raises a NameError on missing constants" do
+            expect{Decorator::HELLO_WORLD}.to raise_error NameError, /HELLO_WORLD/
+          end
+        end
+
+        context "with an object class" do
+          it "delegates constants that exist on the object class" do
+            object_class = Class.new
+            object_class.const_set(:HELLO_WORLD, :delegated)
+            allow(Decorator).to receive_messages object_class: object_class
+
+            expect(Decorator::HELLO_WORLD).to be :delegated
+          end
+
+          it "raises a NameError for constants that do not exist on the object class" do
+            allow(Decorator).to receive_messages object_class: Class.new
+
+            expect{Decorator::HELLO_WORLD}.to raise_error NameError, /HELLO_WORLD/
+          end
+        end
+      end
+
       describe "#respond_to?" do
         it "returns true for its own methods" do
           Decorator.class_eval{def hello_world; end}
