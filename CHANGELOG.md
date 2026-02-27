@@ -1,5 +1,10 @@
 # Draper Changelog
 
+## Unreleased
+
+### New Features
+* Delegate missing constants to the object class via `const_missing` when using `delegate_all` [#955](https://github.com/drapergem/draper/pull/955)
+
 ## 4.0.6 - 2025-11-15
 
 ### Fixes
