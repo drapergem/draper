@@ -547,6 +547,21 @@ the decorator will first try to call the method on the parent decorator class. I
 the method does not exist on the parent decorator class, it will then try to call
 the method on the decorated `object`. This is a very permissive interface.
 
+Constants defined on the source model class are also accessible via the decorator
+class when using `delegate_all`:
+
+```ruby
+class Car
+  WHEELS_COUNT = 4
+end
+
+class CarDecorator < ApplicationDecorator
+  delegate_all
+end
+
+CarDecorator::WHEELS_COUNT # => 4
+```
+
 If you want to strictly control which methods are called within views, you can
 choose to only delegate certain methods from the decorator to the source model:
 
