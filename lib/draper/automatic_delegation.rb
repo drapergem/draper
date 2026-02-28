@@ -51,7 +51,7 @@ module Draper
 
       # Proxies missing constants to the source class.
       def const_missing(name)
-        return object_class.const_get(name) if object_class?
+        return object_class.const_get(name) if object_class? && object_class.const_defined?(name)
 
         super
       end
