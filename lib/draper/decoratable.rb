@@ -22,12 +22,12 @@ module Draper
     # @param [Hash] options
     #   see {Decorator#initialize}
     def decorate(options = {})
-      decorator_class.decorate(self, options)
+      decorator_class(namespace: options.delete(:namespace)).decorate(self, options)
     end
 
     # (see ClassMethods#decorator_class)
-    def decorator_class
-      self.class.decorator_class
+    def decorator_class(namespace: nil)
+      self.class.decorator_class(namespace: namespace)
     end
 
     def decorator_class?
@@ -62,7 +62,7 @@ module Draper
       # @param [Hash] options
       #   see {Decorator.decorate_collection}.
       def decorate(options = {})
-        decorator_class.decorate_collection(all, options.reverse_merge(with: nil))
+        decorator_class(namespace: options[:namespace]).decorate_collection(all, options.reverse_merge(with: nil))
       end
 
       def decorator_class?
@@ -75,9 +75,11 @@ module Draper
       # `Product` maps to `ProductDecorator`).
       #
       # @return [Class] the inferred decorator class.
-      def decorator_class(called_on = self)
+      def decorator_class(called_on = self, namespace: nil)
         prefix = respond_to?(:model_name) ? model_name : name
-        decorator_name = "#{prefix}Decorator"
+        namespace = "#{namespace}::" if namespace.present?
+
+        decorator_name = "#{namespace}#{prefix}Decorator"
         decorator_name_constant = decorator_name.safe_constantize
         return decorator_name_constant unless decorator_name_constant.nil?
 
