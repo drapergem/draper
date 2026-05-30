@@ -197,6 +197,12 @@ module Draper
         end
       end
 
+      context "when namespace is passed explicitly" do
+        it "returns namespaced decorator class" do
+          expect(Product.decorator_class(namespace: Namespaced)).to be Namespaced::ProductDecorator
+        end
+      end
+
       context "when the decorator contains name error" do
         it "throws an NameError" do
           # We imitate ActiveSupport::Autoload behavior here in order to cause lazy NameError exception raising
