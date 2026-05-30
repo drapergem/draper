@@ -62,8 +62,14 @@ namespace "db" do
   task "setup" do
     puts "Setting up databases"
     run_in_dummy_app "rm -f db/*.sqlite3"
-    run_in_dummy_app "RAILS_ENV=development rake db:schema:load db:seed"
-    run_in_dummy_app "RAILS_ENV=production rake db:schema:load db:seed"
-    run_in_dummy_app "RAILS_ENV=test rake db:environment:set db:schema:load"
+    puts "Setting up development database"
+    run_in_dummy_app "RAILS_ENV=development rake db:schema:load db:seed --trace"
+    puts "Setting up production database"
+    run_in_dummy_app "RAILS_ENV=production rake db:schema:load --trace"
+    puts "Setting up production database(db:seed)"
+    run_in_dummy_app "RAILS_ENV=production rake db:seed --trace"
+    puts "Setting up test database"
+    run_in_dummy_app "RAILS_ENV=test rake db:environment:set db:schema:load --trace"
+    puts "Finish setting up databases"
   end
 end
